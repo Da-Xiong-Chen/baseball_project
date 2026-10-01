@@ -7,7 +7,9 @@ from fatigue import outlook, pitch_count_before
 from load import load
 from mlmodel import ENSEMBLE_W
 from model import fit
-from roster import POS_ZH, active_roster, assign_positions, defense_check, positions_of
+import numpy as np
+
+from roster import POS_ZH, active_roster, assign_positions, defense_check, hitter_pool, positions_of, reliever_pool
 
 
 @lru_cache(maxsize=32)
@@ -58,6 +60,55 @@ def situation(pa_id):
                 pitch_count=pc, starter=starter)
 
 
+def value_score(v, pool, higher_better=True):
+    """價值分數 1–100：v 在比較基準中的百分位（50 ≈ 聯盟平均）。"""
+    pool = np.asarray(pool)
+    beat = (pool < v) if higher_better else (pool > v)
+    frac = (beat.sum() + 0.5 * (pool == v).sum()) / len(pool)
+    return int(np.clip(round(1 + 99 * frac), 1, 100))
+
+
+def ensemble_rel(m, ml, names, hands, pitcher):
+    """每打席得分值（相對聯盟平均打者）：階層式與梯度提升樹集成。"""
+    h = np.array([m.matchup(n, b, pitcher)["rel_pa"] for n, b in zip(names, hands)])
+    if not ml:
+        return h, h, None
+    g = ml.rel_many([(n, b, pitcher) for n, b in zip(names, hands)])
+    return (1 - ENSEMBLE_W) * h + ENSEMBLE_W * g, h, g
+
+
+def ensemble_runs(m, ml, pitchers, batters):
+    """每位投手對上 batters 的預期失分合計（集成）。"""
+    _, phands = _hands()
+    rows = [(b, bat_hand(b, phands.get(p, "R")), p) for p in pitchers for b in batters]
+    h = np.array([m.matchup(b, bh, p)["per_pa"] for b, bh, p in rows]).reshape(len(pitchers), len(batters)).sum(1)
+    if not ml:
+        return h
+    g = ml.abs_many(rows).reshape(len(pitchers), len(batters)).sum(1)
+    return (1 - ENSEMBLE_W) * h + ENSEMBLE_W * g
+
+
+_pool_cache = {}
+
+
+def _cached(key, fn):
+    if key not in _pool_cache:
+        if len(_pool_cache) > 500:
+            _pool_cache.clear()
+        _pool_cache[key] = fn()
+    return _pool_cache[key]
+
+
+def hitter_pool_rels(m, ml, pitcher, phand):
+    names = hitter_pool()
+    return _cached((id(m), id(ml), "H", pitcher),
+                   lambda: ensemble_rel(m, ml, names, [bat_hand(n, phand) for n in names], pitcher)[0])
+
+
+def reliever_pool_runs(m, ml, batters):
+    return _cached((id(m), id(ml), "P", tuple(batters)), lambda: ensemble_runs(m, ml, reliever_pool(), batters))
+
+
 def evaluate_pinch_hit(sit, model=None, ml=None):
     """ml 為梯度提升樹模擬器（mlmodel.MLModel）；有提供時採用集成：階層式與梯度提升樹各半。"""
     row = sit["row"]
@@ -68,16 +119,18 @@ def evaluate_pinch_hit(sit, model=None, ml=None):
     due_pos = sit["positions"].get(due, "DH")
     names = [due] + sit["bench"]
     hands = [bat_hand(n, phand) for n in names]
-    rel_g = ml.rel_many([(n, h, row["pitcher"]) for n, h in zip(names, hands)]) if ml else None
+    rels, rel_h, rel_g = ensemble_rel(m, ml, names, hands, row["pitcher"])
+    pool = hitter_pool_rels(m, ml, row["pitcher"], phand)
 
     out = []
     for i, (name, bh) in enumerate(zip(names, hands)):
         r = m.matchup(name, bh, row["pitcher"])
-        rel = r["rel_pa"] if ml is None else (1 - ENSEMBLE_W) * r["rel_pa"] + ENSEMBLE_W * rel_g[i]
+        rel = float(rels[i])
         rec = dict(
             角色="現任" if name == due else "代打", 球員=name, 打擊=bh,
+            價值分數=value_score(rel, pool),
             預估勝率=rel * slope * 100, 誤差=r["se_pa"] * slope * 100,
-            每打席得分值=rel, 階層式=r["rel_pa"], 機器學習=(rel_g[i] if ml else None),
+            每打席得分值=rel, 階層式=r["rel_pa"], 機器學習=(float(rel_g[i]) if ml else None),
             本身能力=r["skill_pa"] - r["fit_pa"], 球路適性=r["fit_pa"], 左右優勢=r["platoon_pa"],
             樣本球數=r["n"], 可守=",".join(positions_of(name)) or "-",
         )
@@ -163,13 +216,11 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
     pc, starter = sit.get("pitch_count"), sit.get("starter", False)
     fat_runs, fat_warn = outlook(pc, starter, len(nxt))
     pitchers = [row["pitcher"]] + pen
-    if ml:
-        g = ml.abs_many([(b, bat_hand(b, phands.get(pit, "R")), pit) for pit in pitchers for b in nxt]).reshape(len(pitchers), len(nxt))
+    all_runs = ensemble_runs(m, ml, pitchers, nxt)
+    pool = reliever_pool_runs(m, ml, nxt)
     for k, pit in enumerate(pitchers):
         ph = phands.get(pit, "R")
-        runs = sum(m.matchup(b, bat_hand(b, ph), pit)["per_pa"] for b in nxt)
-        if ml:
-            runs = (1 - ENSEMBLE_W) * runs + ENSEMBLE_W * float(g[k].sum())
+        runs = float(all_runs[k])
         cur = pit == row["pitcher"]
         extra = fat_runs if cur else 0.0
         h = hist[hist["name"] == pit]
@@ -186,6 +237,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
         if np3 >= 50:
             warn.append(f"前 3 天 {np3} 球")
         out.append(dict(角色="場上" if cur else "牛棚", 投手=pit, 投=ph,
+                        價值分數=value_score(runs + extra, pool, higher_better=False),
                         預估失分=runs + extra, 疲勞調整=extra, 用球數=(pc if cur else 0),
                         樣本球數=int(m.pit_all["n"].get(pit, 0)),
                         疲勞="；".join(warn) or "-"))

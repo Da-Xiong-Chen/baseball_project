@@ -106,6 +106,27 @@ def pitcher_names(boxes):
     return set(c.index[p > b])
 
 
+POOL_MIN_PA = 100     # 價值分數的比較基準：2025 年 100 打席以上的打者
+POOL_MIN_GAMES = 15   # 以及 15 場以上的後援投手
+
+
+@lru_cache(maxsize=1)
+def hitter_pool():
+    boxes = load()[2]
+    b = boxes[boxes["date"].dt.year == 2025]
+    pa = b[b["role"] == "B"].groupby("name")["PA"].sum()
+    return sorted(set(pa[pa >= POOL_MIN_PA].index) - pitcher_names(b))
+
+
+@lru_cache(maxsize=1)
+def reliever_pool():
+    boxes = load()[2]
+    b = boxes[boxes["date"].dt.year == 2025]
+    p = b[b["role"] == "P"]
+    g = p.groupby("name").agg(n=("game", "nunique"), st=("order", lambda s: (s == 1).mean()))
+    return sorted(set(g[(g["n"] >= POOL_MIN_GAMES) & (g["st"] < 0.5)].index) & pitcher_names(b))
+
+
 def active_roster(team, game_date, game_id, window_days=10):
     """推估當日名單：過去 window_days 天內該隊出賽過的野手 + 當場名單（不含當天以後的資料）。"""
     _, _, boxes = load()

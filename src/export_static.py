@@ -18,7 +18,7 @@ from fatigue import CAP, RELIEVER_WARN, starter_curve  # noqa: E402
 from load import CELLS, ROOT, load  # noqa: E402
 import mlmodel  # noqa: E402
 from model import PITCHES_PER_PA, fit  # noqa: E402
-from roster import can_play, positions_of  # noqa: E402
+from roster import can_play, hitter_pool, positions_of, reliever_pool  # noqa: E402
 
 sys.path.insert(0, ROOT)
 import server  # noqa: E402
@@ -87,6 +87,7 @@ def export_model():
     for p in pitchers:
         ph_ = ph.get(p, "R")
         grid[p] = list(ml.abs_many([(h, bh.get(h, "R") if bh.get(h) != "S" else ("L" if ph_ == "R" else "R"), p) for h in hitters]))
+    model["pools"] = dict(hitters=hitter_pool(), relievers=reliever_pool())
     model["ml"] = dict(w=mlmodel.ENSEMBLE_W, hitters=hitters, grid=grid, ref={p: ml.ref(p) for p in pitchers})
     print("model.json", dump(model, "model.json") // 1024, "KB")
 
