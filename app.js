@@ -358,7 +358,8 @@ function renderResult() {
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? `對上 ${R.bullpen.next.map(esc).join("、")}` : "點選列可看球路明細"}</span></div>`;
   html += `<div class="tbl-wrap">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div>${mixCard(R)}<div id="detail"></div></div></div>`;
-  html += `<div class="foot">預估勝率＝相對「聯盟平均打者面對同一投手」的勝率增減，已依當下局勢換算；細線為誤差範圍。
+  html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>（完整實驗比較 6 種方法後選出；滑鼠移到預估勝率可看兩個模型各自的值）。<br>
+    預估勝率＝相對「聯盟平均打者面對同一投手」的勝率增減，已依當下局勢換算；細線為誤差範圍。
     模型只使用 ${esc(R.model_cutoff)} 以前的資料。資料來源：Rebas Open Data（ODC-By）、ldkrsi/cpbl-opendata（MIT）、中華職棒官網守位統計。</div>`;
   $("#resultBody").innerHTML = html;
 
@@ -395,7 +396,7 @@ function phTable(R) {
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""}">
       <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span><span class="pname">${esc(x["球員"])}</span> ${handChip(x["打擊"])}${best ? `<span class="best">建議</span>` : ""}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div></td>
-      <td><div class="vcell"><span class="vnum num ${cls(x["預估勝率"], 0.02)}">${sign(x["預估勝率"])}%</span>${dbar(x["預估勝率"], x["誤差"], scale)}</div></td>
+      <td><div class="vcell" title="${x["機器學習"] != null ? `階層式 ${sign(x["階層式"], 3)}・梯度提升樹 ${sign(x["機器學習"], 3)}（每打席得分值，各占一半）` : ""}"><span class="vnum num ${cls(x["預估勝率"], 0.02)}">${sign(x["預估勝率"])}%</span>${dbar(x["預估勝率"], x["誤差"], scale)}</div></td>
       <td class="num ${cur ? "mut" : cls(x["相對現任"], 0.02)}">${cur ? "—" : sign(x["相對現任"]) + "%"}</td>
       <td style="white-space:nowrap"><span class="chip c-${x["可信度"]}">${x["可信度"]}</span><div class="mut num" style="font-size:11px">${Math.round(x["樣本球數"])} 球</div></td>
       <td><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${esc(x["守備說明"])}</span></div></td>
