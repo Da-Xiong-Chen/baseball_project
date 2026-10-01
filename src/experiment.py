@@ -26,12 +26,14 @@ from sklearn.preprocessing import StandardScaler
 
 from engine import bat_hand, situation
 from load import ROOT, load
-from ml_compare import add_velocity, features, fit_tendencies, prepare
+from ml_compare import EarlyStopped, add_velocity, features, fit_tendencies, prepare
 from mlmodel import Simulator, oof_tendencies as oof
 from model import fit
 
 MONTHS = ["2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01"]
 RNG = np.random.default_rng(0)
+ENSEMBLES = {"梯度提升樹模擬": "集成（階層式＋梯度提升樹）", "XGBoost模擬": "集成（階層式＋XGBoost）",
+             "LightGBM模擬": "集成（階層式＋LightGBM）"}
 OUT = os.path.join(ROOT, "output", "experiment.txt")
 _lines = []
 
@@ -47,6 +49,8 @@ def make_models():
         "隨機森林模擬": RandomForestClassifier(n_estimators=150, min_samples_leaf=40, max_features="sqrt", n_jobs=-1, random_state=0),
         "梯度提升樹模擬": HistGradientBoostingClassifier(max_iter=600, learning_rate=0.05, max_leaf_nodes=31, l2_regularization=1.0,
                                                     early_stopping=True, validation_fraction=0.1, random_state=0),
+        "XGBoost模擬": EarlyStopped("xgb"),
+        "LightGBM模擬": EarlyStopped("lgbm"),
         "MLP模擬": make_pipeline(StandardScaler(), MLPClassifier(hidden_layer_sizes=(64, 32), alpha=1e-3, early_stopping=True,
                                                             max_iter=200, random_state=0)),
     }
@@ -108,12 +112,13 @@ def main():
         log(f"{start}：{len(test)} 打席、{len(phs)} 個代打情境（{time.time() - tm:.0f} 秒）")
 
     A = pd.DataFrame(A)
-    methods = ["階層式（現行）", "邏輯斯迴歸模擬", "隨機森林模擬", "梯度提升樹模擬", "MLP模擬"]
+    methods = ["階層式（現行）", "邏輯斯迴歸模擬", "隨機森林模擬", "梯度提升樹模擬", "XGBoost模擬", "LightGBM模擬", "MLP模擬"]
     # 集成：各方法先在月內置中，避免整體水準差異
     for m in methods:
         A[m + "_c"] = A[m] - A.groupby("month")[m].transform("mean")
-    A["集成（階層式＋梯度提升樹）_c"] = (A["階層式（現行）_c"] + A["梯度提升樹模擬_c"]) / 2
-    methods.append("集成（階層式＋梯度提升樹）")
+    for k, lab in ENSEMBLES.items():
+        A[lab + "_c"] = (A["階層式（現行）_c"] + A[k + "_c"]) / 2
+        methods.append(lab)
     A["y_c"] = A["y"] - A.groupby("month")["y"].transform("mean")
 
     log("\n=== A. 打席得分值預測（2025/5–10，共 {:,} 打席；預測與實際皆在月內置中）===".format(len(A)))
@@ -131,7 +136,7 @@ def main():
 
     se0 = A["y_c"] ** 2
     hier_se = (A["y_c"] - A["階層式（現行）_c"]) ** 2
-    log(f"{'方法':<22}{'相對聯盟平均改善':>14}{'95% 區間':>22}{'相關係數':>10}{'相對現行模型':>14}")
+    log(f"{'方法':<24}{'相對聯盟平均改善':>14}{'95% 區間':>22}{'相關係數':>10}{'相對現行模型':>14}")
     log(f"{'聯盟平均':<22}{'+0.000%':>14}")
     summaryA = {}
     for m in methods:
@@ -148,14 +153,15 @@ def main():
     log(f"\n=== B. 與教練實際代打選擇比較（{len(B)} 個情境）===")
     rand1 = np.mean([1 / x["n_bench"] for x in B])
     rand3 = np.mean([min(3, x["n_bench"]) / x["n_bench"] for x in B])
-    log(f"{'方法':<22}{'第1名一致':>10}{'前3名':>10}{'建議換代打比例':>16}")
+    log(f"{'方法':<24}{'第1名一致':>10}{'前3名':>10}{'建議換代打比例':>16}")
     log(f"{'隨機挑選':<22}{rand1:>10.1%}{rand3:>10.1%}")
     summaryB = {}
     for m in methods:
         top1 = top3 = recommend = 0
         for x in B:
             if m.startswith("集成"):
-                h = np.array(x["階層式（現行）"]); gb = np.array(x["梯度提升樹模擬"])
+                src = next(k for k, lab in ENSEMBLES.items() if lab == m)
+                h = np.array(x["階層式（現行）"]); gb = np.array(x[src])
                 v = (h - h.mean()) + (gb - gb.mean())
             else:
                 v = np.array(x[m])

@@ -358,7 +358,7 @@ function renderResult() {
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? `對上 ${R.bullpen.next.map(esc).join("、")}` : "點選列可看球路明細"}</span></div>`;
   html += `<div class="tbl-wrap">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div>${mixCard(R)}<div id="detail"></div></div></div>`;
-  html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>（完整實驗比較 6 種方法後選出；滑鼠移到預估勝率可看兩個模型各自的值）。<br>
+  html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>（完整實驗比較 11 種方法後選出；滑鼠移到預估勝率可看兩個模型各自的值）。<br>
     預估勝率＝相對「聯盟平均打者面對同一投手」的勝率增減，已依當下局勢換算；細線為誤差範圍。
     模型只使用 ${esc(R.model_cutoff)} 以前的資料。資料來源：Rebas Open Data（ODC-By）、ldkrsi/cpbl-opendata（MIT）、中華職棒官網守位統計。</div>`;
   $("#resultBody").innerHTML = html;

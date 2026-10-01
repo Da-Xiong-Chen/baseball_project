@@ -3,7 +3,7 @@
 訓練：2024 全季 + 2025/7/1 以前；測試：2025/7/1 以後（時間切分，不偷看未來）。
 打者／投手傾向特徵以部分池化估計；訓練列用 5 折（依比賽分折）的 out-of-fold 估計，避免標籤洩漏。
 
-比較：球數基準、現行階層式模型（得分值）、邏輯斯迴歸、隨機森林、梯度提升樹、MLP、SVM（抽樣）。
+比較：球數基準、現行階層式模型（得分值）、邏輯斯迴歸、隨機森林、梯度提升樹（scikit-learn）、XGBoost、LightGBM、MLP、SVM（抽樣）。
 用法：python ml_compare.py
 """
 import os
@@ -152,6 +152,35 @@ GROUPS = {
 }
 
 
+# ---------------- XGBoost / LightGBM ----------------
+class EarlyStopped:
+    """XGBoost / LightGBM 包裝：與 scikit-learn 梯度提升樹相同，留 10% 訓練資料做 early stopping。"""
+
+    def __init__(self, kind):
+        self.kind = kind
+
+    def fit(self, X, y):
+        rng = np.random.default_rng(0)
+        val = rng.random(len(X)) < 0.1
+        Xt, yt, Xv, yv = X[~val], y[~val], X[val], y[val]
+        if self.kind == "xgb":
+            from xgboost import XGBClassifier
+            self.m = XGBClassifier(n_estimators=600, learning_rate=0.05, max_depth=6, min_child_weight=20,
+                                   reg_lambda=1.0, subsample=0.8, colsample_bytree=0.8, tree_method="hist",
+                                   eval_metric="mlogloss", early_stopping_rounds=30, n_jobs=-1, random_state=0)
+            self.m.fit(Xt, yt, eval_set=[(Xv, yv)], verbose=False)
+        else:
+            import lightgbm as lgb
+            self.m = lgb.LGBMClassifier(n_estimators=600, learning_rate=0.05, num_leaves=31, min_child_samples=20,
+                                        reg_lambda=1.0, subsample=0.8, subsample_freq=1, colsample_bytree=0.8,
+                                        n_jobs=-1, random_state=0, verbose=-1)
+            self.m.fit(Xt, yt, eval_set=[(Xv, yv)], callbacks=[lgb.early_stopping(30, verbose=False)])
+        return self
+
+    def predict_proba(self, X):
+        return self.m.predict_proba(X)
+
+
 # ---------------- 評估 ----------------
 def logloss(y, P):
     return -np.log(np.clip(P[np.arange(len(y)), y], 1e-6, 1))
@@ -206,6 +235,8 @@ def main():
         "隨機森林": RandomForestClassifier(n_estimators=300, min_samples_leaf=40, max_features="sqrt", n_jobs=-1, random_state=0),
         "梯度提升樹": HistGradientBoostingClassifier(max_iter=600, learning_rate=0.05, max_leaf_nodes=31, l2_regularization=1.0,
                                                  early_stopping=True, validation_fraction=0.1, random_state=0),
+        "XGBoost": EarlyStopped("xgb"),
+        "LightGBM": EarlyStopped("lgbm"),
         "MLP 神經網路": make_pipeline(StandardScaler(), MLPClassifier(hidden_layer_sizes=(64, 32), alpha=1e-3, early_stopping=True,
                                                                   max_iter=200, random_state=0)),
     }
@@ -243,7 +274,7 @@ def main():
     best = min((n for n in results if n != "球數基準"), key=lambda n: results[n]["logloss"])
     log(f"\n最佳：{best}")
     g = test["game"]
-    for other in ("球數基準", "邏輯斯迴歸", "隨機森林"):
+    for other in ("球數基準", "邏輯斯迴歸", "隨機森林", "梯度提升樹", "XGBoost", "LightGBM"):
         if other == best:
             continue
         lo, hi = boot_ci(preds[other] - preds[best], g)
