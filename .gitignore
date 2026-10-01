@@ -1,0 +1,8 @@
+# 原始資料不放進 repo：Rebas 用 download_data.py 下載；中職官網整理的守位資料僅本機使用
+data/rebas/
+data/cpbl/
+data/ldkrsi/*.csv
+output/*.csv
+__pycache__/
+*.pyc
+.DS_Store
