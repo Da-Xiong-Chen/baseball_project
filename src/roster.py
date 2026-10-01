@@ -98,17 +98,26 @@ def defense_check(out_name, out_pos, in_name, bench_after):
     return status, msg
 
 
+def pitcher_names(boxes):
+    """以投手身分出賽次數多於野手的人才算投手（野手偶爾敗戰處理登板不算）。"""
+    c = boxes.groupby(["name", "role"]).size().unstack(fill_value=0)
+    p = c.get("P", pd.Series(0, index=c.index))
+    b = c.get("B", pd.Series(0, index=c.index))
+    return set(c.index[p > b])
+
+
 def active_roster(team, game_date, game_id, window_days=10):
     """推估當日名單：過去 window_days 天內該隊出賽過的野手 + 當場名單（不含當天以後的資料）。"""
     _, _, boxes = load()
     d = boxes[(boxes["team"] == team)]
     recent = d[(d["date"] < game_date) & (d["date"] >= game_date - pd.Timedelta(days=window_days))]
     today = d[d["game"] == game_id]
-    pitchers = set(d.loc[(d["role"] == "P") & (d["date"] >= game_date - pd.Timedelta(days=30)), "name"])
+    pitchers = pitcher_names(d[(d["date"] < game_date) & (d["date"] >= game_date - pd.Timedelta(days=60))])
     hitters = set(recent.loc[recent["role"] == "B", "name"]) | set(today.loc[today["role"] == "B", "name"])
     # 牛棚：排除先發投手（本季先發比例 ≥ 50%，或今天是先發）
     season_p = d[(d["role"] == "P") & (d["date"] < game_date) & (d["date"].dt.year == game_date.year)]
     start_ratio = season_p.assign(start=season_p["order"] == 1).groupby("name")["start"].mean()
     starters = set(start_ratio[start_ratio >= 0.5].index) | set(today.loc[(today["role"] == "P") & (today["order"] == 1), "name"])
     pen = (set(recent.loc[recent["role"] == "P", "name"]) | set(today.loc[today["role"] == "P", "name"])) - starters
+    pen &= pitchers | pitcher_names(today)
     return sorted(hitters - pitchers), sorted(pen)

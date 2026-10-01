@@ -5,6 +5,7 @@ import pandas as pd
 
 from fatigue import outlook, pitch_count_before
 from load import load
+from mlmodel import ENSEMBLE_W
 from model import fit
 from roster import POS_ZH, active_roster, assign_positions, defense_check, positions_of
 
@@ -57,23 +58,27 @@ def situation(pa_id):
                 pitch_count=pc, starter=starter)
 
 
-def evaluate_pinch_hit(sit, model=None):
+def evaluate_pinch_hit(sit, model=None, ml=None):
+    """ml 為梯度提升樹模擬器（mlmodel.MLModel）；有提供時採用集成：階層式與梯度提升樹各半。"""
     row = sit["row"]
     m = model or model_at(str(row["date"].date()))
-    _, phands = _hands()
     phand = row["phand"]
     slope = m.run_to_win(row["inning"], row["half"], row["bat_score"], row["fld_score"], row["bases"], row["outs"])
     due = sit["due"]
     due_pos = sit["positions"].get(due, "DH")
+    names = [due] + sit["bench"]
+    hands = [bat_hand(n, phand) for n in names]
+    rel_g = ml.rel_many([(n, h, row["pitcher"]) for n, h in zip(names, hands)]) if ml else None
 
     out = []
-    for name in [due] + sit["bench"]:
-        bh = bat_hand(name, phand)
+    for i, (name, bh) in enumerate(zip(names, hands)):
         r = m.matchup(name, bh, row["pitcher"])
+        rel = r["rel_pa"] if ml is None else (1 - ENSEMBLE_W) * r["rel_pa"] + ENSEMBLE_W * rel_g[i]
         rec = dict(
             角色="現任" if name == due else "代打", 球員=name, 打擊=bh,
-            預估勝率=r["rel_pa"] * slope * 100, 誤差=r["se_pa"] * slope * 100,
-            每打席得分值=r["rel_pa"], 本身能力=r["skill_pa"] - r["fit_pa"], 球路適性=r["fit_pa"], 左右優勢=r["platoon_pa"],
+            預估勝率=rel * slope * 100, 誤差=r["se_pa"] * slope * 100,
+            每打席得分值=rel, 階層式=r["rel_pa"], 機器學習=(rel_g[i] if ml else None),
+            本身能力=r["skill_pa"] - r["fit_pa"], 球路適性=r["fit_pa"], 左右優勢=r["platoon_pa"],
             樣本球數=r["n"], 可守=",".join(positions_of(name)) or "-",
         )
         if name != due:
@@ -132,7 +137,7 @@ def matchup_detail(model, batter, pitcher):
                 skill=r["skill_pa"] - r["fit_pa"], fit=r["fit_pa"], platoon=r["platoon_pa"], n=r["n"])
 
 
-def evaluate_bullpen(sit, n_next=3, model=None):
+def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
     """防守方換投：牛棚每位投手對上接下來 n_next 棒。"""
     row = sit["row"]
     m = model or model_at(str(row["date"].date()))
@@ -157,9 +162,14 @@ def evaluate_bullpen(sit, n_next=3, model=None):
     out = []
     pc, starter = sit.get("pitch_count"), sit.get("starter", False)
     fat_runs, fat_warn = outlook(pc, starter, len(nxt))
-    for pit in [row["pitcher"]] + pen:
+    pitchers = [row["pitcher"]] + pen
+    if ml:
+        g = ml.abs_many([(b, bat_hand(b, phands.get(pit, "R")), pit) for pit in pitchers for b in nxt]).reshape(len(pitchers), len(nxt))
+    for k, pit in enumerate(pitchers):
         ph = phands.get(pit, "R")
         runs = sum(m.matchup(b, bat_hand(b, ph), pit)["per_pa"] for b in nxt)
+        if ml:
+            runs = (1 - ENSEMBLE_W) * runs + ENSEMBLE_W * float(g[k].sum())
         cur = pit == row["pitcher"]
         extra = fat_runs if cur else 0.0
         h = hist[hist["name"] == pit]

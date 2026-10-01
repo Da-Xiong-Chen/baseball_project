@@ -64,6 +64,19 @@ const Engine = (() => {
     };
   }
 
+  // ---------- 梯度提升樹模擬（預先計算的打者 × 投手表）----------
+  let hIdx = null;
+  function mlAbs(batter, pitcher) {
+    if (!M.ml) return null;
+    if (!hIdx) hIdx = Object.fromEntries(M.ml.hitters.map((h, i) => [h, i]));
+    const row = M.ml.grid[pitcher], i = hIdx[batter];
+    return row && i != null ? row[i] : null;
+  }
+  function mlRel(batter, pitcher) {
+    const v = mlAbs(batter, pitcher);
+    return v == null ? null : v - M.ml.ref[pitcher];
+  }
+
   // ---------- 守備 ----------
   const positionsOf = (name) => M.eligible[name] || [];
   const canPlay = (name, pos) => pos === "DH" || positionsOf(name).includes(pos);
@@ -120,9 +133,12 @@ const Engine = (() => {
     const out = [due, ...bench].map((name) => {
       const bh = batHand(name, row.phand);
       const r = matchup(name, bh, row.pitcher);
+      const g = mlRel(name, row.pitcher);
+      const w = M.ml ? M.ml.w : 0;
+      const rel = g == null ? r.rel_pa : (1 - w) * r.rel_pa + w * g;
       const rec = {
         角色: name === due ? "現任" : "代打", 球員: name, 打擊: bh,
-        預估勝率: r.rel_pa * slope * 100, 誤差: r.se_pa * slope * 100, 每打席得分值: r.rel_pa,
+        預估勝率: rel * slope * 100, 誤差: r.se_pa * slope * 100, 每打席得分值: rel, 階層式: r.rel_pa, 機器學習: g,
         本身能力: r.skill_pa - r.fit_pa, 球路適性: r.fit_pa, 左右優勢: r.platoon_pa, 樣本球數: r.n,
         可守: positionsOf(name).join(",") || "-",
       };
@@ -142,7 +158,11 @@ const Engine = (() => {
     const rows = [row.pitcher, ...pen.filter((p) => p !== row.pitcher)].map((pit) => {
       const ph = hand(M.phand[pit]);
       const cur = pit === row.pitcher;
-      const runs = nextBatters.reduce((s, b) => s + matchup(b, batHand(b, ph), pit).per_pa, 0);
+      const w = M.ml ? M.ml.w : 0;
+      const runs = nextBatters.reduce((s, b) => {
+        const h = matchup(b, batHand(b, ph), pit).per_pa, g = mlAbs(b, pit);
+        return s + (g == null ? h : (1 - w) * h + w * g);
+      }, 0);
       const extra = cur ? fatRuns : 0;
       return {
         角色: cur ? "場上" : "牛棚", 投手: pit, 投: ph, 預估失分: runs + extra, 疲勞調整: extra,
@@ -179,6 +199,7 @@ const Engine = (() => {
       actual: null, leverage: ph.slope * 100, league_leverage: M.slope_all * 100,
       pitch_mix: pitchMixPayload(row.pitcher), candidates: ph.rows,
       bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter) }, model_cutoff: M.cutoff,
+      method: M.ml ? "集成（階層式＋梯度提升樹）" : "階層式",
     };
   }
 

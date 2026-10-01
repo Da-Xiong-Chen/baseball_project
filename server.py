@@ -19,8 +19,9 @@ import pandas as pd  # noqa: E402
 from engine import (_hands, bat_hand, custom_situation, evaluate_bullpen, evaluate_pinch_hit,  # noqa: E402
                     matchup_detail, situation)
 from load import CELLS, load  # noqa: E402
+import mlmodel  # noqa: E402
 from model import fit  # noqa: E402
-from roster import POS_ZH, can_play, positions_of  # noqa: E402
+from roster import POS_ZH, can_play, pitcher_names, positions_of  # noqa: E402
 
 PORT = int(os.environ.get("PORT", 8000))
 WEB = os.path.join(ROOT, "docs")
@@ -72,15 +73,16 @@ def rosters():
         # 球員以最後出現的隊伍為準
         last_team_b = b25[b25["role"] == "B"].groupby("name")["team"].last()
         last_team_p = b25[b25["role"] == "P"].groupby("name")["team"].last()
+        true_pitchers = pitcher_names(b25)
         hitters = []
         for name, g in hit.groupby("name"):
-            if last_team_b.get(name) != team or name in set(pit["name"]):
+            if last_team_b.get(name) != team or name in true_pitchers:
                 continue
             hitters.append(dict(name=name, hand=bh.get(name, "R"), pa=int(g["PA"].sum()), games=int(g["game"].nunique()),
                                 positions=positions_of(name), catcher=bool(can_play(name, "C"))))
         pitchers = []
         for name, g in pit.groupby("name"):
-            if last_team_p.get(name) != team:
+            if last_team_p.get(name) != team or name not in true_pitchers:
                 continue
             starts = int((g["order"] == 1).sum())
             pitchers.append(dict(name=name, hand=ph.get(name, "R"), games=int(len(g)), starts=starts,
@@ -100,10 +102,10 @@ def pitch_mix_payload(m, pitcher):
     return res
 
 
-def build_result(sit, m, actual=None):
+def build_result(sit, m, ml=None, actual=None):
     row = sit["row"]
-    ph_df, slope, _ = evaluate_pinch_hit(sit, model=m)
-    bp_df, nxt = evaluate_bullpen(sit, model=m)
+    ph_df, slope, _ = evaluate_pinch_hit(sit, model=m, ml=ml)
+    bp_df, nxt = evaluate_bullpen(sit, model=m, ml=ml)
     r = {k: row[k] for k in ("inning", "half", "outs", "bases", "bat_score", "fld_score", "pitcher", "phand",
                              "bat_team", "fld_team", "date")}
     r["pitch_count"] = sit.get("pitch_count")
@@ -115,6 +117,7 @@ def build_result(sit, m, actual=None):
         situation=r, actual=actual, leverage=slope * 100, league_leverage=m.slope_all * 100,
         pitch_mix=pitch_mix_payload(m, row["pitcher"]),
         candidates=ph_df, bullpen=dict(next=nxt, rows=bp_df), model_cutoff=str(m.cutoff.date()),
+        method="集成（階層式＋梯度提升樹）" if ml else "階層式",
     ))
 
 
@@ -153,11 +156,15 @@ def api(path, qs, body):
         m = model_for(str(row["date"].date()))
         sit = situation(pid)
         actual = dict(batter=row["batter"], is_ph=bool(row["is_ph"]), result=row["result"], WPA=row["WPA"])
-        return build_result(sit, m, actual)
+        with _lock:
+            ml = mlmodel.for_date(str(row["date"].date()))
+        return build_result(sit, m, ml, actual)
     if path == "/api/evaluate":
         m = model_for(FULL)
         s = custom_situation(**body)
-        return build_result(s, m)
+        with _lock:
+            ml = mlmodel.get(FULL)
+        return build_result(s, m, ml)
     if path == "/api/detail":
         date = qs.get("date", [FULL])[0]
         m = model_for(date if date != "custom" else FULL)
@@ -204,5 +211,6 @@ if __name__ == "__main__":
     load()
     rosters()
     model_for(FULL)
+    mlmodel.get(FULL)
     print(f"完成。請開啟 http://localhost:{PORT}")
     ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()

@@ -6,3 +6,5 @@ output/*.csv
 __pycache__/
 *.pyc
 .DS_Store
+models/
+output/experiment_pa.csv

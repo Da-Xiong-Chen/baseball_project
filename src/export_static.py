@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from engine import _hands, matchup_detail, situation  # noqa: E402
 from fatigue import CAP, RELIEVER_WARN, starter_curve  # noqa: E402
 from load import CELLS, ROOT, load  # noqa: E402
+import mlmodel  # noqa: E402
 from model import PITCHES_PER_PA, fit  # noqa: E402
 from roster import can_play, positions_of  # noqa: E402
 
@@ -78,6 +79,15 @@ def export_model():
         fatigue=dict(curve=starter_curve(), cap=CAP, reliever_warn=RELIEVER_WARN),
         rosters=rosters, teams=sorted(rosters),
     )
+    # 梯度提升樹模擬：瀏覽器無法執行樹模型，預先算好所有「名單打者 × 名單投手」的每打席得分值
+    ml = mlmodel.get(server.FULL)
+    hitters = sorted({h["name"] for r in rosters.values() for h in r["hitters"]})
+    pitchers = sorted({p["name"] for r in rosters.values() for p in r["pitchers"]})
+    grid = {}
+    for p in pitchers:
+        ph_ = ph.get(p, "R")
+        grid[p] = list(ml.abs_many([(h, bh.get(h, "R") if bh.get(h) != "S" else ("L" if ph_ == "R" else "R"), p) for h in hitters]))
+    model["ml"] = dict(w=mlmodel.ENSEMBLE_W, hitters=hitters, grid=grid, ref={p: ml.ref(p) for p in pitchers})
     print("model.json", dump(model, "model.json") // 1024, "KB")
 
 
@@ -91,7 +101,7 @@ def export_replays():
             try:
                 sit = situation(r["pa_id"])
                 actual = dict(batter=r["batter"], is_ph=True, result=r["result"], WPA=r["WPA"])
-                res = server.build_result(sit, m, actual)
+                res = server.build_result(sit, m, mlmodel.for_date(str(date.date())), actual)
             except Exception as e:  # noqa: BLE001
                 print("skip", r["pa_id"], e)
                 continue
