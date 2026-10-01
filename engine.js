@@ -127,17 +127,44 @@ const Engine = (() => {
     return false;
   }
 
+  // ---------- 價值分數（1–100 百分位）----------
+  function valueScore(v, pool, higherBetter = true) {
+    let beat = 0, eq = 0;
+    for (const x of pool) { if (x === v) eq++; else if (higherBetter ? x < v : x > v) beat++; }
+    return Math.max(1, Math.min(100, Math.round(1 + 99 * (beat + 0.5 * eq) / pool.length)));
+  }
+  function ensembleRel(name, bh, pitcher) {
+    const r = matchup(name, bh, pitcher), g = mlRel(name, pitcher), w = M.ml ? M.ml.w : 0;
+    return { rel: g == null ? r.rel_pa : (1 - w) * r.rel_pa + w * g, r, g };
+  }
+  function ensembleRuns(pitcher, batters) {
+    const ph = hand(M.phand[pitcher]), w = M.ml ? M.ml.w : 0;
+    return batters.reduce((s, b) => {
+      const h = matchup(b, batHand(b, ph), pitcher).per_pa, g = mlAbs(b, pitcher);
+      return s + (g == null ? h : (1 - w) * h + w * g);
+    }, 0);
+  }
+  const poolCache = {};
+  function hitterPool(pitcher, phand) {
+    const k = "H|" + pitcher;
+    if (!poolCache[k]) poolCache[k] = M.pools.hitters.map((n) => ensembleRel(n, batHand(n, phand), pitcher).rel);
+    return poolCache[k];
+  }
+  function relieverPool(batters) {
+    const k = "P|" + batters.join(",");
+    if (!poolCache[k]) poolCache[k] = M.pools.relievers.map((p) => ensembleRuns(p, batters));
+    return poolCache[k];
+  }
+
   // ---------- 評估 ----------
   function evaluatePinchHit(row, due, duePos, bench) {
     const slope = runToWin(row.inning, row.half, row.bat_score, row.fld_score, row.bases, row.outs);
+    const pool = hitterPool(row.pitcher, row.phand);
     const out = [due, ...bench].map((name) => {
       const bh = batHand(name, row.phand);
-      const r = matchup(name, bh, row.pitcher);
-      const g = mlRel(name, row.pitcher);
-      const w = M.ml ? M.ml.w : 0;
-      const rel = g == null ? r.rel_pa : (1 - w) * r.rel_pa + w * g;
+      const { rel, r, g } = ensembleRel(name, bh, row.pitcher);
       const rec = {
-        角色: name === due ? "現任" : "代打", 球員: name, 打擊: bh,
+        角色: name === due ? "現任" : "代打", 球員: name, 打擊: bh, 價值分數: valueScore(rel, pool),
         預估勝率: rel * slope * 100, 誤差: r.se_pa * slope * 100, 每打席得分值: rel, 階層式: r.rel_pa, 機器學習: g,
         本身能力: r.skill_pa - r.fit_pa, 球路適性: r.fit_pa, 左右優勢: r.platoon_pa, 樣本球數: r.n,
         可守: positionsOf(name).join(",") || "-",
@@ -155,17 +182,15 @@ const Engine = (() => {
   function evaluateBullpen(row, nextBatters, pen, pc, starter) {
     const slope = runToWin(row.inning, row.half, row.bat_score, row.fld_score, row.bases, row.outs);
     const [fatRuns, fatWarn] = outlook(pc, starter, nextBatters.length);
+    const pool = relieverPool(nextBatters);
     const rows = [row.pitcher, ...pen.filter((p) => p !== row.pitcher)].map((pit) => {
       const ph = hand(M.phand[pit]);
       const cur = pit === row.pitcher;
-      const w = M.ml ? M.ml.w : 0;
-      const runs = nextBatters.reduce((s, b) => {
-        const h = matchup(b, batHand(b, ph), pit).per_pa, g = mlAbs(b, pit);
-        return s + (g == null ? h : (1 - w) * h + w * g);
-      }, 0);
+      const runs = ensembleRuns(pit, nextBatters);
       const extra = cur ? fatRuns : 0;
       return {
-        角色: cur ? "場上" : "牛棚", 投手: pit, 投: ph, 預估失分: runs + extra, 疲勞調整: extra,
+        角色: cur ? "場上" : "牛棚", 投手: pit, 投: ph, 價值分數: valueScore(runs + extra, pool, false),
+        預估失分: runs + extra, 疲勞調整: extra,
         用球數: cur ? pc : 0, 樣本球數: Math.trunc(M.pit_all[pit] ? M.pit_all[pit][1] : 0),
         疲勞: cur && fatWarn ? fatWarn : "-",
       };
