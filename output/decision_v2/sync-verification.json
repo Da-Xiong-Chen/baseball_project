@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-10-03 Asia/Taipei",
+  "upstream_main": "a3b8636e5568fc7acb04e676d210ba0d5447ed16",
+  "feature_commit": "40671b4ce8e94aab7065301294f062c296df8d22",
+  "remote_feature_commit": "40671b4ce8e94aab7065301294f062c296df8d22",
+  "tree": "8bab4c75c5c09f75daa5707c1688dbab053a912a",
+  "tracked_files": 562,
+  "content_mismatches": [],
+  "line_endings_normalized": true,
+  "latest_clone_python_tests": 29,
+  "latest_clone_javascript_tests": 24,
+  "latest_clone_parity_cases": 18,
+  "replay_games": 275,
+  "replay_cases": 498,
+  "ui_evidence_cases": 8,
+  "reproduction_json_files": 277,
+  "reproduction_max_error": 0.0
+}

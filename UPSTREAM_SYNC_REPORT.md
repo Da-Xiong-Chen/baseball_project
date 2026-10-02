@@ -15,6 +15,10 @@
 
 本次使用 Git 提交保存完整功能分支，再將該分支帶入最新 clone；保留先前功能提交的歷史，避免只套用最後一輪 diff 而遺失近期配球功能。整合完成結果、兩份 checkout 的提交及檔案核對另記錄於 `output/decision_v2/sync-verification.json`。
 
+核對結果：功能提交 `40671b4ce8e94aab7065301294f062c296df8d22` 已成功 push 到既有 fork 分支。最新 clone 再從 GitHub fetch，確認遠端功能 SHA 與本機相同；562 個已追蹤檔案內容一致（文字僅正規化 CRLF／LF），Git tree 相同，最新上游主分支是功能提交的祖先。clone 中再次通過 29 項 Python、24 項 JavaScript、18 組一致性及 498 情境核對、八組已存介面證據檢查。
+
+PR 標題與說明已更新為完整換打／換投範圍。GitHub connector 編輯遭 403 權限限制後，改用已登入的 GitHub 網頁完成，並確認新說明已保存；畫面證據為 `output/decision_v2/ui/pr-updated.png`。PR 保持開啟，由原作者審查合併。本核對紀錄以功能提交為基準，後續僅補交付文件及證據。
+
 核心更新包含深淺主題、換打／換投候選比較、模型分歧與資料提示、截止日期修正、v2 模型參數及完整回放，以及 README 期刊依據和測試文件。原始逐球資料、非公開守位資料、模型 pickle、隔離環境均不提交。
 
 ## 驗收範圍
