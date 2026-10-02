@@ -1,0 +1,130 @@
+[
+  {
+    "bottom": 63,
+    "id": "",
+    "name": "淺色",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 19
+  },
+  {
+    "bottom": 129,
+    "id": "",
+    "name": "自訂情境",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 85
+  },
+  {
+    "bottom": 129,
+    "id": "",
+    "name": "歷史回放",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 85
+  },
+  {
+    "bottom": 313,
+    "id": "",
+    "name": "情境設定",
+    "outline": "auto",
+    "tag": "A",
+    "top": 269
+  },
+  {
+    "bottom": 313,
+    "id": "",
+    "name": "查看結果\n↓",
+    "outline": "auto",
+    "tag": "A",
+    "top": 269
+  },
+  {
+    "bottom": 447.6000061035156,
+    "id": "",
+    "name": "我方進攻・評估代打",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 403.6000061035156
+  },
+  {
+    "bottom": 447.6000061035156,
+    "id": "",
+    "name": "我方防守・評估換投",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 403.6000061035156
+  },
+  {
+    "bottom": 532.1000061035156,
+    "id": "myTeam",
+    "name": "中信兄弟\n台鋼雄鷹\n味全龍\n富邦悍將\n樂天桃猿\n統一7-ELEVEn獅",
+    "outline": "solid",
+    "tag": "SELECT",
+    "top": 488.1000061035156
+  },
+  {
+    "bottom": 532.1000061035156,
+    "id": "oppTeam",
+    "name": "中信兄弟\n台鋼雄鷹\n味全龍\n富邦悍將\n樂天桃猿\n統一7-ELEVEn獅",
+    "outline": "solid",
+    "tag": "SELECT",
+    "top": 488.1000061035156
+  },
+  {
+    "bottom": 651.2999877929688,
+    "id": "innDown",
+    "name": "減一局",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 607.2999877929688
+  },
+  {
+    "bottom": 651.2999877929688,
+    "id": "innUp",
+    "name": "加一局",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 607.2999877929688
+  },
+  {
+    "bottom": 651.2999877929688,
+    "id": "",
+    "name": "上",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 607.2999877929688
+  },
+  {
+    "bottom": 651.2999877929688,
+    "id": "",
+    "name": "下",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 607.2999877929688
+  },
+  {
+    "bottom": 464.2000122070313,
+    "id": "",
+    "name": "1 出局",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 420.2000122070313
+  },
+  {
+    "bottom": 464.2000122070313,
+    "id": "",
+    "name": "2 出局",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 420.2000122070313
+  },
+  {
+    "bottom": 448.8999938964844,
+    "id": "",
+    "name": "一壘",
+    "outline": "solid",
+    "tag": "BUTTON",
+    "top": 404.8999938964844
+  }
+]

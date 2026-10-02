@@ -1,5 +1,7 @@
 # 修改與測試交付報告
 
+> 此為前一輪配球功能紀錄；換打／換投 v2、雙主題、日期修正與最新驗收請見 [DECISION_V2_TEST_REPORT.md](DECISION_V2_TEST_REPORT.md)。
+
 測試日期：2026-10-02。專案：`Da-Xiong-Chen/baseball_project`。
 
 ## 結論與交付範圍

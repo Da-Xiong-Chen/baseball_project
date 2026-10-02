@@ -21,6 +21,32 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('automatic detail does not collapse the initial two-candidate comparison',async()=>{
+  const f=fixture();f.node('#candidateCompare').innerHTML='both selected candidates';
+  f.eval("S.last={view:'offense',model_cutoff:'2026-01-01'};mountPitchChange=()=>{};api=async()=>{throw Error('controlled missing detail');};");
+  await f.eval("showDetail('One','Pitcher',null,false)");
+  assert.equal(f.node('#candidateCompare').innerHTML,'both selected candidates');
+});
+
+test('comparison keeps both candidates initially and explains model disagreement',()=>{
+  const f=fixture();const base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
+  f.context.result={candidates:[base,{...base,角色:'代打',球員:'One',階層式:.02,機器學習:-.01,相對現任:.2},
+    {...base,角色:'代打',球員:'Two',階層式:.01,機器學習:.01,相對現任:.1}]};
+  const html=f.eval("comparisonPanel(result,null,'ph')");
+  assert.equal((html.match(/<article/g)||[]).length,2);
+  assert.match(html,/模型意見不同，難以區分/);assert.match(html,/排序尚未校準/);
+  const selected=f.eval("comparisonPanel(result,'Two','ph')");
+  assert.equal((selected.match(/<article/g)||[]).length,1);assert.match(selected,/<h3>Two/);
+});
+
+test('tiny positive differences never become a strong recommendation from SE',()=>{
+  const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,誤差:0,階層式:0,機器學習:0,樣本球數:1000},
+    {角色:'代打',球員:'One',守備:'ok',預估勝率:.00001,誤差:0,階層式:.00001,機器學習:.00001,樣本球數:1000}];
+  const rec=f.eval('recommendation(cands)');
+  assert.equal(rec.kind,'neutral');assert.match(rec.text,/不能只依排序認定必須換人/);
+  assert.match(rec.title,/差距小於顯示精度/);assert.match(rec.text,/並非統計上的相等/);
+});
+
 test('API and static reads work without the newer timeout API',async()=>{
   const f=fixture();f.context.AbortSignal={};
   assert.equal(f.eval('Object.keys(timeoutOptions(100)).length'),0);

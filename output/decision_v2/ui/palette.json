@@ -1,0 +1,32 @@
+[
+  {
+    "theme": "dark",
+    "--accent": "#5cc48e",
+    "--accent-soft": "#1d3326",
+    "--bg": "#121614",
+    "--chip": "#262e29",
+    "--muted": "#94a199",
+    "--neg": "#ef7a64",
+    "--panel": "#1a201d",
+    "--panel-2": "#20271f",
+    "--pos": "#5cc48e",
+    "--text": "#e6ebe7",
+    "--warn": "#e3ae55",
+    "--warn-soft": "#3a2f1a"
+  },
+  {
+    "theme": "light",
+    "--accent": "#1f6f4a",
+    "--accent-soft": "#e3f0e8",
+    "--bg": "#f1f0e9",
+    "--chip": "#eef0eb",
+    "--muted": "#57645c",
+    "--neg": "#c2412d",
+    "--panel": "#ffffff",
+    "--panel-2": "#f8f9f6",
+    "--pos": "#176b43",
+    "--text": "#1d2420",
+    "--warn": "#8a5b17",
+    "--warn-soft": "#fbf1dc"
+  }
+]

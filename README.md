@@ -5,27 +5,47 @@
 
 **線上版：https://da-xiong-chen.github.io/baseball_project/**
 
+公開網站是否包含本機修改，以原作者合併與部署為準。下一階段只聚焦 **換打與換投**；球路與資料提示用於解釋候選，不擴充無關分析頁。
+
+### 本次功能更新
+
+- 頁首可選深色／淺色，首次預設深色，記住同瀏覽器的選擇；切換不清除情境或改變推薦。
+- 「現任與候選比較」固定基準，呈現差值、階層式理由、兩模型分歧與樣本限制；點選姓名切換人選。
+- 換投明細列出後續每位打者的估計及疲勞項，與合計失分價值對照；這是得分期望變化的價值，可為負值，不是實際會失幾分。僅比較接下來最多三棒，不是整場換投最適策略。
+- 勝率換算使用「百分點」，價值分數是比較池百分位；原「可信度」在介面標為樣本充分度，不當成排名把握度。
+- 歷史估計的慣用手、守位、比較池、疲勞曲線與逐球得分期望表均限制在截止日前。可用名單仍由過去出賽推估，不能冒充官方當日登錄或健康資訊。
+
 ## 兩種使用方式
 
 | | 線上版（GitHub Pages） | 本機完整版 |
 |---|---|---|
 | 開啟 | 直接點上方網址 | `python server.py` → http://localhost:8000 |
 | 計算 | 瀏覽器內 `docs/engine.js`（模型參數 `docs/data/model.json`） | Python 即時計算 |
-| 歷史回放 | 2025 年所有實際換代打的情境（約 420 個，預先計算） | 2025 年任一打席 |
+| 歷史回放 | 2025 年 275 場比賽的 498 個實際代打情境（預先計算） | 2025 年任一打席 |
 
-使用相同模型與守位資料時，`engine.js` 與 Python 版曾經數值比對，差異 < 0.0001 個百分點。本機若缺少不公開的 2025 守位 CSV 或重新訓練不同模型，不能直接保證與既有線上版選人結果一致；本轮新增配球功能已另以全量 9,852 組資料核對靜態與 Python 計算完全相同。
+本次 v2 已用 18 組自訂情境核對 `engine.js` 與 Python，數值最大差異約 0.0000096，並核對全部 498 個回放版本及日期。必須使用相同模型與守位資料，不能直接保證與尚未部署新版的公開網站一致。配球功能另有前一輪全量 9,852 組資料對照；詳見 [本次驗收報告](DECISION_V2_TEST_REPORT.md)。
 
 ### 本機安裝
 
-需要 Python 3.10+、pandas、numpy、scipy、scikit-learn；方法比較實驗另需 `pip install xgboost lightgbm`。
+v2 已驗證 Python 3.11.4；依賴版本對應 Python 3.10–3.11（以 3.11 為建議重現環境）。pandas、numpy、scipy、scikit-learn 版本固定於 `requirements.txt`，避免舊模型 pickle 與不同 sklearn 版本混用。方法比較實驗另需 `pip install xgboost lightgbm`。
 
 ```bash
+python -m pip install -r requirements.txt
 python download_data.py       # 下載 Rebas 2024–2025 逐球資料與 ldkrsi 守備資料
 python server.py              # 或雙擊「啟動系統.bat」
 ```
 
 2025 守位資料（`data/cpbl/positions_2025.csv`，欄位 `ID,Name,Team Name,POS,G`）由中職官網「全記錄查詢」依守備位置篩選整理，
-屬中職官網內容，**不隨 repo 公開**；沒有此檔時系統只用 2022–2024 的守位紀錄。
+屬中職官網內容，**不隨 repo 公開**；沒有此檔時使用可取得的 2023–2024 守位紀錄。歷史回放不使用當季整季守位；缺少守位紀錄時不能當成已確認可守。守位是經驗門檻與分配推估，不是實際當場守位或守備品質。
+
+啟動 `http://127.0.0.1:8011/`（PowerShell）：
+
+```powershell
+$env:PORT = '8011'
+python server.py
+```
+
+伺服器只綁定本機。主題偏好儲存被瀏覽器禁止時，當次仍可切換。模型缺少慣用手時會顯示估計假設與資料有限提示，不能將其當成可靠的左右優勢。
 
 ### 更新線上版
 
@@ -37,14 +57,16 @@ python mlmodel.py             # 訓練梯度提升樹（全資料 + 2025 各月�
 python export_static.py       # 產生 docs/data/（約 15 分鐘，含逐日重建模的回放資料）
 ```
 
+新版訓練檔使用 `gbt_full_v2.pkl`／`gbt_YYYY-MM_v2.pkl`，與舊檔分開；截止日內重建得分標籤後須重新匯出模型與全部回放。不可混用舊快照与新版引擎。`export_static.py` 遇到回放失敗會中止，不靜默跳過。
+
 | 模式 | 用途 |
 |---|---|
 | **自訂情境・我方進攻** | 設定局數、比分、壘包、出局、對方投手、輪到的打者與板凳 → 每位人選的預估勝率、誤差、可信度、守備檢查與建議 |
 | **自訂情境・我方防守** | 設定場上投手、本場已投球數、先發／後援、對手接下來 3 棒、牛棚 → 換投建議與疲勞警示 |
 | **歷史回放** | 選 2025 年任一場比賽的任一打席 → 系統「當時」會怎麼建議（只用該日以前的資料），並對照實際發生的結果 |
 
-**價值分數（1–100）**：面對這位投手，這位打者勝過多少比例的主力打者（2025 年 100 打席以上，86 人）；
-50 ≈ 聯盟平均。換投則是對上接下來 3 棒時，勝過多少比例的主力後援投手（2025 年 15 場以上，64 人）。
+**價值分數（1–100）**：對決估計在截止日前比較池的百分位。打者門檻是該季累積 100 打席，後援門檻是 15 場；早季沒有合格球員時回退前一季，無比較池時不給分。人數會隨截止日改變。
+50 約為比較池中位位置，不是聯盟平均能力或成功率。換投分數的方向已調整為失分價值越低越佳。
 分數只反映對戰適合度；局面關鍵程度由「預估勝率」呈現。80+ 極佳、60–79 佳、40–59 普通、20–39 不利、<20 很不利。
 
 點表格任一列可看該打者 vs 投手的 8 格球路明細（投手使用率 × 打者揮空偏離）。
@@ -64,6 +86,10 @@ python export_static.py       # 產生 docs/data/（約 15 分鐘，含逐日重
 python src/export_pitch_change.py            # 單獨更新 2025 配球資料，不需重訓模型
 python -m unittest discover -s tests -v      # 驗證比較與日期邊界
 node --test tests/test_pitch_change_static.cjs # 驗證靜態日期選擇與錯誤重試（需 Node.js）
+node --test tests/*.cjs                     # 全部前端狀態與主題回歸
+python tests/verify_decisions.py            # 前後端對照及全量 v2 歷史快照
+python tests/qa_http.py                     # 須先啟動 server.py，預設 8011
+python tests/check_ui_evidence.py           # 核對已保存的瀏覽器證據
 python -m http.server 8011 --directory docs --bind 127.0.0.1  # 快速預覽靜態版
 ```
 
@@ -97,7 +123,7 @@ python experiment.py            # 完整實驗：打席開始前的評估方法�
 ```
 
 打者／投手傾向特徵（揮空、強擊、出棒、得分值）一律先做部分池化再餵給梯度提升樹，處理替補小樣本；
-訓練時以 5 折（依比賽分折）out-of-fold 估計，避免標籤洩漏。
+訓練中的球員傾向特徵以 5 折（依比賽分折）out-of-fold 估計，降低同場結果直接進入特徵的洩漏；歷史訓練標籤另外按截止日前資料重建。這不等於所有分布偏差或反事實問題都已解決。
 
 | 檔案 | 內容 |
 |---|---|
@@ -117,7 +143,33 @@ python experiment.py            # 完整實驗：打席開始前的評估方法�
 
 **局勢換算**：用歷史資料估計各局勢下 WPA 與 RE24 的比例（1 分值多少勝率），例如 10 局下平手二三壘 1 分 ≈ 21% 勝率，全聯盟平均約 8.6%。
 
-## 方法比較實驗
+## 研究依據與方法實作
+
+研究提供方法原理；中職資料上的效果仍須由本專案實驗驗證。下列僅列正式頂級期刊論文；直接使用棒球案例與一般統計方法分開標示，不把未實作方法列為成果。
+
+| 研究與原方法 | 換人情境如何採用 | 程式與目前狀態 | 支持範圍與限制 |
+| --- | --- | --- | --- |
+| Efron & Morris (1975)，JASA；收縮估計，含棒球打擊率預測案例 [1] | 少量直接對戰不能單靠原始平均，從其他球員共享資訊，將小樣本效果向基準收縮 | `src/model.py`：`_mom_k()`、`fit()`；`src/ml_compare.py`：`fit_tendencies()`，**已採用收縮原理並改編** | 目標改為球員／球路效果；不是逐式重現 James–Stein 估計，也未證明最佳換人 |
+| Efron (1979)，Annals of Statistics；bootstrap [2] | 重抽登板，評估近期與前期配球差值的抽樣變動 | `src/pitch_change.py`：`compare()`，**已實作**；亦有既有實驗的比賽重抽樣 | 本專案選擇整次登板為單位；不是已校準的候選排名區間，不代表一球一球獨立 |
+| Künsch (1989)，Annals of Statistics；相依觀測的重抽樣 [3] | 提醒逐球／逐場資料的相依結構不能忽略 | **方法選擇的背景依據**，未實作論文的 moving-block bootstrap | 現有登板重抽樣不是完整重現此論文；跨場相依與短窗穩定性仍有局限 |
+| Gneiting & Raftery (2007)，JASA；proper scoring rules [4] | 以 log loss 等指標檢查逐球機率，而非只看命中率；未來打席機率也需獨立校準 | `src/ml_compare.py` 的逐球 log loss，**已有評估**；打席結果機率 **尚未實作** | 逐球六類機率不等於三振／保送／安打的完整打席機率，得分值模型不能據此稱為已校準 |
+| Mazumder, Hastie & Tibshirani (2010)，JMLR；低秩正則化 [5] | 研究稀疏投打組合的額外交互訊號 | **研究中，未整合** | 不是棒球實驗；須驗證低秩假設、選擇性對戰與新球員回退 |
+| Gibbs & Candès (2024)，JMLR；線上自適應 conformal inference [6] | 研究結果分布變化時的校準監控 | **研究中，未整合** | 不是個別候選勝出或每組對戰的保證；現有配球區間不屬於此方法 |
+
+### 正式期刊來源
+
+1. Efron, B., & Morris, C. (1975). *Data Analysis Using Stein's Estimator and its Generalizations*. Journal of the American Statistical Association, 70(350), 311–319. [DOI／期刊原文](https://doi.org/10.1080/01621459.1975.10479864)。直接運動案例：利用棒球打擊資料示範收縮預測。
+2. Efron, B. (1979). *Bootstrap Methods: Another Look at the Jackknife*. The Annals of Statistics, 7(1), 1–26. [DOI／期刊原文](https://doi.org/10.1214/aos/1176344552)。一般統計方法。
+3. Künsch, H. R. (1989). *The Jackknife and the Bootstrap for General Stationary Observations*. The Annals of Statistics, 17(3), 1217–1241. [DOI／期刊原文](https://doi.org/10.1214/aos/1176347265)。一般相依資料方法。
+4. Gneiting, T., & Raftery, A. E. (2007). *Strictly Proper Scoring Rules, Prediction, and Estimation*. Journal of the American Statistical Association, 102(477), 359–378. [DOI](https://doi.org/10.1198/016214506000001437)、[作者提供的期刊論文](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf)。一般預測評估方法。
+5. Mazumder, R., Hastie, T., & Tibshirani, R. (2010). *Spectral Regularization Algorithms for Learning Large Incomplete Matrices*. Journal of Machine Learning Research, 11(80), 2287–2322. [期刊原文](https://jmlr.org/papers/v11/mazumder10a.html)。一般矩陣方法，未上線。
+6. Gibbs, I., & Candès, E. J. (2024). *Conformal Inference for Online Prediction with Arbitrary Distribution Shifts*. Journal of Machine Learning Research, 25(162), 1–36. [期刊原文](https://jmlr.org/papers/v25/22-1218.html)。一般線上預測方法，未上線。
+
+球路八格分群、集成各半、得分到勝率的局勢斜率及疲勞門檻是專案的建模／工程選擇，不能說成上述論文指定的棒球策略。近期配球觀察目前不直接改動候選分數。研究引用與應用創新也不等於「全臺首創」。
+
+## 方法比較實驗（既有版本結果）
+
+以下為原有實驗紀錄。新版改為截止日內重建得分標籤、守位／候選資料與模型後，**尚未重新執行完整效能比較**；數字不作為新版已驗證提升的證據。功能、時間一致性與前後端數值測試另見本輪驗收報告。
 
 ### 1. 逐球結果預測（`ml_compare.py`；訓練至 2025/6/30，測試 2025/7/1 後 50,906 球）
 
@@ -188,14 +240,14 @@ XGBoost 最佳，顯著優於 scikit-learn 梯度提升樹（每球 Log Loss 低
 
 ## 已知限制
 
-手機／電腦運動風格改版與本輪 41 項測試：[UI/UX 修改及驗證紀錄](UI_UX_REFINEMENT.md)。含設計參考、九種尺寸、實際操作證據與裝置驗證邊界。
+本次換打／換投 v2 與 53 項自動測試、八種雙主題操作及待驗收環境見 [最新驗收報告](DECISION_V2_TEST_REPORT.md)。前一輪手機／電腦運動風格改版與 41 項測試見 [UI/UX 修改及驗證紀錄](UI_UX_REFINEMENT.md)，保留作歷史參考。
 
 新增配球功能與本輪測試交付：[實作說明](IMPLEMENTATION.md)、[完整測試規劃](QA_TEST_PLAN.md)、[實際測試報告](QA_TEST_REPORT.md)、[問題與修正紀錄](QA_ISSUES.md)。測試報告列出已執行項目、資料核對證據及仍待外部驗收的範圍。
 
-- **2025 守位資料是整季累計**，歷史回放時會用到「未來」的守位紀錄（例如某人 8 月才開始守游擊）。正式版應改用逐場守位或只用前一季。
+- **歷史守位採前一季以前的完整紀錄**，避免當季整季資料洩漏；仍可能漏掉當季新學會的守位。當場守位與可用名單需人工確認，不是官方登錄的重現。
 - **當日名單是推估的**：過去 10 天出賽過的野手。實際使用時應由教練勾選。
 - **守位分配是推估的**：依出賽紀錄最大化指派 9 人守位，不是實際當天守位。
 - 守備只判斷「能不能守」，沒有守備好壞的數據。
 - 換投評估只看接下來 3 棒，沒有考慮投手後續可用局數。
-- **用球數疲勞**（`src/fatigue.py`）：由 2024–2025 先發投手資料估計，85 球以前不調整，95 球約每打席 +0.027 分、105 球約 +0.047 分，之後線性外推（上限 +0.12）。因教練只讓狀況好的先發投長局（倖存者偏差），實際疲勞可能被低估。後援投手 30 球以上樣本太少，只警示不調整。歷史回放會自動從資料算出當下用球數。
+- **用球數疲勞**（`src/fatigue.py`）：以截止日前先發資料估計曲線，85 球以前不調整，之後估計值會隨截止日改變，調整上限每打席 +0.12 分。因教練只讓狀況好的先發投長局（倖存者偏差），不能將曲線當成疲勞的因果效果。後援投手 30 球以上樣本太少，只警示不調整。歷史回放會由逐球紀錄計算當下用球數。
 - 跑壘（代跑）尚未納入。

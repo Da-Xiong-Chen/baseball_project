@@ -66,7 +66,7 @@ def export_model():
     for (p, h), r in m.mix.iterrows():
         mix.setdefault(p, {})[h] = [r[c] for c in CELLS] + [float(m.mix_n.get((p, h), 0))]
     model = dict(
-        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA,
+        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, training_version=2,
         league={f"{a}|{c}": v for (a, c), v in m.league.items()},
         league_mix={f"{a}|{b}": [r[c] for c in CELLS] for (a, b), r in m.league_mix.iterrows()},
         bat_all={b: [r["effect"], r["var"], r["n"]] for b, r in m.bat_all.iterrows()},
@@ -103,9 +103,8 @@ def export_replays():
                 sit = situation(r["pa_id"])
                 actual = dict(batter=r["batter"], is_ph=True, result=r["result"], WPA=r["WPA"])
                 res = server.build_result(sit, m, mlmodel.for_date(str(date.date())), actual)
-            except Exception as e:  # noqa: BLE001
-                print("skip", r["pa_id"], e)
-                continue
+            except Exception as e:
+                raise RuntimeError(f"歷史匯出失敗：{r['pa_id']}") from e
             names = [c["球員"] for c in res["candidates"]]
             res["details"] = {f"{n}|{sit['row']['pitcher']}": matchup_detail(m, n, sit["row"]["pitcher"]) for n in names}
             nxt = res["bullpen"]["next"][0]

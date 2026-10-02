@@ -117,6 +117,9 @@ def build_result(sit, m, ml=None, actual=None):
         situation=r, actual=actual, leverage=slope * 100, league_leverage=m.slope_all * 100,
         pitch_mix=pitch_mix_payload(m, row["pitcher"]),
         candidates=ph_df, bullpen=dict(next=nxt, rows=bp_df), model_cutoff=str(m.cutoff.date()),
+        ml_cutoff=str(ml.cutoff) if ml else None, schema_version=2,
+        availability="人工勾選可用名單；請確認當日登錄、健康與已用人選" if not row.get("game") else "依此前 10 天出賽推估，非官方當日登錄名單；守位由既有紀錄推估",
+        fielding_source="截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位",
         method="集成（階層式＋梯度提升樹）" if ml else "階層式",
     ))
 
@@ -240,8 +243,13 @@ class Handler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
-        n = int(self.headers.get("Content-Length", 0))
-        body = json.loads(self.rfile.read(n) or b"{}")
+        try:
+            n = int(self.headers.get("Content-Length", 0))
+            if not 0 < n <= 1_000_000:
+                raise ValueError("情境資料長度無效")
+            body = json.loads(self.rfile.read(n))
+        except (ValueError, UnicodeDecodeError):
+            return self._send_json({"error":"請提交有效的 JSON 情境資料"}, 400)
         return self._handle_api(body)
 
 

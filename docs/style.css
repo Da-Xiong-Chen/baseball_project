@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --bg: #f1f0e9;
   --panel: #ffffff;
   --panel-2: #f8f9f6;
@@ -30,6 +31,7 @@
   }
 }
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #121614; --panel: #1a201d; --panel-2: #20271f; --line: #2d3530; --text: #e6ebe7; --muted: #94a199;
   --accent: #5cc48e; --accent-soft: #1d3326; --pos: #5cc48e; --neg: #ef7a64; --warn: #e3ae55;
   --warn-soft: #3a2f1a; --bad-soft: #3d221d; --ok-soft: #1d3326; --chip: #262e29;
@@ -56,6 +58,24 @@ header {
 .brand h1 { font-size: 17px; margin: 0; letter-spacing: .02em; }
 .brand small { color: var(--muted); font-size: 12px; display: block; margin-top: -2px; }
 .spacer { flex: 1; }
+.theme-control button { min-width:44px; min-height:44px; }
+.comparison { margin-top:16px; margin-bottom:16px; }
+.compare-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.compare-card { border:1px solid var(--line); padding:14px; background:var(--panel-2); min-width:0; }
+.compare-card h3 { font-size:16px; margin:0; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.compare-card .chip { white-space:normal; font-size:12px; }
+.compare-delta { color:var(--accent); font-weight:600; }
+.compare-values { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; font-size:12px; }
+.compare-values dt { color:var(--muted); }
+.compare-values dd { margin:4px 0; font-variant-numeric:tabular-nums; }
+.compare-card summary { cursor:pointer; min-height:44px; padding:10px 0; color:var(--accent); }
+.matchup-list { padding-left:20px; }
+.matchup-list li { margin:8px 0; }
+.matchup-list span { display:block; }
+@media(max-width:600px) {
+  .compare-grid { grid-template-columns:1fr; }
+  .theme-control { margin-left:auto; }
+}
 
 .seg { display: inline-flex; background: var(--chip); border-radius: 9px; padding: 3px; gap: 2px; }
 .seg button {
@@ -384,7 +404,7 @@ button:active:not(:disabled) { filter:brightness(.92); }
   .mobile-jump a { display:flex; align-items:center; justify-content:space-between; min-height:44px; flex:1; padding:8px 12px; border-bottom:2px solid var(--accent); color:var(--text); text-decoration:none; font-size:14px; }
 }
 @media (max-width:600px) {
-  html { scroll-padding-top:144px; }
+  html { scroll-padding-top:220px; }
   header { gap:10px; }
   .brand { width:100%; }
   header .spacer { display:none; }

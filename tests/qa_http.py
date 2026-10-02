@@ -1,12 +1,13 @@
 """Actual HTTP integration after normal server.py startup. No mocked models."""
 import json
 import time
+import sys
 import urllib.request
 import urllib.error
 import urllib.parse
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-BASE='http://127.0.0.1:8013/'
+BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8011').rstrip('/')+'/'
 
 def request(path,body=None):
     req=urllib.request.Request(BASE+path,data=json.dumps(body).encode() if body is not None else None,
@@ -31,6 +32,13 @@ def main():
     body=fixtures[0]
     assert request('api/detail?'+urllib.parse.urlencode(dict(batter=body['due'],pitcher=body['pitcher'],date='2026-01-01')))['batter']==body['due']
     report['routes']['detail']='pass'
+    for payload in [b'{', b'\xff', b'']:
+        req=urllib.request.Request(BASE+'api/evaluate',data=payload,headers={'Content-Type':'application/json'})
+        try:urllib.request.urlopen(req,timeout=10);raise AssertionError('malformed JSON accepted')
+        except urllib.error.HTTPError as e:
+            assert e.code==400
+            assert 'error' in json.load(e)
+            report['invalid_requests']+=1
     for extra in [{'bat_score':-1},{'inning':1.5},{'fld_team':body['bat_team']},{'next_batters':[body['due']]*3}]:
         try:request('api/evaluate',{**body,**extra});raise AssertionError('invalid accepted')
         except urllib.error.HTTPError as e:assert e.code==400;report['invalid_requests']+=1

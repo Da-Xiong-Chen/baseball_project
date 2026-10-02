@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<link rel="stylesheet" href="style.css">
+<script src="theme.js?v=20261002-v2"></script>
+<link rel="stylesheet" href="style.css?v=20261002-v2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231f6f4a'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -15,6 +16,10 @@
     <div><h1>臨場用人決策</h1><small>CPBL · 對決分析 / 2024–2025</small></div>
   </div>
   <div class="spacer"></div>
+  <div class="seg theme-control" role="group" aria-label="版面主題">
+    <button type="button" data-set-theme="dark" aria-pressed="true">深色</button>
+    <button type="button" data-set-theme="light" aria-pressed="false">淺色</button>
+  </div>
   <div class="seg" id="modeSeg">
     <button data-mode="custom" class="on">自訂情境</button>
     <button data-mode="replay">歷史回放</button>
@@ -81,7 +86,7 @@
               <div><label class="f" for="duePos">目前守位</label><select id="duePos"></select></div>
             </div>
             <div style="margin-top:14px">
-              <label class="f">板凳可用野手</label>
+              <label class="f">板凳可用野手（請確認今日可上場）</label>
               <input type="search" id="benchFilter" aria-label="搜尋板凳球員" placeholder="搜尋球員…">
               <div class="checklist" id="benchList" style="margin-top:6px"></div>
               <div class="mini-actions"><button class="link" id="benchAll" aria-label="全選所有板凳球員">全選</button><button class="link" id="benchNone" aria-label="清除所有板凳球員">清除</button></div>
@@ -101,7 +106,7 @@
               <div class="row3"><select id="nb1" aria-label="接下來第一棒"></select><select id="nb2" aria-label="接下來第二棒"></select><select id="nb3" aria-label="接下來第三棒"></select></div>
             </div>
             <div style="margin-top:14px">
-              <label class="f">牛棚可用投手</label>
+              <label class="f">牛棚可用投手（請確認今日可上場）</label>
               <div class="checklist" id="penList"></div>
               <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手">全選</button><button class="link" id="penNone" aria-label="清除牛棚投手">清除</button></div>
             </div>
@@ -145,8 +150,8 @@
   </section>
 </main>
 
-<script src="engine.js"></script>
-<script src="pitch-change.js"></script>
-<script src="app.js"></script>
+<script src="engine.js?v=20261002-v2"></script>
+<script src="pitch-change.js?v=20261002-v2"></script>
+<script src="app.js?v=20261002-v5"></script>
 </body>
 </html>

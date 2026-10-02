@@ -6,8 +6,14 @@ window.PitchChange = (() => {
   const pp = v => v == null ? "—" : `${v > 0 ? "+" : ""}${v.toFixed(1)} pp`;
   const requests = new Map();
   const timeoutOptions = ms => typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? {signal:AbortSignal.timeout(ms)} : {};
+  async function fetchData(url) {
+    if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') return fetch(url, timeoutOptions(30000));
+    if (typeof AbortController === 'undefined') return fetch(url);
+    const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 30000);
+    try { return await fetch(url, {signal:controller.signal}); } finally { clearTimeout(timer); }
+  }
   async function read(url) {
-    if (!requests.has(url)) requests.set(url, fetch(url, timeoutOptions(30000)).then(r => {
+    if (!requests.has(url)) requests.set(url, fetchData(url).then(r => {
       if (!r.ok) throw new Error("近期配球資料尚未匯出或無法取得");
       return r.json();
     }).catch(e => { requests.delete(url); throw e; }));
