@@ -7,7 +7,7 @@ const Engine = (() => {
   const POS_ZH = { C: "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", SS: "游擊", LF: "左外野", CF: "中外野", RF: "右外野", DH: "指定打擊" };
 
   async function load(base = "data/") {
-    if (!M) M = await (await fetch(base + "model.json")).json();
+    if (!M) M = await (await fetch(base + "model.json", {cache:"no-cache"})).json();
     return M;
   }
 
@@ -60,7 +60,7 @@ const Engine = (() => {
     const f = M.ppa;
     return {
       per_pa: (lgBase + skill + q) * f, rel_pa: (skill + platoon) * f, skill_pa: skill * f, fit_pa: fit * f,
-      platoon_pa: platoon * f, se_pa: se * f, n: Math.trunc(n), mix_n: mixN, mix: m, cell_eff: cellEff,
+      platoon_pa: platoon * f, se_pa: se * f, n: Math.trunc(n), mix_n: Math.trunc(mixN), mix: m, cell_eff: cellEff,
     };
   }
 
@@ -129,6 +129,7 @@ const Engine = (() => {
 
   // ---------- 價值分數（1–100 百分位）----------
   function valueScore(v, pool, higherBetter = true) {
+    if (!pool.length) return null;
     let beat = 0, eq = 0;
     for (const x of pool) { if (x === v) eq++; else if (higherBetter ? x < v : x > v) beat++; }
     return Math.max(1, Math.min(100, Math.round(1 + 99 * (beat + 0.5 * eq) / pool.length)));
@@ -167,7 +168,8 @@ const Engine = (() => {
         角色: name === due ? "現任" : "代打", 球員: name, 打擊: bh, 價值分數: valueScore(rel, pool),
         預估勝率: rel * slope * 100, 誤差: r.se_pa * slope * 100, 每打席得分值: rel, 階層式: r.rel_pa, 機器學習: g,
         本身能力: r.skill_pa - r.fit_pa, 球路適性: r.fit_pa, 左右優勢: r.platoon_pa, 樣本球數: r.n,
-        可守: positionsOf(name).join(",") || "-",
+        可守: positionsOf(name).join(",") || "-", 投手對此側樣本:r.mix_n, 比較池人數:pool.length,
+        資料警示:[!M.bhand[name] ? '打者慣用手缺資料，暫以右打估計' : '', !M.phand[row.pitcher] ? '投手慣用手缺資料，球路基準暫以右投估計' : '', !r.mix_n ? '投手對此侧球路採聯盟回退' : ''].filter(Boolean).join('；'),
       };
       if (name !== due) [rec.守備, rec.守備說明] = defenseCheck(due, duePos, name, bench.filter((b) => b !== name));
       else [rec.守備, rec.守備說明] = ["ok", `目前守${POS_ZH[duePos] || duePos}`];
@@ -188,11 +190,19 @@ const Engine = (() => {
       const cur = pit === row.pitcher;
       const runs = ensembleRuns(pit, nextBatters);
       const extra = cur ? fatRuns : 0;
+      const hRuns = nextBatters.map(b => matchup(b, batHand(b, ph), pit).per_pa);
+      const gRuns = nextBatters.map(b => mlAbs(b, pit));
+      const details = nextBatters.map((b,i) => ({batter:b,
+        runs:gRuns[i] == null ? hRuns[i] : (1 - M.ml.w) * hRuns[i] + M.ml.w * gRuns[i],
+        fatigue:cur ? penalty((pc || 0) + M.ppa * i, starter) : 0}));
       return {
         角色: cur ? "場上" : "牛棚", 投手: pit, 投: ph, 價值分數: valueScore(runs + extra, pool, false),
         預估失分: runs + extra, 疲勞調整: extra,
         用球數: cur ? pc : 0, 樣本球數: Math.trunc(M.pit_all[pit] ? M.pit_all[pit][1] : 0),
         疲勞: cur && fatWarn ? fatWarn : "-",
+        階層式:hRuns.reduce((s,v)=>s+v,0), 機器學習:gRuns.some(v=>v==null) ? null : gRuns.reduce((s,v)=>s+v,0),
+        對決明細:details, 比較池人數:pool.length,
+        資料警示:[!M.phand[pit] ? '投手慣用手缺資料，暫以右投估計' : '', ...nextBatters.filter(b=>!M.bhand[b]).map(b=>`${b}慣用手缺資料，暫以右打估計`)].filter(Boolean).join('；'),
       };
     });
     const curRuns = rows[0].預估失分;
@@ -225,6 +235,9 @@ const Engine = (() => {
       pitch_mix: pitchMixPayload(row.pitcher), candidates: ph.rows,
       bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter) }, model_cutoff: M.cutoff,
       method: M.ml ? "集成（階層式＋梯度提升樹）" : "階層式",
+      ml_cutoff:M.ml ? M.cutoff : null, schema_version:2,
+      availability:'人工勾選可用名單；請確認當日登錄、健康與已用人選',
+      fielding_source:'截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位',
     };
   }
 
