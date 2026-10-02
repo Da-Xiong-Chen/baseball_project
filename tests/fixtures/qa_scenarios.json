@@ -1,0 +1,560 @@
+[
+  {
+    "inning": 1,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "林詩翔",
+    "due": "江坤宇",
+    "due_pos": "DH",
+    "bench": [
+      "宋晟睿",
+      "許基宏",
+      "岳東華",
+      "王威晨"
+    ],
+    "bat_team": "中信兄弟",
+    "fld_team": "台鋼雄鷹",
+    "next_batters": [
+      "江坤宇",
+      "宋晟睿",
+      "許基宏"
+    ],
+    "pen": [
+      "許育銘",
+      "陳柏清",
+      "張誠恩"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 7,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "林詩翔",
+    "due": "江坤宇",
+    "due_pos": "DH",
+    "bench": [
+      "宋晟睿",
+      "許基宏",
+      "岳東華",
+      "王威晨"
+    ],
+    "bat_team": "中信兄弟",
+    "fld_team": "台鋼雄鷹",
+    "next_batters": [
+      "江坤宇",
+      "宋晟睿",
+      "許基宏"
+    ],
+    "pen": [
+      "許育銘",
+      "陳柏清",
+      "張誠恩"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 9,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "林詩翔",
+    "due": "江坤宇",
+    "due_pos": "DH",
+    "bench": [
+      "宋晟睿",
+      "許基宏",
+      "岳東華",
+      "王威晨"
+    ],
+    "bat_team": "中信兄弟",
+    "fld_team": "台鋼雄鷹",
+    "next_batters": [
+      "江坤宇",
+      "宋晟睿",
+      "許基宏"
+    ],
+    "pen": [
+      "許育銘",
+      "陳柏清",
+      "張誠恩"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 1,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "林子昱",
+    "due": "曾子祐",
+    "due_pos": "DH",
+    "bench": [
+      "王博玄",
+      "王柏融",
+      "張肇元",
+      "魔鷹"
+    ],
+    "bat_team": "台鋼雄鷹",
+    "fld_team": "味全龍",
+    "next_batters": [
+      "曾子祐",
+      "王博玄",
+      "王柏融"
+    ],
+    "pen": [
+      "陳冠偉",
+      "陳禹勳",
+      "李超"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 7,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "林子昱",
+    "due": "曾子祐",
+    "due_pos": "DH",
+    "bench": [
+      "王博玄",
+      "王柏融",
+      "張肇元",
+      "魔鷹"
+    ],
+    "bat_team": "台鋼雄鷹",
+    "fld_team": "味全龍",
+    "next_batters": [
+      "曾子祐",
+      "王博玄",
+      "王柏融"
+    ],
+    "pen": [
+      "陳冠偉",
+      "陳禹勳",
+      "李超"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 9,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "林子昱",
+    "due": "曾子祐",
+    "due_pos": "DH",
+    "bench": [
+      "王博玄",
+      "王柏融",
+      "張肇元",
+      "魔鷹"
+    ],
+    "bat_team": "台鋼雄鷹",
+    "fld_team": "味全龍",
+    "next_batters": [
+      "曾子祐",
+      "王博玄",
+      "王柏融"
+    ],
+    "pen": [
+      "陳冠偉",
+      "陳禹勳",
+      "李超"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 1,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "李吳永勤",
+    "due": "李凱威",
+    "due_pos": "DH",
+    "bench": [
+      "吉力吉撈．鞏冠",
+      "郭天信",
+      "劉基鴻",
+      "陳子豪"
+    ],
+    "bat_team": "味全龍",
+    "fld_team": "富邦悍將",
+    "next_batters": [
+      "李凱威",
+      "吉力吉撈．鞏冠",
+      "郭天信"
+    ],
+    "pen": [
+      "林栚呈",
+      "富藍戈",
+      "曾峻岳"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 7,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "李吳永勤",
+    "due": "李凱威",
+    "due_pos": "DH",
+    "bench": [
+      "吉力吉撈．鞏冠",
+      "郭天信",
+      "劉基鴻",
+      "陳子豪"
+    ],
+    "bat_team": "味全龍",
+    "fld_team": "富邦悍將",
+    "next_batters": [
+      "李凱威",
+      "吉力吉撈．鞏冠",
+      "郭天信"
+    ],
+    "pen": [
+      "林栚呈",
+      "富藍戈",
+      "曾峻岳"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 9,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "李吳永勤",
+    "due": "李凱威",
+    "due_pos": "DH",
+    "bench": [
+      "吉力吉撈．鞏冠",
+      "郭天信",
+      "劉基鴻",
+      "陳子豪"
+    ],
+    "bat_team": "味全龍",
+    "fld_team": "富邦悍將",
+    "next_batters": [
+      "李凱威",
+      "吉力吉撈．鞏冠",
+      "郭天信"
+    ],
+    "pen": [
+      "林栚呈",
+      "富藍戈",
+      "曾峻岳"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 1,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "陳冠宇",
+    "due": "范國宸",
+    "due_pos": "DH",
+    "bench": [
+      "戴培峰",
+      "林澤彬",
+      "申皓瑋",
+      "林岳谷"
+    ],
+    "bat_team": "富邦悍將",
+    "fld_team": "樂天桃猿",
+    "next_batters": [
+      "范國宸",
+      "戴培峰",
+      "林澤彬"
+    ],
+    "pen": [
+      "朱承洋",
+      "莊昕諺",
+      "陳柏豪"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 7,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "陳冠宇",
+    "due": "范國宸",
+    "due_pos": "DH",
+    "bench": [
+      "戴培峰",
+      "林澤彬",
+      "申皓瑋",
+      "林岳谷"
+    ],
+    "bat_team": "富邦悍將",
+    "fld_team": "樂天桃猿",
+    "next_batters": [
+      "范國宸",
+      "戴培峰",
+      "林澤彬"
+    ],
+    "pen": [
+      "朱承洋",
+      "莊昕諺",
+      "陳柏豪"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 9,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "陳冠宇",
+    "due": "范國宸",
+    "due_pos": "DH",
+    "bench": [
+      "戴培峰",
+      "林澤彬",
+      "申皓瑋",
+      "林岳谷"
+    ],
+    "bat_team": "富邦悍將",
+    "fld_team": "樂天桃猿",
+    "next_batters": [
+      "范國宸",
+      "戴培峰",
+      "林澤彬"
+    ],
+    "pen": [
+      "朱承洋",
+      "莊昕諺",
+      "陳柏豪"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 1,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "髙塩將樹",
+    "due": "陳晨威",
+    "due_pos": "DH",
+    "bench": [
+      "林泓育",
+      "林智平",
+      "成晉",
+      "林子偉"
+    ],
+    "bat_team": "樂天桃猿",
+    "fld_team": "統一7-ELEVEn獅",
+    "next_batters": [
+      "陳晨威",
+      "林泓育",
+      "林智平"
+    ],
+    "pen": [
+      "陳韻文",
+      "王鏡銘",
+      "胡智爲"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 7,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "髙塩將樹",
+    "due": "陳晨威",
+    "due_pos": "DH",
+    "bench": [
+      "林泓育",
+      "林智平",
+      "成晉",
+      "林子偉"
+    ],
+    "bat_team": "樂天桃猿",
+    "fld_team": "統一7-ELEVEn獅",
+    "next_batters": [
+      "陳晨威",
+      "林泓育",
+      "林智平"
+    ],
+    "pen": [
+      "陳韻文",
+      "王鏡銘",
+      "胡智爲"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 9,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "髙塩將樹",
+    "due": "陳晨威",
+    "due_pos": "DH",
+    "bench": [
+      "林泓育",
+      "林智平",
+      "成晉",
+      "林子偉"
+    ],
+    "bat_team": "樂天桃猿",
+    "fld_team": "統一7-ELEVEn獅",
+    "next_batters": [
+      "陳晨威",
+      "林泓育",
+      "林智平"
+    ],
+    "pen": [
+      "陳韻文",
+      "王鏡銘",
+      "胡智爲"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 1,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "蔡齊哲",
+    "due": "林佳緯",
+    "due_pos": "DH",
+    "bench": [
+      "潘傑楷",
+      "邱智呈",
+      "林安可",
+      "陳聖平"
+    ],
+    "bat_team": "統一7-ELEVEn獅",
+    "fld_team": "中信兄弟",
+    "next_batters": [
+      "林佳緯",
+      "潘傑楷",
+      "邱智呈"
+    ],
+    "pen": [
+      "王凱程",
+      "呂彥青",
+      "李振昌"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 7,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "蔡齊哲",
+    "due": "林佳緯",
+    "due_pos": "DH",
+    "bench": [
+      "潘傑楷",
+      "邱智呈",
+      "林安可",
+      "陳聖平"
+    ],
+    "bat_team": "統一7-ELEVEn獅",
+    "fld_team": "中信兄弟",
+    "next_batters": [
+      "林佳緯",
+      "潘傑楷",
+      "邱智呈"
+    ],
+    "pen": [
+      "王凱程",
+      "呂彥青",
+      "李振昌"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  },
+  {
+    "inning": 9,
+    "half": "home",
+    "outs": 1,
+    "bases": 3,
+    "bat_score": 2,
+    "fld_score": 3,
+    "pitcher": "蔡齊哲",
+    "due": "林佳緯",
+    "due_pos": "DH",
+    "bench": [
+      "潘傑楷",
+      "邱智呈",
+      "林安可",
+      "陳聖平"
+    ],
+    "bat_team": "統一7-ELEVEn獅",
+    "fld_team": "中信兄弟",
+    "next_batters": [
+      "林佳緯",
+      "潘傑楷",
+      "邱智呈"
+    ],
+    "pen": [
+      "王凱程",
+      "呂彥青",
+      "李振昌"
+    ],
+    "pitch_count": 90,
+    "starter": true
+  }
+]

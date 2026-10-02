@@ -1,0 +1,23 @@
+✔ search preserves hidden selections and never treats InputEvent as reset (2.2224ms)
+✔ missing historical detail never falls back to full-season Engine (0.9972ms)
+✔ result context controls season after a mode switch (0.6624ms)
+✔ pitcher identity switches even when detail fails (0.8205ms)
+✔ slow evaluation cannot replace the latest result (0.7644ms)
+✔ mode switch invalidates a pending evaluation (0.6079ms)
+✔ slow game cannot replace the latest plate appearance list (0.7032ms)
+✔ game request failure exposes a retry path (0.6578ms)
+✔ older team list response cannot replace the latest team (0.6798ms)
+✔ slow roster response cannot reset the latest names (0.8912ms)
+✔ fixed scenarios preserve all original recommendation outputs (26.2932ms)
+✔ static selection is strictly before the requested date for every hand (8.9459ms)
+✔ failed fetch is retryable instead of permanently cached (2.5268ms)
+✔ unknown pitcher produces a clear error without requesting a guessed filename (1.9549ms)
+✔ invalid handedness and impossible dates are rejected (0.9245ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.5038

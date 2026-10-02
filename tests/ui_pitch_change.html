@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配球卡受控失敗測試</title><link rel="stylesheet" href="../docs/style.css">
+<body><main style="display:block"><h1>受控測試：不連正式 API</h1>
+<p>同一份人工資料，測試失敗恢復及亂序回應；此頁不作產品展示。</p>
+<button id="fault">首次失敗</button><button id="race">慢左打／快右打</button><button id="remount">重掛投手 B</button>
+<div id="target"></div><pre id="requests" aria-live="polite"></pre></main>
+<script src="../docs/pitch-change.js"></script><script>
+const target=document.querySelector('#target'), log=document.querySelector('#requests');let mode='normal',fail=true;
+function result(o) {return {pitcher:o.pitcher,season:2025,hand:o.hand,cutoff:o.cutoff,last_observed:'2025-09-26',status:'insufficient',reasons:['測試資料，僅供描述'],
+ windows:{baseline:{games:[],selected_games:0,effective_games:0,valid_pitches:0,unknown_type:0,unknown_rate:null,excluded:{}},recent:{games:[],selected_games:0,effective_games:0,valid_pitches:0,unknown_type:0,unknown_rate:null,excluded:{}}},
+ coverage:[0,0],rows:[{group:`${o.pitcher} / ${o.hand}`,raw:[null,null],adjusted:[null,null],delta_pp:null,interval:null,interpretation:'測試回應'}],
+ settings:{min_stratum:10},bootstrap:{requested:1000,valid:0},strata:[],source:'人工測試'}};
+function mount(pitcher='A') {PitchChange.mount({element:target,pitcher,cutoff:'2025-09-27',hand:'ALL',fetcher:o=>new Promise((resolve,reject)=>{
+ log.textContent+=`request ${o.pitcher} ${o.hand}\n`;
+ const delay=mode==='race'&&o.hand==='L'?1200:30;
+ setTimeout(()=>{if(mode==='fault'&&fail){fail=false;reject(Error('受控網路失敗'));}else{log.textContent+=`response ${o.pitcher} ${o.hand}\n`;resolve(result(o));}},delay);
+})});}
+document.querySelector('#fault').onclick=()=>{mode='fault';fail=true;mount();};
+document.querySelector('#race').onclick=()=>{mode='race';mount();};
+document.querySelector('#remount').onclick=()=>mount('B');mount();
+</script></body></html>
