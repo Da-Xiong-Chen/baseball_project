@@ -96,4 +96,4 @@ python -m http.server 8011 --directory docs --bind 127.0.0.1
 3. **補足新的資料球季。** 先確認來源完整度與授權，再更新下載、匯出及情境球季設定。本次沒有加入未取得的 2026 資料。
 4. **評估後才接入推薦。** 若未來要修改對決分數，需時間切分回測、機率校準與原模型對照；目前這個描述功能本身不足以證明推薦準確率提升。
 
-本地修改尚未推送或部署到 GitHub；原線上網址不會因此自動更新。
+後續完整修正與介面驗證共 41 項自動測試通過，詳見 `QA_TEST_REPORT.md` 與 `UI_UX_REFINEMENT.md`。修改已提交至 `Lily09-project/baseball_project` 的 `feat/matchup-pitch-change-ui` 分支，並建立原專案 [PR #1](https://github.com/Da-Xiong-Chen/baseball_project/pull/1)，待原作者審查合併。原線上網址是否更新，以合併與部署結果為準。
