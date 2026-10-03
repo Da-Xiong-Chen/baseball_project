@@ -491,3 +491,9 @@ button:active:not(:disabled) { filter:brightness(.92); }
 .candidate-chart-track .positive{background:var(--accent)}
 .candidate-chart-track .negative{background:#d97956}
 @media(max-width:400px){.candidate-chart{padding:10px}.candidate-chart-row{grid-template-columns:64px minmax(40px,1fr) 88px;gap:5px;font-size:12px}.candidate-chart-key{margin-left:69px;margin-right:93px;justify-content:center}.candidate-chart-key span:first-child,.candidate-chart-key span:last-child{display:none}}
+/* 板凳名單：依守位分組 */
+.bench-group-h { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 10px; background: var(--panel); border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 700; }
+.bench-group-h .mut { font-weight: 400; margin-left: 4px; }
+.chip.cover { background: var(--accent-soft); color: var(--accent); margin-left: 6px; }
+#benchList { max-height: 360px; }

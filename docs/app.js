@@ -133,7 +133,16 @@ function bindStatic() {
   $("#oppTeam").onchange = refreshCustom;
   $("#dueBatter").onchange = () => { autoPos(); renderBench(); };
   $("#benchFilter").oninput = () => renderBench();
-  $("#benchList").onchange = e => { if (e.target.matches('input')) { if (e.target.checked) S.bench.add(e.target.value); else S.bench.delete(e.target.value); } };
+  $("#benchList").onchange = e => { if (e.target.matches('input')) { if (e.target.checked) S.bench.add(e.target.value); else S.bench.delete(e.target.value); renderBench(); } };
+  $("#benchList").onclick = e => {
+    const b = e.target.closest("button[data-group]");
+    if (!b) return;
+    const names = b.dataset.group.split("|");
+    const all = names.every((n) => S.bench.has(n));
+    names.forEach((n) => (all ? S.bench.delete(n) : S.bench.add(n)));
+    renderBench();
+  };
+  $("#duePos").onchange = () => renderBench();
   $("#benchAll").onclick = () => { S.bench = new Set(S.roster[$("#myTeam").value].hitters.filter(h => h.name !== $("#dueBatter").value).map(h => h.name)); renderBench(); };
   $("#benchNone").onclick = () => { S.bench.clear(); renderBench(); };
   $("#penAll").onclick = () => { $$("#penList input").forEach((i) => i.checked = true); };
@@ -235,20 +244,49 @@ function autoPos() {
   const top = h && Object.keys(h.positions || {})[0];
   $("#duePos").value = top || "DH";
 }
+const POS_ORDER = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+const BENCH_GROUPS = [
+  ["捕手", ["C"]],
+  ["內野手", ["1B", "2B", "3B", "SS"]],
+  ["外野手", ["LF", "CF", "RF"]],
+  ["指定打擊・其他", []],
+];
+// 依主守位（出賽最多的位置）分組；同組內依守位順序、再依打席數排列
+function benchGroupOf(h) {
+  const main = Object.keys(h.positions || {})[0];
+  const i = BENCH_GROUPS.findIndex(([, ps]) => ps.includes(main));
+  return i < 0 ? BENCH_GROUPS.length - 1 : i;
+}
 function renderBench(reset) {
   const my = S.roster[$("#myTeam").value];
   const due = $("#dueBatter").value;
+  const duePos = $("#duePos").value;
   const q = $("#benchFilter").value.trim();
   const list = my.hitters.filter((h) => h.name !== due);
   // 預設勾選：出賽較少的球員（較可能在板凳）
   const regulars = new Set(my.hitters.slice(0, 9).map((h) => h.name));
   if (reset === true) S.bench = new Set(list.filter(h => !regulars.has(h.name)).map(h => h.name));
   S.bench.delete(due);
-  $("#benchList").innerHTML = list.filter((h) => !q || h.name.includes(q)).map((h) => {
-    const on = S.bench.has(h.name);
-    return `<label><input type="checkbox" value="${esc(h.name)}" ${on ? "checked" : ""}>
-      ${esc(h.name)} <span class="meta">${handChip(h.hand)}${posChips(h.positions)}<span class="chip">${h.pa} 打席</span></span></label>`;
-  }).join("") || '<p role="status">沒有符合的球員；搜尋不會清除已選名單。</p>';
+  const shown = list.filter((h) => !q || h.name.includes(q));
+  const posRank = (h) => { const p = Object.keys(h.positions || {})[0]; const i = POS_ORDER.indexOf(p); return i < 0 ? 99 : i; };
+  const groups = BENCH_GROUPS.map(([label]) => ({ label, players: [] }));
+  for (const h of shown) groups[benchGroupOf(h)].players.push(h);
+  const html = groups.filter((g) => g.players.length).map((g, gi) => {
+    g.players.sort((a, b) => posRank(a) - posRank(b) || b.pa - a.pa);
+    const picked = g.players.filter((h) => S.bench.has(h.name)).length;
+    const rows = g.players.map((h) => {
+      const cover = duePos && duePos !== "DH" && Object.keys(h.positions || {}).includes(duePos);
+      return `<label><input type="checkbox" value="${esc(h.name)}" ${S.bench.has(h.name) ? "checked" : ""}>
+      ${esc(h.name)}${cover ? `<span class="chip cover" title="可接守${POS[duePos]}">可接守</span>` : ""}
+      <span class="meta">${handChip(h.hand)}${posChips(h.positions)}<span class="chip">${h.pa} 打席</span></span></label>`;
+    }).join("");
+    const names = esc(g.players.map((h) => h.name).join("|"));
+    return `<div class="bench-group"><div class="bench-group-h"><span>${g.label} <span class="mut">${picked}/${g.players.length}</span></span>
+      <button type="button" class="link" data-group="${names}">${picked === g.players.length ? "全不選" : "全選"}</button></div>${rows}</div>`;
+  }).join("");
+  const box = $("#benchList"), top = box.scrollTop;
+  box.innerHTML = html || '<p role="status">沒有符合的球員；搜尋不會清除已選名單。</p>';
+  box.scrollTop = top;
 }
 
 async function evaluateCustom() {
