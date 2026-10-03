@@ -6,6 +6,13 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const POS = { C: "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", SS: "游擊", LF: "左外野", CF: "中外野", RF: "右外野", DH: "指定打擊" };
 const GROUPS = ["速球", "滑卡", "曲球", "低落"];
 const GROUP_COLOR = { 速球: "#d9534f", 滑卡: "#e0a03a", 曲球: "#4a7fd0", 低落: "#3f9a6b" };
+let officialPlayers = {};
+function officialPlayerLink(name) {
+  const ids = officialPlayers[name];
+  const direct = Array.isArray(ids) && ids.length === 1 && /^\d{10}$/.test(ids[0]);
+  const url = direct ? `https://www.cpbl.com.tw/team/person?acnt=${ids[0]}` : `https://stats.cpbl.com.tw/players?playerName=${encodeURIComponent(String(name).replace(/〔.*〕$/, ''))}`;
+  return `<a class="player-official" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)}：CPBL ${direct ? '官方球員資料' : '官方球員搜尋'}（另開分頁）">${esc(name)}</a>`;
+}
 const BASES = { 0: "無人", 1: "一壘", 2: "二壘", 3: "一二壘", 4: "三壘", 5: "一三壘", 6: "二三壘", 7: "滿壘" };
 
 const S = {
@@ -90,6 +97,7 @@ const posChips = (p) => Object.keys(p || {}).slice(0, 3).map((k) => `<span class
 
 /* ---------------- 初始化 ---------------- */
 async function init() {
+  try { officialPlayers = (await json('data/cpbl-players.json')).players || {}; } catch { /* Search remains available when the mapping cannot load. */ }
   try {
     const r = await fetchTimed("api/meta");
     if (!r.ok || !(r.headers.get("content-type") || "").includes("json")) throw 0;
@@ -482,25 +490,27 @@ function renderResult() {
   html += `<div id="candidateCompare">${comparisonPanel(R, null, activeTab)}</div>`;
 
   // 主表 + 側欄
-  html += `<div id="pitchChange"></div>`;
+  html += `<div id="pitchArsenal">${mixCard(R)}</div>`;
   const showTabs = view === "replay";
   const tab = S.tab || (view === "defense" ? "pen" : "ph");
   html += `<div class="grid2"><div class="card">`;
   if (showTabs) html += `<div class="tabs"><button data-t="ph" class="${tab === "ph" ? "on" : ""}">代打評估（進攻方）</button><button data-t="pen" class="${tab === "pen" ? "on" : ""}">換投評估（防守方）</button></div>`;
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? `對上 ${R.bullpen.next.map(esc).join("、")}` : "點選列可看球路明細"}</span></div>`;
-  html += `<p class="table-help">點選球員姓名查看對決。小螢幕可左右滑動表格。</p><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
-  html += `<div>${mixCard(R)}<div id="detail"></div></div></div>`;
+  html += `<p class="table-help">姓名開啟 CPBL 官方資料；「對決」查看本站分析。</p><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
+  html += `<div><div id="pitchChange"></div><div id="detail"></div></div></div>`;
   html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>。價值分數是比較池百分位，不是成功機率；勝率變化為局勢換算，單位是百分點。<br>
     表中細線僅為階層式估計的近似標準誤，不是完整集成區間或排名把握度。球路拆解也只解釋階層式部分。失分價值可為負值，不是實際失分數。<br>
     階層式截止：${esc(R.model_cutoff)}；逐球模型截止：${esc(R.ml_cutoff || '舊快照未記錄')}（均不含截止日）。<br>
     ${esc(R.availability || '歷史快照的可用名單與守位可能包含推估資訊，請審慎使用')}。<br>
     ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</div>`;
   $("#resultBody").innerHTML = html;
+  bindMixSwitch();
   mountPitchChange(R.situation.pitcher);
 
   $$(".tabs button").forEach((b) => b.onclick = () => { S.tab = b.dataset.t; renderResult(); });
   $$("tr[data-batter]").forEach((tr) => tr.onclick = () => showDetail(tr.dataset.batter, R.situation.pitcher, tr));
   $$("tr[data-pitcher]").forEach((tr) => tr.onclick = () => showDetail(R.bullpen.next[0], tr.dataset.pitcher, tr));
+  $$(".player-official").forEach(link => link.onclick = event => event.stopPropagation());
   const first = $("tr[data-batter].best-row") || $("tr[data-batter]");
   if (first && (showTabs ? tab : view === "defense" ? "pen" : "ph") === "ph") showDetail(first.dataset.batter, R.situation.pitcher, first, false);
 }
@@ -539,7 +549,7 @@ function phTable(R) {
     const cur = x["角色"] === "現任", best = x["球員"] === S.bestName;
     const d = x["守備"];
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""}">
-      <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span><button type="button" class="row-action" aria-label="查看 ${esc(x["球員"])} 對決">${esc(x["球員"])}</button> ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
+      <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${officialPlayerLink(x["球員"])}<button type="button" class="row-action detail-action" aria-label="查看 ${esc(x["球員"])} 對決">對決</button> ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div></td>
       <td>${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比较池百分位；截止日之前達門檻的打者，早季回退前一季`)}</td>
       <td><div class="vcell" title="${x["機器學習"] != null ? `階層式 ${sign(x["階層式"], 3)}・梯度提升樹 ${sign(x["機器學習"], 3)}（每打席得分值，各占一半）` : ""}"><div class="vnum num"><span class="${cls(x["預估勝率"], 0.02)}">${sign(x["預估勝率"])} 百分點</span>${cur ? "" : `<div class="parts ${cls(x["相對現任"], 0.02)}">比現任 ${sign(x["相對現任"])} 百分點</div>`}</div>${dbar(x["預估勝率"], x["誤差"], scale)}</div></td>
@@ -557,7 +567,7 @@ function penTable(R) {
     const cur = x["角色"] === "場上";
     const best = !cur && i === 1 && x["守方勝率增減"] > 0;
     return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""}">
-      <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span><button type="button" class="row-action" aria-label="查看 ${esc(x["投手"])} 配球與對決">${esc(x["投手"])}</button> ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
+      <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${officialPlayerLink(x["投手"])}<button type="button" class="row-action detail-action" aria-label="查看 ${esc(x["投手"])} 配球與對決">對決</button> ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div></td>
       <td>${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位；截止日之前達門檻的後援，早季回退前一季')}</td>
       <td><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
@@ -570,20 +580,19 @@ function penTable(R) {
 
 function mixCard(R) {
   const mix = R.pitch_mix;
-  const bar = (h) => {
+  const panel = h => {
+    if (!mix?.[h]?.n) return '<p class="mut">此側沒有可用個人逐球紀錄。</p>';
     const cells = mix[h].cells;
-    return GROUPS.map((g) => {
-      const hi = cells[g + "高中"] || 0, lo = cells[g + "低"] || 0;
-      return `<div class="mix-row"><span>${g}</span>
-        <div class="mix-bar"><span style="width:${hi * 100}%;background:${GROUP_COLOR[g]};opacity:.55" title="高中 ${(hi * 100).toFixed(0)}%"></span><span style="width:${lo * 100}%;background:${GROUP_COLOR[g]}" title="低球 ${(lo * 100).toFixed(0)}%"></span></div>
-        <span class="num mut" style="text-align:right">${((hi + lo) * 100).toFixed(0)}%</span></div>`;
-    }).join("");
+    const groups = GROUPS.map(g => ({g, hi:cells[g+'高中'] || 0, lo:cells[g+'低'] || 0})).sort((a,b) => (b.hi+b.lo)-(a.hi+a.lo));
+    return `<p class="mix-count">有效樣本 ${mix[h].n} 球 · 主要球種：${esc(groups[0].g)}${groups[1].hi+groups[1].lo > 0 ? `、${esc(groups[1].g)}` : ''}</p><div class="arsenal-grid">${groups.map(({g,hi,lo}) => `<article class="arsenal-pitch" style="--pitch-color:${GROUP_COLOR[g]}"><h3>${esc(g)}</h3><strong class="num">${((hi+lo)*100).toFixed(1)}<small>%</small></strong><div class="arsenal-meter" aria-hidden="true"><i style="width:${(hi+lo)*100}%"></i></div><p>高中 ${(hi*100).toFixed(1)}% · 低球 ${(lo*100).toFixed(1)}%</p></article>`).join('')}</div>`;
   };
-  return `<div class="card"><div class="card-h"><h2>${esc(R.situation.pitcher)} 的球路</h2></div><div class="card-b">
-    <div class="mix-h"><span>對右打</span><span>${mix.R.n} 球</span></div>${bar("R")}
-    <div class="mix-h"><span>對左打</span><span>${mix.L.n} 球</span></div>${bar("L")}
-    <div class="legend"><span><i style="background:#888;opacity:.55"></i>高中位置</span><span><i style="background:#888"></i>低球（好球帶下緣附近以下）</span></div>
-  </div></div>`;
+  return `<section class="card arsenal-card"><div class="card-h"><h2>${esc(R.situation.pitcher)} 的球路</h2><div class="mix-switch" role="group" aria-label="球路面對的打者"><button type="button" data-mix-hand="R" aria-pressed="true">對右打</button><button type="button" data-mix-hand="L" aria-pressed="false">對左打</button></div></div><div class="card-b"><div data-mix-panel="R">${panel('R')}</div><div data-mix-panel="L" hidden>${panel('L')}</div><p class="mix-count">四類球種的模型配球估計；高低區為比例分類。</p></div></section>`;
+}
+function bindMixSwitch() {
+  $$('[data-mix-hand]').forEach(button => button.onclick = () => {
+    $$('[data-mix-hand]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    $$('[data-mix-panel]').forEach(panel => { panel.hidden = panel.dataset.mixPanel !== button.dataset.mixHand; });
+  });
 }
 
 let detailGeneration = 0;
