@@ -414,7 +414,7 @@ function comparisonPanel(R, selected, tab) {
       ${details}<p>${esc(x['資料警示'] || '')}${x['資料警示'] && current['資料警示'] ? '；' : ''}${esc(current['資料警示'] || '')}</p><p>模型分歧與樣本量是判讀線索，不能解讀為候選勝出的機率。</p></details></article>`;
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
-    <p class="mut">${pen ? `同樣面對接下來 ${R.bullpen.next.length} 棒；比較續投與換投。` : '固定對方投手與局勢；比較續打與代打。'}按「對決」切換比較人選。</p>
+    <p class="mut">${pen ? `對上接下來 ${R.bullpen.next.length} 棒。` : '同一投手、同一局勢。'}</p>
     ${chart}<div class="compare-grid">${choices.length ? choices.map(card).join('') : '<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }
 function recommendation(cands) {
@@ -561,7 +561,7 @@ function phTable(R) {
     const cur = x["角色"] === "現任", best = x["球員"] === S.bestName;
     const d = x["守備"];
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""}">
-      <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${officialPlayerLink(x["球員"])}<button type="button" class="row-action detail-action" aria-label="查看 ${esc(x["球員"])} 對決">對決</button> ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
+      <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${officialPlayerLink(x["球員"])}<button type="button" class="row-action detail-action" aria-label="查看 ${esc(x["球員"])} 對決">分析</button> ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div></td>
       <td>${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比较池百分位；截止日之前達門檻的打者，早季回退前一季`)}</td>
       <td><div class="vcell" title="${x["機器學習"] != null ? `階層式 ${sign(x["階層式"], 3)}・梯度提升樹 ${sign(x["機器學習"], 3)}（每打席得分值，各占一半）` : ""}"><div class="vnum num"><span class="${cls(x["預估勝率"], 0.02)}">${sign(x["預估勝率"])} 百分點</span>${cur ? "" : `<div class="parts ${cls(x["相對現任"], 0.02)}">比現任 ${sign(x["相對現任"])} 百分點</div>`}</div>${dbar(x["預估勝率"], x["誤差"], scale)}</div></td>
@@ -579,7 +579,7 @@ function penTable(R) {
     const cur = x["角色"] === "場上";
     const best = !cur && i === 1 && x["守方勝率增減"] > 0;
     return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""}">
-      <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${officialPlayerLink(x["投手"])}<button type="button" class="row-action detail-action" aria-label="查看 ${esc(x["投手"])} 配球與對決">對決</button> ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
+      <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${officialPlayerLink(x["投手"])}<button type="button" class="row-action detail-action" aria-label="查看 ${esc(x["投手"])} 配球與對決">分析</button> ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div></td>
       <td>${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位；截止日之前達門檻的後援，早季回退前一季')}</td>
       <td><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
