@@ -351,7 +351,7 @@ select, input[type=number], input[type=search] { min-height:44px; font-size:16px
 .stepper button { width:44px; height:44px; border-radius:4px; flex:none; }
 .outs button { width:44px; height:44px; border:0; border-radius:4px; position:relative; }
 .outs button::after { content:""; position:absolute; width:18px; height:18px; top:13px; left:13px; border:2px solid var(--muted); border-radius:50%; }
-.outs button.on { background:var(--bad-soft); }
+.outs button.on { background:transparent; }
 .outs button.on::after { background:var(--neg); border-color:var(--neg); }
 .checklist label { min-height:48px; white-space:normal; flex-wrap:wrap; }
 .checklist input { width:18px; height:18px; accent-color:var(--accent); flex:none; }
@@ -397,6 +397,12 @@ button:active:not(:disabled) { filter:brightness(.92); }
 @media (hover:hover) { .btn-primary:hover:not(:disabled) { background:var(--club); color:#fff; } .link:hover,.row-action:hover { background:var(--accent-soft); } }
 #resultBody:not(.hidden) { animation:desk-enter 220ms var(--ease-ui); }
 @keyframes desk-enter { from { opacity:.6; transform:translateY(6px); } to { opacity:1; transform:none; } }
+.compare-card, #detail > .card, .pc-body { animation:panel-reveal 180ms var(--ease-ui); }
+.pc-bar, .arsenal-meter > i { transform-origin:left; animation:bar-reveal 260ms var(--ease-ui); }
+.outs button::after { transition:background-color 160ms var(--ease-ui),border-color 160ms var(--ease-ui); }
+.tbl-wrap { scroll-margin-top:220px; }
+@keyframes panel-reveal { from { opacity:.4; } to { opacity:1; } }
+@keyframes bar-reveal { from { transform:scaleX(0); } to { transform:scaleX(1); } }
 @media (max-width:1000px) {
   .matchday-intro { padding:24px 16px 8px; }
   .mobile-jump { display:flex; gap:8px; padding:8px 16px 0; }

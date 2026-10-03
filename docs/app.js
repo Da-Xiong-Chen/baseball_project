@@ -24,6 +24,10 @@ function clearResult() {
   $("#evalBtn").disabled = !S.ready;
   $("#evalBtn").textContent = "評估";
 }
+function invalidateCustom(event) {
+  if (S.mode !== 'custom' || event?.target?.id === 'benchFilter') return;
+  clearResult();
+}
 function listError(selector, message, retry) {
   $(selector).innerHTML = `<div class="err-box" role="alert">${esc(message)}<button type="button" class="retry">重新載入</button></div>`;
   $(selector + " .retry").onclick = retry;
@@ -113,6 +117,12 @@ async function init() {
 }
 
 function bindStatic() {
+  const panel = $("#customPanel");
+  panel.addEventListener('input', invalidateCustom);
+  panel.addEventListener('change', invalidateCustom);
+  panel.addEventListener('click', event => {
+    if (event.target.closest('#halfSeg button, #outs button, #diamond .base, #baseControls button, #roleSeg button, #innUp, #innDown, #benchAll, #benchNone, #penAll, #penNone')) invalidateCustom(event);
+  });
   $$("#modeSeg button").forEach((b) => b.onclick = () => setMode(b.dataset.mode));
   $$("#viewSeg button").forEach((b) => b.onclick = () => setView(b.dataset.view));
   $$("#halfSeg button").forEach((b) => b.onclick = () => { S.half = b.dataset.half; renderState(); });
@@ -245,6 +255,7 @@ function renderBench(reset) {
 
 async function evaluateCustom() {
   if (!S.ready) return;
+  clearResult();
   $("#formError").innerHTML = '';
   for (const id of ['myScore','oppScore', ...(S.view === 'defense' ? ['pitchCount'] : [])]) {
     const input = $('#' + id);
@@ -291,7 +302,7 @@ async function run(fn, view) {
     S.selected = null;
     renderResult();
     if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    else window.scrollTo({ top: 0, behavior: "smooth" });
+    else window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   } catch (e) {
     if (token !== runGeneration) return;
     S.last = null;

@@ -28,6 +28,23 @@ test('automatic detail does not collapse the initial two-candidate comparison',a
   assert.equal(f.node('#candidateCompare').innerHTML,'both selected candidates');
 });
 
+test('editing the situation invalidates a pending request while bench search preserves it',async()=>{
+  const f=fixture();const pending=deferred();f.context.pending=pending.promise;
+  f.eval('S.ready=true;renderResult=()=>{};');
+  const job=f.eval("run(()=>pending,'offense')");
+  f.eval("invalidateCustom({target:{id:'myScore'}})");
+  pending.resolve({id:'stale'});await job;
+  assert.equal(f.eval('S.last'),null);
+  f.eval("S.last={id:'saved'};invalidateCustom({target:{id:'benchFilter'}})");
+  assert.equal(f.eval('S.last.id'),'saved');
+});
+
+test('invalid submit clears the old result without evaluating',async()=>{
+  const f=fixture();f.eval("S.ready=true;S.last={id:'old'};api=()=>{throw Error('must not evaluate');}");
+  f.node('#myScore').value='';await f.eval('evaluateCustom()');
+  assert.equal(f.eval('S.last'),null);assert.match(f.node('#formError').innerHTML,/非負整數/);
+});
+
 test('comparison keeps both candidates initially and explains model disagreement',()=>{
   const f=fixture();const base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
   f.context.result={candidates:[base,{...base,角色:'代打',球員:'One',階層式:.02,機器學習:-.01,相對現任:.2},
