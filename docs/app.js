@@ -137,8 +137,8 @@ function bindStatic() {
   $("#duePos").onchange = () => renderBench();
   $("#benchAll").onclick = () => { S.bench = new Set(S.roster[$("#myTeam").value].hitters.filter(h => h.name !== $("#dueBatter").value).map(h => h.name)); renderBench(); };
   $("#benchNone").onclick = () => { S.bench.clear(); renderBench(); };
-  $("#penAll").onclick = () => { $$("#penList input").forEach((i) => i.checked = true); };
-  $("#penNone").onclick = () => { $$("#penList input").forEach((i) => i.checked = false); };
+  $("#penAll").onclick = () => { $$("#penList input").forEach((i) => i.checked = true); clearResult(); };
+  $("#penNone").onclick = () => { $$("#penList input").forEach((i) => i.checked = false); clearResult(); };
   $("#evalBtn").onclick = evaluateCustom;
   $("#myPitcher").onchange = syncRole;
   $$("#roleSeg button").forEach((b) => b.onclick = () => { S.starter = b.dataset.r === "1"; renderRole(); });

@@ -46,6 +46,7 @@
   function mount({element,list,team,pitchers,changed,storage}) {
     if(!storage){try{storage=root.localStorage;}catch{}}
     let groups=load(storage,team,pitchers);
+    list.onchange=changed;
     const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     element.innerHTML=`<div class="pitcher-group-select"><label class="f" for="pitcherGroupSelect">投手群組</label><div class="pitcher-group-actions"><select id="pitcherGroupSelect"></select><button type="button" class="link" id="pitcherGroupApply">套用</button><button type="button" class="link" id="pitcherGroupNew">新增</button></div></div><details class="pitcher-group-editor"><summary>編輯群組</summary><form id="pitcherGroupForm"><label class="f" for="pitcherGroupName">群組名稱</label><input id="pitcherGroupName" type="text" maxlength="30" required placeholder="例如：勝投組"><p class="mut">2025 後援範本，非官方分組；可自行調整。</p><div class="checklist group-members" aria-label="群組成員"></div><div class="pitcher-group-actions"><button type="submit" class="link" id="pitcherGroupSave">儲存群組</button><button type="button" class="link" id="pitcherGroupDelete">刪除群組</button></div></form></details><p class="pitcher-group-status" role="status"></p>`;
     const q=s=>element.querySelector(s),select=q('select'),name=q('#pitcherGroupName'),editor=q('details');
