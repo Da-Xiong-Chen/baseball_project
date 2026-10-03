@@ -21,6 +21,14 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('position-group selection clears evaluation even when rendering removes its button',()=>{
+  const f=fixture();f.node('#customPanel').addEventListener=()=>{};
+  f.eval('bindStatic();S.last={id:"old"};S.bench=new Set();renderBench=()=>{};');
+  f.node('#benchList').onclick({target:{closest:()=>({dataset:{group:'One|Two'}})}});
+  assert.equal(f.eval('S.last'),null);
+  assert.equal(f.eval('S.bench.has("One")&&S.bench.has("Two")'),true);
+});
+
 test('automatic detail does not collapse the initial two-candidate comparison',async()=>{
   const f=fixture();f.node('#candidateCompare').innerHTML='both selected candidates';
   f.eval("S.last={view:'offense',model_cutoff:'2026-01-01'};mountPitchChange=()=>{};api=async()=>{throw Error('controlled missing detail');};");

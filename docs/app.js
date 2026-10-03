@@ -159,6 +159,7 @@ function bindStatic() {
     const names = b.dataset.group.split("|");
     const all = names.every((n) => S.bench.has(n));
     names.forEach((n) => (all ? S.bench.delete(n) : S.bench.add(n)));
+    clearResult();
     renderBench();
   };
   $("#duePos").onchange = () => renderBench();
