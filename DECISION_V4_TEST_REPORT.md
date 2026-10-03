@@ -30,6 +30,8 @@ UI 檢查由 AI 實際操作側邊瀏覽器完成。沒有以真人、實體手�
 
 ## 遠端交付
 
-已確認 PR #1 合併並同步 origin/main 的 0175434，保留本機修改後建立 feat/substitution-data-integrity。依使用者指定的協作指南，僅推功能分支與建立 PR；不推 main、不強推、不自行合併或部署。原始資料、私有守位 CSV、模型 pickle 與巢狀中間 CSV 不提交。實際推送與 PR 結果於完成後補記。
+已確認 PR #1 合併並同步 origin/main 的 0175434，保留本機修改後建立 feat/substitution-data-integrity。依使用者指定的協作指南，僅推功能分支與建立 PR；不推 main、不強推、不自行合併或部署。原始資料、私有守位 CSV、模型 pickle 與巢狀中間 CSV 不提交。
 
 使用者再次要求先 clone 後推送，因此另建立 `../baseball_remote_check_20261003` 核對副本。clone 的 HEAD 與本機共同基底均為 `0175434`，沒有新主分支更新需要合併；原工作目錄與全部已測修改保留。
+
+功能修改已提交為 `a1cde7b`，實際推送到主專案功能分支成功，確認現有帳號具備 Git 推送權限。GitHub 連接器建立 PR 回傳 403，改用已登入的 Codex 側邊瀏覽器完成 [PR #2：補強換人評估的個人資料、守位推估與用球數](https://github.com/Da-Xiong-Chen/baseball_project/pull/2)，頁面確認 Open、base main、head feat/substitution-data-integrity。公開網站尚未隨此分支部署。此段交付紀錄另作文件提交，不改變已測程式與資料。
