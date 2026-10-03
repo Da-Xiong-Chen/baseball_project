@@ -461,3 +461,9 @@ button:active:not(:disabled) { filter:brightness(.92); }
 .score-stepper input::-webkit-inner-spin-button { appearance:none; }
 .seg button,.tabs button,.mix-switch button,.link,.pc-toggle,.pc-retry { text-align:center; }
 @media(max-width:350px) { .score-controls { grid-template-columns:1fr; } .state-control,.base-setting { padding:10px; } }
+/* 板凳名單：依守位分組 */
+.bench-group-h { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 10px; background: var(--panel); border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 700; }
+.bench-group-h .mut { font-weight: 400; margin-left: 4px; }
+.chip.cover { background: var(--accent-soft); color: var(--accent); margin-left: 6px; }
+#benchList { max-height: 360px; }
