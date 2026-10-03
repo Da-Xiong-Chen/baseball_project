@@ -3,6 +3,7 @@ data/rebas/
 data/cpbl/
 data/ldkrsi/*.csv
 output/*.csv
+output/**/*.csv
 __pycache__/
 *.pyc
 .DS_Store

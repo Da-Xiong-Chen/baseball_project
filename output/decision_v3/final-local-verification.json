@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-03",
+  "training_version": 4,
+  "ui_version": 12,
+  "unit_tests": {
+    "python": 36,
+    "javascript": 37,
+    "failed": 0
+  },
+  "parity": {
+    "custom_scenarios": 18,
+    "max_numeric_error": 6.3064175019889035e-06,
+    "replay_games": 275,
+    "replay_cases": 498,
+    "missing_cases": 0,
+    "stale_snapshots": 0,
+    "version": 3
+  },
+  "ui_matrix": {
+    "cases": 16,
+    "all_page_width_checks_pass": true,
+    "browser": "Codex in-app browser",
+    "physical_device_tested": false
+  },
+  "pitch_change": {
+    "pitchers": 168,
+    "totals": {
+      "insufficient": 9035,
+      "recomputed": 9855,
+      "ready": 820
+    },
+    "elapsed_seconds": 6.707657200051472,
+    "total_bytes": 34049727,
+    "maximum_pitcher_bytes": 649527,
+    "median_pitcher_bytes": 166046,
+    "errors": 0,
+    "scope": "all exported snapshots and all three hands; exact Python recomputation"
+  },
+  "http": {
+    "routes": {
+      "meta": "pass",
+      "evaluate": "pass (3 scenarios)",
+      "team": "pass",
+      "games": "pass",
+      "game": "pass",
+      "detail": "pass",
+      "pitch-change": "pass (3 hands, 15 requests)"
+    },
+    "invalid_requests": 10,
+    "pitch_change_ms": [
+      11.875299969688058,
+      0.8616000413894653,
+      15.197100001387298,
+      16.83539990335703,
+      0.9046000195667148,
+      15.142699936404824,
+      0.7605999708175659,
+      0.7677000248804688,
+      0.7572999456897378,
+      13.332200003787875,
+      1.0535999899730086,
+      0.9147000964730978,
+      1.2162000639364123,
+      0.8880000095814466,
+      11.601499980315566
+    ]
+  },
+  "limitations": [
+    "No physical phone, other browser, actual zoom or screen-reader testing",
+    "No validated sample-depth cutoff or causal substitution ranking guarantee",
+    "Cross-provider fielding identity mapping remains conservative"
+  ],
+  "remote_actions": [],
+  "sha256": {
+    "docs/app.js": "cad2c924bc8005530830f2cc0e45a98b779f0972ea371d7a49fe52fa8dc37004",
+    "docs/engine.js": "8010eb4ac6be0a0ef9a5bba859ef425e3e9be770a9afd2c1074c6d86f2ceeea5",
+    "docs/data/model.json": "1b6f3694b2ed8cba7d1599a5a210cffb916f7c9a2b72c57fd46286b0920a36f7",
+    "docs/data/qualification.json": "74c5c468ec14525212cefe27142de3f2268f1cdf6922ec2b4094f7b1ef60abff",
+    "output/decision_v3/parity.json": "a71acd6c20f5f90d889224560c30deee0953dc2037ee321f7c538820c4973a6a",
+    "output/decision_v3/sample-depth-validation.json": "19d996e8f9a562e3a32315cf0d3cbda9b4100dff19241b4b4a05e3468ad55b33",
+    "output/decision_v3/ui/side-browser-tests.json": "c454f60120fc03dcfb607d72fb74301ab43040cc64183705c821628b7e7c3606"
+  }
+}

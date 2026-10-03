@@ -7,6 +7,7 @@ import pandas as pd
 from scipy.optimize import linear_sum_assignment
 
 from load import DATA, load
+from identity import catalog
 
 FIELD_POS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 POS_ZH = {"C": "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", "SS": "游擊",
@@ -57,6 +58,8 @@ def catcher_pitches(cutoff=None):
 def can_play(name, pos, cutoff=None):
     if pos == "DH":
         return True
+    if len(catalog().get(name, ())) > 1:
+        return False  # Cross-provider IDs are not interchangeable; never merge by name.
     g = position_games(cutoff)
     games = float(g.get((name, pos), 0.0))
     if pos == "C":
@@ -65,6 +68,8 @@ def can_play(name, pos, cutoff=None):
 
 
 def positions_of(name, cutoff=None):
+    if len(catalog().get(name, ())) > 1:
+        return {}
     g = position_games(cutoff)
     if name not in g.index.get_level_values(0):
         return {}
@@ -80,14 +85,16 @@ def assign_positions(lineup, cutoff=None):
     for i, n in enumerate(lineup):
         for j, s in enumerate(slots):
             cost[i, j] = -0.5 if s == "DH" else -float(g.get((n, s), 0.0))
-            if s == "C" and not can_play(n, "C", cutoff):
+            if s != "DH" and not can_play(n, s, cutoff):
                 cost[i, j] = 1000
     r, c = linear_sum_assignment(cost)
-    return {lineup[i]: slots[j] for i, j in zip(r, c)}
+    return {lineup[i]: slots[j] for i, j in zip(r, c) if cost[i, j] < 1000}
 
 
 def defense_check(out_name, out_pos, in_name, bench_after, cutoff=None):
     """out_name（守 out_pos）被 in_name 代打後，守備排不排得出來。"""
+    if out_pos not in FIELD_POS + ["DH"]:
+        return "warn", "現任守位未知，請確認當場守位與接守安排；未評估守備品質"
     if out_pos == "DH":
         return "ok", f"{in_name} 接任指定打擊"
     if can_play(in_name, out_pos, cutoff):

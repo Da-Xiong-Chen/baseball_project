@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from load import PITCH_GROUP, GROUPS, STRIKE_CODES, FOUL_CODES
+from identity import game_identity, resolve_game, display
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = 1
@@ -92,13 +93,20 @@ def observations():
             continue
         seen.add(game)
         local = {}
+        identities = game_identity(g)
         for side in ('away', 'home'):
             for p in g.get(side + 'PitcherBox', []):
                 name = p['playerName']
-                local.setdefault(name, appearance(game, day, name))
+                label = display(name, p.get('playerId'))
+                local.setdefault(label, appearance(game, day, name))
             for p in g.get(side + 'PAList', []):
                 name = p['pitcherName']
-                add_pa(local.setdefault(name, appearance(game, day, name)), p)
+                other = 'home' if side == 'away' else 'away'
+                player_id = resolve_game(identities[other], name)
+                if player_id is None:
+                    continue
+                label = display(name, player_id)
+                add_pa(local.setdefault(label, appearance(game, day, name)), p)
         for name, a in local.items():
             out.setdefault(name, []).append(a)
     return out

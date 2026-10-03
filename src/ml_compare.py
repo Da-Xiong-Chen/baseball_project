@@ -45,6 +45,9 @@ def prepare():
          (code == "H") & (p["hardness"] == "H"), code == "H"],
         [0, 1, 2, 3, 5, 4], -1)
     p = p[p["cls"] >= 0]                      # 排除觸擊
+    p = p.dropna(subset=['batter_id', 'pitcher_id']).copy()
+    p['batter_name'], p['pitcher_name'] = p['batter'], p['pitcher']
+    p['batter'], p['pitcher'] = p['batter_id'], p['pitcher_id']
     p["swing"] = code.isin(SWING).astype(float)
     return p
 

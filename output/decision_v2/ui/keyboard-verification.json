@@ -1,0 +1,11 @@
+{
+  "replay_focus_cycles": 12,
+  "custom_focus_cycles": 4,
+  "total_focus_cycles": 16,
+  "focus_cases": 48,
+  "identical_theme_pairs": 24,
+  "viewport_simulation": true,
+  "physical_devices_verified": false,
+  "browser_zoom_verified": false,
+  "screen_reader_verified": false
+}

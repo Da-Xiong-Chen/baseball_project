@@ -5,6 +5,7 @@ import pandas as pd
 
 from fatigue import outlook, pitch_count_before
 from load import load
+from identity import key
 from mlmodel import ENSEMBLE_W
 from model import fit
 import numpy as np
@@ -58,6 +59,7 @@ def situation(pa_id):
     fld_before = fld_before[(fld_before["inning"] < row["inning"]) | ((fld_before["inning"] == row["inning"]) & (fld_before["seq"] < row["seq"]))]
     pc, starter = pitch_count_before(row)
     return dict(row=row, lineup=lineup, due=due, bench=bench, positions=pos,
+                positions_confirmed=False,
                 used_pitchers=set(fld_before["pitcher"]) | {row["pitcher"]},
                 pitch_count=pc, starter=starter)
 
@@ -127,7 +129,7 @@ def evaluate_pinch_hit(sit, model=None, ml=None):
     phand = row["phand"]
     slope = m.run_to_win(row["inning"], row["half"], row["bat_score"], row["fld_score"], row["bases"], row["outs"])
     due = sit["due"]
-    due_pos = sit["positions"].get(due, "DH")
+    due_pos = sit["positions"].get(due, "UNKNOWN")
     names = [due] + sit["bench"]
     cutoff = str(m.cutoff.date())
     hands = [bat_hand(n, phand, cutoff) for n in names]
@@ -153,6 +155,9 @@ def evaluate_pinch_hit(sit, model=None, ml=None):
             rec["守備"], rec["守備說明"] = st, msg
         else:
             rec["守備"], rec["守備說明"] = "ok", f"目前守{POS_ZH.get(due_pos, due_pos)}"
+        if sit.get('positions_confirmed') is False:
+            rec['守備'] = 'warn'
+            rec['守備說明'] = '當場守位未確認；以下僅為推估情境：' + rec['守備說明']
         rec["可信度"] = "高" if r["n"] >= 1500 else "中" if r["n"] >= 500 else "低"
         bhist, phist = _hands(cutoff)
         rec["資料警示"] = "；".join((["打者慣用手缺資料，暫以右打估計"] if name not in bhist.index else []) +
@@ -179,6 +184,7 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
     positions = dict(lineup_positions or {})
     positions[due] = due_pos
     return dict(row=row, lineup={1: due}, due=due, bench=list(bench), positions=positions,
+                positions_confirmed=True,
                 used_pitchers={pitcher}, next_batters=next_batters or [due], pen=pen,
                 pitch_count=None if pitch_count in (None, "") else int(pitch_count), starter=bool(starter))
 
@@ -201,8 +207,8 @@ def matchup_detail(model, batter, pitcher):
     r = model.matchup(batter, bh, pitcher)
     cells = []
     for c in r["mix"].index:
-        key = (batter, c)
-        bc = model.bat_cell.loc[key] if key in model.bat_cell.index else None
+        cell_key = (key(batter, model.identities['batter']), c)
+        bc = model.bat_cell.loc[cell_key] if cell_key in model.bat_cell.index else None
         cells.append(dict(cell=c, usage=float(r["mix"][c]), effect=float(r["cell_eff"][c]),
                           whiff_dev=float(bc["whiff"]) if bc is not None else 0.0,
                           n=float(bc["n"]) if bc is not None else 0.0))
@@ -265,7 +271,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
         out.append(dict(角色="場上" if cur else "牛棚", 投手=pit, 投=ph,
                         價值分數=value_score(runs + extra, pool, higher_better=False),
                         預估失分=runs + extra, 疲勞調整=extra, 用球數=(pc if cur else 0),
-                        樣本球數=int(m.pit_all["n"].get(pit, 0)),
+                        樣本球數=int(m.pit_all["n"].get(key(pit, m.identities['pitcher']), 0)),
                         階層式=float(sum(h_runs)), 機器學習=float(sum(g_runs)) if ml else None,
                         對決明細=details, 比較池人數=len(pool),
                         資料警示="；".join((["投手慣用手缺資料，暫以右投估計"] if pit not in phands.index else []) +

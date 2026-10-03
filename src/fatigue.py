@@ -1,8 +1,9 @@
 """投手當場用球數的疲勞調整（由資料估計）。
 
 先發投手：以「投手本身平均」為基準，看用球數越多時每球被得分值的變化。
-2024–2025 資料顯示 90 球以前大致持平，之後明顯變差（且因倖存者偏差，實際影響可能更大）。
-後援投手：30 球以後的樣本太少（約 2,700 球），不做數值調整，只給警示。
+曲線只描述截止日前的觀測關聯，未識別教練換投選擇、健康或疲勞的因果效果。
+85 球起點是現行政策，高球數外推另行提示；不代表此前沒有疲勞。
+後援投手：30 球以後不做數值調整，只給警示，並非已知安全線。
 """
 from functools import lru_cache
 
@@ -24,7 +25,10 @@ def starter_curve(cutoff=None):
     if cutoff:
         p = pitches_before(cutoff)
         boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
-    p = p.assign(pc=p.groupby(["game", "pitcher"]).cumcount())
+    from game_context import pitch_offsets
+    offsets = pitch_offsets()
+    p = p.assign(pc=[offsets.get((pid,int(j)), np.nan) for pid,j in zip(p['pa_id'],p['j'])])
+    p = p[p['pc'].notna()]
     p = p[p["cell"].notna()]
     st = boxes[(boxes["role"] == "P") & (boxes["order"] == 1)][["game", "name"]].rename(columns={"name": "pitcher"})
     p = p.merge(st.assign(sp=True), on=["game", "pitcher"], how="left")
@@ -65,11 +69,21 @@ def outlook(pitch_count, starter, n_batters=3, cutoff=None):
     return total, warn
 
 
+def support(pitch_count, starter, n_batters=3, cutoff=None):
+    """Describe this existing adjustment's domain, not physical pitching capacity."""
+    points = starter_curve(cutoff)
+    last = float(points[-1][0])
+    highest = (pitch_count or 0) + PITCHES_PER_PA * max(0,n_batters-1)
+    status = 'unknown-pitch-count' if pitch_count is None else (
+        'starter-no-supported-high-count-bin' if starter and len(points)==1 and highest>ONSET else (
+            'starter-extrapolation' if starter and highest > last else (
+                'reliever-warning-only' if not starter and highest>=RELIEVER_WARN else 'within-model-policy')))
+    return dict(status=status,curve_last_point=last,curve_points=len(points),
+                future_pitch_counts_estimated=True,causal_effect_validated=False,
+                before_policy_onset=(pitch_count is not None and pitch_count<=ONSET))
+
+
 def pitch_count_before(pa_row):
     """歷史打席開始前，場上投手本場已投球數，以及是否為先發。"""
-    pa, p, boxes = load()
-    prior = pa[(pa["game"] == pa_row["game"]) & (pa["half"] == pa_row["half"]) & (pa["seq"] < pa_row["seq"])]
-    n = int(p[p["pa_id"].isin(prior["pa_id"]) & (p["pitcher"] == pa_row["pitcher"])].shape[0])
-    st = boxes[(boxes["game"] == pa_row["game"]) & (boxes["team"] == pa_row["fld_team"]) &
-               (boxes["role"] == "P") & (boxes["order"] == 1)]["name"]
-    return n, bool((st == pa_row["pitcher"]).any())
+    from game_context import count_before
+    return count_before(pa_row)

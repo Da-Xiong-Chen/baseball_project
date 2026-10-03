@@ -21,6 +21,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from load import ROOT, load, pitches_before
 from ml_compare import add_velocity, apply_tendencies, features, fit_tendencies, prepare
 from model import PITCHES_PER_PA
+from identity import aliases, key, display_aliases
 
 MODEL_DIR = os.path.join(ROOT, "models")
 FULL = "2026-01-01"
@@ -29,7 +30,7 @@ SAMPLE = 150          # 每位投手（對該手打者）抽樣的歷史球數
 MIN_OWN = 40          # 少於此數改用聯盟同投打組合的球
 ENSEMBLE_W = 0.5      # 集成中梯度提升樹的權重
 AVG = "__聯盟平均打者__"
-TRAINING_VERSION = 2  # 截止日內重建逐球得分標籤；舊模型不得用於新回放
+TRAINING_VERSION = 4  # ID features + exclude ambiguous mid-PA participant changes.
 
 
 def make_gbt():
@@ -47,6 +48,7 @@ class Simulator:
 
     def __init__(self, train, models, tb, velo_tbl, velo_type):
         self.models, self.tb, self.velo_tbl, self.velo_type = models, tb, velo_tbl, velo_type
+        self.identities = {who: aliases(train, who, who+'_name') for who in ('batter', 'pitcher')}
         rv = train.groupby(["cls", "balls", "strikes"])["rv"].mean()
         self.rv = np.zeros((6, 4, 3))
         for (c, b, s), v in rv.items():
@@ -61,6 +63,8 @@ class Simulator:
         """queries: DataFrame[batter, bhand, pitcher] → {模型名: 每打席預期得分值 array}"""
         parts = []
         for i, (b, bh, p) in enumerate(queries[["batter", "bhand", "pitcher"]].itertuples(index=False)):
+            b = key(b, self.identities['batter'])
+            p = key(p, self.identities['pitcher'])
             bh = bh if bh in ("L", "R") else "R"
             ph = self.phand.get(p, "R")
             ph = ph if ph in ("L", "R") else "R"
@@ -90,8 +94,22 @@ class MLModel:
 
     def abs_many(self, rows):
         """rows: [(batter, bhand, pitcher)] → 每打席預期得分值（已平移到與階層式模型同一水準）。"""
-        q = pd.DataFrame(rows, columns=["batter", "bhand", "pitcher"])
-        return self.sim.values(q)["gbt"] - self.offset
+        normalized = [(key(b, self.sim.identities['batter']), bh if bh in ('L','R') else 'R',
+                       key(p, self.sim.identities['pitcher'])) for b,bh,p in rows]
+        if not normalized:
+            return np.array([])
+        # A fixed model samples fixed historical pitches. Cache identical queries only
+        # when all training pitch types have fixed velocity fills (no batch-mean fill).
+        if self.sim.velo_type.isna().any():
+            return self.sim.values(pd.DataFrame(normalized, columns=['batter','bhand','pitcher']))['gbt']-self.offset
+        cache = getattr(self, '_absolute_cache', None)
+        if cache is None:
+            self._absolute_cache = cache = {}
+        missing = list(dict.fromkeys(r for r in normalized if r not in cache))
+        if missing:
+            values = self.sim.values(pd.DataFrame(missing, columns=['batter','bhand','pitcher']))['gbt']-self.offset
+            cache.update(zip(missing, map(float, values)))
+        return np.array([cache[r] for r in normalized])
 
     def ref(self, pitcher):
         """聯盟平均打者（左右打各半）面對此投手的值；加上校正量，使實際打席的相對值平均為 0。"""
@@ -123,7 +141,7 @@ def train(cutoff):
     # 平移量：讓梯度提升樹的整體水準與階層式模型一致（用截止日前最近 2000 個打席估計）
     pa, _, _ = load()
     ref = pa[pa["date"] < cutoff].tail(2000)
-    rows = list(ref[["batter", "bhand", "pitcher"]].itertuples(index=False, name=None))
+    rows = list(ref[["batter_id", "bhand", "pitcher_id"]].itertuples(index=False, name=None))
     g = sim.values(pd.DataFrame(rows, columns=["batter", "bhand", "pitcher"]))["gbt"]
     hm = fit(cutoff, season=2025 if cutoff == FULL else None)
     h = np.array([hm.matchup(b, bh, p)["per_pa"] for b, bh, p in rows])
@@ -140,7 +158,7 @@ def _pitches():
 
 
 def path_for(cutoff):
-    name = "full_v2" if cutoff == FULL else cutoff[:7] + "_v2"
+    name = "full_v4" if cutoff == FULL else cutoff[:7] + "_v4"
     return os.path.join(MODEL_DIR, f"gbt_{name}.pkl")
 
 
@@ -160,6 +178,9 @@ def get(cutoff):
             m = _Unpickler(f).load()
         if getattr(m, "training_version", None) != TRAINING_VERSION or m.cutoff != cutoff:
             raise ValueError("模型版本或截止日不一致，請重新訓練")
+        for who in ('batter', 'pitcher'):
+            observed = m.sim.tb[f'{who[:3]}_rv'].index
+            m.sim.identities[who] = display_aliases(m.sim.identities[who], observed)
         if not hasattr(m, "rel_bias"):  # 舊版存檔：補做校正並重新存檔
             pa, _, _ = load()
             ref = pa[pa["date"] < m.cutoff].tail(2000)
@@ -169,8 +190,10 @@ def get(cutoff):
         return m
     m = train(cutoff)
     os.makedirs(MODEL_DIR, exist_ok=True)
-    with open(p, "wb") as f:
+    temporary = p + f'.{os.getpid()}.tmp'
+    with open(temporary, "wb") as f:
         pickle.dump(m, f)
+    os.replace(temporary, p)
     return m
 
 

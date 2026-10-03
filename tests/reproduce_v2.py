@@ -60,7 +60,7 @@ def main():
             assert error<0.0001,(location,a,b)
         else:
             assert a==b,(location,a,b)
-    paths=[Path('model.json')]+[p.relative_to(ROOT/'docs/data') for p in (ROOT/'docs/data/replay').glob('*.json')]
+    paths=[Path('model.json'),Path('qualification.json')]+[p.relative_to(ROOT/'docs/data') for p in (ROOT/'docs/data/replay').glob('*.json')]
     for relative in paths:
         compare(json.loads((ROOT/'docs/data'/relative).read_text(encoding='utf8')),
                 json.loads((REPRO/'docs/data'/relative).read_text(encoding='utf8')),str(relative))

@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-03",
+  "local_only": true,
+  "app_version": "20261003-v7",
+  "style_version": "20261003-v3",
+  "source_sha256": {
+    "docs/app.js": "24c0d2c4068c6a23668c70dc508b1103af0be94407cf281f1019a8afab069217",
+    "docs/style.css": "62eb4de032348bd57ca158166f681234c98178a46195508d1ab34e6a2094f694",
+    "docs/index.html": "09c7e9f16dd6a38118738af267d142998edca3ed91d9bd4ac277a508c820f566"
+  }
+}

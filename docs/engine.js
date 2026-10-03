@@ -8,6 +8,8 @@ const Engine = (() => {
 
   async function load(base = "data/") {
     if (!M) M = await (await fetch(base + "model.json", {cache:"no-cache"})).json();
+    if (typeof Qualification === 'undefined') throw new Error('個人資料資格模組尚未載入');
+    Qualification.configure(M.qualification);
     return M;
   }
 
@@ -27,13 +29,15 @@ const Engine = (() => {
 
   // ---------- 對戰 ----------
   const hand = (h) => (h === "L" || h === "R" ? h : "R");
+  const playerKey = (value, role) => M.identities?.[role]?.[value] || value;
   function batHand(batter, phand) {
     const h = M.bhand[batter] || "R";
     return h === "S" ? (phand === "R" ? "L" : "R") : h;
   }
   function pitchMix(pitcher, bhand) {
     bhand = hand(bhand);
-    const row = M.mix[pitcher] && M.mix[pitcher][bhand];
+    const id = playerKey(pitcher, 'pitcher');
+    const row = M.mix[id] && M.mix[id][bhand];
     if (row) return { m: row.slice(0, M.cells.length), n: row[M.cells.length] };
     const ph = hand(M.phand[pitcher]);
     return { m: M.league_mix[`${ph}|${bhand}`], n: 0 };
@@ -47,12 +51,13 @@ const Engine = (() => {
     const ph = hand(M.phand[pitcher]);
     const platoonKey = ph === bhand ? "同側" : "異側";
     const lgBase = M.cells.reduce((s, c, i) => s + m[i] * (M.league[`${platoonKey}|${c}`] || 0), 0);
-    const a = M.bat_all[batter];
+    const bid = playerKey(batter, 'batter'), pid = playerKey(pitcher, 'pitcher');
+    const a = M.bat_all[bid];
     const [aEff, aVar, n] = a ? a : [0, M.k.sigma2 / M.k.bat, 0];
-    const bc = M.bat_cell[batter] || {};
+    const bc = M.bat_cell[bid] || {};
     const cellEff = M.cells.map((c) => (bc[c] ? bc[c][0] : 0));
     const cellVar = M.cells.map((c) => (bc[c] ? bc[c][1] : 0));
-    const q = M.pit_all[pitcher] ? M.pit_all[pitcher][0] : 0;
+    const q = M.pit_all[pid] ? M.pit_all[pid][0] : 0;
     const fit = M.cells.reduce((s, _, i) => s + m[i] * cellEff[i], 0);
     const skill = aEff + fit;
     const platoon = lgBase - neutralBase(m);
@@ -132,7 +137,11 @@ const Engine = (() => {
     if (!pool.length) return null;
     let beat = 0, eq = 0;
     for (const x of pool) { if (x === v) eq++; else if (higherBetter ? x < v : x > v) beat++; }
-    return Math.max(1, Math.min(100, Math.round(1 + 99 * (beat + 0.5 * eq) / pool.length)));
+    const value = 1 + 99 * (beat + 0.5 * eq) / pool.length;
+    const lower = Math.floor(value);
+    // Match Python round(): exact half ties go to the even integer.
+    const rounded = value - lower === 0.5 ? lower + (lower % 2) : Math.round(value);
+    return Math.max(1, Math.min(100, rounded));
   }
   function ensembleRel(name, bh, pitcher) {
     const r = matchup(name, bh, pitcher), g = mlRel(name, pitcher), w = M.ml ? M.ml.w : 0;
@@ -198,7 +207,7 @@ const Engine = (() => {
       return {
         角色: cur ? "場上" : "牛棚", 投手: pit, 投: ph, 價值分數: valueScore(runs + extra, pool, false),
         預估失分: runs + extra, 疲勞調整: extra,
-        用球數: cur ? pc : 0, 樣本球數: Math.trunc(M.pit_all[pit] ? M.pit_all[pit][1] : 0),
+        用球數: cur ? pc : 0, 樣本球數: Math.trunc(M.pit_all[playerKey(pit, 'pitcher')] ? M.pit_all[playerKey(pit, 'pitcher')][1] : 0),
         疲勞: cur && fatWarn ? fatWarn : "-",
         階層式:hRuns.reduce((s,v)=>s+v,0), 機器學習:gRuns.some(v=>v==null) ? null : gRuns.reduce((s,v)=>s+v,0),
         對決明細:details, 比較池人數:pool.length,
@@ -229,23 +238,30 @@ const Engine = (() => {
     const starter = b.starter != null ? !!b.starter : isStarter(b.pitcher);
     const pc = b.pitch_count == null || b.pitch_count === "" ? null : +b.pitch_count;
     const pen = b.pen || [];
-    return {
+    const result = {
       situation: { ...row, pitch_count: pc, starter, due: b.due, due_pos: b.due_pos, due_pos_zh: POS_ZH[b.due_pos] || b.due_pos },
       actual: null, leverage: ph.slope * 100, league_leverage: M.slope_all * 100,
       pitch_mix: pitchMixPayload(row.pitcher), candidates: ph.rows,
       bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter) }, model_cutoff: M.cutoff,
       method: M.ml ? "集成（階層式＋梯度提升樹）" : "階層式",
       ml_cutoff:M.ml ? M.cutoff : null, schema_version:2,
+      training_version:M.training_version,
+      context_version:1,
+      context:{positions_confirmed:true,roster_confirmed:false,roster_source:'user-selected',defensive_quality_measured:false,
+        pitcher_capacity_known:false,horizon_batters:next.length,fatigue_causal:false,
+        fatigue_support:{status:pc == null ? 'unknown-pitch-count' : starter && M.fatigue.curve.length===1 && (pc + M.ppa * Math.max(0,next.length-1)) > M.fatigue.curve[0][0] ? 'starter-no-supported-high-count-bin' : starter && (pc + M.ppa * Math.max(0,next.length-1)) > M.fatigue.curve[M.fatigue.curve.length-1][0] ? 'starter-extrapolation' : !starter && (pc + M.ppa * Math.max(0,next.length-1)) >= M.fatigue.reliever_warn ? 'reliever-warning-only' : 'within-model-policy',curve_last_point:M.fatigue.curve[M.fatigue.curve.length-1][0],curve_points:M.fatigue.curve.length,causal_effect_validated:false,future_pitch_counts_estimated:true,before_policy_onset:pc!=null && pc<=85},
+        fatigue_note:'用球數調整為觀測資料關聯，並非疲勞因果效果；高球數含外推，未估計剩餘可用局數'},
       availability:'人工勾選可用名單；請確認當日登錄、健康與已用人選',
       fielding_source:'截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位',
     };
+    return Qualification.annotate(result);
   }
 
   function detail(batter, pitcher) {
     const ph = hand(M.phand[pitcher]);
     const bh = batHand(batter, ph);
     const r = matchup(batter, bh, pitcher);
-    const bc = M.bat_cell[batter] || {};
+    const bc = M.bat_cell[playerKey(batter, 'batter')] || {};
     return {
       batter, pitcher, bhand: bh, phand: ph, mix_n: r.mix_n, n: r.n,
       cells: M.cells.map((c, i) => ({ cell: c, usage: r.mix[i], effect: r.cell_eff[i], whiff_dev: bc[c] ? bc[c][3] : 0, n: bc[c] ? bc[c][2] : 0 })),

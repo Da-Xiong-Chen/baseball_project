@@ -6,6 +6,7 @@ from functools import lru_cache
 
 import numpy as np
 import pandas as pd
+from identity import game_identity, resolve_game, display
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
@@ -42,14 +43,15 @@ def load():
         gid = f"{season}-{g['seq']:03d}"
         date = pd.Timestamp(g["date"][:10])
         teams = {"away": g["awayTeam"], "home": g["homeTeam"]}
+        identities = game_identity(g)
         for side in ("away", "home"):
             other = "home" if side == "away" else "away"
             for b in g[side + "BatterBox"]:
                 box_rows.append(dict(game=gid, date=date, team=teams[side], name=b["playerName"],
-                                     order=b["order"], role="B", PA=b["PA"]))
+                                     player_id=b.get("playerId"), order=b["order"], role="B", PA=b["PA"]))
             for i, p in enumerate(g[side + "PitcherBox"]):
                 box_rows.append(dict(game=gid, date=date, team=teams[side], name=p["playerName"],
-                                     order=i + 1, role="P", NP=p["NP"], BF=p["BF"]))
+                                     player_id=p.get("playerId"), order=i + 1, role="P", NP=p["NP"], BF=p["BF"], IPOuts=p.get("IPOuts")))
             for k, p in enumerate(g[side + "PAList"]):
                 bat_start = p["awayScores"] if side == "away" else p["homeScores"]
                 bat_end = p["endAwayScores"] if side == "away" else p["endHomeScores"]
@@ -63,6 +65,9 @@ def load():
                     end_outs=p["endOuts"], end_bases=p["endBases"],
                     batter=p["batterName"], bhand=p["batterHand"],
                     pitcher=p["pitcherName"], phand=p["pitcherHand"], catcher=p["catcherName"],
+                    batter_id=resolve_game(identities[side], p["batterName"]),
+                    pitcher_id=resolve_game(identities[other], p["pitcherName"]),
+                    catcher_id=resolve_game(identities[other], p["catcherName"]),
                     is_ph=p["isPH"], pa_order=p["paOrder"],
                     result=p.get("result", p.get("results")),
                     hardness=p.get("hardness") or None, trajectory=p.get("trajectory") or None,
@@ -73,6 +78,9 @@ def load():
                 # 依 event 重建球數
                 balls = strikes = 0
                 pitches = [e for e in p["events"] if e["type"] == "PITCH"]
+                if any(e.get('pitcherName', p['pitcherName']) != p['pitcherName'] or
+                       e.get('batterName', p['batterName']) != p['batterName'] for e in pitches):
+                    continue  # Mid-PA participant changes cannot inherit a single person's features.
                 for j, e in enumerate(pitches):
                     code = e["pitchCode"]
                     y = float(e["coordY"]) if e["coordY"] not in (None, "") else np.nan
@@ -80,7 +88,7 @@ def load():
                         pa_id=pa_id, j=j, last=(j == len(pitches) - 1), balls=min(balls, 3), strikes=min(strikes, 2),
                         ptype=e["pitchType"] or None, code=code,
                         y=y, x=float(e["coordX"]) if e["coordX"] not in (None, "") else np.nan,
-                        catcher=e["catcherName"],
+                        catcher=display(e["catcherName"], resolve_game(identities[other], e["catcherName"])),
                     ))
                     if code == "B":
                         balls += 1
@@ -91,13 +99,16 @@ def load():
     pa = pd.DataFrame(pa_rows)
     pitches = pd.DataFrame(pitch_rows)
     boxes = pd.DataFrame(box_rows)
+    for who in ('batter', 'pitcher'):
+        pa[who] = [display(n, i) for n, i in zip(pa[who], pa[who+'_id'])]
+    boxes['name'] = [display(n, i) for n, i in zip(boxes['name'], boxes['player_id'])]
 
     # 半局結束時的得分 → 每個打席開始到半局結束的得分（用來建立含球數的得分期望表）
     half_key = ["game", "half", "inning"]
     pa["runs_to_end"] = pa.groupby(half_key)["runs"].transform(lambda s: s[::-1].cumsum()[::-1])
     pitches = pitches.merge(pa[["pa_id", "bases", "outs", "runs_to_end", "runs", "end_outs", "end_bases",
                                 "batter", "pitcher", "bhand", "phand", "date", "season", "game",
-                                "hardness"]], on="pa_id")
+                                "hardness", "batter_id", "pitcher_id"]], on="pa_id")
     # 逐球結果分類：揮空、強勁擊球（進場且 hardness=H）、其他
     pitches["whiff"] = (pitches["code"] == "SW").astype(float)
     pitches["hard"] = ((pitches["code"] == "H") & pitches["last"] & (pitches["hardness"] == "H")).astype(float)

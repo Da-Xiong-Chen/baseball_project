@@ -1,0 +1,38 @@
+[
+  {
+    "label": "mobile-light-offense",
+    "steps": 90,
+    "bodyTransitions": 1,
+    "issues": []
+  },
+  {
+    "label": "mobile-dark-offense",
+    "steps": 90,
+    "bodyTransitions": 1,
+    "issues": []
+  },
+  {
+    "label": "desktop-dark-offense",
+    "steps": 90,
+    "bodyTransitions": 1,
+    "issues": []
+  },
+  {
+    "label": "desktop-light-offense",
+    "steps": 90,
+    "bodyTransitions": 1,
+    "issues": []
+  },
+  {
+    "label": "desktop-light-defense",
+    "steps": 90,
+    "bodyTransitions": 1,
+    "issues": []
+  },
+  {
+    "label": "desktop-dark-defense",
+    "steps": 90,
+    "bodyTransitions": 1,
+    "issues": []
+  }
+]

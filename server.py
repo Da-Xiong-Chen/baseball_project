@@ -22,6 +22,8 @@ from load import CELLS, load  # noqa: E402
 import mlmodel  # noqa: E402
 from model import fit  # noqa: E402
 from roster import POS_ZH, can_play, pitcher_names, positions_of  # noqa: E402
+from qualification import annotate  # noqa: E402
+from fatigue import support  # noqa: E402
 
 PORT = int(os.environ.get("PORT", 8000))
 WEB = os.path.join(ROOT, "docs")
@@ -78,14 +80,14 @@ def rosters():
         for name, g in hit.groupby("name"):
             if last_team_b.get(name) != team or name in true_pitchers:
                 continue
-            hitters.append(dict(name=name, hand=bh.get(name, "R"), pa=int(g["PA"].sum()), games=int(g["game"].nunique()),
+            hitters.append(dict(name=name, player_id=g['player_id'].iloc[0], hand=bh.get(name, "R"), pa=int(g["PA"].sum()), games=int(g["game"].nunique()),
                                 positions=positions_of(name), catcher=bool(can_play(name, "C"))))
         pitchers = []
         for name, g in pit.groupby("name"):
             if last_team_p.get(name) != team or name not in true_pitchers:
                 continue
             starts = int((g["order"] == 1).sum())
-            pitchers.append(dict(name=name, hand=ph.get(name, "R"), games=int(len(g)), starts=starts,
+            pitchers.append(dict(name=name, player_id=g['player_id'].iloc[0], hand=ph.get(name, "R"), games=int(len(g)), starts=starts,
                                  role="先發" if starts >= len(g) / 2 else "後援", np=int(g["NP"].sum())))
         out[team] = dict(hitters=sorted(hitters, key=lambda x: -x["pa"]),
                          pitchers=sorted(pitchers, key=lambda x: (x["role"] != "後援", -x["games"])))
@@ -111,17 +113,27 @@ def build_result(sit, m, ml=None, actual=None):
     r["pitch_count"] = sit.get("pitch_count")
     r["starter"] = sit.get("starter", False)
     r["due"] = sit["due"]
-    r["due_pos"] = sit["positions"].get(sit["due"], "DH")
+    r["due_pos"] = sit["positions"].get(sit["due"], "UNKNOWN")
     r["due_pos_zh"] = POS_ZH.get(r["due_pos"], r["due_pos"])
-    return clean(dict(
+    return annotate(clean(dict(
         situation=r, actual=actual, leverage=slope * 100, league_leverage=m.slope_all * 100,
         pitch_mix=pitch_mix_payload(m, row["pitcher"]),
         candidates=ph_df, bullpen=dict(next=nxt, rows=bp_df), model_cutoff=str(m.cutoff.date()),
         ml_cutoff=str(ml.cutoff) if ml else None, schema_version=2,
+        training_version=getattr(ml, 'training_version', None),
+        context_version=1,
+        context=dict(positions_confirmed=sit.get('positions_confirmed',False),
+                     roster_confirmed=False,
+                     roster_source='prior-10-days' if row.get('game') else 'user-selected',
+                     defensive_quality_measured=False, pitcher_capacity_known=False,
+                     horizon_batters=len(nxt),
+                     fatigue_support=support(sit.get('pitch_count'),sit.get('starter',False),len(nxt),str(m.cutoff.date())),
+                     fatigue_causal=False,
+                     fatigue_note='用球數調整為觀測資料關聯，並非疲勞因果效果；高球數含外推，未估計剩餘可用局數'),
         availability="人工勾選可用名單；請確認當日登錄、健康與已用人選" if not row.get("game") else "依此前 10 天出賽推估，非官方當日登錄名單；守位由既有紀錄推估",
         fielding_source="截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位",
         method="集成（階層式＋梯度提升樹）" if ml else "階層式",
-    ))
+    )))
 
 
 # ---------- API ----------

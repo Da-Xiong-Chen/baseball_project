@@ -50,7 +50,7 @@ def export_model():
     m = fit(server.FULL, season=2025)
     bh, ph = _hands()
     rosters = server.rosters()
-    players = sorted({h["name"] for r in rosters.values() for h in r["hitters"]} | set(m.bat_all.index))
+    players = sorted({h["name"] for r in rosters.values() for h in r["hitters"]} | set(m.identities['batter']))
     # 依出賽場數排序的可守位置（捕手另可由逐球捕手紀錄判定）
     eligible = {n: list(positions_of(n)) + (["C"] if can_play(n, "C") and "C" not in positions_of(n) else [])
                 for n in players}
@@ -66,7 +66,8 @@ def export_model():
     for (p, h), r in m.mix.iterrows():
         mix.setdefault(p, {})[h] = [r[c] for c in CELLS] + [float(m.mix_n.get((p, h), 0))]
     model = dict(
-        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, training_version=2,
+        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, training_version=mlmodel.TRAINING_VERSION,
+        identities=m.identities,
         league={f"{a}|{c}": v for (a, c), v in m.league.items()},
         league_mix={f"{a}|{b}": [r[c] for c in CELLS] for (a, b), r in m.league_mix.iterrows()},
         bat_all={b: [r["effect"], r["var"], r["n"]] for b, r in m.bat_all.iterrows()},
@@ -79,6 +80,9 @@ def export_model():
         fatigue=dict(curve=starter_curve(), cap=CAP, reliever_warn=RELIEVER_WARN),
         rosters=rosters, teams=sorted(rosters),
     )
+    with open(os.path.join(OUT, 'qualification.json'), encoding='utf8') as stream:
+        depth = json.load(stream)
+    model['qualification'] = dict(policy=depth['policy'], cutoffs={server.FULL: depth['cutoffs'][server.FULL]})
     # 梯度提升樹模擬：瀏覽器無法執行樹模型，預先算好所有「名單打者 × 名單投手」的每打席得分值
     ml = mlmodel.get(server.FULL)
     hitters = sorted({h["name"] for r in rosters.values() for h in r["hitters"]})
@@ -132,6 +136,9 @@ def export_replays():
 
 
 if __name__ == "__main__":
-    export_model()
+    from export_qualification import main as export_qualification
+    export_qualification()
+    if '--replay-only' not in sys.argv:
+        export_model()
     if "--model-only" not in sys.argv:
         export_replays()

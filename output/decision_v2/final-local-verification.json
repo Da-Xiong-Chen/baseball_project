@@ -1,0 +1,24 @@
+{
+  "status": "local_ai_acceptance_passed",
+  "python_tests": 31,
+  "javascript_tests": 32,
+  "app": "v11",
+  "style": "v5",
+  "qualification": "v2",
+  "human_test_required": false,
+  "source_sha256": {
+    "docs/app.js": "9419f3a718cea7ee78900a249affaf360e004fc9f9fb51d1268f04aa0a792708",
+    "docs/style.css": "4856760426f0fa91bec57f488cca1f3ff99f59f3a2d67b0e9352db2bde12806c",
+    "docs/index.html": "3aa977c60bbf1b63ed87f1321d3c7ada13617d90fe40d684752cdba10293f127",
+    "docs/qualification.js": "4fd6a8bae64980eb5d9e7223d4f6849c4413b8468f0ea9fc0b9c5fc4c7c2e484",
+    "docs/data/qualification.json": "1d7a017d6b65b9e96a502681bd3edf8e7e4af3e487cacc8d39a9de40e4b3d48b",
+    "src/export_qualification.py": "0db614f5b2f48a0202bf9d8384f1299ad2f89601fb5e870e5e6d6834e39ce395"
+  },
+  "no_commit_clone_download_upload": true,
+  "prediction_accuracy_improvement_claimed": false,
+  "remaining_limitations": [
+    "Full model player-ID migration pending; ambiguous identities blocked in website",
+    "Physical devices, other browsers, true zoom and screen reader unverified",
+    "Model calibration and causal substitution benefit not established"
+  ]
+}

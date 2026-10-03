@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from load import CELLS, load, pitches_before
+from identity import aliases, key
 
 PRIOR_SEASON_WEIGHT = 0.6  # 前一季資料的權重
 PITCHES_PER_PA = 3.76
@@ -44,9 +45,11 @@ class Model:
     slope_fine: pd.Series
     slope_coarse: pd.Series
     slope_all: float
+    identities: dict
 
     # ---------- 對戰 ----------
     def pitch_mix(self, pitcher, bhand):
+        pitcher = key(pitcher, self.identities['pitcher'])
         bhand = bhand if bhand in ("L", "R") else "R"
         if (pitcher, bhand) in self.mix.index:
             return self.mix.loc[(pitcher, bhand)], int(self.mix_n.get((pitcher, bhand), 0))
@@ -55,6 +58,8 @@ class Model:
 
     def matchup(self, batter, bhand, pitcher):
         """回傳 (每打席預期得分值，相對聯盟平均打者)、標準誤、打者總樣本球數、投手樣本。"""
+        batter = key(batter, self.identities['batter'])
+        pitcher = key(pitcher, self.identities['pitcher'])
         bhand = bhand if bhand in ("L", "R") else "R"
         mix, mix_n = self.pitch_mix(pitcher, bhand)
         ph = self.phand.get(pitcher, "R")
@@ -111,6 +116,9 @@ def fit(cutoff, season=None):
     season = season or cutoff.year
     pa, _, _ = load()
     p = pitches_before(str(cutoff.date()))
+    identities = {who: aliases(p, who+'_id', who) for who in ('batter', 'pitcher')}
+    p = p.dropna(subset=['batter_id', 'pitcher_id']).copy()
+    p['batter'], p['pitcher'] = p['batter_id'], p['pitcher_id']
     p = p[p["cell"].notna() & p["rv"].notna()].copy()
     p["w"] = np.where(p["season"] < season, PRIOR_SEASON_WEIGHT, 1.0)
     pa_ = pa[pa["date"] < cutoff].copy()
@@ -194,4 +202,4 @@ def fit(cutoff, season=None):
 
     return Model(cutoff, league, ba, bc, pp, mix, mix_n, league_mix, phand,
                  dict(sigma2=sigma2, bat=k_bat, cell=k_cell, pit=k_pit),
-                 slope_fine, slope_coarse, slope_all)
+                 slope_fine, slope_coarse, slope_all, identities)

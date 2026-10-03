@@ -1,14 +1,14 @@
 {
-  "pitchers": 167,
+  "pitchers": 168,
   "totals": {
-    "insufficient": 9032,
-    "recomputed": 9852,
+    "insufficient": 9035,
+    "recomputed": 9855,
     "ready": 820
   },
-  "elapsed_seconds": 7.401450000004843,
-  "total_bytes": 34053269,
+  "elapsed_seconds": 6.707657200051472,
+  "total_bytes": 34049727,
   "maximum_pitcher_bytes": 649527,
-  "median_pitcher_bytes": 167639,
+  "median_pitcher_bytes": 166046,
   "errors": 0,
   "scope": "all exported snapshots and all three hands; exact Python recomputation"
 }

@@ -21,6 +21,54 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('missing personal pitch mix never displays league fallback percentages as pitcher usage',()=>{
+  const f=fixture();f.context.result={situation:{pitcher:'No pitches'},pitch_mix:{R:{n:0,cells:{速球高中:.5}},L:{n:0,cells:{速球高中:.5}}}};
+  const html=f.eval('mixCard(result)');
+  assert.match(html,/不展示聯盟回退配球/);
+  assert.doesNotMatch(html,/50%|mix-bar/);
+});
+
+test('comparison chart shares a zero baseline and never magnifies tiny improvements',()=>{
+  const f=fixture();f.context.current={球員:'Current'};f.context.choices=[{球員:'One',守備:'ok',相對現任:.001},{球員:'Two',守備:'bad',相對現任:-.5}];
+  const html=f.eval('candidateChart(current,choices,false)');
+  assert.match(html,/共同刻度 ±1.0/);assert.match(html,/\+0.0010/);assert.match(html,/差距極小/);
+  assert.match(html,/守備受限/);assert.match(html,/left:25%;width:25%/);
+  assert.doesNotMatch(html,/NaN|undefined/);
+});
+
+test('defense chart uses defending-team win delta without reversing the sign again',()=>{
+  const f=fixture();f.context.current={投手:'Current'};f.context.choices=[{投手:'Better',守方勝率增減:2},{投手:'Worse',守方勝率增減:-1}];
+  const html=f.eval('candidateChart(current,choices,true)');
+  assert.match(html,/守方/);assert.match(html,/共同刻度 ±2.0/);
+  assert.match(html,/left:50%;width:50%/);assert.match(html,/left:25%;width:25%/);
+  assert.match(html,/不是贏球機率/);
+  assert.equal(f.eval('candidateChart(current,[],true)'), '');
+});
+
+test('editing a custom situation invalidates an in-flight result before it can arrive',async()=>{
+  const f=fixture(),a=deferred();f.context.a=a.promise;f.eval('S.ready=true;renderResult=()=>{};');
+  const pending=f.eval("run(()=>a,'offense')");
+  f.eval("invalidateCustom({target:{id:'myScore'}})");
+  a.resolve({id:'obsolete'});await pending;
+  assert.equal(f.eval('S.last'),null);assert.equal(f.node('#resultBody').innerHTML,'');
+  assert.equal(f.node('#evalBtn').disabled,false);
+});
+
+test('searching the bench and theme-independent replay controls do not invalidate a result',()=>{
+  const f=fixture();f.eval("S.last={id:'saved'};invalidateCustom({target:{id:'benchFilter'}})");
+  assert.equal(f.eval('S.last.id'),'saved');
+  f.eval("S.mode='replay';invalidateCustom({target:{id:'myScore'}})");
+  assert.equal(f.eval('S.last.id'),'saved');
+});
+
+test('invalid submit removes the previous recommendation without making a request',async()=>{
+  const f=fixture();f.node('#myScore').value='-1';f.node('#myScore').checkValidity=()=>false;
+  f.eval("S.ready=true;S.last={id:'old'};api=()=>{throw Error('request should not run');};");
+  await f.eval('evaluateCustom()');
+  assert.equal(f.eval('S.last'),null);assert.equal(f.node('#resultBody').innerHTML,'');
+  assert.match(f.node('#formError').innerHTML,/非負整數/);
+});
+
 test('automatic detail does not collapse the initial two-candidate comparison',async()=>{
   const f=fixture();f.node('#candidateCompare').innerHTML='both selected candidates';
   f.eval("S.last={view:'offense',model_cutoff:'2026-01-01'};mountPitchChange=()=>{};api=async()=>{throw Error('controlled missing detail');};");
@@ -45,6 +93,15 @@ test('tiny positive differences never become a strong recommendation from SE',()
   const rec=f.eval('recommendation(cands)');
   assert.equal(rec.kind,'neutral');assert.match(rec.text,/不能只依排序認定必須換人/);
   assert.match(rec.title,/差距小於顯示精度/);assert.match(rec.text,/並非統計上的相等/);
+});
+
+test('a high predicted value never bypasses personal sample qualification',()=>{
+  const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0},
+    {角色:'代打',球員:'Thin',預估勝率:99,守備:'ok',可列入排名:false}];
+  const rec=f.eval('recommendation(cands)');
+  assert.match(rec.title,/沒有達門檻/);assert.equal(rec.best,undefined);
+  f.context.cands[0]['可列入排名']=false;f.context.cands[0]['樣本資格說明']='99 打席';
+  assert.match(f.eval('recommendation(cands).title'),/個人資料不足/);
 });
 
 test('API and static reads work without the newer timeout API',async()=>{
@@ -83,6 +140,13 @@ test('missing historical detail never falls back to full-season Engine',async()=
 test('result context controls season after a mode switch',()=>{
   const f=fixture();f.eval("S.mode='replay';S.last={view:'offense',situation:{date:'2026-01-01'},model_cutoff:'2026-01-01'};mountPitchChange('P');");
   assert.equal(f.context.lastMount.season,2025);
+});
+
+test('ambiguous player identity also blocks observational pitch charts',()=>{
+  const f=fixture();f.eval("S.last={ambiguous_players:['Shared'],situation:{pitcher:'Shared'}};mountPitchChange('Shared');");
+  assert.equal(f.context.lastMount,undefined);
+  assert.match(f.node('#pitchChange').innerHTML,/避免混入另一位球員/);
+  assert.match(f.eval('mixCard(S.last)'),/不展示合併球路/);
 });
 
 test('pitcher identity switches even when detail fails',async()=>{

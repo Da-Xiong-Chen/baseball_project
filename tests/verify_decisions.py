@@ -1,4 +1,4 @@
-"""Independent real-data parity and replay invariants; run after exporting v2 snapshots."""
+"""Independent real-data parity and replay invariants; run after context v1 export."""
 import json
 import math
 import subprocess
@@ -12,7 +12,7 @@ from engine import custom_situation
 from load import load
 
 def main():
-    out=ROOT/'output'/'decision_v2';out.mkdir(parents=True,exist_ok=True)
+    out=ROOT/'output'/'decision_v4';out.mkdir(parents=True,exist_ok=True)
     roster=server.rosters();teams=sorted(roster)
     cases=[]
     for i,bat in enumerate(teams):
@@ -34,6 +34,8 @@ def main():
             a=local[key] if key=='candidates' else local[key]['rows'];b=result[key] if key=='candidates' else result[key]['rows']
             assert [x[identity] for x in a]==[x[identity] for x in b]
             for x,y in zip(a,b):
+                for metric in ['個人樣本','個人投球數','樣本門檻','樣本單位','可列入排名','推薦已驗證','樣本資格說明']:
+                    assert x[metric] == y[metric], (x[identity], metric, x[metric], y[metric])
                 for metric in ['價值分數','預估勝率','相對現任','預估失分','守方勝率增減','階層式','機器學習','疲勞調整']:
                     if metric not in x or x[metric] is None:continue
                     error=abs(x[metric]-y[metric]);max_error=max(max_error,error)
@@ -41,6 +43,9 @@ def main():
                 if '對決明細' in x:
                     assert abs(sum(d['runs']+d['fatigue'] for d in x['對決明細'])-x['預估失分'])<1e-9
         assert local['schema_version']==result['schema_version']==2
+        assert local['training_version']==result['training_version']==4
+        assert local['context']==result['context']
+        assert local['context_version']==result['context_version']==1
     pa=load()[0];expected=set(pa.loc[(pa.season==2025)&pa.is_ph,'pa_id'])
     seen=set();games=0
     for file in (ROOT/'docs/data/replay').glob('*.json'):
@@ -48,6 +53,9 @@ def main():
         payload=json.loads(file.read_text(encoding='utf8'));games+=1
         for pid,r in payload['results'].items():
             assert r['schema_version']==2,(pid,'stale schema')
+            assert r['training_version']==4,(pid,'stale identity model')
+            assert r['context_version']==1 and not r['context']['positions_confirmed'],(pid,'stale context')
+            assert 'fatigue_support' in r['context'],(pid,'missing fatigue support')
             assert r['ml_cutoff']<=r['model_cutoff']<=r['situation']['date'],pid
             assert all(math.isfinite(c['預估勝率']) for c in r['candidates']),pid
             for p in r['bullpen']['rows']:
@@ -55,7 +63,7 @@ def main():
             seen.add(pid)
     assert seen==expected,{'missing':sorted(expected-seen),'extra':sorted(seen-expected)}
     report=dict(custom_scenarios=len(cases),max_numeric_error=max_error,replay_games=games,
-                replay_cases=len(seen),missing_cases=0,stale_snapshots=0,version=2)
+                replay_cases=len(seen),missing_cases=0,stale_snapshots=0,version=4)
     (out/'parity.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps(report,ensure_ascii=False,indent=2))
 

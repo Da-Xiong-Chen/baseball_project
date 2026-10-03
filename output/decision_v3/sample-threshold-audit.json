@@ -1,0 +1,214 @@
+{
+  "raw_games": 720,
+  "replay_snapshots": 498,
+  "distributions": {
+    "2025-04-01": {
+      "missing_identity_or_depth_rows": 0,
+      "hitters": {
+        "positive_ids": 176,
+        "recorded_ids": 183,
+        "unit": "PA",
+        "quantiles": {
+          "0.25": 21.0,
+          "0.5": 105.0,
+          "0.75": 251.75
+        },
+        "passes": {
+          "20": 132,
+          "50": 112,
+          "100": 91,
+          "200": 54
+        }
+      },
+      "pitchers": {
+        "positive_ids": 175,
+        "recorded_ids": 175,
+        "unit": "outs",
+        "quantiles": {
+          "0.25": 18.0,
+          "0.5": 78.0,
+          "0.75": 148.5
+        },
+        "passes": {
+          "15": 138,
+          "30": 124,
+          "60": 106,
+          "90": 80
+        }
+      }
+    },
+    "2025-07-01": {
+      "missing_identity_or_depth_rows": 0,
+      "hitters": {
+        "positive_ids": 194,
+        "recorded_ids": 202,
+        "unit": "PA",
+        "quantiles": {
+          "0.25": 22.75,
+          "0.5": 117.0,
+          "0.75": 350.75
+        },
+        "passes": {
+          "20": 150,
+          "50": 129,
+          "100": 101,
+          "200": 75
+        }
+      },
+      "pitchers": {
+        "positive_ids": 197,
+        "recorded_ids": 197,
+        "unit": "outs",
+        "quantiles": {
+          "0.25": 36.0,
+          "0.5": 98.0,
+          "0.75": 197.0
+        },
+        "passes": {
+          "15": 168,
+          "30": 157,
+          "60": 132,
+          "90": 109
+        }
+      }
+    },
+    "2026-01-01": {
+      "missing_identity_or_depth_rows": 0,
+      "hitters": {
+        "positive_ids": 201,
+        "recorded_ids": 216,
+        "unit": "PA",
+        "quantiles": {
+          "0.25": 30.0,
+          "0.5": 146.0,
+          "0.75": 447.0
+        },
+        "passes": {
+          "20": 157,
+          "50": 138,
+          "100": 115,
+          "200": 91
+        }
+      },
+      "pitchers": {
+        "positive_ids": 219,
+        "recorded_ids": 219,
+        "unit": "outs",
+        "quantiles": {
+          "0.25": 37.0,
+          "0.5": 111.0,
+          "0.75": 250.0
+        },
+        "passes": {
+          "15": 186,
+          "30": 173,
+          "60": 149,
+          "90": 127
+        }
+      }
+    }
+  },
+  "no_depth_gate_comparable": {
+    "offense": 419,
+    "defense": 493
+  },
+  "coverage": [
+    {
+      "min_pa": 20,
+      "min_outs": 15,
+      "offense": 373,
+      "defense": 416
+    },
+    {
+      "min_pa": 20,
+      "min_outs": 30,
+      "offense": 356,
+      "defense": 397
+    },
+    {
+      "min_pa": 20,
+      "min_outs": 60,
+      "offense": 332,
+      "defense": 374
+    },
+    {
+      "min_pa": 20,
+      "min_outs": 90,
+      "offense": 306,
+      "defense": 341
+    },
+    {
+      "min_pa": 50,
+      "min_outs": 15,
+      "offense": 337,
+      "defense": 355
+    },
+    {
+      "min_pa": 50,
+      "min_outs": 30,
+      "offense": 320,
+      "defense": 336
+    },
+    {
+      "min_pa": 50,
+      "min_outs": 60,
+      "offense": 297,
+      "defense": 315
+    },
+    {
+      "min_pa": 50,
+      "min_outs": 90,
+      "offense": 273,
+      "defense": 287
+    },
+    {
+      "min_pa": 100,
+      "min_outs": 15,
+      "offense": 310,
+      "defense": 288
+    },
+    {
+      "min_pa": 100,
+      "min_outs": 30,
+      "offense": 293,
+      "defense": 272
+    },
+    {
+      "min_pa": 100,
+      "min_outs": 60,
+      "offense": 271,
+      "defense": 254
+    },
+    {
+      "min_pa": 100,
+      "min_outs": 90,
+      "offense": 250,
+      "defense": 235
+    },
+    {
+      "min_pa": 200,
+      "min_outs": 15,
+      "offense": 232,
+      "defense": 155
+    },
+    {
+      "min_pa": 200,
+      "min_outs": 30,
+      "offense": 220,
+      "defense": 145
+    },
+    {
+      "min_pa": 200,
+      "min_outs": 60,
+      "offense": 206,
+      "defense": 135
+    },
+    {
+      "min_pa": 200,
+      "min_outs": 90,
+      "offense": 193,
+      "defense": 124
+    }
+  ],
+  "interpretation": "Descriptive only. ID-grouped positive exposure distributions include all recorded roles (including emergency pitchers), not current roster. Replay cases are selected historical substitution snapshots, not a representative sample of all games. Coverage uses unique ID display labels and strictly pre-cutoff depth. This script does not evaluate outcome error or select a gate."
+}

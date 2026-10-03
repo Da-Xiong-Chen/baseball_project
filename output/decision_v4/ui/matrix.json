@@ -1,0 +1,58 @@
+[
+  {
+    "mode": "我方進攻・評估代打",
+    "bodyWidth": 375,
+    "text": true,
+    "theme": "dark",
+    "width": 390
+  },
+  {
+    "mode": "我方防守・評估換投",
+    "bodyWidth": 375,
+    "text": true,
+    "theme": "dark",
+    "width": 390
+  },
+  {
+    "mode": "我方進攻・評估代打",
+    "bodyWidth": 375,
+    "text": true,
+    "theme": "light",
+    "width": 390
+  },
+  {
+    "mode": "我方防守・評估換投",
+    "bodyWidth": 375,
+    "text": true,
+    "theme": "light",
+    "width": 390
+  },
+  {
+    "mode": "我方進攻・評估代打",
+    "bodyWidth": 1351,
+    "text": true,
+    "theme": "dark",
+    "width": 1366
+  },
+  {
+    "mode": "我方防守・評估換投",
+    "bodyWidth": 1351,
+    "text": true,
+    "theme": "dark",
+    "width": 1366
+  },
+  {
+    "mode": "我方進攻・評估代打",
+    "bodyWidth": 1351,
+    "text": true,
+    "theme": "light",
+    "width": 1366
+  },
+  {
+    "mode": "我方防守・評估換投",
+    "bodyWidth": 1351,
+    "text": true,
+    "theme": "light",
+    "width": 1366
+  }
+]

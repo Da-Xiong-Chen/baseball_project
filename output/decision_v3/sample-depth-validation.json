@@ -1,0 +1,2506 @@
+{
+  "training_version": 4,
+  "interpretation": "Retrospective out-of-time actual-PA outcomes. May-July exploration; Aug-Oct confirmation already historically examined, not untouched prospective test. Gates select different populations. Gains compare model vs baseline on the same subset, not causal gain from gating or evidence of counterfactual candidate rankings. Game-cluster bootstrap 1000; repeat-player dependence remains a limitation.",
+  "periods": {
+    "all": {
+      "n": 22377,
+      "games": 294,
+      "batter_ids": 172,
+      "pitcher_ids": 163,
+      "baseline_mse": 0.24487710911448754,
+      "hierarchy_mse": 0.24413334702542067,
+      "ensemble_mse": 0.24408714620942404,
+      "ensemble_gain_percent": 0.32259565131266266,
+      "gain_ci95_percent": [
+        0.13328365010025267,
+        0.5033921301413169
+      ]
+    },
+    "exploration": {
+      "n": 11966,
+      "games": 155,
+      "batter_ids": 150,
+      "pitcher_ids": 133,
+      "baseline_mse": 0.25814557961913864,
+      "hierarchy_mse": 0.25691497320638795,
+      "ensemble_mse": 0.2569896653128089,
+      "ensemble_gain_percent": 0.447776137803757,
+      "gain_ci95_percent": [
+        0.2126818870064845,
+        0.6612937463638635
+      ]
+    },
+    "confirmation": {
+      "n": 10411,
+      "games": 139,
+      "batter_ids": 151,
+      "pitcher_ids": 137,
+      "baseline_mse": 0.22962684323621882,
+      "hierarchy_mse": 0.22944264114880422,
+      "ensemble_mse": 0.2292574906920767,
+      "ensemble_gain_percent": 0.16084902746416052,
+      "gain_ci95_percent": [
+        -0.11233360069366372,
+        0.4279300747813458
+      ]
+    }
+  },
+  "gates": [
+    {
+      "period": "all",
+      "min_pa": 0,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 1.0,
+      "n": 22377,
+      "games": 294,
+      "batter_ids": 172,
+      "pitcher_ids": 163,
+      "baseline_mse": 0.24487710911448754,
+      "hierarchy_mse": 0.24413334702542067,
+      "ensemble_mse": 0.24408714620942404,
+      "ensemble_gain_percent": 0.32259565131266266,
+      "gain_ci95_percent": [
+        0.13328365010025267,
+        0.5033921301413169
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 0,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.9351119453009786,
+      "n": 20925,
+      "games": 294,
+      "batter_ids": 171,
+      "pitcher_ids": 139,
+      "baseline_mse": 0.24239651060842782,
+      "hierarchy_mse": 0.24177483511038433,
+      "ensemble_mse": 0.24170020349426385,
+      "ensemble_gain_percent": 0.2872595452864335,
+      "gain_ci95_percent": [
+        0.09580485332678773,
+        0.4745179481518793
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 0,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.851499307324485,
+      "n": 19054,
+      "games": 294,
+      "batter_ids": 171,
+      "pitcher_ids": 118,
+      "baseline_mse": 0.24096022332936448,
+      "hierarchy_mse": 0.24032352298508888,
+      "ensemble_mse": 0.24024029843192615,
+      "ensemble_gain_percent": 0.29877333590211386,
+      "gain_ci95_percent": [
+        0.10223770915513687,
+        0.4879206769966046
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 0,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.8295124458148992,
+      "n": 18562,
+      "games": 294,
+      "batter_ids": 170,
+      "pitcher_ids": 115,
+      "baseline_mse": 0.2408180484152941,
+      "hierarchy_mse": 0.24018337539591908,
+      "ensemble_mse": 0.24010485619795438,
+      "ensemble_gain_percent": 0.2961539726913709,
+      "gain_ci95_percent": [
+        0.09489002626927423,
+        0.48942448523257265
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 0,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.7101488135138758,
+      "n": 15891,
+      "games": 294,
+      "batter_ids": 170,
+      "pitcher_ids": 91,
+      "baseline_mse": 0.23809764673421943,
+      "hierarchy_mse": 0.23759579532112826,
+      "ensemble_mse": 0.2374733260542388,
+      "ensemble_gain_percent": 0.2622120329805466,
+      "gain_ci95_percent": [
+        0.039852854535597226,
+        0.46462412351800764
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 0,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.5754122536533047,
+      "n": 12876,
+      "games": 287,
+      "batter_ids": 169,
+      "pitcher_ids": 72,
+      "baseline_mse": 0.23550948161062513,
+      "hierarchy_mse": 0.2351840719024611,
+      "ensemble_mse": 0.23500010252730388,
+      "ensemble_gain_percent": 0.21628814255699735,
+      "gain_ci95_percent": [
+        -0.023974652745705757,
+        0.44493447931084135
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 20,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.977789694775886,
+      "n": 21880,
+      "games": 294,
+      "batter_ids": 141,
+      "pitcher_ids": 163,
+      "baseline_mse": 0.2458332736159073,
+      "hierarchy_mse": 0.24501117155908902,
+      "ensemble_mse": 0.24497636404803932,
+      "ensemble_gain_percent": 0.34857346821440816,
+      "gain_ci95_percent": [
+        0.1566775552443378,
+        0.5343496126589398
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 20,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.9151360772221477,
+      "n": 20478,
+      "games": 294,
+      "batter_ids": 141,
+      "pitcher_ids": 139,
+      "baseline_mse": 0.243295599286297,
+      "hierarchy_mse": 0.24260865191114664,
+      "ensemble_mse": 0.24254549012588425,
+      "ensemble_gain_percent": 0.30831184888389096,
+      "gain_ci95_percent": [
+        0.11463647660887227,
+        0.5023633417091228
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 20,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.8338025651338428,
+      "n": 18658,
+      "games": 294,
+      "batter_ids": 141,
+      "pitcher_ids": 118,
+      "baseline_mse": 0.24191584470303715,
+      "hierarchy_mse": 0.24121772806551153,
+      "ensemble_mse": 0.2411457338127759,
+      "ensemble_gain_percent": 0.3183383424953501,
+      "gain_ci95_percent": [
+        0.11522344185183525,
+        0.5080385377150602
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 20,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.8123966572820307,
+      "n": 18179,
+      "games": 294,
+      "batter_ids": 141,
+      "pitcher_ids": 115,
+      "baseline_mse": 0.24191819686537336,
+      "hierarchy_mse": 0.24122659243253794,
+      "ensemble_mse": 0.24116204883458767,
+      "ensemble_gain_percent": 0.31256351964563667,
+      "gain_ci95_percent": [
+        0.10773457795709984,
+        0.5105055230269434
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 20,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.6960271707556867,
+      "n": 15575,
+      "games": 294,
+      "batter_ids": 141,
+      "pitcher_ids": 91,
+      "baseline_mse": 0.23921835480065048,
+      "hierarchy_mse": 0.23867333366259055,
+      "ensemble_mse": 0.23856476856391315,
+      "ensemble_gain_percent": 0.2732174281868782,
+      "gain_ci95_percent": [
+        0.05593522263128037,
+        0.4758389822261252
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 20,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.5648210215846629,
+      "n": 12639,
+      "games": 287,
+      "batter_ids": 141,
+      "pitcher_ids": 72,
+      "baseline_mse": 0.2362677264164935,
+      "hierarchy_mse": 0.2358938499361996,
+      "ensemble_mse": 0.2357342807509033,
+      "ensemble_gain_percent": 0.22578016628891362,
+      "gain_ci95_percent": [
+        -0.015577015941116157,
+        0.45394694840429484
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 50,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.9403852169638468,
+      "n": 21043,
+      "games": 294,
+      "batter_ids": 126,
+      "pitcher_ids": 163,
+      "baseline_mse": 0.24649419489833166,
+      "hierarchy_mse": 0.2456445115565819,
+      "ensemble_mse": 0.24560951521423874,
+      "ensemble_gain_percent": 0.3589048758157687,
+      "gain_ci95_percent": [
+        0.16428553751561492,
+        0.5369648088077275
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 50,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.880725745184788,
+      "n": 19708,
+      "games": 294,
+      "batter_ids": 126,
+      "pitcher_ids": 139,
+      "baseline_mse": 0.2435685739881294,
+      "hierarchy_mse": 0.24285623723186997,
+      "ensemble_mse": 0.24280232323263545,
+      "ensemble_gain_percent": 0.3145934399284567,
+      "gain_ci95_percent": [
+        0.11217355072526941,
+        0.5036296431817832
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 50,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.802431067614068,
+      "n": 17956,
+      "games": 294,
+      "batter_ids": 126,
+      "pitcher_ids": 118,
+      "baseline_mse": 0.24237244090790366,
+      "hierarchy_mse": 0.24167195326533952,
+      "ensemble_mse": 0.24159330172773663,
+      "ensemble_gain_percent": 0.3214636025648976,
+      "gain_ci95_percent": [
+        0.11467104655943335,
+        0.513419194545438
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 50,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.7823658220494257,
+      "n": 17507,
+      "games": 294,
+      "batter_ids": 126,
+      "pitcher_ids": 115,
+      "baseline_mse": 0.24225001965798362,
+      "hierarchy_mse": 0.24157566927754306,
+      "ensemble_mse": 0.2414995018116277,
+      "ensemble_gain_percent": 0.30981126334500564,
+      "gain_ci95_percent": [
+        0.0980835899583782,
+        0.502080821383953
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 50,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.6710908522143272,
+      "n": 15017,
+      "games": 294,
+      "batter_ids": 126,
+      "pitcher_ids": 91,
+      "baseline_mse": 0.2402677836544532,
+      "hierarchy_mse": 0.23972850638726925,
+      "ensemble_mse": 0.2396107459447778,
+      "ensemble_gain_percent": 0.27346059454244065,
+      "gain_ci95_percent": [
+        0.04994293582096743,
+        0.47967776144458624
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 50,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.5449345309916432,
+      "n": 12194,
+      "games": 287,
+      "batter_ids": 126,
+      "pitcher_ids": 72,
+      "baseline_mse": 0.23688375906196366,
+      "hierarchy_mse": 0.2365313820110819,
+      "ensemble_mse": 0.23635659744360912,
+      "ensemble_gain_percent": 0.22254021146999037,
+      "gain_ci95_percent": [
+        -0.015330538372312349,
+        0.4552427885586623
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 100,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.8825132949010145,
+      "n": 19748,
+      "games": 294,
+      "batter_ids": 106,
+      "pitcher_ids": 163,
+      "baseline_mse": 0.2493101788655846,
+      "hierarchy_mse": 0.24831669034294665,
+      "ensemble_mse": 0.24828967766311125,
+      "ensemble_gain_percent": 0.4093299387601501,
+      "gain_ci95_percent": [
+        0.21269752973343103,
+        0.5944809844672155
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 100,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.8265629887831255,
+      "n": 18496,
+      "games": 294,
+      "batter_ids": 105,
+      "pitcher_ids": 139,
+      "baseline_mse": 0.2462732567495426,
+      "hierarchy_mse": 0.24544059026804238,
+      "ensemble_mse": 0.24539285869226185,
+      "ensemble_gain_percent": 0.35748829121795556,
+      "gain_ci95_percent": [
+        0.15901113394650002,
+        0.557621193832776
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 100,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.7523796755597265,
+      "n": 16836,
+      "games": 294,
+      "batter_ids": 105,
+      "pitcher_ids": 118,
+      "baseline_mse": 0.24488817435109925,
+      "hierarchy_mse": 0.2440781245247711,
+      "ensemble_mse": 0.24401204859495879,
+      "ensemble_gain_percent": 0.3577656448548461,
+      "gain_ci95_percent": [
+        0.1446913360845492,
+        0.5519487144136105
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 100,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.7332975823390088,
+      "n": 16409,
+      "games": 294,
+      "batter_ids": 105,
+      "pitcher_ids": 115,
+      "baseline_mse": 0.2448663140177092,
+      "hierarchy_mse": 0.24407754872301263,
+      "ensemble_mse": 0.2440180102380392,
+      "ensemble_gain_percent": 0.34643547564842114,
+      "gain_ci95_percent": [
+        0.13154566808206425,
+        0.5458084376863781
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 100,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.6289940563971935,
+      "n": 14075,
+      "games": 294,
+      "batter_ids": 105,
+      "pitcher_ids": 91,
+      "baseline_mse": 0.24283411139668265,
+      "hierarchy_mse": 0.24217588988689281,
+      "ensemble_mse": 0.24206902802886376,
+      "ensemble_gain_percent": 0.3150642071735432,
+      "gain_ci95_percent": [
+        0.08295120780738463,
+        0.5230557669137883
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 100,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.511105152612057,
+      "n": 11437,
+      "games": 287,
+      "batter_ids": 105,
+      "pitcher_ids": 72,
+      "baseline_mse": 0.23894930725341598,
+      "hierarchy_mse": 0.23846854404568538,
+      "ensemble_mse": 0.2382986515877482,
+      "ensemble_gain_percent": 0.27229861979792824,
+      "gain_ci95_percent": [
+        0.020686269366021193,
+        0.5101528371533787
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 200,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.7866559413683694,
+      "n": 17603,
+      "games": 294,
+      "batter_ids": 89,
+      "pitcher_ids": 161,
+      "baseline_mse": 0.25269615494533815,
+      "hierarchy_mse": 0.251564156212122,
+      "ensemble_mse": 0.2515858665224738,
+      "ensemble_gain_percent": 0.43937685680439653,
+      "gain_ci95_percent": [
+        0.23404501490027263,
+        0.6353437114266658
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 200,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.7375877016579524,
+      "n": 16505,
+      "games": 294,
+      "batter_ids": 89,
+      "pitcher_ids": 139,
+      "baseline_mse": 0.24980895315800875,
+      "hierarchy_mse": 0.24885518635028983,
+      "ensemble_mse": 0.2488411533063723,
+      "ensemble_gain_percent": 0.3874159990672199,
+      "gain_ci95_percent": [
+        0.17335211493551772,
+        0.5921037859435473
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 200,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.6712249184430442,
+      "n": 15020,
+      "games": 294,
+      "batter_ids": 89,
+      "pitcher_ids": 118,
+      "baseline_mse": 0.2480234182011636,
+      "hierarchy_mse": 0.24705786825506404,
+      "ensemble_mse": 0.2470453945516365,
+      "ensemble_gain_percent": 0.39432713919533846,
+      "gain_ci95_percent": [
+        0.17212730302845175,
+        0.6124122790121469
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 200,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.6546900835679492,
+      "n": 14650,
+      "games": 294,
+      "batter_ids": 89,
+      "pitcher_ids": 115,
+      "baseline_mse": 0.2475145746865434,
+      "hierarchy_mse": 0.2465714945050463,
+      "ensemble_mse": 0.24656167038119225,
+      "ensemble_gain_percent": 0.38498916944907924,
+      "gain_ci95_percent": [
+        0.16801024765186384,
+        0.6022976088510759
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 200,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.5616481208383608,
+      "n": 12568,
+      "games": 294,
+      "batter_ids": 89,
+      "pitcher_ids": 91,
+      "baseline_mse": 0.24546877009966622,
+      "hierarchy_mse": 0.24468821147663877,
+      "ensemble_mse": 0.24460950931610292,
+      "ensemble_gain_percent": 0.35004892199296256,
+      "gain_ci95_percent": [
+        0.10414996866661252,
+        0.5776730363717127
+      ]
+    },
+    {
+      "period": "all",
+      "min_pa": 200,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.4565848862671493,
+      "n": 10217,
+      "games": 287,
+      "batter_ids": 89,
+      "pitcher_ids": 72,
+      "baseline_mse": 0.24225034122630418,
+      "hierarchy_mse": 0.24162931195426404,
+      "ensemble_mse": 0.24150380262908383,
+      "ensemble_gain_percent": 0.30816823350641176,
+      "gain_ci95_percent": [
+        0.025890090372661382,
+        0.5577442594432096
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 0,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 1.0,
+      "n": 11966,
+      "games": 155,
+      "batter_ids": 150,
+      "pitcher_ids": 133,
+      "baseline_mse": 0.25814557961913864,
+      "hierarchy_mse": 0.25691497320638795,
+      "ensemble_mse": 0.2569896653128089,
+      "ensemble_gain_percent": 0.447776137803757,
+      "gain_ci95_percent": [
+        0.2126818870064845,
+        0.6612937463638635
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 0,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.945512284806953,
+      "n": 11314,
+      "games": 155,
+      "batter_ids": 148,
+      "pitcher_ids": 117,
+      "baseline_mse": 0.2549144737213835,
+      "hierarchy_mse": 0.25373100997982134,
+      "ensemble_mse": 0.2538044398777674,
+      "ensemble_gain_percent": 0.43545343950509574,
+      "gain_ci95_percent": [
+        0.2115832831003167,
+        0.6515095195999184
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 0,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.842470332609059,
+      "n": 10081,
+      "games": 155,
+      "batter_ids": 148,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.25198455800955066,
+      "hierarchy_mse": 0.2506658456565618,
+      "ensemble_mse": 0.25077492289225084,
+      "ensemble_gain_percent": 0.480043351408066,
+      "gain_ci95_percent": [
+        0.24401097453950416,
+        0.7226232112777078
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 0,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.8211599532007354,
+      "n": 9826,
+      "games": 155,
+      "batter_ids": 147,
+      "pitcher_ids": 96,
+      "baseline_mse": 0.25141904533167425,
+      "hierarchy_mse": 0.2501367173441235,
+      "ensemble_mse": 0.2502449794216707,
+      "ensemble_gain_percent": 0.4669757251105411,
+      "gain_ci95_percent": [
+        0.21035718486546368,
+        0.7147724289052895
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 0,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.6836035433728899,
+      "n": 8180,
+      "games": 155,
+      "batter_ids": 147,
+      "pitcher_ids": 74,
+      "baseline_mse": 0.2533731882845466,
+      "hierarchy_mse": 0.25197053007368225,
+      "ensemble_mse": 0.25208615366007064,
+      "ensemble_gain_percent": 0.507960069962321,
+      "gain_ci95_percent": [
+        0.2234558551342894,
+        0.7795865154760153
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 0,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.49791074711683103,
+      "n": 5958,
+      "games": 148,
+      "batter_ids": 144,
+      "pitcher_ids": 54,
+      "baseline_mse": 0.24741877844972002,
+      "hierarchy_mse": 0.24623711067734855,
+      "ensemble_mse": 0.24634012058852273,
+      "ensemble_gain_percent": 0.4359644275814256,
+      "gain_ci95_percent": [
+        0.06747071825898067,
+        0.7799682438477805
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 20,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.9753468159786061,
+      "n": 11671,
+      "games": 155,
+      "batter_ids": 125,
+      "pitcher_ids": 133,
+      "baseline_mse": 0.2595448080685555,
+      "hierarchy_mse": 0.25821933444242295,
+      "ensemble_mse": 0.2583091242767354,
+      "ensemble_gain_percent": 0.47609651721243207,
+      "gain_ci95_percent": [
+        0.2363888613961604,
+        0.6956089025931765
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 20,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.9231990640147083,
+      "n": 11047,
+      "games": 155,
+      "batter_ids": 124,
+      "pitcher_ids": 117,
+      "baseline_mse": 0.2561997892931016,
+      "hierarchy_mse": 0.2549430381157284,
+      "ensemble_mse": 0.25503224924618817,
+      "ensemble_gain_percent": 0.4557146788195743,
+      "gain_ci95_percent": [
+        0.22885308502626128,
+        0.6749148044831416
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 20,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.8229984957379242,
+      "n": 9848,
+      "games": 155,
+      "batter_ids": 123,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.25350699234363716,
+      "hierarchy_mse": 0.2521184095321028,
+      "ensemble_mse": 0.252243385559709,
+      "ensemble_gain_percent": 0.49845046570364815,
+      "gain_ci95_percent": [
+        0.26111100035992374,
+        0.7432036853582776
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 20,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.8026909577135216,
+      "n": 9605,
+      "games": 155,
+      "batter_ids": 123,
+      "pitcher_ids": 96,
+      "baseline_mse": 0.25319686653615264,
+      "hierarchy_mse": 0.25185127081286485,
+      "ensemble_mse": 0.2519819132176232,
+      "ensemble_gain_percent": 0.47984532160707527,
+      "gain_ci95_percent": [
+        0.2309964897348818,
+        0.7216736537036758
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 20,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.668978773190707,
+      "n": 8005,
+      "games": 155,
+      "batter_ids": 123,
+      "pitcher_ids": 74,
+      "baseline_mse": 0.2551252885124448,
+      "hierarchy_mse": 0.2536417565493867,
+      "ensemble_mse": 0.2537906461499429,
+      "ensemble_gain_percent": 0.5231321325626981,
+      "gain_ci95_percent": [
+        0.23840874782811688,
+        0.8051910236497042
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 20,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.4889687447768678,
+      "n": 5851,
+      "games": 148,
+      "batter_ids": 122,
+      "pitcher_ids": 54,
+      "baseline_mse": 0.2484850886715456,
+      "hierarchy_mse": 0.2472039952544218,
+      "ensemble_mse": 0.24736889234519796,
+      "ensemble_gain_percent": 0.4492005264038257,
+      "gain_ci95_percent": [
+        0.07085524120667264,
+        0.7938285440549167
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 50,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.9323082065853251,
+      "n": 11156,
+      "games": 155,
+      "batter_ids": 110,
+      "pitcher_ids": 133,
+      "baseline_mse": 0.26077141352751826,
+      "hierarchy_mse": 0.25937706792100995,
+      "ensemble_mse": 0.25948325702846037,
+      "ensemble_gain_percent": 0.49397918339003644,
+      "gain_ci95_percent": [
+        0.25485924072218863,
+        0.707808135542078
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 50,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.8836703994651512,
+      "n": 10574,
+      "games": 155,
+      "batter_ids": 110,
+      "pitcher_ids": 117,
+      "baseline_mse": 0.2569906447984894,
+      "hierarchy_mse": 0.25565437459144863,
+      "ensemble_mse": 0.255778946500639,
+      "ensemble_gain_percent": 0.4714951000650225,
+      "gain_ci95_percent": [
+        0.2387671151405682,
+        0.702867991385983
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 50,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.7880661875313388,
+      "n": 9430,
+      "games": 155,
+      "batter_ids": 110,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.2545378866804432,
+      "hierarchy_mse": 0.2530933143373715,
+      "ensemble_mse": 0.25323781219200664,
+      "ensemble_gain_percent": 0.5107587343445963,
+      "gain_ci95_percent": [
+        0.26078800614121767,
+        0.7532160951344588
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 50,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.7696807621594518,
+      "n": 9210,
+      "games": 155,
+      "batter_ids": 110,
+      "pitcher_ids": 96,
+      "baseline_mse": 0.2540309890097015,
+      "hierarchy_mse": 0.2526540893587933,
+      "ensemble_mse": 0.2527985565920676,
+      "ensemble_gain_percent": 0.4851504229615111,
+      "gain_ci95_percent": [
+        0.22746363603533604,
+        0.7323390474331315
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 50,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.6417349155941835,
+      "n": 7679,
+      "games": 155,
+      "batter_ids": 110,
+      "pitcher_ids": 74,
+      "baseline_mse": 0.2564391817842999,
+      "hierarchy_mse": 0.25493273546466066,
+      "ensemble_mse": 0.25510177193229444,
+      "ensemble_gain_percent": 0.5215310089120573,
+      "gain_ci95_percent": [
+        0.23082330598188122,
+        0.8068763924377944
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 50,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.4685776366371386,
+      "n": 5607,
+      "games": 148,
+      "batter_ids": 110,
+      "pitcher_ids": 54,
+      "baseline_mse": 0.24909346718210293,
+      "hierarchy_mse": 0.24779111689277497,
+      "ensemble_mse": 0.24798108255299237,
+      "ensemble_gain_percent": 0.44657318463408036,
+      "gain_ci95_percent": [
+        0.07441970729016117,
+        0.7906221235559321
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 100,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.8613571786729066,
+      "n": 10307,
+      "games": 155,
+      "batter_ids": 93,
+      "pitcher_ids": 133,
+      "baseline_mse": 0.26608251118529014,
+      "hierarchy_mse": 0.2644942987429572,
+      "ensemble_mse": 0.2645922276036517,
+      "ensemble_gain_percent": 0.5600832519957133,
+      "gain_ci95_percent": [
+        0.3010120981854758,
+        0.7890431372777618
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 100,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.8165635968577637,
+      "n": 9771,
+      "games": 155,
+      "batter_ids": 93,
+      "pitcher_ids": 117,
+      "baseline_mse": 0.2622908719363669,
+      "hierarchy_mse": 0.260781795106394,
+      "ensemble_mse": 0.2609034474572175,
+      "ensemble_gain_percent": 0.5289640729418843,
+      "gain_ci95_percent": [
+        0.2785496986299982,
+        0.7704338932424933
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 100,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.7267257228814976,
+      "n": 8696,
+      "games": 155,
+      "batter_ids": 93,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.25967646397566596,
+      "hierarchy_mse": 0.2580709417489545,
+      "ensemble_mse": 0.25822818698122557,
+      "ensemble_gain_percent": 0.5577236274197261,
+      "gain_ci95_percent": [
+        0.3031231423687841,
+        0.8199546016794478
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 100,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.7098445595854922,
+      "n": 8494,
+      "games": 155,
+      "batter_ids": 93,
+      "pitcher_ids": 96,
+      "baseline_mse": 0.25932733779221623,
+      "hierarchy_mse": 0.25778339020405794,
+      "ensemble_mse": 0.2579489529289068,
+      "ensemble_gain_percent": 0.5315231610536486,
+      "gain_ci95_percent": [
+        0.2529602611129897,
+        0.7937765999886703
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 100,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.5914257061674745,
+      "n": 7077,
+      "games": 155,
+      "batter_ids": 93,
+      "pitcher_ids": 74,
+      "baseline_mse": 0.26269593291898763,
+      "hierarchy_mse": 0.2609828311770151,
+      "ensemble_mse": 0.26116835567241503,
+      "ensemble_gain_percent": 0.5815001509915652,
+      "gain_ci95_percent": [
+        0.27824827353807924,
+        0.8784036301487296
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 100,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.43097108474009693,
+      "n": 5157,
+      "games": 148,
+      "batter_ids": 93,
+      "pitcher_ids": 54,
+      "baseline_mse": 0.25504724863752903,
+      "hierarchy_mse": 0.2535325171981048,
+      "ensemble_mse": 0.25372943573277557,
+      "ensemble_gain_percent": 0.5166936368823039,
+      "gain_ci95_percent": [
+        0.13591199952775107,
+        0.8648293988737725
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 200,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.7704328931973926,
+      "n": 9219,
+      "games": 155,
+      "batter_ids": 74,
+      "pitcher_ids": 132,
+      "baseline_mse": 0.2717894809434257,
+      "hierarchy_mse": 0.2699489011824442,
+      "ensemble_mse": 0.270112323587695,
+      "ensemble_gain_percent": 0.6170795683147823,
+      "gain_ci95_percent": [
+        0.3649626032254316,
+        0.8523752383450709
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 200,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.7309042286478356,
+      "n": 8746,
+      "games": 155,
+      "batter_ids": 74,
+      "pitcher_ids": 117,
+      "baseline_mse": 0.2683490489474118,
+      "hierarchy_mse": 0.2666005610587178,
+      "ensemble_mse": 0.2667822928429393,
+      "ensemble_gain_percent": 0.583850067894065,
+      "gain_ci95_percent": [
+        0.3282565151249675,
+        0.8377084312383778
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 200,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.6504262075881665,
+      "n": 7783,
+      "games": 155,
+      "batter_ids": 74,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.2650787120047326,
+      "hierarchy_mse": 0.2631892679761089,
+      "ensemble_mse": 0.26343231840531695,
+      "ensemble_gain_percent": 0.621096121587561,
+      "gain_ci95_percent": [
+        0.3562329956871582,
+        0.8884506644358386
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 200,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.6361357178672906,
+      "n": 7612,
+      "games": 155,
+      "batter_ids": 74,
+      "pitcher_ids": 96,
+      "baseline_mse": 0.26431449568669996,
+      "hierarchy_mse": 0.2624743042089208,
+      "ensemble_mse": 0.2627264598655611,
+      "ensemble_gain_percent": 0.6008129887137281,
+      "gain_ci95_percent": [
+        0.32701122003219923,
+        0.8662371432693119
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 200,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.531589503593515,
+      "n": 6361,
+      "games": 155,
+      "batter_ids": 74,
+      "pitcher_ids": 74,
+      "baseline_mse": 0.26803481725897,
+      "hierarchy_mse": 0.2660610399735799,
+      "ensemble_mse": 0.26630097328660596,
+      "ensemble_gain_percent": 0.6468726675493253,
+      "gain_ci95_percent": [
+        0.3275722019010635,
+        0.9601780019469691
+      ]
+    },
+    {
+      "period": "exploration",
+      "min_pa": 200,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.38734748453952866,
+      "n": 4635,
+      "games": 148,
+      "batter_ids": 74,
+      "pitcher_ids": 54,
+      "baseline_mse": 0.26104480402559016,
+      "hierarchy_mse": 0.25923940918739163,
+      "ensemble_mse": 0.2595176208007015,
+      "ensemble_gain_percent": 0.5850272448782223,
+      "gain_ci95_percent": [
+        0.1646082849251096,
+        0.9730484380602066
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 0,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 1.0,
+      "n": 10411,
+      "games": 139,
+      "batter_ids": 151,
+      "pitcher_ids": 137,
+      "baseline_mse": 0.22962684323621882,
+      "hierarchy_mse": 0.22944264114880422,
+      "ensemble_mse": 0.2292574906920767,
+      "ensemble_gain_percent": 0.16084902746416052,
+      "gain_ci95_percent": [
+        -0.11233360069366372,
+        0.4279300747813458
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 0,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.9231581980597445,
+      "n": 9611,
+      "games": 139,
+      "batter_ids": 151,
+      "pitcher_ids": 120,
+      "baseline_mse": 0.22766045456223277,
+      "hierarchy_mse": 0.22770011213953728,
+      "ensemble_mse": 0.227451183575113,
+      "ensemble_gain_percent": 0.09192241468646278,
+      "gain_ci95_percent": [
+        -0.20257386515516285,
+        0.3881559985951688
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 0,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.8618768610123907,
+      "n": 8973,
+      "games": 139,
+      "batter_ids": 151,
+      "pitcher_ids": 104,
+      "baseline_mse": 0.22857458665144656,
+      "hierarchy_mse": 0.22870411421977974,
+      "ensemble_mse": 0.22840484215369886,
+      "ensemble_gain_percent": 0.07426219171360326,
+      "gain_ci95_percent": [
+        -0.21246096667282943,
+        0.3579077664611321
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 0,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.8391124771875901,
+      "n": 8736,
+      "games": 139,
+      "batter_ids": 151,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.228894353852525,
+      "hierarchy_mse": 0.22898814439969015,
+      "ensemble_mse": 0.2286995390280555,
+      "ensemble_gain_percent": 0.08511124070583742,
+      "gain_ci95_percent": [
+        -0.2165271384618056,
+        0.3763882625546835
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 0,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.7406589184516377,
+      "n": 7711,
+      "games": 139,
+      "batter_ids": 151,
+      "pitcher_ids": 84,
+      "baseline_mse": 0.2218930131093101,
+      "hierarchy_mse": 0.22234675754705333,
+      "ensemble_mse": 0.22197171409525754,
+      "ensemble_gain_percent": -0.03546798740736712,
+      "gain_ci95_percent": [
+        -0.3360627179332404,
+        0.26601018298436235
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 0,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.6644894822783595,
+      "n": 6918,
+      "games": 139,
+      "batter_ids": 149,
+      "pitcher_ids": 67,
+      "baseline_mse": 0.22525281919846443,
+      "hierarchy_mse": 0.225664845967107,
+      "ensemble_mse": 0.22523372097067745,
+      "ensemble_gain_percent": 0.008478574365866631,
+      "gain_ci95_percent": [
+        -0.2854215653653269,
+        0.3397017741489529
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 20,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.9805974450100855,
+      "n": 10209,
+      "games": 139,
+      "batter_ids": 128,
+      "pitcher_ids": 137,
+      "baseline_mse": 0.2301581518021295,
+      "hierarchy_mse": 0.22991150763398463,
+      "ensemble_mse": 0.22973425956874532,
+      "ensemble_gain_percent": 0.18417432972288594,
+      "gain_ci95_percent": [
+        -0.09916372362938408,
+        0.4555291806562692
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 20,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.905868792623187,
+      "n": 9431,
+      "games": 139,
+      "batter_ids": 128,
+      "pitcher_ids": 120,
+      "baseline_mse": 0.2281802788531329,
+      "hierarchy_mse": 0.22816077104994265,
+      "ensemble_mse": 0.22791912727973887,
+      "ensemble_gain_percent": 0.11444966879110563,
+      "gain_ci95_percent": [
+        -0.1818518665286789,
+        0.4122485910684824
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 20,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.8462203438670637,
+      "n": 8810,
+      "games": 139,
+      "batter_ids": 128,
+      "pitcher_ids": 104,
+      "baseline_mse": 0.22895902041647323,
+      "hierarchy_mse": 0.22903272113214143,
+      "ensemble_mse": 0.2287405494309601,
+      "ensemble_gain_percent": 0.0954192523691555,
+      "gain_ci95_percent": [
+        -0.1971642539756835,
+        0.38995448229093893
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 20,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.8235520122946883,
+      "n": 8574,
+      "games": 139,
+      "batter_ids": 128,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.2292832980797616,
+      "hierarchy_mse": 0.22932432559756719,
+      "ensemble_mse": 0.22904112541505697,
+      "ensemble_gain_percent": 0.10562158985535364,
+      "gain_ci95_percent": [
+        -0.20095691259866488,
+        0.40979239752578134
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 20,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.7271155508596676,
+      "n": 7570,
+      "games": 139,
+      "batter_ids": 128,
+      "pitcher_ids": 84,
+      "baseline_mse": 0.222397350261296,
+      "hierarchy_mse": 0.22284477022681728,
+      "ensemble_mse": 0.22246395613641404,
+      "ensemble_gain_percent": -0.02994904167687995,
+      "gain_ci95_percent": [
+        -0.32604005283817905,
+        0.2793983343641561
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 20,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.6520026894630679,
+      "n": 6788,
+      "games": 139,
+      "batter_ids": 128,
+      "pitcher_ids": 67,
+      "baseline_mse": 0.22573682091350147,
+      "hierarchy_mse": 0.22614493121832716,
+      "ensemble_mse": 0.22570568433985166,
+      "ensemble_gain_percent": 0.013793307411613664,
+      "gain_ci95_percent": [
+        -0.2827472905858808,
+        0.3533096684495273
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 50,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.9496686197291326,
+      "n": 9887,
+      "games": 139,
+      "batter_ids": 116,
+      "pitcher_ids": 137,
+      "baseline_mse": 0.2303844901317487,
+      "hierarchy_mse": 0.23014937665200416,
+      "ensemble_mse": 0.22995507365669274,
+      "ensemble_gain_percent": 0.18639122573328448,
+      "gain_ci95_percent": [
+        -0.09859368659516976,
+        0.46001482243647135
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 50,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.8773412736528672,
+      "n": 9134,
+      "games": 139,
+      "batter_ids": 116,
+      "pitcher_ids": 120,
+      "baseline_mse": 0.22803047712489902,
+      "hierarchy_mse": 0.22804043862882808,
+      "ensemble_mse": 0.22777989993113887,
+      "ensemble_gain_percent": 0.10988758911507635,
+      "gain_ci95_percent": [
+        -0.1965503103751487,
+        0.41647865887472507
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 50,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.8189415041782729,
+      "n": 8526,
+      "games": 139,
+      "batter_ids": 116,
+      "pitcher_ids": 104,
+      "baseline_mse": 0.22891710972856436,
+      "hierarchy_mse": 0.22903960105923332,
+      "ensemble_mse": 0.2287141399076491,
+      "ensemble_gain_percent": 0.08866520338122186,
+      "gain_ci95_percent": [
+        -0.21507858313767392,
+        0.39668896732892284
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 50,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.7969455383728749,
+      "n": 8297,
+      "games": 139,
+      "batter_ids": 116,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.22917267510822803,
+      "hierarchy_mse": 0.22927818236078826,
+      "ensemble_mse": 0.22895710160337754,
+      "ensemble_gain_percent": 0.09406597219703272,
+      "gain_ci95_percent": [
+        -0.21897355388715622,
+        0.41130661889439113
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 50,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.7048314282969935,
+      "n": 7338,
+      "games": 139,
+      "batter_ids": 116,
+      "pitcher_ids": 84,
+      "baseline_mse": 0.22334489373361738,
+      "hierarchy_mse": 0.22381773027861723,
+      "ensemble_mse": 0.2233998453508639,
+      "ensemble_gain_percent": -0.02460392817937862,
+      "gain_ci95_percent": [
+        -0.33724424490948146,
+        0.2944134295230163
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 50,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.6326961867255787,
+      "n": 6587,
+      "games": 139,
+      "batter_ids": 116,
+      "pitcher_ids": 67,
+      "baseline_mse": 0.2264905856249482,
+      "hierarchy_mse": 0.22694684679297752,
+      "ensemble_mse": 0.22646157876920317,
+      "ensemble_gain_percent": 0.012807091149058536,
+      "gain_ci95_percent": [
+        -0.2992420061526574,
+        0.35751620752047014
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 100,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.9068293151474403,
+      "n": 9441,
+      "games": 139,
+      "batter_ids": 101,
+      "pitcher_ids": 137,
+      "baseline_mse": 0.2309993612382988,
+      "hierarchy_mse": 0.23065514921606295,
+      "ensemble_mse": 0.23049173441163887,
+      "ensemble_gain_percent": 0.2197524806729967,
+      "gain_ci95_percent": [
+        -0.06380915897591154,
+        0.5132212533526453
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 100,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.8380559024109115,
+      "n": 8725,
+      "games": 139,
+      "batter_ids": 100,
+      "pitcher_ids": 120,
+      "baseline_mse": 0.22833536357012021,
+      "hierarchy_mse": 0.228260199153368,
+      "ensemble_mse": 0.22802277699342152,
+      "ensemble_gain_percent": 0.1368980134357045,
+      "gain_ci95_percent": [
+        -0.16826625504576087,
+        0.46253907003382544
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 100,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.7818653347420997,
+      "n": 8140,
+      "games": 139,
+      "batter_ids": 100,
+      "pitcher_ids": 104,
+      "baseline_mse": 0.22908977550893317,
+      "hierarchy_mse": 0.22912953256144206,
+      "ensemble_mse": 0.2288248815916448,
+      "ensemble_gain_percent": 0.11562886938096817,
+      "gain_ci95_percent": [
+        -0.20031183763819904,
+        0.433433837374863
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 100,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.7602535779464028,
+      "n": 7915,
+      "games": 139,
+      "batter_ids": 100,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.22934743392413207,
+      "hierarchy_mse": 0.22936909420121873,
+      "ensemble_mse": 0.22906798784811763,
+      "ensemble_gain_percent": 0.12184399503980536,
+      "gain_ci95_percent": [
+        -0.19542294746399347,
+        0.45672744625910056
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 100,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.672173662472385,
+      "n": 6998,
+      "games": 139,
+      "batter_ids": 100,
+      "pitcher_ids": 84,
+      "baseline_mse": 0.2227480709689386,
+      "hierarchy_mse": 0.22315663817066025,
+      "ensemble_mse": 0.22275408922729018,
+      "ensemble_gain_percent": -0.002701822882422711,
+      "gain_ci95_percent": [
+        -0.3129420957971579,
+        0.31494529161777246
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 100,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.6032081452310056,
+      "n": 6280,
+      "games": 139,
+      "batter_ids": 100,
+      "pitcher_ids": 67,
+      "baseline_mse": 0.22573002640662126,
+      "hierarchy_mse": 0.22609833551908867,
+      "ensemble_mse": 0.22562722581769942,
+      "ensemble_gain_percent": 0.04554138878124503,
+      "gain_ci95_percent": [
+        -0.26080153744398593,
+        0.3774355646828095
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 200,
+      "min_outs": 0,
+      "min_np": 0,
+      "coverage": 0.8053020843338776,
+      "n": 8384,
+      "games": 139,
+      "batter_ids": 86,
+      "pitcher_ids": 136,
+      "baseline_mse": 0.23170123934701164,
+      "hierarchy_mse": 0.23134839239039012,
+      "ensemble_mse": 0.23121427686547524,
+      "ensemble_gain_percent": 0.21016826794229004,
+      "gain_ci95_percent": [
+        -0.0941505882099064,
+        0.5177682422522369
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 200,
+      "min_outs": 15,
+      "min_np": 100,
+      "coverage": 0.7452694265680531,
+      "n": 7759,
+      "games": 139,
+      "batter_ids": 86,
+      "pitcher_ids": 120,
+      "baseline_mse": 0.22891042528404057,
+      "hierarchy_mse": 0.22885247373269596,
+      "ensemble_mse": 0.22861777318176663,
+      "ensemble_gain_percent": 0.12784568545133324,
+      "gain_ci95_percent": [
+        -0.19476578111221998,
+        0.4680092072927355
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 200,
+      "min_outs": 30,
+      "min_np": 300,
+      "coverage": 0.6951301508020363,
+      "n": 7237,
+      "games": 139,
+      "batter_ids": 86,
+      "pitcher_ids": 104,
+      "baseline_mse": 0.22968137706904018,
+      "hierarchy_mse": 0.22970942497347055,
+      "ensemble_mse": 0.22942214895909888,
+      "ensemble_gain_percent": 0.11286422662964979,
+      "gain_ci95_percent": [
+        -0.2125516708261227,
+        0.441663987689226
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 200,
+      "min_outs": 60,
+      "min_np": 0,
+      "coverage": 0.6760157525693977,
+      "n": 7038,
+      "games": 139,
+      "batter_ids": 86,
+      "pitcher_ids": 102,
+      "baseline_mse": 0.2293444981515631,
+      "hierarchy_mse": 0.2293716952061129,
+      "ensemble_mse": 0.22907852494853873,
+      "ensemble_gain_percent": 0.11597104145424364,
+      "gain_ci95_percent": [
+        -0.22962017545829772,
+        0.45470850037858274
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 200,
+      "min_outs": 60,
+      "min_np": 600,
+      "coverage": 0.5961963308039574,
+      "n": 6207,
+      "games": 139,
+      "batter_ids": 86,
+      "pitcher_ids": 84,
+      "baseline_mse": 0.2223428435682773,
+      "hierarchy_mse": 0.2227851081950144,
+      "ensemble_mse": 0.22237986499253773,
+      "ensemble_gain_percent": -0.016650603035528455,
+      "gain_ci95_percent": [
+        -0.3553708210481471,
+        0.300767042178297
+      ]
+    },
+    {
+      "period": "confirmation",
+      "min_pa": 200,
+      "min_outs": 90,
+      "min_np": 900,
+      "coverage": 0.5361636730381327,
+      "n": 5582,
+      "games": 139,
+      "batter_ids": 86,
+      "pitcher_ids": 67,
+      "baseline_mse": 0.22664440516849496,
+      "hierarchy_mse": 0.2270068109375055,
+      "ensemble_mse": 0.2265460729219094,
+      "ensemble_gain_percent": 0.04338613455402429,
+      "gain_ci95_percent": [
+        -0.2836457489736799,
+        0.3859794342360664
+      ]
+    }
+  ],
+  "strata": {
+    "all": {
+      "bat_pa": [
+        {
+          "lower": 0,
+          "upper": 20,
+          "n": 497,
+          "games": 136,
+          "batter_ids": 44,
+          "pitcher_ids": 126,
+          "baseline_mse": 0.2027827845851835,
+          "hierarchy_mse": 0.20548787258545428,
+          "ensemble_mse": 0.20494009126193646,
+          "ensemble_gain_percent": -1.0638509975913202,
+          "gain_ci95_percent": [
+            -2.1159141084455113,
+            -0.21918607454185135
+          ]
+        },
+        {
+          "lower": 20,
+          "upper": 50,
+          "n": 837,
+          "games": 181,
+          "batter_ids": 33,
+          "pitcher_ids": 135,
+          "baseline_mse": 0.22921706507820555,
+          "hierarchy_mse": 0.22908838354565667,
+          "ensemble_mse": 0.22905832343832133,
+          "ensemble_gain_percent": 0.06925384889211461,
+          "gain_ci95_percent": [
+            -0.6500882494874544,
+            0.7278002051128579
+          ]
+        },
+        {
+          "lower": 50,
+          "upper": 100,
+          "n": 1295,
+          "games": 219,
+          "batter_ids": 37,
+          "pitcher_ids": 143,
+          "baseline_mse": 0.2035520702764701,
+          "hierarchy_mse": 0.20489533265841117,
+          "ensemble_mse": 0.20473859008656695,
+          "ensemble_gain_percent": -0.5829072671603486,
+          "gain_ci95_percent": [
+            -1.200673328922558,
+            -0.003989539936058958
+          ]
+        },
+        {
+          "lower": 100,
+          "upper": 200,
+          "n": 2145,
+          "games": 267,
+          "batter_ids": 42,
+          "pitcher_ids": 154,
+          "baseline_mse": 0.22152307540082847,
+          "hierarchy_mse": 0.2216662746342781,
+          "ensemble_mse": 0.22123941542937808,
+          "ensemble_gain_percent": 0.12804985256598123,
+          "gain_ci95_percent": [
+            -0.43325679615805635,
+            0.6426536486507874
+          ]
+        },
+        {
+          "lower": 200,
+          "upper": null,
+          "n": 17603,
+          "games": 294,
+          "batter_ids": 89,
+          "pitcher_ids": 161,
+          "baseline_mse": 0.25269615494533815,
+          "hierarchy_mse": 0.251564156212122,
+          "ensemble_mse": 0.2515858665224738,
+          "ensemble_gain_percent": 0.43937685680439653,
+          "gain_ci95_percent": [
+            0.23404501490027263,
+            0.6353437114266658
+          ]
+        }
+      ],
+      "pit_outs": [
+        {
+          "lower": 0,
+          "upper": 15,
+          "n": 1400,
+          "games": 129,
+          "batter_ids": 137,
+          "pitcher_ids": 49,
+          "baseline_mse": 0.2787528031970405,
+          "hierarchy_mse": 0.2761309801003226,
+          "ensemble_mse": 0.27641064919261593,
+          "ensemble_gain_percent": 0.8402261708446379,
+          "gain_ci95_percent": [
+            0.09345029595997201,
+            1.4633984397142903
+          ]
+        },
+        {
+          "lower": 15,
+          "upper": 30,
+          "n": 638,
+          "games": 93,
+          "batter_ids": 116,
+          "pitcher_ids": 23,
+          "baseline_mse": 0.23229206625944906,
+          "hierarchy_mse": 0.23337074341237857,
+          "ensemble_mse": 0.233972233097973,
+          "ensemble_gain_percent": -0.7232992781799563,
+          "gain_ci95_percent": [
+            -2.117750898644191,
+            0.4726207468499168
+          ]
+        },
+        {
+          "lower": 30,
+          "upper": 60,
+          "n": 1777,
+          "games": 138,
+          "batter_ids": 136,
+          "pitcher_ids": 41,
+          "baseline_mse": 0.2651064677663547,
+          "hierarchy_mse": 0.2640485007604046,
+          "ensemble_mse": 0.2638506113650447,
+          "ensemble_gain_percent": 0.4737177526792369,
+          "gain_ci95_percent": [
+            -0.2364824768457735,
+            1.1825704066971912
+          ]
+        },
+        {
+          "lower": 60,
+          "upper": 90,
+          "n": 1381,
+          "games": 146,
+          "batter_ids": 142,
+          "pitcher_ids": 37,
+          "baseline_mse": 0.2806548771676496,
+          "hierarchy_mse": 0.2789528011213945,
+          "ensemble_mse": 0.2791815821181462,
+          "ensemble_gain_percent": 0.5249490279206181,
+          "gain_ci95_percent": [
+            -0.3488445958618469,
+            1.2209384562008523
+          ]
+        },
+        {
+          "lower": 90,
+          "upper": null,
+          "n": 17181,
+          "games": 294,
+          "batter_ids": 170,
+          "pitcher_ids": 101,
+          "baseline_mse": 0.23761598447797952,
+          "hierarchy_mse": 0.23706710876843048,
+          "ensemble_mse": 0.23696388893785394,
+          "ensemble_gain_percent": 0.2744325225250144,
+          "gain_ci95_percent": [
+            0.05192663091108607,
+            0.4680947645006883
+          ]
+        }
+      ],
+      "pit_np": [
+        {
+          "lower": 0,
+          "upper": 100,
+          "n": 1452,
+          "games": 133,
+          "batter_ids": 137,
+          "pitcher_ids": 49,
+          "baseline_mse": 0.28062540370078176,
+          "hierarchy_mse": 0.27812223257785607,
+          "ensemble_mse": 0.27848575248678376,
+          "ensemble_gain_percent": 0.7624581330774372,
+          "gain_ci95_percent": [
+            0.04476760236516248,
+            1.359590454953528
+          ]
+        },
+        {
+          "lower": 100,
+          "upper": 300,
+          "n": 1871,
+          "games": 151,
+          "batter_ids": 137,
+          "pitcher_ids": 46,
+          "baseline_mse": 0.2570234575968152,
+          "hierarchy_mse": 0.2565547930127785,
+          "ensemble_mse": 0.25656767065502495,
+          "ensemble_gain_percent": 0.17733281858858252,
+          "gain_ci95_percent": [
+            -0.5099502795400601,
+            0.8362318794796796
+          ]
+        },
+        {
+          "lower": 300,
+          "upper": 600,
+          "n": 3163,
+          "games": 244,
+          "batter_ids": 159,
+          "pitcher_ids": 56,
+          "baseline_mse": 0.25534188778508693,
+          "hierarchy_mse": 0.2540277026588155,
+          "ensemble_mse": 0.25414164463927025,
+          "ensemble_gain_percent": 0.47005336892741445,
+          "gain_ci95_percent": [
+            -0.041031906048321624,
+            0.9438046586671716
+          ]
+        },
+        {
+          "lower": 600,
+          "upper": 900,
+          "n": 3015,
+          "games": 231,
+          "batter_ids": 147,
+          "pitcher_ids": 56,
+          "baseline_mse": 0.24915078574960933,
+          "hierarchy_mse": 0.24789541413995356,
+          "ensemble_mse": 0.24803559011155682,
+          "ensemble_gain_percent": 0.44759868394446123,
+          "gain_ci95_percent": [
+            -0.060470671068337256,
+            0.9040620459825897
+          ]
+        },
+        {
+          "lower": 900,
+          "upper": null,
+          "n": 12876,
+          "games": 287,
+          "batter_ids": 169,
+          "pitcher_ids": 72,
+          "baseline_mse": 0.23550948161062513,
+          "hierarchy_mse": 0.2351840719024611,
+          "ensemble_mse": 0.23500010252730388,
+          "ensemble_gain_percent": 0.21628814255699735,
+          "gain_ci95_percent": [
+            -0.023974652745705757,
+            0.44493447931084135
+          ]
+        }
+      ]
+    },
+    "exploration": {
+      "bat_pa": [
+        {
+          "lower": 0,
+          "upper": 20,
+          "n": 295,
+          "games": 80,
+          "batter_ids": 32,
+          "pitcher_ids": 100,
+          "baseline_mse": 0.20278830764237962,
+          "hierarchy_mse": 0.2053109054580315,
+          "ensemble_mse": 0.20478829050607647,
+          "ensemble_gain_percent": -0.9862417054260497,
+          "gain_ci95_percent": [
+            -2.2272218008326,
+            0.20279797460079768
+          ]
+        },
+        {
+          "lower": 20,
+          "upper": 50,
+          "n": 515,
+          "games": 100,
+          "batter_ids": 24,
+          "pitcher_ids": 107,
+          "baseline_mse": 0.23297391389343158,
+          "hierarchy_mse": 0.23314035446743872,
+          "ensemble_mse": 0.23287490101801003,
+          "ensemble_gain_percent": 0.04249955446378184,
+          "gain_ci95_percent": [
+            -0.7606643223703619,
+            0.8333288707621613
+          ]
+        },
+        {
+          "lower": 50,
+          "upper": 100,
+          "n": 849,
+          "games": 131,
+          "batter_ids": 23,
+          "pitcher_ids": 120,
+          "baseline_mse": 0.19629381216278974,
+          "hierarchy_mse": 0.19725304191181064,
+          "ensemble_mse": 0.19745951177699125,
+          "ensemble_gain_percent": -0.5938544885127461,
+          "gain_ci95_percent": [
+            -1.3801719659529592,
+            0.1461504126086008
+          ]
+        },
+        {
+          "lower": 100,
+          "upper": 200,
+          "n": 1088,
+          "games": 136,
+          "batter_ids": 29,
+          "pitcher_ids": 122,
+          "baseline_mse": 0.21772538416299986,
+          "hierarchy_mse": 0.2182755672267528,
+          "ensemble_mse": 0.21781854665062306,
+          "ensemble_gain_percent": -0.04278898759617622,
+          "gain_ci95_percent": [
+            -0.902048153117822,
+            0.5934819597525404
+          ]
+        },
+        {
+          "lower": 200,
+          "upper": null,
+          "n": 9219,
+          "games": 155,
+          "batter_ids": 74,
+          "pitcher_ids": 132,
+          "baseline_mse": 0.2717894809434257,
+          "hierarchy_mse": 0.2699489011824442,
+          "ensemble_mse": 0.270112323587695,
+          "ensemble_gain_percent": 0.6170795683147823,
+          "gain_ci95_percent": [
+            0.3649626032254316,
+            0.8523752383450709
+          ]
+        }
+      ],
+      "pit_outs": [
+        {
+          "lower": 0,
+          "upper": 15,
+          "n": 652,
+          "games": 68,
+          "batter_ids": 111,
+          "pitcher_ids": 25,
+          "baseline_mse": 0.31421418717619637,
+          "hierarchy_mse": 0.31216552526984587,
+          "ensemble_mse": 0.31226212017793054,
+          "ensemble_gain_percent": 0.6212536155062898,
+          "gain_ci95_percent": [
+            -0.45608505501808166,
+            1.467917514904998
+          ]
+        },
+        {
+          "lower": 15,
+          "upper": 30,
+          "n": 360,
+          "games": 59,
+          "batter_ids": 98,
+          "pitcher_ids": 13,
+          "baseline_mse": 0.24174427658150546,
+          "hierarchy_mse": 0.24365679561315365,
+          "ensemble_mse": 0.243349305435001,
+          "ensemble_gain_percent": -0.663936650824648,
+          "gain_ci95_percent": [
+            -1.8052871142395321,
+            0.25860124267954054
+          ]
+        },
+        {
+          "lower": 30,
+          "upper": 60,
+          "n": 1128,
+          "games": 91,
+          "batter_ids": 121,
+          "pitcher_ids": 27,
+          "baseline_mse": 0.2895663800402124,
+          "hierarchy_mse": 0.28825604243582065,
+          "ensemble_mse": 0.2881476197013514,
+          "ensemble_gain_percent": 0.48996031192016787,
+          "gain_ci95_percent": [
+            -0.3601403576201051,
+            1.3268288807807103
+          ]
+        },
+        {
+          "lower": 60,
+          "upper": 90,
+          "n": 937,
+          "games": 87,
+          "batter_ids": 117,
+          "pitcher_ids": 25,
+          "baseline_mse": 0.26932918588406035,
+          "hierarchy_mse": 0.26885544126952615,
+          "ensemble_mse": 0.26876345913947164,
+          "ensemble_gain_percent": 0.21005029318739155,
+          "gain_ci95_percent": [
+            -0.7654929250725689,
+            1.020645695846834
+          ]
+        },
+        {
+          "lower": 90,
+          "upper": null,
+          "n": 8889,
+          "games": 155,
+          "batter_ids": 147,
+          "pitcher_ids": 83,
+          "baseline_mse": 0.2495311162398095,
+          "hierarchy_mse": 0.2481635545228722,
+          "ensemble_mse": 0.24829292457910349,
+          "ensemble_gain_percent": 0.49620731849573385,
+          "gain_ci95_percent": [
+            0.21097912557387966,
+            0.7645579520017556
+          ]
+        }
+      ],
+      "pit_np": [
+        {
+          "lower": 0,
+          "upper": 100,
+          "n": 652,
+          "games": 68,
+          "batter_ids": 111,
+          "pitcher_ids": 25,
+          "baseline_mse": 0.31421418717619637,
+          "hierarchy_mse": 0.31216552526984587,
+          "ensemble_mse": 0.31226212017793054,
+          "ensemble_gain_percent": 0.6212536155062898,
+          "gain_ci95_percent": [
+            -0.45608505501808166,
+            1.467917514904998
+          ]
+        },
+        {
+          "lower": 100,
+          "upper": 300,
+          "n": 1233,
+          "games": 107,
+          "batter_ids": 119,
+          "pitcher_ids": 28,
+          "baseline_mse": 0.27886944557133164,
+          "hierarchy_mse": 0.2787917735992692,
+          "ensemble_mse": 0.2785737510951178,
+          "ensemble_gain_percent": 0.10603330013729817,
+          "gain_ci95_percent": [
+            -0.5731621631544165,
+            0.7238696760982746
+          ]
+        },
+        {
+          "lower": 300,
+          "upper": 600,
+          "n": 1901,
+          "games": 135,
+          "batter_ids": 138,
+          "pitcher_ids": 43,
+          "baseline_mse": 0.24600928412766437,
+          "hierarchy_mse": 0.24505179066863678,
+          "ensemble_mse": 0.24513269896759737,
+          "ensemble_gain_percent": 0.35632198320292297,
+          "gain_ci95_percent": [
+            -0.30147610567114896,
+            0.978975329181744
+          ]
+        },
+        {
+          "lower": 600,
+          "upper": 900,
+          "n": 2222,
+          "games": 140,
+          "batter_ids": 133,
+          "pitcher_ids": 40,
+          "baseline_mse": 0.26933915308918044,
+          "hierarchy_mse": 0.2673439381580009,
+          "ensemble_mse": 0.2674933836511969,
+          "ensemble_gain_percent": 0.6852956270239852,
+          "gain_ci95_percent": [
+            0.11029889381970527,
+            1.1801857021400979
+          ]
+        },
+        {
+          "lower": 900,
+          "upper": null,
+          "n": 5958,
+          "games": 148,
+          "batter_ids": 144,
+          "pitcher_ids": 54,
+          "baseline_mse": 0.24741877844972002,
+          "hierarchy_mse": 0.24623711067734855,
+          "ensemble_mse": 0.24634012058852273,
+          "ensemble_gain_percent": 0.4359644275814256,
+          "gain_ci95_percent": [
+            0.06747071825898067,
+            0.7799682438477805
+          ]
+        }
+      ]
+    },
+    "confirmation": {
+      "bat_pa": [
+        {
+          "lower": 0,
+          "upper": 20,
+          "n": 202,
+          "games": 56,
+          "batter_ids": 28,
+          "pitcher_ids": 70,
+          "baseline_mse": 0.20277471873432784,
+          "hierarchy_mse": 0.20574631467748256,
+          "ensemble_mse": 0.20516178048460323,
+          "ensemble_gain_percent": -1.1771988959841106,
+          "gain_ci95_percent": [
+            -2.7211909514506183,
+            0.03957861735526872
+          ]
+        },
+        {
+          "lower": 20,
+          "upper": 50,
+          "n": 322,
+          "games": 81,
+          "batter_ids": 20,
+          "pitcher_ids": 98,
+          "baseline_mse": 0.22320844042031293,
+          "hierarchy_mse": 0.2226077468229307,
+          "ensemble_mse": 0.22295416985589994,
+          "ensemble_gain_percent": 0.11391619597098668,
+          "gain_ci95_percent": [
+            -1.1605907936156727,
+            1.3001046406157073
+          ]
+        },
+        {
+          "lower": 50,
+          "upper": 100,
+          "n": 446,
+          "games": 88,
+          "batter_ids": 20,
+          "pitcher_ids": 103,
+          "baseline_mse": 0.21736879928659258,
+          "hierarchy_mse": 0.2194431013666261,
+          "ensemble_mse": 0.21859495216017633,
+          "ensemble_gain_percent": -0.5640887181637799,
+          "gain_ci95_percent": [
+            -1.6735177023938363,
+            0.46555709512614024
+          ]
+        },
+        {
+          "lower": 100,
+          "upper": 200,
+          "n": 1057,
+          "games": 131,
+          "batter_ids": 26,
+          "pitcher_ids": 125,
+          "baseline_mse": 0.22543214641952058,
+          "hierarchy_mse": 0.22515642568384062,
+          "ensemble_mse": 0.2247606124315403,
+          "ensemble_gain_percent": 0.29788741253015116,
+          "gain_ci95_percent": [
+            -0.4849584906721488,
+            1.0473698903476514
+          ]
+        },
+        {
+          "lower": 200,
+          "upper": null,
+          "n": 8384,
+          "games": 139,
+          "batter_ids": 86,
+          "pitcher_ids": 136,
+          "baseline_mse": 0.23170123934701164,
+          "hierarchy_mse": 0.23134839239039012,
+          "ensemble_mse": 0.23121427686547524,
+          "ensemble_gain_percent": 0.21016826794229004,
+          "gain_ci95_percent": [
+            -0.0941505882099064,
+            0.5177682422522369
+          ]
+        }
+      ],
+      "pit_outs": [
+        {
+          "lower": 0,
+          "upper": 15,
+          "n": 748,
+          "games": 61,
+          "batter_ids": 114,
+          "pitcher_ids": 27,
+          "baseline_mse": 0.24784261288365864,
+          "hierarchy_mse": 0.24472118939105905,
+          "ensemble_mse": 0.24516043651557695,
+          "ensemble_gain_percent": 1.0822095267938314,
+          "gain_ci95_percent": [
+            0.1369822463645745,
+            2.032477963535206
+          ]
+        },
+        {
+          "lower": 15,
+          "upper": 30,
+          "n": 278,
+          "games": 34,
+          "batter_ids": 86,
+          "pitcher_ids": 10,
+          "baseline_mse": 0.22005179389995164,
+          "hierarchy_mse": 0.2200506758142527,
+          "ensemble_mse": 0.22182926172628195,
+          "ensemble_gain_percent": -0.8077497551046697,
+          "gain_ci95_percent": [
+            -3.635361124283334,
+            1.4699711917261409
+          ]
+        },
+        {
+          "lower": 30,
+          "upper": 60,
+          "n": 649,
+          "games": 47,
+          "batter_ids": 103,
+          "pitcher_ids": 20,
+          "baseline_mse": 0.22259370806695356,
+          "hierarchy_mse": 0.22197437593780173,
+          "ensemble_mse": 0.221620988247396,
+          "ensemble_gain_percent": 0.4369934029154976,
+          "gain_ci95_percent": [
+            -1.1448758662720098,
+            1.8287533942177334
+          ]
+        },
+        {
+          "lower": 60,
+          "upper": 90,
+          "n": 444,
+          "games": 59,
+          "batter_ids": 117,
+          "pitcher_ids": 18,
+          "baseline_mse": 0.3045561671062152,
+          "hierarchy_mse": 0.3002618690970716,
+          "ensemble_mse": 0.3011675758817007,
+          "ensemble_gain_percent": 1.1126326078738535,
+          "gain_ci95_percent": [
+            -0.5044815390250901,
+            2.4982208580478207
+          ]
+        },
+        {
+          "lower": 90,
+          "upper": null,
+          "n": 8292,
+          "games": 139,
+          "batter_ids": 151,
+          "pitcher_ids": 90,
+          "baseline_mse": 0.22484299771593086,
+          "hierarchy_mse": 0.22517175103673337,
+          "ensemble_mse": 0.22481919552069676,
+          "ensemble_gain_percent": 0.01058614031830274,
+          "gain_ci95_percent": [
+            -0.27245633217743204,
+            0.2932550494147605
+          ]
+        }
+      ],
+      "pit_np": [
+        {
+          "lower": 0,
+          "upper": 100,
+          "n": 800,
+          "games": 65,
+          "batter_ids": 115,
+          "pitcher_ids": 28,
+          "baseline_mse": 0.2532505451683189,
+          "hierarchy_mse": 0.2503769490338844,
+          "ensemble_mse": 0.25095801281849917,
+          "ensemble_gain_percent": 0.9052428093673237,
+          "gain_ci95_percent": [
+            -0.049582485040770514,
+            1.7868188720244382
+          ]
+        },
+        {
+          "lower": 100,
+          "upper": 300,
+          "n": 638,
+          "games": 44,
+          "batter_ids": 107,
+          "pitcher_ids": 23,
+          "baseline_mse": 0.2148038601476322,
+          "hierarchy_mse": 0.21357956250628476,
+          "ensemble_mse": 0.21403867820575462,
+          "ensemble_gain_percent": 0.35622355266412553,
+          "gain_ci95_percent": [
+            -1.4186575356238822,
+            2.088831982520274
+          ]
+        },
+        {
+          "lower": 300,
+          "upper": 600,
+          "n": 1262,
+          "games": 109,
+          "batter_ids": 128,
+          "pitcher_ids": 31,
+          "baseline_mse": 0.2693999539917115,
+          "hierarchy_mse": 0.2675484702446554,
+          "ensemble_mse": 0.26771217215262216,
+          "ensemble_gain_percent": 0.6264967065069516,
+          "gain_ci95_percent": [
+            -0.2515589283347086,
+            1.4230622268228093
+          ]
+        },
+        {
+          "lower": 600,
+          "upper": 900,
+          "n": 793,
+          "games": 91,
+          "batter_ids": 117,
+          "pitcher_ids": 26,
+          "baseline_mse": 0.19258262404907076,
+          "hierarchy_mse": 0.19340030648787138,
+          "ensemble_mse": 0.19351450909632315,
+          "ensemble_gain_percent": -0.48388843586166796,
+          "gain_ci95_percent": [
+            -1.790477496318355,
+            0.5761991612076558
+          ]
+        },
+        {
+          "lower": 900,
+          "upper": null,
+          "n": 6918,
+          "games": 139,
+          "batter_ids": 149,
+          "pitcher_ids": 67,
+          "baseline_mse": 0.22525281919846443,
+          "hierarchy_mse": 0.225664845967107,
+          "ensemble_mse": 0.22523372097067745,
+          "ensemble_gain_percent": 0.008478574365866631,
+          "gain_ci95_percent": [
+            -0.2854215653653269,
+            0.3397017741489529
+          ]
+        }
+      ]
+    }
+  }
+}

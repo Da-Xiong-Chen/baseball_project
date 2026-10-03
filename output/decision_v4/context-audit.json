@@ -1,0 +1,8 @@
+{
+  "cases": 498,
+  "raw_event_count_matches": 498,
+  "training_filtered_count_differences": 3,
+  "offsets_covered": 205947,
+  "all_historical_positions_marked_unconfirmed": true,
+  "errors": 0
+}

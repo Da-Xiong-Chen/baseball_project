@@ -1,0 +1,9 @@
+{
+  "custom_scenarios": 18,
+  "max_numeric_error": 7.193944261629781e-06,
+  "replay_games": 275,
+  "replay_cases": 498,
+  "missing_cases": 0,
+  "stale_snapshots": 0,
+  "version": 4
+}

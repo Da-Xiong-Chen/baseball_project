@@ -66,8 +66,37 @@ header {
 .compare-card .chip { white-space:normal; font-size:12px; }
 .compare-delta { color:var(--accent); font-weight:600; }
 .compare-values { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; font-size:12px; }
+.compare-values > div { padding:8px 4px; background:var(--chip); text-align:center; }
 .compare-values dt { color:var(--muted); }
 .compare-values dd { margin:4px 0; font-variant-numeric:tabular-nums; }
+.delta-chart { margin:16px 0 20px; padding:16px; border:1px solid var(--line); background:var(--panel-2); }
+.delta-chart figcaption { font-size:16px; font-weight:700; }
+.delta-chart p { margin:8px 0 12px; }
+.delta-chart ul { margin:0; padding:0; list-style:none; }
+.delta-row { display:grid; grid-template-columns:104px minmax(0,1fr) 88px; align-items:center; gap:12px; min-height:56px; }
+.delta-label { min-width:0; overflow-wrap:anywhere; }
+.delta-label strong,.delta-label span { display:block; }
+.delta-label span,.chart-note { font-size:12px; color:var(--muted); }
+.delta-track { position:relative; height:24px; background:var(--chip); }
+.delta-zero { position:absolute; left:50%; top:-4px; bottom:-4px; width:1px; background:var(--muted); }
+.delta-fill { position:absolute; top:5px; height:14px; }
+.delta-fill.positive { background:var(--pos); }
+.delta-fill.negative { background:var(--neg); }
+.delta-dot { position:absolute; left:calc(50% - 3px); top:9px; width:6px; height:6px; border-radius:50%; background:var(--text); }
+.delta-value { text-align:center; font-weight:600; }
+.delta-value small { display:block; font-size:12px; font-weight:400; color:var(--muted); }
+.delta-axis { display:flex; justify-content:space-between; margin:0 100px 8px 116px; font-size:12px; color:var(--muted); }
+.delta-axis span { white-space:nowrap; }
+.sample-policy { padding:12px; margin-top:12px; border-left:3px solid var(--muted); background:var(--panel-2); font-size:12px; color:var(--muted); }
+.sample-policy p { margin:4px 0; }
+.sample-policy summary { cursor:pointer; padding:10px 0; min-height:44px; color:var(--text); }
+.sample-policy ul { padding-left:20px; }
+.sample-policy li { margin:8px 0; overflow-wrap:anywhere; }
+@media(max-width:600px) {
+  .delta-chart { padding:12px; }
+  .delta-row { grid-template-columns:68px minmax(0,1fr) 72px; gap:8px; }
+  .delta-axis { margin-left:76px; margin-right:80px; }
+}
 .compare-card summary { cursor:pointer; min-height:44px; padding:10px 0; color:var(--accent); }
 .matchup-list { padding-left:20px; }
 .matchup-list li { margin:8px 0; }
@@ -134,7 +163,7 @@ input[type=number] { text-align: center; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-primary { color: #0d1a12; } }
 .btn-primary:disabled { opacity: .5; cursor: wait; }
 
-.chip { display: inline-block; padding: 1px 7px; border-radius: 999px; background: var(--chip); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.chip { display: inline-flex; align-items:center; justify-content:center; text-align:center; padding: 1px 7px; border-radius: 999px; background: var(--chip); font-size: 11px; color: var(--muted); white-space: nowrap; }
 .chip.hand-L { background: #e7eefb; color: #2d5aa8; }
 .chip.hand-R { background: #fbece7; color: #a8492d; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip.hand-L { background: #1f2a3d; color: #8fb2ef; } :root:not([data-theme="light"]) .chip.hand-R { background: #3a2520; color: #f0a48f; } }
@@ -398,6 +427,7 @@ button:active:not(:disabled) { filter:brightness(.92); }
 #resultBody:not(.hidden) { animation:desk-enter 220ms var(--ease-ui); }
 @keyframes desk-enter { from { opacity:.6; transform:translateY(6px); } to { opacity:1; transform:none; } }
 @media (max-width:1000px) {
+  html { scroll-padding-top:160px; }
   .matchday-intro { padding:24px 16px 8px; }
   .mobile-jump { display:flex; gap:8px; padding:8px 16px 0; }
   .result-return { display:flex; align-items:center; justify-content:space-between; min-height:44px; margin-bottom:12px; padding:8px 12px; color:var(--accent); text-decoration:none; border-bottom:1px solid var(--line); font-size:14px; }
