@@ -406,7 +406,7 @@ function comparisonPanel(R, selected, tab) {
       ${details}<p>${esc(x['資料警示'] || '')}${x['資料警示'] && current['資料警示'] ? '；' : ''}${esc(current['資料警示'] || '')}</p><p>模型分歧與樣本量是判讀線索，不能解讀為候選勝出的機率。</p></details></article>`;
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
-    <p class="mut">${pen ? `同樣面對接下來 ${R.bullpen.next.length} 棒；比較續投與換投。` : '固定對方投手與局勢；比較續打與代打。'}點選表格姓名可切換比較人選。</p>
+    <p class="mut">${pen ? `同樣面對接下來 ${R.bullpen.next.length} 棒；比較續投與換投。` : '固定對方投手與局勢；比較續打與代打。'}按「對決」切換比較人選。</p>
     <div class="compare-grid">${choices.length ? choices.map(card).join('') : '<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }
 function recommendation(cands) {
