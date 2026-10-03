@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
 <script src="theme.js?v=20261002-v2"></script>
-<link rel="stylesheet" href="style.css?v=20261002-v2">
+<link rel="stylesheet" href="style.css?v=20261003-ui2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231f6f4a'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -47,7 +47,7 @@
             <div><label class="f" for="oppTeam">對手球隊</label><select id="oppTeam"></select></div>
           </div>
           <div class="state">
-            <div>
+            <div class="state-control">
               <label class="f">局數</label>
               <div class="stepper">
                 <button id="innDown" aria-label="減一局">−</button>
@@ -58,11 +58,10 @@
                   <button data-half="home" class="on">下</button>
                 </div>
               </div>
-              <label class="f" style="margin-top:12px">出局數</label>
-              <div class="outs" id="outs"><button data-o="1" aria-label="1 出局"></button><button data-o="2" aria-label="2 出局"></button></div>
+              <div class="out-setting"><span class="f">出局數</span><div class="outs" id="outs"><button data-o="1" aria-label="1 出局"></button><button data-o="2" aria-label="2 出局"></button></div><output id="outsValue">1 出局</output></div>
             </div>
-            <div>
-              <label class="f" style="text-align:center">壘包（點擊切換）</label>
+            <div class="base-setting">
+              <label class="f">壘上跑者</label>
               <svg class="diamond" viewBox="0 0 120 100" id="diamond">
                 <path d="M60 92 L100 52 L60 12 L20 52 Z" fill="none" stroke="var(--line)" stroke-width="2"/>
                 <rect class="base" data-b="2" x="51" y="3" width="18" height="18" transform="rotate(45 60 12)" fill="var(--panel)" stroke="var(--muted)" stroke-width="2"/>
@@ -73,9 +72,9 @@
               <div id="baseControls"><button type="button" data-b="1">一壘</button><button type="button" data-b="2">二壘</button><button type="button" data-b="4">三壘</button></div>
             </div>
           </div>
-          <div class="row2">
-            <div><label class="f" for="myScore">我方得分</label><input type="number" id="myScore" min="0" value="2"></div>
-            <div><label class="f" for="oppScore">對手得分</label><input type="number" id="oppScore" min="0" value="3"></div>
+          <div class="row2 score-controls">
+            <div><label class="f" for="myScore">我方得分</label><div class="score-stepper"><button type="button" data-score="myScore" data-delta="-1" aria-label="我方減一分">−</button><input type="number" id="myScore" min="0" step="1" value="2"><button type="button" data-score="myScore" data-delta="1" aria-label="我方加一分">+</button></div></div>
+            <div><label class="f" for="oppScore">對手得分</label><div class="score-stepper"><button type="button" data-score="oppScore" data-delta="-1" aria-label="對手減一分">−</button><input type="number" id="oppScore" min="0" step="1" value="3"><button type="button" data-score="oppScore" data-delta="1" aria-label="對手加一分">+</button></div></div>
           </div>
 
           <!-- 進攻 -->
@@ -152,6 +151,6 @@
 
 <script src="engine.js?v=20261002-v2"></script>
 <script src="pitch-change.js?v=20261002-v2"></script>
-<script src="app.js?v=20261002-v5"></script>
+<script src="app.js?v=20261003-ui2"></script>
 </body>
 </html>
