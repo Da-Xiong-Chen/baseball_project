@@ -151,8 +151,8 @@ function renderRole() {
   syncPressed();
   const pc = +$("#pitchCount").value || 0;
   $("#pcHint").textContent = S.starter
-    ? (pc >= 85 ? "先發超過 85 球：依 2024–2025 資料加入疲勞調整（球數越多，預估失分越高）" : "先發 85 球以前，資料上看不出明顯疲勞")
-    : (pc >= 30 ? "後援超過 30 球：資料太少，只顯示警示、不調整數值" : "後援投手 30 球以內不調整");
+    ? (pc >= 85 ? "已進入球數調整區間；請確認投手狀況。" : "目前未套用球數調整，仍須確認投手狀況。")
+    : (pc >= 30 ? "後援球數偏高；樣本不足，僅提示。" : "目前未套用後援球數調整。");
 }
 
 function setMode(m) {
@@ -411,13 +411,13 @@ function recommendation(cands) {
   if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距小於顯示精度，難以區分',
     text:`相對 ${cur["球員"]}，估計差值 ${sign(diff,4)} 百分點；主畫面保留兩位小數。這是顯示精度限制，並非統計上的相等，不能只依排序認定必須換人。`};
   if (diff <= 0) return { kind: "neutral", title: `目前估計以 ${cur["球員"]} 續打較佳`, text: "可用候選沒有更高的估計值；這不是續打必然較好的保證。" };
-  const def = best["守備"] === "warn" ? `　⚠ ${best["守備說明"]}` : "";
+  const def = best["守備"] === "warn" ? `　${best["守備說明"]}` : "";
   const disagree = best["機器學習"] != null && cur["機器學習"] != null &&
     (best["階層式"] - cur["階層式"]) * (best["機器學習"] - cur["機器學習"]) <= 0;
   const low = best["樣本球數"] < 500 || cur["樣本球數"] < 500 || !!best['資料警示'] || !!cur['資料警示'];
   return {kind:best["守備"] === "warn" ? "warn" : "neutral", best:best["球員"],
     title:disagree ? "兩模型意見不同，難以區分" : low ? "候選資料有限，需審慎判斷" : `估計較佳人選：${best["球員"]}`,
-    text:`相對 ${cur["球員"]}，勝率換算差值 ${sign(diff)} 百分點。${disagree ? "階層式與逐球模型排序不同。" : "尚未校準候選差值區間，不能只依排序認定必須換人。"}${def}`};
+    text:`比 ${cur["球員"]} ${sign(diff)} 百分點。${disagree ? "估計有分歧，請審慎判斷。" : "差值僅供參考，仍須確認上場狀況。"}${def}`};
 }
 
 function renderResult() {
@@ -488,13 +488,13 @@ function renderResult() {
   html += `<div class="grid2"><div class="card">`;
   if (showTabs) html += `<div class="tabs"><button data-t="ph" class="${tab === "ph" ? "on" : ""}">代打評估（進攻方）</button><button data-t="pen" class="${tab === "pen" ? "on" : ""}">換投評估（防守方）</button></div>`;
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? `對上 ${R.bullpen.next.map(esc).join("、")}` : "點選列可看球路明細"}</span></div>`;
-  html += `<p class="table-help">點選球員姓名查看對決。小螢幕可左右滑動表格。</p><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
+  html += `<div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div>${mixCard(R)}<div id="detail"></div></div></div>`;
-  html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>。價值分數是比較池百分位，不是成功機率；勝率變化為局勢換算，單位是百分點。<br>
+  html += `<div class="foot"><p>價值分數是相對排名，不是成功機率；勝率變化以百分點表示。請確認今日可上場名單。</p><details><summary>資料與評估依據</summary>評估方法：<b>${esc(R.method || "階層式")}</b>。<br>
     表中細線僅為階層式估計的近似標準誤，不是完整集成區間或排名把握度。球路拆解也只解釋階層式部分。失分價值可為負值，不是實際失分數。<br>
     階層式截止：${esc(R.model_cutoff)}；逐球模型截止：${esc(R.ml_cutoff || '舊快照未記錄')}（均不含截止日）。<br>
     ${esc(R.availability || '歷史快照的可用名單與守位可能包含推估資訊，請審慎使用')}。<br>
-    ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</div>`;
+    ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</details></div>`;
   $("#resultBody").innerHTML = html;
   mountPitchChange(R.situation.pitcher);
 
@@ -620,12 +620,12 @@ async function showDetail(batter, pitcher, tr, updateComparison = true) {
       <span class="hint">${d.bhand === "L" ? "左" : "右"}打 vs ${d.phand === "L" ? "左" : "右"}投</span></div><div class="card-b">
       <div class="heat"><div></div><div class="hh">高中位置</div><div class="hh">低球</div>
         ${GROUPS.map((g) => `<div class="rl">${g}</div>${tile(g + "高中")}${tile(g + "低")}`).join("")}</div>
-      <p class="mut" style="font-size:11px;margin:10px 0 0">大字＝投手使用率（底色越深越常投）；揮空＝此打者在該格相對自身平均的揮空率偏離（紅＝較易揮空）。</p>
-      <div class="breakdown">
+      <p class="mut" style="font-size:12px;margin:10px 0 0">大字：配球估計。揮空：相對打者自身平均的差值。</p>
+      <p class="detail-unit">能力拆解 · 分／打席</p><div class="breakdown">
         <div><small>本身能力</small><b class="num ${cls(d.skill, 0.002)}">${sign(d.skill, 3)}</b></div>
         <div><small>球路適性</small><b class="num ${cls(d.fit, 0.002)}">${sign(d.fit, 3)}</b></div>
         <div><small>左右投打</small><b class="num ${cls(d.platoon, 0.002)}">${sign(d.platoon, 3)}</b></div>
-      </div><p class="mut" style="font-size:12px;margin:6px 0 0">階層式拆解，單位：每打席得分值；不是完整集成分數的原因。打者樣本 ${Math.round(d.n)} 球；投手對此側 ${Math.round(d.mix_n)} 球${d.mix_n ? '' : '（使用聯盟球路回退）'}。</p></div></div>`;
+      </div></div></div>`;
   } catch (e) {
     if (token !== detailGeneration || box !== $("#detail")) return;
     box.innerHTML = `<div class="err-box" style="margin-top:16px">${esc(e.message)}</div>`;
