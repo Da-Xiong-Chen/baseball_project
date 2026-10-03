@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from load import CELLS, load
+from load import CELLS, load, pitches_before
 
 PRIOR_SEASON_WEIGHT = 0.6  # 前一季資料的權重
 PITCHES_PER_PA = 3.76
@@ -109,8 +109,9 @@ def fit(cutoff, season=None):
     """以 cutoff 之前的資料建模。season 為 cutoff 所屬球季（前一季資料降權）。"""
     cutoff = pd.Timestamp(cutoff)
     season = season or cutoff.year
-    pa, p, _ = load()
-    p = p[(p["date"] < cutoff) & p["cell"].notna()].copy()
+    pa, _, _ = load()
+    p = pitches_before(str(cutoff.date()))
+    p = p[p["cell"].notna() & p["rv"].notna()].copy()
     p["w"] = np.where(p["season"] < season, PRIOR_SEASON_WEIGHT, 1.0)
     pa_ = pa[pa["date"] < cutoff].copy()
 

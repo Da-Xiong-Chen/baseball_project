@@ -36,7 +36,8 @@ def load():
     """回傳 (pa, pitches, boxes)。"""
     pa_rows, pitch_rows, box_rows = [], [], []
     for f in _game_files():
-        g = json.load(open(f, encoding="utf8"))
+        with open(f, encoding="utf8") as source:
+            g = json.load(source)
         season = int(g["date"][:4])
         gid = f"{season}-{g['seq']:03d}"
         date = pd.Timestamp(g["date"][:10])
@@ -132,3 +133,14 @@ def _pitch_run_values(p):
     terminal = end_re + p["runs"].to_numpy() - before
     rv = np.where(p["last"].to_numpy(), terminal, mid - before)
     return rv
+
+
+@lru_cache(maxsize=2)
+def pitches_before(cutoff):
+    """Training labels and run-expectancy table both use only completed prior games."""
+    p = load()[1]
+    p = p[p["date"] < pd.Timestamp(cutoff)].copy()
+    if p.empty:
+        raise ValueError("截止日前沒有逐球資料")
+    p["rv"] = _pitch_run_values(p)
+    return p

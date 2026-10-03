@@ -9,7 +9,7 @@ from functools import lru_cache
 import numpy as np
 import pandas as pd
 
-from load import load
+from load import load, pitches_before
 from model import PITCHES_PER_PA
 
 ONSET = 85            # 曲線起點（之前視為 0）
@@ -17,10 +17,13 @@ RELIEVER_WARN = 30    # 後援超過此球數只警示
 CAP = 0.12            # 每打席最多加 0.12 分
 
 
-@lru_cache(maxsize=1)
-def starter_curve():
+@lru_cache(maxsize=64)
+def starter_curve(cutoff=None):
     """回傳 [(用球數, 每打席額外失分值)]，單調遞增。"""
     _, p, boxes = load()
+    if cutoff:
+        p = pitches_before(cutoff)
+        boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
     p = p.assign(pc=p.groupby(["game", "pitcher"]).cumcount())
     p = p[p["cell"].notna()]
     st = boxes[(boxes["role"] == "P") & (boxes["order"] == 1)][["game", "name"]].rename(columns={"name": "pitcher"})
@@ -38,11 +41,11 @@ def starter_curve():
     return pts
 
 
-def penalty(pitch_count, starter):
+def penalty(pitch_count, starter, cutoff=None):
     """當前用球數下，接下來一個打席的額外失分值（每打席）。"""
     if not starter or pitch_count is None:
         return 0.0
-    pts = starter_curve()
+    pts = starter_curve(cutoff)
     xs, ys = np.array([x for x, _ in pts]), np.array([y for _, y in pts])
     if pitch_count <= xs[-1]:
         return float(np.interp(pitch_count, xs, ys))
@@ -50,10 +53,10 @@ def penalty(pitch_count, starter):
     return float(min(CAP, ys[-1] + slope * (pitch_count - xs[-1])))
 
 
-def outlook(pitch_count, starter, n_batters=3):
+def outlook(pitch_count, starter, n_batters=3, cutoff=None):
     """接下來 n 個打席累計的額外失分值，以及警示文字。"""
     pc = pitch_count or 0
-    total = sum(penalty(pc + PITCHES_PER_PA * i, starter) for i in range(n_batters))
+    total = sum(penalty(pc + PITCHES_PER_PA * i, starter, cutoff) for i in range(n_batters))
     warn = None
     if starter and pc >= 90:
         warn = f"先發 {pc} 球"

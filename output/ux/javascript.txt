@@ -1,0 +1,26 @@
+✔ API and static reads work without the newer timeout API (2.1071ms)
+✔ mobile result navigation respects reduced-motion preference (1.3639ms)
+✔ search preserves hidden selections and never treats InputEvent as reset (1.2456ms)
+✔ missing historical detail never falls back to full-season Engine (1.0442ms)
+✔ result context controls season after a mode switch (0.6247ms)
+✔ pitcher identity switches even when detail fails (0.7403ms)
+✔ slow evaluation cannot replace the latest result (0.6929ms)
+✔ mode switch invalidates a pending evaluation (0.6079ms)
+✔ slow game cannot replace the latest plate appearance list (0.7306ms)
+✔ game request failure exposes a retry path (0.7901ms)
+✔ older team list response cannot replace the latest team (0.7029ms)
+✔ slow roster response cannot reset the latest names (0.8583ms)
+✔ fixed scenarios preserve all original recommendation outputs (26.7813ms)
+✔ pitch card reads snapshots without AbortSignal.timeout (5.8002ms)
+✔ static selection is strictly before the requested date for every hand (5.618ms)
+✔ failed fetch is retryable instead of permanently cached (3.3244ms)
+✔ unknown pitcher produces a clear error without requesting a guessed filename (1.0911ms)
+✔ invalid handedness and impossible dates are rejected (0.7861ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85.2664

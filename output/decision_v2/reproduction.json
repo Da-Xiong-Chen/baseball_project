@@ -1,0 +1,29 @@
+{
+  "python": "3.11.4 | packaged by Anaconda, Inc. | (main, Jul  5 2023, 13:38:37) [MSC v.1916 64 bit (AMD64)]",
+  "isolated_prefix": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_project\\.qa-venv",
+  "source_sha256": {
+    "src\\backtest.py": "b98934c94c6d0bfdc7c369ba4f6f26ac03b73ce21611c71c720cb432d01b45db",
+    "src\\demo.py": "44b1f39b3bb01380e21539274aaac329bdcc8936af5a06caf1e74f19cb287918",
+    "src\\engine.py": "5a3ea5b96ab01acdbdea6d71eb99e47391ad0da496aeba087b23d4fc0f50a19a",
+    "src\\experiment.py": "45813c888ae41348133e568c68f68d98447ddce6fce1e41a2454d687b5cf5244",
+    "src\\export_pitch_change.py": "5ec138f2196cf677434a8cab11cd1d4b1090590b45e61922c724360dbd598abd",
+    "src\\export_static.py": "edcc2ac9b752ed317e2a3c4d8715e40bf3c5b55e36eefa5159c480ef3a0d07f9",
+    "src\\fatigue.py": "11e08b9e11d77024d6b7dbed81a03278a88e7cd3b794fb2bcf48713326287808",
+    "src\\load.py": "c5c81888a2b7a8d2c63be6a55bd1078b412b33a91205804f631cb945f2ff782f",
+    "src\\mlmodel.py": "e2567b009f9dfa04350472716d5510d1088593b8f8c7e3d90dbe1a33e9f71eae",
+    "src\\ml_compare.py": "d852efdd027e2b61d96f4613f909f4445c8bb9159ea97e6c3c7136fc8adfb871",
+    "src\\model.py": "c5026ad03106c5e36ce73e53c79266448802ed33c0161185bdfe3be932706cd6",
+    "src\\ph_agreement.py": "d2ee467992461e0251a62737224b5e0a6752865df40fd20410cbdad7efc1724e",
+    "src\\pitch_change.py": "e07b80cffe06b0b15630f6af5aa12dd88c990e0fbad1de0d92e309281494381a",
+    "src\\roster.py": "ae2f5055ee464a96036e3ad0ef31e5c104ba98a580ab24c62657bc33951fb925",
+    "server.py": "30488413b7c5b3f708fe0d1d32cde613c2b9ce9cba129f7a22b37cbb23af8170"
+  },
+  "public_data_files": 720,
+  "private_fielding_used": false,
+  "existing_pickles_used": false,
+  "raw_data_mismatches": [],
+  "status": "passed",
+  "compared_json_files": 277,
+  "max_numeric_error": 0.0,
+  "rebuilt_models": 9
+}

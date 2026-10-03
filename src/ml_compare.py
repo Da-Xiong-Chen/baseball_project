@@ -55,7 +55,8 @@ def add_velocity(p):
     import json
     rows = []
     for f in sorted(glob.glob(os.path.join(ROOT, "data", "rebas", "*", "*.json"))):
-        g = json.load(open(f, encoding="utf8"))
+        with open(f, encoding="utf8") as source:
+            g = json.load(source)
         gid = f"{int(g['date'][:4])}-{g['seq']:03d}"
         for side in ("away", "home"):
             for k, pa in enumerate(g[side + "PAList"]):

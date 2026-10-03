@@ -117,12 +117,53 @@ def build_result(sit, m, ml=None, actual=None):
         situation=r, actual=actual, leverage=slope * 100, league_leverage=m.slope_all * 100,
         pitch_mix=pitch_mix_payload(m, row["pitcher"]),
         candidates=ph_df, bullpen=dict(next=nxt, rows=bp_df), model_cutoff=str(m.cutoff.date()),
+        ml_cutoff=str(ml.cutoff) if ml else None, schema_version=2,
+        availability="人工勾選可用名單；請確認當日登錄、健康與已用人選" if not row.get("game") else "依此前 10 天出賽推估，非官方當日登錄名單；守位由既有紀錄推估",
+        fielding_source="截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位",
         method="集成（階層式＋梯度提升樹）" if ml else "階層式",
     ))
 
 
 # ---------- API ----------
+def validate_evaluation(body):
+    if not isinstance(body, dict):
+        raise ValueError('需要情境資料')
+    for key, low, high in [('inning', 1, 12), ('outs', 0, 2), ('bases', 0, 7),
+                           ('bat_score', 0, None), ('fld_score', 0, None)]:
+        value = body.get(key)
+        if type(value) is not int or value < low or (high is not None and value > high):
+            raise ValueError(f'{key} 須為有效範圍內的整數')
+    pc = body.get('pitch_count')
+    if pc is not None and (type(pc) is not int or not 0 <= pc <= 160):
+        raise ValueError('本場球數須介於 0 至 160')
+    if body.get('half') not in ('away', 'home'):
+        raise ValueError('局別無效')
+    r = rosters()
+    bat, fld = body.get('bat_team'), body.get('fld_team')
+    if bat not in r or fld not in r or bat == fld:
+        raise ValueError('請選不同的有效球隊')
+    hitters = {h['name'] for h in r[bat]['hitters']}
+    pitchers = {p['name'] for p in r[fld]['pitchers']}
+    if body.get('pitcher') not in pitchers or body.get('due') not in hitters:
+        raise ValueError('投打者與所選球隊不一致')
+    if body.get('due_pos') not in POS_ZH:
+        raise ValueError('守位無效')
+    for key, pool in [('bench', hitters), ('pen', pitchers)]:
+        values = body.get(key, [])
+        if not isinstance(values, list) or any(not isinstance(v, str) for v in values) or len(set(values)) != len(values) or not set(values) <= pool:
+            raise ValueError(f'{key} 名單無效')
+    if body['due'] in body.get('bench', []):
+        raise ValueError('現任打者不能同時列入板凳')
+    nxt = body.get('next_batters')
+    if nxt is not None and (not isinstance(nxt, list) or len(nxt) != 3 or any(not isinstance(v, str) for v in nxt) or len(set(nxt)) != 3 or not set(nxt) <= hitters):
+        raise ValueError('接下來三棒須為三位有效且不同的打者')
+
+
 def api(path, qs, body):
+    if path == "/api/pitch-change":
+        from pitch_change import pitch_change
+        return pitch_change(qs["pitcher"][0], int(qs.get("season", ["2025"])[0]),
+                            qs["cutoff"][0], qs.get("hand", ["ALL"])[0])
     pa, _, boxes = load()
     if path == "/api/meta":
         r = rosters()
@@ -160,6 +201,7 @@ def api(path, qs, body):
             ml = mlmodel.for_date(str(row["date"].date()))
         return build_result(sit, m, ml, actual)
     if path == "/api/evaluate":
+        validate_evaluation(body)
         m = model_for(FULL)
         s = custom_situation(**body)
         with _lock:
@@ -201,8 +243,13 @@ class Handler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
-        n = int(self.headers.get("Content-Length", 0))
-        body = json.loads(self.rfile.read(n) or b"{}")
+        try:
+            n = int(self.headers.get("Content-Length", 0))
+            if not 0 < n <= 1_000_000:
+                raise ValueError("情境資料長度無效")
+            body = json.loads(self.rfile.read(n))
+        except (ValueError, UnicodeDecodeError):
+            return self._send_json({"error":"請提交有效的 JSON 情境資料"}, 400)
         return self._handle_api(body)
 
 

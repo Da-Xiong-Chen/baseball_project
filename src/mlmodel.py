@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
 
-from load import ROOT, load
+from load import ROOT, load, pitches_before
 from ml_compare import add_velocity, apply_tendencies, features, fit_tendencies, prepare
 from model import PITCHES_PER_PA
 
@@ -29,6 +29,7 @@ SAMPLE = 150          # 每位投手（對該手打者）抽樣的歷史球數
 MIN_OWN = 40          # 少於此數改用聯盟同投打組合的球
 ENSEMBLE_W = 0.5      # 集成中梯度提升樹的權重
 AVG = "__聯盟平均打者__"
+TRAINING_VERSION = 2  # 截止日內重建逐球得分標籤；舊模型不得用於新回放
 
 
 def make_gbt():
@@ -113,7 +114,8 @@ def train(cutoff):
     from model import fit
     t = time.time()
     P = _pitches()
-    tr = P[P["date"] < cutoff]
+    tr = P[P["date"] < cutoff].drop(columns="rv").merge(
+        pitches_before(cutoff)[["pa_id", "j", "rv"]], on=["pa_id", "j"], how="left").dropna(subset=["rv"])
     velo_tbl = tr.groupby(["pitcher", "ptype"])["velo"].mean()
     velo_type = tr.groupby("ptype")["velo"].mean()
     gbt = make_gbt().fit(features(tr, oof_tendencies(tr), velo_tbl, velo_type), tr["cls"].to_numpy())
@@ -126,6 +128,7 @@ def train(cutoff):
     hm = fit(cutoff, season=2025 if cutoff == FULL else None)
     h = np.array([hm.matchup(b, bh, p)["per_pa"] for b, bh, p in rows])
     model = MLModel(cutoff, sim, float(g.mean() - h.mean()))
+    model.training_version = TRAINING_VERSION
     model.calibrate(rows)
     print(f"訓練 {cutoff}：{len(tr):,} 球，{time.time() - t:.0f} 秒")
     return model
@@ -137,7 +140,7 @@ def _pitches():
 
 
 def path_for(cutoff):
-    name = "full" if cutoff == FULL else cutoff[:7]
+    name = "full_v2" if cutoff == FULL else cutoff[:7] + "_v2"
     return os.path.join(MODEL_DIR, f"gbt_{name}.pkl")
 
 
@@ -155,6 +158,8 @@ def get(cutoff):
     if os.path.exists(p):
         with open(p, "rb") as f:
             m = _Unpickler(f).load()
+        if getattr(m, "training_version", None) != TRAINING_VERSION or m.cutoff != cutoff:
+            raise ValueError("模型版本或截止日不一致，請重新訓練")
         if not hasattr(m, "rel_bias"):  # 舊版存檔：補做校正並重新存檔
             pa, _, _ = load()
             ref = pa[pa["date"] < m.cutoff].tail(2000)
@@ -173,6 +178,8 @@ def for_date(date_str):
     """歷史回放：用該日期所屬月份月初截止的模型（時間安全）。"""
     if date_str == FULL:
         return get(FULL)
+    if date_str < REPLAY_MONTHS[0] or date_str >= FULL:
+        raise ValueError("歷史模型僅支援 2025 球季，不能使用較晚模型回補")
     month = date_str[:7] + "-01"
     return get(max(REPLAY_MONTHS[0], month))
 

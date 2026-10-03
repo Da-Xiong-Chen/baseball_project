@@ -1,0 +1,18 @@
+test_bootstrap_reproducible_with_real_variation (test_pitch_change.PitchChangeTests.test_bootstrap_reproducible_with_real_variation) ... ok
+test_composition_is_not_pitch_change (test_pitch_change.PitchChangeTests.test_composition_is_not_pitch_change) ... ok
+test_empty_history_has_nulls_not_zero_estimates (test_pitch_change.PitchChangeTests.test_empty_history_has_nulls_not_zero_estimates) ... ok
+test_export_api_and_date_boundary_parity (test_pitch_change.PitchChangeTests.test_export_api_and_date_boundary_parity) ... ok
+test_fixed_baseline_weights (test_pitch_change.PitchChangeTests.test_fixed_baseline_weights) ... ok
+test_future_data_does_not_change_any_response_field (test_pitch_change.PitchChangeTests.test_future_data_does_not_change_any_response_field) ... ok
+test_impossible_count_rejects_entire_pa (test_pitch_change.PitchChangeTests.test_impossible_count_rejects_entire_pa) ... ok
+test_mid_pa_pitcher_attribution_is_not_guessed (test_pitch_change.PitchChangeTests.test_mid_pa_pitcher_attribution_is_not_guessed) ... ok
+test_missing_coordinates_are_usable (test_pitch_change.PitchChangeTests.test_missing_coordinates_are_usable) ... ok
+test_support_coverage_gate (test_pitch_change.PitchChangeTests.test_support_coverage_gate) ... ok
+test_unknown_hand_is_not_assumed_right (test_pitch_change.PitchChangeTests.test_unknown_hand_is_not_assumed_right) ... ok
+test_unknown_type_is_counted_and_gated (test_pitch_change.PitchChangeTests.test_unknown_type_is_counted_and_gated) ... ok
+test_windows_selected_before_hand_filter (test_pitch_change.PitchChangeTests.test_windows_selected_before_hand_filter) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.686s
+
+OK

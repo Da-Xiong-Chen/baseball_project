@@ -1,27 +1,38 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<link rel="stylesheet" href="style.css">
+<script src="theme.js?v=20261002-v2"></script>
+<link rel="stylesheet" href="style.css?v=20261002-v2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231f6f4a'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
+<a class="skip-link" href="#workspace">跳到情境設定</a>
 <header>
   <div class="brand">
     <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--accent)"/><path d="M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-    <div><h1>臨場用人決策</h1><small>代打・守備檢查・換投 ｜ CPBL 2024–2025</small></div>
+    <div><h1>臨場用人決策</h1><small>CPBL · 對決分析 / 2024–2025</small></div>
   </div>
   <div class="spacer"></div>
+  <div class="seg theme-control" role="group" aria-label="版面主題">
+    <button type="button" data-set-theme="dark" aria-pressed="true">深色</button>
+    <button type="button" data-set-theme="light" aria-pressed="false">淺色</button>
+  </div>
   <div class="seg" id="modeSeg">
     <button data-mode="custom" class="on">自訂情境</button>
     <button data-mode="replay">歷史回放</button>
   </div>
 </header>
 
+<div class="matchday-intro">
+  <div><p class="eyebrow">打席之間 / MATCHUP DESK</p><h2>下一個打席，先看對決。</h2><p class="intro-note">比較代打與換投人選，確認守位，再看投手近期配球。</p></div>
+  <div class="season-note"><span>資料球季</span><strong>2024–25</strong><span>歷史資料分析</span></div>
+</div>
+<nav class="mobile-jump" aria-label="頁面區域"><a href="#workspace">情境設定</a><a href="#result">查看結果 <span aria-hidden="true">↓</span></a></nav>
 <main>
-  <aside>
+  <aside id="workspace" tabindex="-1">
     <!-- 自訂情境 -->
     <div id="customPanel">
       <div class="card">
@@ -32,8 +43,8 @@
             <button data-view="defense">我方防守・評估換投</button>
           </div>
           <div class="row2">
-            <div><label class="f">我方球隊</label><select id="myTeam"></select></div>
-            <div><label class="f">對手球隊</label><select id="oppTeam"></select></div>
+            <div><label class="f" for="myTeam">我方球隊</label><select id="myTeam"></select></div>
+            <div><label class="f" for="oppTeam">對手球隊</label><select id="oppTeam"></select></div>
           </div>
           <div class="state">
             <div>
@@ -59,48 +70,49 @@
                 <rect class="base" data-b="4" x="11" y="43" width="18" height="18" transform="rotate(45 20 52)" fill="var(--panel)" stroke="var(--muted)" stroke-width="2"/>
                 <path d="M54 86 h12 v4 l-6 6 l-6 -6 z" fill="var(--muted)"/>
               </svg>
+              <div id="baseControls"><button type="button" data-b="1">一壘</button><button type="button" data-b="2">二壘</button><button type="button" data-b="4">三壘</button></div>
             </div>
           </div>
           <div class="row2">
-            <div><label class="f">我方得分</label><input type="number" id="myScore" min="0" value="2"></div>
-            <div><label class="f">對手得分</label><input type="number" id="oppScore" min="0" value="3"></div>
+            <div><label class="f" for="myScore">我方得分</label><input type="number" id="myScore" min="0" value="2"></div>
+            <div><label class="f" for="oppScore">對手得分</label><input type="number" id="oppScore" min="0" value="3"></div>
           </div>
 
           <!-- 進攻 -->
           <div id="offenseFields">
-            <div><label class="f">對方投手</label><select id="oppPitcher"></select></div>
+            <div><label class="f" for="oppPitcher">對方投手</label><select id="oppPitcher"></select></div>
             <div class="row2" style="margin-top:14px">
-              <div><label class="f">輪到的打者</label><select id="dueBatter"></select></div>
-              <div><label class="f">他目前的守位</label><select id="duePos"></select></div>
+              <div><label class="f" for="dueBatter">輪到的打者</label><select id="dueBatter"></select></div>
+              <div><label class="f" for="duePos">目前守位</label><select id="duePos"></select></div>
             </div>
             <div style="margin-top:14px">
-              <label class="f">板凳可用野手</label>
-              <input type="search" id="benchFilter" placeholder="搜尋球員…">
+              <label class="f">板凳可用野手（請確認今日可上場）</label>
+              <input type="search" id="benchFilter" aria-label="搜尋板凳球員" placeholder="搜尋球員…">
               <div class="checklist" id="benchList" style="margin-top:6px"></div>
-              <div class="mini-actions"><button class="link" id="benchAll">全選</button><button class="link" id="benchNone">清除</button></div>
+              <div class="mini-actions"><button class="link" id="benchAll" aria-label="全選所有板凳球員">全選</button><button class="link" id="benchNone" aria-label="清除所有板凳球員">清除</button></div>
             </div>
           </div>
 
           <!-- 防守 -->
           <div id="defenseFields" class="hidden">
-            <div><label class="f">我方場上投手</label><select id="myPitcher"></select></div>
+            <div><label class="f" for="myPitcher">我方場上投手</label><select id="myPitcher"></select></div>
             <div class="row2" style="margin-top:14px">
-              <div><label class="f">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
+              <div><label class="f" for="pitchCount">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
               <div><label class="f">角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
             </div>
             <p class="mut" id="pcHint" style="font-size:11px;margin:6px 0 0"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
-              <div class="row3"><select id="nb1"></select><select id="nb2"></select><select id="nb3"></select></div>
+              <div class="row3"><select id="nb1" aria-label="接下來第一棒"></select><select id="nb2" aria-label="接下來第二棒"></select><select id="nb3" aria-label="接下來第三棒"></select></div>
             </div>
             <div style="margin-top:14px">
-              <label class="f">牛棚可用投手</label>
+              <label class="f">牛棚可用投手（請確認今日可上場）</label>
               <div class="checklist" id="penList"></div>
-              <div class="mini-actions"><button class="link" id="penAll">全選</button><button class="link" id="penNone">清除</button></div>
+              <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手">全選</button><button class="link" id="penNone" aria-label="清除牛棚投手">清除</button></div>
             </div>
           </div>
 
-          <button class="btn-primary" id="evalBtn">評估</button>
+          <div id="formError" aria-live="polite"></div><button class="btn-primary" id="evalBtn" disabled>評估</button>
         </div>
       </div>
     </div>
@@ -110,7 +122,7 @@
       <div class="card">
         <div class="card-h"><h2>選擇比賽</h2><span class="hint">2025 例行賽</span></div>
         <div class="card-b">
-          <div><label class="f">球隊</label><select id="rpTeam"></select></div>
+          <div><label class="f" for="rpTeam">球隊</label><select id="rpTeam"></select></div>
           <label class="toggle server-only"><input type="checkbox" id="onlyPhGames" checked> 只顯示有代打的比賽</label>
           <div class="list" id="gameList"></div>
         </div>
@@ -126,15 +138,20 @@
   </aside>
 
   <section id="result">
+    <a class="result-return" href="#workspace">調整情境 <span aria-hidden="true">↑</span></a>
     <div class="card empty" id="emptyState">
-      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M32 56 L56 32 L32 8 L8 32 Z"/><circle cx="32" cy="32" r="5"/></svg>
-      <p>設定局勢後按「評估」，或切到「歷史回放」挑一個真實的比賽時刻。</p>
+      <span class="eyebrow">對決準備</span>
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M32 56 L56 32 L32 8 L8 32 Z"/><circle cx="32" cy="32" r="5"/></svg>
+      <h2>這個打席，誰適合上場？</h2>
+      <p>選好球隊、投打人選與局面，按「評估」比較。<br>想看實際比賽，可切到「歷史回放」。</p>
+      <div class="desk-guide"><span><b>01</b> 設定局面</span><span><b>02</b> 比較人選</span><span><b>03</b> 查看配球</span></div>
     </div>
     <div id="resultBody" class="hidden"></div>
   </section>
 </main>
 
-<script src="engine.js"></script>
-<script src="app.js"></script>
+<script src="engine.js?v=20261002-v2"></script>
+<script src="pitch-change.js?v=20261002-v2"></script>
+<script src="app.js?v=20261002-v5"></script>
 </body>
 </html>

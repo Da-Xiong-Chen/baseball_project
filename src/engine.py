@@ -17,16 +17,18 @@ def model_at(date_str):
     return fit(date_str)
 
 
-@lru_cache(maxsize=1)
-def _hands():
+@lru_cache(maxsize=64)
+def _hands(cutoff=None):
     pa, _, _ = load()
+    if cutoff:
+        pa = pa[pa["date"] < pd.Timestamp(cutoff)]
     b = pa.groupby("batter")["bhand"].agg(lambda s: "S" if s.nunique() > 1 and s.value_counts(normalize=True).min() > 0.1 else s.mode().iat[0])
     p = pa.groupby("pitcher")["phand"].agg(lambda s: s.mode().iat[0])
     return b, p
 
 
-def bat_hand(batter, phand):
-    b, _ = _hands()
+def bat_hand(batter, phand, cutoff=None):
+    b, _ = _hands(cutoff)
     h = b.get(batter, "R")
     if h == "S":
         return "L" if phand == "R" else "R"
@@ -49,7 +51,7 @@ def situation(pa_id):
 
     hitters, _ = active_roster(row["bat_team"], row["date"], row["game"])
     bench = [h for h in hitters if h not in used and h not in lineup.values()]
-    pos = assign_positions([lineup[k] for k in sorted(lineup)])
+    pos = assign_positions([lineup[k] for k in sorted(lineup)], str(row["date"].date()))
 
     # 防守方：已用過的投手
     fld_before = pa[(pa["game"] == row["game"]) & (pa["fld_team"] == row["fld_team"]) & (pa["date"] == row["date"])]
@@ -63,6 +65,8 @@ def situation(pa_id):
 def value_score(v, pool, higher_better=True):
     """價值分數 1–100：v 在比較基準中的百分位（50 ≈ 聯盟平均）。"""
     pool = np.asarray(pool)
+    if len(pool) == 0:
+        return None
     beat = (pool < v) if higher_better else (pool > v)
     frac = (beat.sum() + 0.5 * (pool == v).sum()) / len(pool)
     return int(np.clip(round(1 + 99 * frac), 1, 100))
@@ -79,8 +83,9 @@ def ensemble_rel(m, ml, names, hands, pitcher):
 
 def ensemble_runs(m, ml, pitchers, batters):
     """每位投手對上 batters 的預期失分合計（集成）。"""
-    _, phands = _hands()
-    rows = [(b, bat_hand(b, phands.get(p, "R")), p) for p in pitchers for b in batters]
+    cutoff = str(m.cutoff.date())
+    _, phands = _hands(cutoff)
+    rows = [(b, bat_hand(b, phands.get(p, "R"), cutoff), p) for p in pitchers for b in batters]
     h = np.array([m.matchup(b, bh, p)["per_pa"] for b, bh, p in rows]).reshape(len(pitchers), len(batters)).sum(1)
     if not ml:
         return h
@@ -100,13 +105,19 @@ def _cached(key, fn):
 
 
 def hitter_pool_rels(m, ml, pitcher, phand):
-    names = hitter_pool()
+    cutoff = str(m.cutoff.date())
+    names = hitter_pool(cutoff)
+    if not names:
+        return np.array([])
     return _cached((id(m), id(ml), "H", pitcher),
-                   lambda: ensemble_rel(m, ml, names, [bat_hand(n, phand) for n in names], pitcher)[0])
+                   lambda: ensemble_rel(m, ml, names, [bat_hand(n, phand, cutoff) for n in names], pitcher)[0])
 
 
 def reliever_pool_runs(m, ml, batters):
-    return _cached((id(m), id(ml), "P", tuple(batters)), lambda: ensemble_runs(m, ml, reliever_pool(), batters))
+    names = reliever_pool(str(m.cutoff.date()))
+    if not names:
+        return np.array([])
+    return _cached((id(m), id(ml), "P", tuple(batters)), lambda: ensemble_runs(m, ml, names, batters))
 
 
 def evaluate_pinch_hit(sit, model=None, ml=None):
@@ -118,7 +129,8 @@ def evaluate_pinch_hit(sit, model=None, ml=None):
     due = sit["due"]
     due_pos = sit["positions"].get(due, "DH")
     names = [due] + sit["bench"]
-    hands = [bat_hand(n, phand) for n in names]
+    cutoff = str(m.cutoff.date())
+    hands = [bat_hand(n, phand, cutoff) for n in names]
     rels, rel_h, rel_g = ensemble_rel(m, ml, names, hands, row["pitcher"])
     pool = hitter_pool_rels(m, ml, row["pitcher"], phand)
 
@@ -132,15 +144,20 @@ def evaluate_pinch_hit(sit, model=None, ml=None):
             預估勝率=rel * slope * 100, 誤差=r["se_pa"] * slope * 100,
             每打席得分值=rel, 階層式=r["rel_pa"], 機器學習=(float(rel_g[i]) if ml else None),
             本身能力=r["skill_pa"] - r["fit_pa"], 球路適性=r["fit_pa"], 左右優勢=r["platoon_pa"],
-            樣本球數=r["n"], 可守=",".join(positions_of(name)) or "-",
+            樣本球數=r["n"], 投手對此側樣本=r["mix_n"], 比較池人數=len(pool),
+            可守=",".join(positions_of(name, cutoff)) or "-",
         )
         if name != due:
             others = [b for b in sit["bench"] if b != name]
-            st, msg = defense_check(due, due_pos, name, others)
+            st, msg = defense_check(due, due_pos, name, others, cutoff)
             rec["守備"], rec["守備說明"] = st, msg
         else:
             rec["守備"], rec["守備說明"] = "ok", f"目前守{POS_ZH.get(due_pos, due_pos)}"
         rec["可信度"] = "高" if r["n"] >= 1500 else "中" if r["n"] >= 500 else "低"
+        bhist, phist = _hands(cutoff)
+        rec["資料警示"] = "；".join((["打者慣用手缺資料，暫以右打估計"] if name not in bhist.index else []) +
+                             (["投手慣用手缺資料，球路基準暫以右投估計"] if row["pitcher"] not in phist.index else []) +
+                             (["投手對此侧球路採聯盟回退"] if not r["mix_n"] else []))
         out.append(rec)
     df = pd.DataFrame(out)
     base = df.loc[df["角色"] == "現任", "預估勝率"].iat[0]
@@ -154,8 +171,8 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
                      next_batters=None, pen=None, pitch_count=None, starter=None):
     """由使用者輸入建立情境（不依賴歷史打席）。"""
     if starter is None:
-        starter = is_starter(pitcher)
-    _, phands = _hands()
+        starter = is_starter(pitcher, date)
+    _, phands = _hands(date)
     row = dict(inning=int(inning), half=half, bat_score=int(bat_score), fld_score=int(fld_score),
                bases=int(bases), outs=int(outs), pitcher=pitcher, phand=phands.get(pitcher, "R"),
                date=pd.Timestamp(date), bat_team=bat_team, fld_team=fld_team, game=None, pa_order=1)
@@ -166,18 +183,21 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
                 pitch_count=None if pitch_count in (None, "") else int(pitch_count), starter=bool(starter))
 
 
-def is_starter(pitcher):
+def is_starter(pitcher, cutoff=None):
     """本季先發比例 ≥ 50% 視為先發投手。"""
     boxes = load()[2]
+    if cutoff:
+        boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
     d = boxes[(boxes["role"] == "P") & (boxes["name"] == pitcher) & (boxes["date"].dt.year == 2025)]
     return bool(len(d)) and (d["order"] == 1).mean() >= 0.5
 
 
 def matchup_detail(model, batter, pitcher):
     """單一對戰的球路格明細：投手使用率、打者揮空偏離、換算得分。"""
-    _, phands = _hands()
+    cutoff = str(model.cutoff.date())
+    _, phands = _hands(cutoff)
     ph = phands.get(pitcher, "R")
-    bh = bat_hand(batter, ph)
+    bh = bat_hand(batter, ph, cutoff)
     r = model.matchup(batter, bh, pitcher)
     cells = []
     for c in r["mix"].index:
@@ -194,7 +214,8 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
     """防守方換投：牛棚每位投手對上接下來 n_next 棒。"""
     row = sit["row"]
     m = model or model_at(str(row["date"].date()))
-    _, phands = _hands()
+    cutoff = str(m.cutoff.date())
+    _, phands = _hands(cutoff)
     boxes = load()[2]
     if sit.get("pen") is not None:
         pen = [p for p in sit["pen"] if p != row["pitcher"]]
@@ -214,7 +235,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
     hist = boxes[(boxes["role"] == "P") & (boxes["date"] < row["date"])]
     out = []
     pc, starter = sit.get("pitch_count"), sit.get("starter", False)
-    fat_runs, fat_warn = outlook(pc, starter, len(nxt))
+    fat_runs, fat_warn = outlook(pc, starter, len(nxt), cutoff)
     pitchers = [row["pitcher"]] + pen
     all_runs = ensemble_runs(m, ml, pitchers, nxt)
     pool = reliever_pool_runs(m, ml, nxt)
@@ -223,6 +244,11 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
         runs = float(all_runs[k])
         cur = pit == row["pitcher"]
         extra = fat_runs if cur else 0.0
+        h_runs = [m.matchup(b, bat_hand(b, ph, cutoff), pit)["per_pa"] for b in nxt]
+        g_runs = list(ml.abs_many([(b, bat_hand(b, ph, cutoff), pit) for b in nxt])) if ml else None
+        details = [dict(batter=b, runs=(1 - ENSEMBLE_W) * hr + ENSEMBLE_W * float(g_runs[i]) if ml else hr,
+                        fatigue=(outlook(pc, starter, i + 1, cutoff)[0] - outlook(pc, starter, i, cutoff)[0]) if cur else 0.0)
+                   for i, (b, hr) in enumerate(zip(nxt, h_runs))]
         h = hist[hist["name"] == pit]
         np3 = int(h.loc[h["date"] >= row["date"] - pd.Timedelta(days=3), "NP"].sum())
         streak = 0
@@ -240,6 +266,10 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
                         價值分數=value_score(runs + extra, pool, higher_better=False),
                         預估失分=runs + extra, 疲勞調整=extra, 用球數=(pc if cur else 0),
                         樣本球數=int(m.pit_all["n"].get(pit, 0)),
+                        階層式=float(sum(h_runs)), 機器學習=float(sum(g_runs)) if ml else None,
+                        對決明細=details, 比較池人數=len(pool),
+                        資料警示="；".join((["投手慣用手缺資料，暫以右投估計"] if pit not in phands.index else []) +
+                                              [f"{b}慣用手缺資料，暫以右打估計" for b in nxt if b not in _hands(cutoff)[0].index]),
                         疲勞="；".join(warn) or "-"))
     df = pd.DataFrame(out)
     cur = df.loc[df["角色"] == "場上", "預估失分"].iat[0]

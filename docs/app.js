@@ -11,13 +11,37 @@ const BASES = { 0: "無人", 1: "一壘", 2: "二壘", 3: "一二壘", 4: "三�
 const S = {
   mode: "custom", view: "offense", starter: false, inning: 7, half: "home", outs: 1, bases: 3,
   teams: [], roster: {}, games: [], game: null, pa: null, last: null, selected: null,
+  bench: new Set(), ready: false,
 };
+let rosterGeneration = 0, gamesGeneration = 0, gameGeneration = 0, runGeneration = 0;
+function clearResult() {
+  ++runGeneration;
+  ++detailGeneration;
+  S.last = null;
+  $("#resultBody").innerHTML = "";
+  $("#resultBody").classList.add("hidden");
+  $("#emptyState").classList.remove("hidden");
+  $("#evalBtn").disabled = !S.ready;
+  $("#evalBtn").textContent = "評估";
+}
+function listError(selector, message, retry) {
+  $(selector).innerHTML = `<div class="err-box" role="alert">${esc(message)}<button type="button" class="retry">重新載入</button></div>`;
+  $(selector + " .retry").onclick = retry;
+}
 
 /* 有本機伺服器（python server.py）時呼叫 API；否則（GitHub Pages）用瀏覽器內的 Engine 與預先計算的回放資料。 */
 let STATIC = false;
 const cache = {};
+// Older mobile browsers can fetch normally even without AbortSignal.timeout.
+const timeoutOptions = ms => typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? {signal:AbortSignal.timeout(ms)} : {};
+async function fetchTimed(url, options = {}, ms = 30000) {
+  if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') return fetch(url, {...options, ...timeoutOptions(ms)});
+  if (typeof AbortController === 'undefined') return fetch(url, options);
+  const controller = new AbortController(), timer = setTimeout(() => controller.abort(), ms);
+  try { return await fetch(url, {...options, signal:controller.signal}); } finally { clearTimeout(timer); }
+}
 async function json(url) {
-  if (!cache[url]) cache[url] = fetch(url).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); });
+  if (!cache[url]) cache[url] = fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).catch(e => { delete cache[url]; throw e; });
   return cache[url];
 }
 async function staticApi(path, body) {
@@ -41,6 +65,7 @@ async function staticApi(path, body) {
     case "detail": {
       const key = `${q("batter")}|${q("pitcher")}`;
       if (S.last && S.last.details && S.last.details[key]) return S.last.details[key];
+      if (S.last?.view === "replay") throw new Error("此歷史對決明細未匯出；不使用全季資料補缺");
       return Engine.detail(q("batter"), q("pitcher"));
     }
   }
@@ -49,7 +74,7 @@ async function staticApi(path, body) {
 
 async function api(path, body) {
   if (STATIC) return staticApi(path, body);
-  const res = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
+  const res = await fetchTimed(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {}, 120000);
   const j = await res.json();
   if (!res.ok || j.error) throw new Error(j.error || res.statusText);
   return j;
@@ -66,7 +91,7 @@ const posChips = (p) => Object.keys(p || {}).slice(0, 3).map((k) => `<span class
 /* ---------------- 初始化 ---------------- */
 async function init() {
   try {
-    const r = await fetch("api/meta");
+    const r = await fetchTimed("api/meta");
     if (!r.ok || !(r.headers.get("content-type") || "").includes("json")) throw 0;
   } catch {
     STATIC = true;
@@ -95,12 +120,14 @@ function bindStatic() {
   $("#innDown").onclick = () => { S.inning = Math.max(1, S.inning - 1); renderState(); };
   $$("#outs button").forEach((b) => b.onclick = () => { const o = +b.dataset.o; S.outs = S.outs === o ? o - 1 : o; renderState(); });
   $$("#diamond .base").forEach((b) => b.onclick = () => { S.bases ^= +b.dataset.b; renderState(); });
+  $$("#baseControls button").forEach(b => b.onclick = () => { S.bases ^= +b.dataset.b; renderState(); });
   $("#myTeam").onchange = refreshCustom;
   $("#oppTeam").onchange = refreshCustom;
   $("#dueBatter").onchange = () => { autoPos(); renderBench(); };
-  $("#benchFilter").oninput = renderBench;
-  $("#benchAll").onclick = () => { $$("#benchList input").forEach((i) => i.checked = true); };
-  $("#benchNone").onclick = () => { $$("#benchList input").forEach((i) => i.checked = false); };
+  $("#benchFilter").oninput = () => renderBench();
+  $("#benchList").onchange = e => { if (e.target.matches('input')) { if (e.target.checked) S.bench.add(e.target.value); else S.bench.delete(e.target.value); } };
+  $("#benchAll").onclick = () => { S.bench = new Set(S.roster[$("#myTeam").value].hitters.filter(h => h.name !== $("#dueBatter").value).map(h => h.name)); renderBench(); };
+  $("#benchNone").onclick = () => { S.bench.clear(); renderBench(); };
   $("#penAll").onclick = () => { $$("#penList input").forEach((i) => i.checked = true); };
   $("#penNone").onclick = () => { $$("#penList input").forEach((i) => i.checked = false); };
   $("#evalBtn").onclick = evaluateCustom;
@@ -121,6 +148,7 @@ function syncRole() {
 }
 function renderRole() {
   $$("#roleSeg button").forEach((b) => b.classList.toggle("on", (b.dataset.r === "1") === S.starter));
+  syncPressed();
   const pc = +$("#pitchCount").value || 0;
   $("#pcHint").textContent = S.starter
     ? (pc >= 85 ? "先發超過 85 球：依 2024–2025 資料加入疲勞調整（球數越多，預估失分越高）" : "先發 85 球以前，資料上看不出明顯疲勞")
@@ -128,29 +156,50 @@ function renderRole() {
 }
 
 function setMode(m) {
+  clearResult();
   S.mode = m;
   $$("#modeSeg button").forEach((b) => b.classList.toggle("on", b.dataset.mode === m));
+  syncPressed();
   $("#customPanel").classList.toggle("hidden", m !== "custom");
   $("#replayPanel").classList.toggle("hidden", m !== "replay");
   if (m === "replay" && !S.games.length) loadGames();
 }
 function setView(v) {
+  clearResult();
   S.view = v;
   $$("#viewSeg button").forEach((b) => b.classList.toggle("on", b.dataset.view === v));
+  syncPressed();
   $("#offenseFields").classList.toggle("hidden", v !== "offense");
   $("#defenseFields").classList.toggle("hidden", v !== "defense");
 }
 function renderState() {
   $("#innVal").textContent = S.inning;
+  $$("#baseControls button").forEach(b => b.setAttribute("aria-pressed", String((S.bases & +b.dataset.b) > 0)));
   $$("#halfSeg button").forEach((b) => b.classList.toggle("on", b.dataset.half === S.half));
   $$("#outs button").forEach((b) => b.classList.toggle("on", +b.dataset.o <= S.outs));
   $$("#diamond .base").forEach((b) => b.classList.toggle("on", (S.bases & +b.dataset.b) > 0));
+  syncPressed();
+}
+function syncPressed() {
+  $$(".seg button, #outs button").forEach(b => b.setAttribute("aria-pressed", String(b.classList.contains("on"))));
 }
 
 /* ---------------- 自訂情境 ---------------- */
 async function refreshCustom() {
-  const my = await team($("#myTeam").value);
-  const opp = await team($("#oppTeam").value);
+  const token = ++rosterGeneration;
+  S.ready = false;
+  clearResult();
+  $("#formError").innerHTML = '<span role="status">正在載入名單…</span>';
+  const myName = $("#myTeam").value, oppName = $("#oppTeam").value;
+  let my, opp;
+  try {
+    [my, opp] = await Promise.all([team(myName), team(oppName)]);
+  } catch (e) {
+    if (token === rosterGeneration) listError('#formError', '名單載入失敗：' + e.message, refreshCustom);
+    return;
+  }
+  if (token !== rosterGeneration) return;
+  $("#formError").innerHTML = '';
   const pOpt = (ps) => {
     const g = (role) => ps.filter((p) => p.role === role).map((p) => `<option value="${esc(p.name)}">${esc(p.name)}（${p.hand === "L" ? "左" : "右"}投・${p.games}場）</option>`).join("");
     return `<optgroup label="後援">${g("後援")}</optgroup><optgroup label="先發">${g("先發")}</optgroup>`;
@@ -163,11 +212,14 @@ async function refreshCustom() {
   // 預設：輪到第 9 位常用打者（較可能被代打）
   $("#dueBatter").selectedIndex = Math.min(8, my.hitters.length - 1);
   autoPos();
+  $("#benchFilter").value = '';
   renderBench(true);
   syncRole();
   $("#penList").innerHTML = my.pitchers.map((p) => `
     <label><input type="checkbox" value="${esc(p.name)}" ${p.role === "後援" ? "checked" : ""}>
       ${esc(p.name)} <span class="meta">${handChip(p.hand)}<span class="chip">${p.role}</span><span class="chip">${p.games} 場</span></span></label>`).join("");
+  S.ready = true;
+  $("#evalBtn").disabled = false;
 }
 function autoPos() {
   const my = S.roster[$("#myTeam").value];
@@ -178,29 +230,43 @@ function autoPos() {
 function renderBench(reset) {
   const my = S.roster[$("#myTeam").value];
   const due = $("#dueBatter").value;
-  const prev = new Set($$("#benchList input:checked").map((i) => i.value));
   const q = $("#benchFilter").value.trim();
   const list = my.hitters.filter((h) => h.name !== due);
   // 預設勾選：出賽較少的球員（較可能在板凳）
   const regulars = new Set(my.hitters.slice(0, 9).map((h) => h.name));
+  if (reset === true) S.bench = new Set(list.filter(h => !regulars.has(h.name)).map(h => h.name));
+  S.bench.delete(due);
   $("#benchList").innerHTML = list.filter((h) => !q || h.name.includes(q)).map((h) => {
-    const on = reset ? !regulars.has(h.name) : prev.has(h.name);
+    const on = S.bench.has(h.name);
     return `<label><input type="checkbox" value="${esc(h.name)}" ${on ? "checked" : ""}>
       ${esc(h.name)} <span class="meta">${handChip(h.hand)}${posChips(h.positions)}<span class="chip">${h.pa} 打席</span></span></label>`;
-  }).join("");
+  }).join("") || '<p role="status">沒有符合的球員；搜尋不會清除已選名單。</p>';
 }
 
 async function evaluateCustom() {
+  if (!S.ready) return;
+  $("#formError").innerHTML = '';
+  for (const id of ['myScore','oppScore', ...(S.view === 'defense' ? ['pitchCount'] : [])]) {
+    const input = $('#' + id);
+    if (input.value === '' || !input.checkValidity() || !Number.isInteger(Number(input.value))) {
+      input.setAttribute('aria-invalid','true');
+      $("#formError").innerHTML = '<p role="alert">請填寫非負整數；本場球數須介於 0 至 160。</p>';
+      input.focus(); return;
+    }
+    input.removeAttribute('aria-invalid');
+  }
   const my = $("#myTeam").value, opp = $("#oppTeam").value;
+  if (my === opp) { $("#formError").innerHTML = '<p role="alert">我方與對手須為不同球隊。</p>'; return; }
   const myScore = +$("#myScore").value || 0, oppScore = +$("#oppScore").value || 0;
   let body;
   if (S.view === "offense") {
-    const bench = $$("#benchList input:checked").map((i) => i.value);
+    const bench = [...S.bench].filter(n => n !== $("#dueBatter").value);
     body = { inning: S.inning, half: S.half, outs: S.outs, bases: S.bases, bat_score: myScore, fld_score: oppScore,
       pitcher: $("#oppPitcher").value, due: $("#dueBatter").value, due_pos: $("#duePos").value, bench,
       bat_team: my, fld_team: opp };
   } else {
     const nb = ["#nb1", "#nb2", "#nb3"].map((s) => $(s).value);
+    if (new Set(nb).size !== 3) { $("#formError").innerHTML = '<p role="alert">接下來三棒須為三位不同打者。</p>'; return; }
     body = { inning: S.inning, half: S.half, outs: S.outs, bases: S.bases, bat_score: oppScore, fld_score: myScore,
       pitcher: $("#myPitcher").value, due: nb[0], due_pos: "DH", bench: [], bat_team: opp, fld_team: my,
       next_batters: nb, pen: $$("#penList input:checked").map((i) => i.value),
@@ -210,48 +276,70 @@ async function evaluateCustom() {
 }
 
 async function run(fn, view) {
+  const token = ++runGeneration;
   const btn = $("#evalBtn");
   btn.disabled = true; btn.innerHTML = `<span class="loading"></span> 計算中…`;
   $("#emptyState").classList.add("hidden");
   const box = $("#resultBody");
   box.classList.remove("hidden");
-  if (!S.last) box.innerHTML = `<div class="card empty"><span class="loading"></span> 計算中（第一次載入某日期的模型約需 5 秒）</div>`;
+  if (!S.last) box.innerHTML = `<div class="card empty" role="status"><span class="loading"></span> 正在比較對決。首次載入歷史模型可能較久，請稍候。</div>`;
   try {
-    S.last = await fn();
+    const result = await fn();
+    if (token !== runGeneration) return;
+    S.last = result;
     S.last.view = view;
     S.selected = null;
     renderResult();
-    if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: "smooth" });
+    if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     else window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (e) {
-    box.innerHTML = `<div class="err-box">發生錯誤：${esc(e.message)}</div>`;
+    if (token !== runGeneration) return;
+    S.last = null;
+    box.innerHTML = `<div class="err-box" role="alert">發生錯誤：${esc(e.message)}<button class="retry">重新評估</button></div>`;
+    box.querySelector('.retry').onclick = () => run(fn, view);
   } finally {
-    btn.disabled = false; btn.textContent = "評估";
+    if (token === runGeneration) { btn.disabled = !S.ready; btn.textContent = "評估"; }
   }
 }
 
 /* ---------------- 歷史回放 ---------------- */
 async function loadGames() {
+  const token = ++gamesGeneration;
+  ++gameGeneration;
+  clearResult();
+  S.games = []; S.pas = null; S.game = null; S.pa = null;
+  $("#paList").innerHTML = '<p>先選一場比賽</p>';
   $("#gameList").innerHTML = `<div class="empty" style="padding:24px"><span class="loading"></span></div>`;
-  S.games = await api(`api/games?team=${encodeURIComponent($("#rpTeam").value)}`);
+  try {
+    const games = await api(`api/games?team=${encodeURIComponent($("#rpTeam").value)}`);
+    if (token !== gamesGeneration) return;
+    S.games = games;
+  } catch (e) { if (token === gamesGeneration) listError('#gameList', e.message, loadGames); return; }
   renderGames();
 }
 function renderGames() {
   const only = $("#onlyPhGames").checked;
   const gs = S.games.filter((g) => !only || g.ph > 0);
   $("#gameList").innerHTML = gs.map((g) => `
-    <div class="item ${S.game === g.game ? "on" : ""}" data-g="${g.game}">
+    <button type="button" class="item ${S.game === g.game ? "on" : ""}" data-g="${g.game}" aria-pressed="${S.game === g.game}">
       <span class="num mut" style="font-size:12px">${g.date.slice(5)}</span>
       <span>${esc(g.away)} <b class="num">${g.away_score}</b> : <b class="num">${g.home_score}</b> ${esc(g.home)}</span>
       ${g.ph ? `<span class="chip tag-ph" style="margin-left:auto">代打 ${g.ph}</span>` : ""}
-    </div>`).join("") || `<div class="empty" style="padding:24px">沒有符合的比賽</div>`;
+    </button>`).join("") || `<div class="empty" style="padding:24px">沒有符合的比賽</div>`;
   $$("#gameList .item").forEach((el) => el.onclick = () => loadGame(el.dataset.g));
 }
 async function loadGame(gid) {
+  const token = ++gameGeneration;
+  clearResult();
+  S.pas = null; S.pa = null;
   S.game = gid;
   renderGames();
   $("#paList").innerHTML = `<div class="empty" style="padding:24px"><span class="loading"></span></div>`;
-  S.pas = await api(`api/game?game=${gid}`);
+  try {
+    const pas = await api(`api/game?game=${gid}`);
+    if (token !== gameGeneration) return;
+    S.pas = pas;
+  } catch (e) { if (token === gameGeneration) listError('#paList', e.message, () => loadGame(gid)); return; }
   renderPAs();
 }
 function renderPAs() {
@@ -265,21 +353,54 @@ function renderPAs() {
       lastKey = key;
     }
     const off = STATIC && !p.is_ph;
-    html += `<div class="item ${S.pa === p.pa_id ? "on" : ""} ${off ? "off" : ""}" data-p="${p.pa_id}" ${off ? 'title="靜態版只收錄實際換代打的打席"' : ""}>
+    html += `<button type="button" class="item ${S.pa === p.pa_id ? "on" : ""} ${off ? "off" : ""}" data-p="${p.pa_id}" aria-pressed="${S.pa === p.pa_id}" ${off ? 'disabled title="靜態版只收錄實際換代打的打席"' : ""}>
       <span class="chip num">${p.outs} 出・${BASES[p.bases]}</span>
       <span>${esc(p.batter)}</span>
       ${p.is_ph ? `<span class="chip tag-ph">代打</span>` : ""}
-      <span class="mut" style="margin-left:auto;font-size:12px">${esc(p.result || "")}</span></div>`;
+      <span class="mut" style="margin-left:auto;font-size:12px">${esc(p.result || "")}</span></button>`;
   }
   $("#paList").innerHTML = (STATIC ? `<div class="inning-h" style="position:static">網頁版收錄 2025 年所有實際換代打的情境（標示「代打」者可點選）</div>` : "") + (html || `<div class="empty" style="padding:24px">沒有打席</div>`);
   $$("#paList .item:not(.off)").forEach((el) => el.onclick = () => {
     S.pa = el.dataset.p;
     renderPAs();
+    $(`#paList [data-p="${S.pa}"]`)?.focus();
     run(() => api(`api/replay?pa=${el.dataset.p}`), "replay");
   });
 }
 
 /* ---------------- 結果呈現 ---------------- */
+function comparisonPanel(R, selected, tab) {
+  if (!R) return '';
+  const pen = tab === 'pen', rows = pen ? R.bullpen?.rows : R.candidates;
+  if (!Array.isArray(rows)) return '';
+  const nameKey = pen ? '投手' : '球員', current = rows.find(r => r['角色'] === (pen ? '場上' : '現任'));
+  if (!current) return '';
+  let choices = rows.filter(r => r !== current);
+  if (selected && selected !== current[nameKey]) choices = choices.filter(r => r[nameKey] === selected);
+  else choices = choices.slice(0, 2);
+  const card = x => {
+    const hDelta = x['階層式'] - current['階層式'];
+    const gDelta = x['機器學習'] == null || current['機器學習'] == null ? null : x['機器學習'] - current['機器學習'];
+    const disagreement = gDelta != null && hDelta * gDelta <= 0;
+    const delta = pen ? x['守方勝率增減'] : x['相對現任'];
+    const low = x['樣本球數'] < 500 || current['樣本球數'] < 500 || !!x['資料警示'] || !!current['資料警示'];
+    const status = low ? '資料有限' : disagreement ? '模型意見不同，難以區分' : Math.abs(delta) < 0.005 ? '差距小於顯示精度，難以區分' : '排序尚未校準';
+    const direction = pen ? '失分價值越低越好' : '得分值越高越好';
+    const reason = pen
+      ? `<p>失分價值 ${x['預估失分'].toFixed(3)}；現任 ${current['預估失分'].toFixed(3)}。${esc(x['疲勞'] === '-' ? '無已觸發警示；仍須確認今日可用' : x['疲勞'])}</p>`
+      : `<p>${esc(x['守備說明'])}</p><dl class="compare-values">${[['本身能力','本身能力'],['球路適性','球路適性'],['左右投打','左右優勢']].map(([label,key]) => `<div><dt>${label}差值</dt><dd>${sign(x[key]-current[key],3)}</dd></div>`).join('')}</dl>`;
+    const details = pen && x['對決明細'] ? `<ol class="matchup-list">${x['對決明細'].map(d => `<li>${esc(d.batter)}<span class="num">${(d.runs + d.fatigue).toFixed(3)} 分${d.fatigue > 0 ? `（含疲勞 ${d.fatigue.toFixed(3)}）` : ''}</span></li>`).join('')}</ol>` : '';
+    return `<article class="compare-card"><h3>${esc(x[nameKey])}<span class="chip">${status}</span></h3>
+      <p class="compare-delta num">相對現任 ${sign(delta)} 百分點</p>${reason}
+      <details><summary>查看模型與資料依據</summary><p>${direction}；${pen ? '以下為疲勞調整前的合計' : '以下為每打席得分值'}。</p>
+      <p class="num">階層式差值 ${Number.isFinite(hDelta) ? sign(hDelta,3) : '未匯出'}；逐球模型差值 ${gDelta == null ? '未使用／未匯出' : sign(gDelta,3)}</p>${pen ? '<p>這是得分期望變化的價值，可為負值；不是實際失分數。單位為分。</p>' : ''}
+      <p>候選 ${Math.round(x['樣本球數'])} 球；現任 ${Math.round(current['樣本球數'])} 球。${!pen ? `投手對此側 ${x['投手對此側樣本'] ?? '未記錄'} 球。` : ''}比較池 ${x['比較池人數'] ?? '未記錄'} 人。</p>
+      ${details}<p>${esc(x['資料警示'] || '')}${x['資料警示'] && current['資料警示'] ? '；' : ''}${esc(current['資料警示'] || '')}</p><p>模型分歧與樣本量是判讀線索，不能解讀為候選勝出的機率。</p></details></article>`;
+  };
+  return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
+    <p class="mut">${pen ? `同樣面對接下來 ${R.bullpen.next.length} 棒；比較續投與換投。` : '固定對方投手與局勢；比較續打與代打。'}點選表格姓名可切換比較人選。</p>
+    <div class="compare-grid">${choices.length ? choices.map(card).join('') : '<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
+}
 function recommendation(cands) {
   const cur = cands.find((c) => c["角色"] === "現任");
   const bench = cands.filter((c) => c["角色"] === "代打");
@@ -287,17 +408,23 @@ function recommendation(cands) {
   if (!playable.length) return { kind: "neutral", title: `建議讓 ${cur["球員"]} 續打`, text: "板凳沒有可用且守備排得出來的人選。" };
   const best = playable[0];
   const diff = best["預估勝率"] - cur["預估勝率"];
-  const err = Math.sqrt(best["誤差"] ** 2 + cur["誤差"] ** 2);
-  if (diff <= 0) return { kind: "neutral", title: `建議讓 ${cur["球員"]} 續打`, text: `現任價值分數 ${cur["價值分數"]}；板凳中最佳人選 ${best["球員"]}（${best["價值分數"]}）預估不會比較好。` };
+  if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距小於顯示精度，難以區分',
+    text:`相對 ${cur["球員"]}，估計差值 ${sign(diff,4)} 百分點；主畫面保留兩位小數。這是顯示精度限制，並非統計上的相等，不能只依排序認定必須換人。`};
+  if (diff <= 0) return { kind: "neutral", title: `目前估計以 ${cur["球員"]} 續打較佳`, text: "可用候選沒有更高的估計值；這不是續打必然較好的保證。" };
   const def = best["守備"] === "warn" ? `　⚠ ${best["守備說明"]}` : "";
-  const sc = `價值分數 ${best["價值分數"]} vs 現任 ${cur["價值分數"]}；`;
-  if (diff > err) return { kind: best["守備"] === "warn" ? "warn" : "go", best: best["球員"], title: `建議換上 ${best["球員"]} 代打`, text: `${sc}預估勝率 ${sign(diff)}%，差距大於誤差範圍（±${err.toFixed(2)}%）。${def}` };
-  return { kind: "neutral", best: best["球員"], title: `可考慮 ${best["球員"]}，但差距不明顯`, text: `${sc}預估勝率 ${sign(diff)}%，仍在誤差範圍內（±${err.toFixed(2)}%），續打也合理。${def}` };
+  const disagree = best["機器學習"] != null && cur["機器學習"] != null &&
+    (best["階層式"] - cur["階層式"]) * (best["機器學習"] - cur["機器學習"]) <= 0;
+  const low = best["樣本球數"] < 500 || cur["樣本球數"] < 500 || !!best['資料警示'] || !!cur['資料警示'];
+  return {kind:best["守備"] === "warn" ? "warn" : "neutral", best:best["球員"],
+    title:disagree ? "兩模型意見不同，難以區分" : low ? "候選資料有限，需審慎判斷" : `估計較佳人選：${best["球員"]}`,
+    text:`相對 ${cur["球員"]}，勝率換算差值 ${sign(diff)} 百分點。${disagree ? "階層式與逐球模型排序不同。" : "尚未校準候選差值區間，不能只依排序認定必須換人。"}${def}`};
 }
 
 function renderResult() {
+  ++detailGeneration;
   const R = S.last, s = R.situation;
   const view = R.view;
+  const activeTab = view === 'replay' ? (S.tab || 'ph') : view === 'defense' ? 'pen' : 'ph';
   const halfZh = s.half === "away" ? "上" : "下";
   const outs = [1, 2, 3].map((i) => `<i class="${i <= s.outs ? "on" : ""}"></i>`).join("");
   const levPct = Math.min(100, R.leverage / 30 * 100), avgPct = R.league_leverage / 30 * 100;
@@ -317,13 +444,13 @@ function renderResult() {
       <div class="sb-pitcher"><span class="mut">投手</span> <b>${esc(s.pitcher)}</b> ${handChip(s.phand)}
         ${s.pitch_count != null ? `<div class="mut num" style="font-size:12px">${s.starter ? "先發" : "後援"}・本場已投 <b class="${(s.starter && s.pitch_count >= 90) || (!s.starter && s.pitch_count >= 30) ? "neg" : ""}">${s.pitch_count}</b> 球</div>` : ""}</div>
       <div class="lev">
-        <div class="lbl"><span>局勢張力：<b class="big">${levTxt}</b></span><span>1 分 ≈ <b class="num">${R.leverage.toFixed(1)}%</b> 勝率</span></div>
-        <div class="bar"><div class="fill" style="width:${levPct}%"></div><div class="avg" style="left:${avgPct}%" title="聯盟平均 ${R.league_leverage.toFixed(1)}%"></div></div>
-        <div class="lbl" style="margin-top:2px"><span>${diff === 0 ? "平手" : diff > 0 ? `進攻方領先 ${diff}` : `進攻方落後 ${-diff}`}</span><span>平均 ${R.league_leverage.toFixed(1)}%</span></div>
+        <div class="lbl"><span>局勢張力：<b class="big">${levTxt}</b></span><span>1 分 ≈ <b class="num">${R.leverage.toFixed(1)} 百分點</b></span></div>
+        <div class="bar"><div class="fill" style="width:${levPct}%"></div><div class="avg" style="left:${avgPct}%" title="聯盟平均每分 ${R.league_leverage.toFixed(1)} 百分點"></div></div>
+        <div class="lbl" style="margin-top:2px"><span>${diff === 0 ? "平手" : diff > 0 ? `進攻方領先 ${diff}` : `進攻方落後 ${-diff}`}</span><span>平均每分 ${R.league_leverage.toFixed(1)} 百分點</span></div>
       </div>
     </div>`;
 
-  if (view !== "defense") {
+  if (activeTab === 'ph') {
     const rec = recommendation(R.candidates);
     S.bestName = rec.best;
     html += `<div class="reco ${rec.kind === "go" ? "" : rec.kind}" style="border-top:1px solid var(--line)">
@@ -332,13 +459,15 @@ function renderResult() {
   } else {
     const rows = R.bullpen.rows, best = rows.filter((r) => r["角色"] === "牛棚")[0];
     const curP = rows.find((r) => r["角色"] === "場上");
-    const fat = curP && curP["疲勞調整"] > 0.0005 ? `已計入 ${esc(s.pitcher)} ${curP["用球數"]} 球的疲勞（3 打席 +${curP["疲勞調整"].toFixed(3)} 分）。` : "";
+    const fat = curP && curP["疲勞調整"] > 0.0005 ? `已計入 ${esc(s.pitcher)} ${curP["用球數"]} 球的疲勞（${R.bullpen.next.length} 打席 +${curP["疲勞調整"].toFixed(3)} 分）。` : "";
     S.bestName = null;
-    if (best && best["守方勝率增減"] > 0) {
+    if (best && Math.abs(best["守方勝率增減"]) < 0.005) {
+      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距小於顯示精度，難以區分</h3><p>相對場上投手，估計差值 ${sign(best["守方勝率增減"],4)} 百分點；主畫面保留兩位小數。這是顯示精度限制，並非統計上的相等，不能只依排序決定換投。${fat}</p></div></div>`;
+    } else if (best && best["守方勝率增減"] > 0) {
       html += `<div class="reco" style="border-top:1px solid var(--line)"><div class="ic">↻</div><div><h3>可考慮換上 ${esc(best["投手"])}</h3>
-        <p>價值分數 ${best["價值分數"]} vs 場上 ${curP["價值分數"]}；對上接下來 3 棒，預估守方勝率 ${sign(best["守方勝率增減"])}%。${fat}${best["疲勞"] !== "-" ? `　⚠ ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
+        <p>對上接下來 ${R.bullpen.next.length} 棒，相對場上投手的守方勝率換算差值 ${sign(best["守方勝率增減"])} 百分點。尚未校準排名穩定性，請確認可用狀態。${fat}${best["疲勞"] !== "-" ? `　警示 ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
     } else {
-      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>建議 ${esc(s.pitcher)} 續投</h3><p>牛棚中沒有預估更好的選擇。${fat}</p></div></div>`;
+      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>${best ? `目前估計以 ${esc(s.pitcher)} 續投較佳` : "沒有勾選可用牛棚"}</h3><p>${best ? "候選沒有較低的估計失分；不代表已證明續投最佳。" : "目前只能顯示場上投手；請確認是否有可用後援。"}${fat}</p></div></div>`;
     }
   }
   if (R.actual) {
@@ -350,29 +479,35 @@ function renderResult() {
       <span>結果 <b>${esc(a.result)}</b></span><span>WPA <b class="${cls(a.WPA, 0)}">${sign(a.WPA, 3)}</b></span></div>`;
   }
   html += `</div>`;
+  html += `<div id="candidateCompare">${comparisonPanel(R, null, activeTab)}</div>`;
 
   // 主表 + 側欄
+  html += `<div id="pitchChange"></div>`;
   const showTabs = view === "replay";
   const tab = S.tab || (view === "defense" ? "pen" : "ph");
   html += `<div class="grid2"><div class="card">`;
   if (showTabs) html += `<div class="tabs"><button data-t="ph" class="${tab === "ph" ? "on" : ""}">代打評估（進攻方）</button><button data-t="pen" class="${tab === "pen" ? "on" : ""}">換投評估（防守方）</button></div>`;
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? `對上 ${R.bullpen.next.map(esc).join("、")}` : "點選列可看球路明細"}</span></div>`;
-  html += `<div class="tbl-wrap">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
+  html += `<p class="table-help">點選球員姓名查看對決。小螢幕可左右滑動表格。</p><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div>${mixCard(R)}<div id="detail"></div></div></div>`;
-  html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>（完整實驗比較 11 種方法後選出；滑鼠移到預估勝率可看兩個模型各自的值）。<br>
-    預估勝率＝相對「聯盟平均打者面對同一投手」的勝率增減，已依當下局勢換算；細線為誤差範圍。
-    模型只使用 ${esc(R.model_cutoff)} 以前的資料。資料來源：Rebas Open Data（ODC-By）、ldkrsi/cpbl-opendata（MIT）、中華職棒官網守位統計。</div>`;
+  html += `<div class="foot">評估方法：<b>${esc(R.method || "階層式")}</b>。價值分數是比較池百分位，不是成功機率；勝率變化為局勢換算，單位是百分點。<br>
+    表中細線僅為階層式估計的近似標準誤，不是完整集成區間或排名把握度。球路拆解也只解釋階層式部分。失分價值可為負值，不是實際失分數。<br>
+    階層式截止：${esc(R.model_cutoff)}；逐球模型截止：${esc(R.ml_cutoff || '舊快照未記錄')}（均不含截止日）。<br>
+    ${esc(R.availability || '歷史快照的可用名單與守位可能包含推估資訊，請審慎使用')}。<br>
+    ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</div>`;
   $("#resultBody").innerHTML = html;
+  mountPitchChange(R.situation.pitcher);
 
   $$(".tabs button").forEach((b) => b.onclick = () => { S.tab = b.dataset.t; renderResult(); });
   $$("tr[data-batter]").forEach((tr) => tr.onclick = () => showDetail(tr.dataset.batter, R.situation.pitcher, tr));
   $$("tr[data-pitcher]").forEach((tr) => tr.onclick = () => showDetail(R.bullpen.next[0], tr.dataset.pitcher, tr));
   const first = $("tr[data-batter].best-row") || $("tr[data-batter]");
-  if (first && (showTabs ? tab : view === "defense" ? "pen" : "ph") === "ph") showDetail(first.dataset.batter, R.situation.pitcher, first);
+  if (first && (showTabs ? tab : view === "defense" ? "pen" : "ph") === "ph") showDetail(first.dataset.batter, R.situation.pitcher, first, false);
 }
 
 const TIER = (v) => (v >= 80 ? ["s5", "極佳"] : v >= 60 ? ["s4", "佳"] : v >= 40 ? ["s3", "普通"] : v >= 20 ? ["s2", "不利"] : ["s1", "很不利"]);
 function scoreBadge(v, tip) {
+  if (v == null) return '<span class="mut">基準不足</span>';
   const [c, lab] = TIER(v);
   return `<div class="score ${c}" title="${esc(tip)}"><div>${v}<small>${lab}</small></div></div>`;
 }
@@ -404,15 +539,15 @@ function phTable(R) {
     const cur = x["角色"] === "現任", best = x["球員"] === S.bestName;
     const d = x["守備"];
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""}">
-      <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span><span class="pname">${esc(x["球員"])}</span> ${handChip(x["打擊"])}${best ? `<span class="best">建議</span>` : ""}
+      <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span><button type="button" class="row-action" aria-label="查看 ${esc(x["球員"])} 對決">${esc(x["球員"])}</button> ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div></td>
-      <td>${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher}，勝過 ${x["價值分數"]}% 的主力打者（2025 年 100 打席以上）`)}</td>
-      <td><div class="vcell" title="${x["機器學習"] != null ? `階層式 ${sign(x["階層式"], 3)}・梯度提升樹 ${sign(x["機器學習"], 3)}（每打席得分值，各占一半）` : ""}"><div class="vnum num"><span class="${cls(x["預估勝率"], 0.02)}">${sign(x["預估勝率"])}%</span>${cur ? "" : `<div class="parts ${cls(x["相對現任"], 0.02)}">比現任 ${sign(x["相對現任"])}</div>`}</div>${dbar(x["預估勝率"], x["誤差"], scale)}</div></td>
-      <td style="white-space:nowrap"><span class="chip c-${x["可信度"]}">${x["可信度"]}</span><div class="mut num" style="font-size:11px">${Math.round(x["樣本球數"])} 球</div></td>
+      <td>${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比较池百分位；截止日之前達門檻的打者，早季回退前一季`)}</td>
+      <td><div class="vcell" title="${x["機器學習"] != null ? `階層式 ${sign(x["階層式"], 3)}・梯度提升樹 ${sign(x["機器學習"], 3)}（每打席得分值，各占一半）` : ""}"><div class="vnum num"><span class="${cls(x["預估勝率"], 0.02)}">${sign(x["預估勝率"])} 百分點</span>${cur ? "" : `<div class="parts ${cls(x["相對現任"], 0.02)}">比現任 ${sign(x["相對現任"])} 百分點</div>`}</div>${dbar(x["預估勝率"], x["誤差"], scale)}</div></td>
+      <td style="white-space:nowrap"><span class="chip c-${x["可信度"]}">${x["可信度"]}樣本</span><div class="mut num" style="font-size:11px">${Math.round(x["樣本球數"])} 球</div></td>
       <td><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${esc(x["守備說明"])}</span></div></td>
     </tr>`;
   }).join("");
-  return `<div class="card-b" style="padding-bottom:0">${SCORE_LEGEND}</div><table class="t"><thead><tr><th>球員</th><th title="1–100：面對這位投手，勝過多少比例的主力打者">價值分數</th><th>預估勝率（相對聯盟平均）</th><th>可信度</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<div class="card-b" style="padding-bottom:0">${SCORE_LEGEND}</div><table class="t"><thead><tr><th>球員</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對聯盟平均）</th><th>樣本充分度</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function penTable(R) {
@@ -422,15 +557,15 @@ function penTable(R) {
     const cur = x["角色"] === "場上";
     const best = !cur && i === 1 && x["守方勝率增減"] > 0;
     return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""}">
-      <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span><span class="pname">${esc(x["投手"])}</span> ${handChip(x["投"] || "R")}${best ? `<span class="best">建議</span>` : ""}
+      <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span><button type="button" class="row-action" aria-label="查看 ${esc(x["投手"])} 配球與對決">${esc(x["投手"])}</button> ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div></td>
-      <td>${scoreBadge(x["價值分數"], `對上接下來 3 棒，勝過 ${x["價值分數"]}% 的主力後援投手（2025 年 15 場以上）`)}</td>
-      <td><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + "%"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
+      <td>${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位；截止日之前達門檻的後援，早季回退前一季')}</td>
+      <td><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
       <td class="num">${x["預估失分"].toFixed(3)}${x["疲勞調整"] > 0.0005 ? `<div class="neg" style="font-size:11px">含疲勞 +${x["疲勞調整"].toFixed(3)}</div>` : ""}</td>
       <td>${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
   }).join("");
-  return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">對上接下來 3 棒：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${SCORE_LEGEND}</div></div>
-    <table class="t"><thead><tr><th>投手</th><th title="1–100：對上接下來 3 棒，勝過多少比例的主力後援投手">價值分數</th><th>守方勝率（相對場上投手）</th><th>預估失分值（3 打席）</th><th>疲勞／警示</th></tr></thead><tbody>${body}</tbody></table>`;
+  return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">對上接下來 ${R.bullpen.next.length} 棒：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${SCORE_LEGEND}</div></div>
+    <table class="t"><thead><tr><th>投手</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對場上投手）</th><th>失分價值（${R.bullpen.next.length} 打席）</th><th>疲勞／警示</th></tr></thead><tbody>${body}</tbody></table>`;
 }
 
 function mixCard(R) {
@@ -451,13 +586,27 @@ function mixCard(R) {
   </div></div>`;
 }
 
-async function showDetail(batter, pitcher, tr) {
+let detailGeneration = 0;
+function mountPitchChange(pitcher, hand = "ALL") {
+  const cutoff = String(S.last.view === 'replay' ? S.last.situation.date : S.last.model_cutoff).slice(0, 10);
+  const season = S.last.view === "replay" ? Number(cutoff.slice(0, 4)) : 2025;
+  PitchChange.mount({element: $("#pitchChange"), pitcher, cutoff, season, hand,
+    fetcher: STATIC ? PitchChange.staticResult : (o) => api(`api/pitch-change?${new URLSearchParams(o)}`)});
+}
+async function showDetail(batter, pitcher, tr, updateComparison = true) {
+  const token = ++detailGeneration;
   $$("tr.sel").forEach((x) => x.classList.remove("sel"));
   tr?.classList.add("sel");
+  const compare = $("#candidateCompare");
+  if (compare && updateComparison) compare.innerHTML = comparisonPanel(S.last, tr?.dataset?.pitcher || batter,
+    S.last.view === 'defense' || (S.last.view === 'replay' && S.tab === 'pen') ? 'pen' : 'ph');
+  mountPitchChange(pitcher); // Independent of a failing eight-cell detail request.
   const box = $("#detail");
   box.innerHTML = `<div class="card" style="margin-top:16px"><div class="card-b"><span class="loading"></span></div></div>`;
   try {
     const d = await api(`api/detail?batter=${encodeURIComponent(batter)}&pitcher=${encodeURIComponent(pitcher)}&date=${S.last.model_cutoff}`);
+    if (token !== detailGeneration || box !== $("#detail")) return;
+    mountPitchChange(pitcher, d.bhand);
     const cell = (k) => d.cells.find((c) => c.cell === k);
     const tile = (k) => {
       const c = cell(k);
@@ -476,12 +625,14 @@ async function showDetail(batter, pitcher, tr) {
         <div><small>本身能力</small><b class="num ${cls(d.skill, 0.002)}">${sign(d.skill, 3)}</b></div>
         <div><small>球路適性</small><b class="num ${cls(d.fit, 0.002)}">${sign(d.fit, 3)}</b></div>
         <div><small>左右投打</small><b class="num ${cls(d.platoon, 0.002)}">${sign(d.platoon, 3)}</b></div>
-      </div><p class="mut" style="font-size:11px;margin:6px 0 0">單位：每打席得分值。打者總樣本 ${Math.round(d.n)} 球。</p></div></div>`;
+      </div><p class="mut" style="font-size:12px;margin:6px 0 0">階層式拆解，單位：每打席得分值；不是完整集成分數的原因。打者樣本 ${Math.round(d.n)} 球；投手對此側 ${Math.round(d.mix_n)} 球${d.mix_n ? '' : '（使用聯盟球路回退）'}。</p></div></div>`;
   } catch (e) {
+    if (token !== detailGeneration || box !== $("#detail")) return;
     box.innerHTML = `<div class="err-box" style="margin-top:16px">${esc(e.message)}</div>`;
   }
 }
 
 init().catch((e) => {
-  $("#emptyState").innerHTML = `<div class="err-box">無法連線到伺服器：${esc(e.message)}<br>請先執行 <code>python server.py</code>。</div>`;
+  $("#emptyState").innerHTML = `<div class="err-box" role="alert">資料載入失敗：${esc(e.message)}<br>請確認本機伺服器或靜態資料可用。<button class="retry">重新載入頁面</button></div>`;
+  $("#emptyState .retry").onclick = () => location.reload();
 });

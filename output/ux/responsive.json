@@ -1,0 +1,74 @@
+[
+  {
+    "client": 1425,
+    "height": 900,
+    "inputFont": "16px",
+    "page": 1425,
+    "smallControls": [],
+    "width": 1440
+  },
+  {
+    "client": 1265,
+    "height": 800,
+    "inputFont": "16px",
+    "page": 1265,
+    "smallControls": [],
+    "width": 1280
+  },
+  {
+    "client": 1009,
+    "height": 768,
+    "inputFont": "16px",
+    "page": 1009,
+    "smallControls": [],
+    "width": 1024
+  },
+  {
+    "client": 753,
+    "height": 1024,
+    "inputFont": "16px",
+    "page": 753,
+    "smallControls": [],
+    "width": 768
+  },
+  {
+    "client": 375,
+    "height": 844,
+    "inputFont": "16px",
+    "page": 375,
+    "smallControls": [],
+    "width": 390
+  },
+  {
+    "client": 360,
+    "height": 812,
+    "inputFont": "16px",
+    "page": 360,
+    "smallControls": [],
+    "width": 375
+  },
+  {
+    "client": 345,
+    "height": 800,
+    "inputFont": "16px",
+    "page": 345,
+    "smallControls": [],
+    "width": 360
+  },
+  {
+    "client": 305,
+    "height": 568,
+    "inputFont": "16px",
+    "page": 305,
+    "smallControls": [],
+    "width": 320
+  },
+  {
+    "client": 829,
+    "height": 390,
+    "inputFont": "16px",
+    "page": 829,
+    "smallControls": [],
+    "width": 844
+  }
+]

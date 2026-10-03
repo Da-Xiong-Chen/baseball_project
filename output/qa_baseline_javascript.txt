@@ -1,0 +1,11 @@
+✔ static selection is strictly before the requested date for every hand (7.1676ms)
+✔ failed fetch is retryable instead of permanently cached (2.4238ms)
+✔ unknown pitcher produces a clear error without requesting a guessed filename (2.2081ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.4369

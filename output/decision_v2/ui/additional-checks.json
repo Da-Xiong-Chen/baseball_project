@@ -1,0 +1,79 @@
+{
+  "themeChecks": [
+    {
+      "theme": "dark",
+      "sameResult": true
+    },
+    {
+      "theme": "light",
+      "sameResult": true
+    }
+  ],
+  "responsive": [
+    {
+      "buttons": [
+        {
+          "h": 44,
+          "name": "深色",
+          "w": 58
+        },
+        {
+          "h": 44,
+          "name": "淺色",
+          "w": 58
+        }
+      ],
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "buttons": [
+        {
+          "h": 44,
+          "name": "深色",
+          "w": 58
+        },
+        {
+          "h": 44,
+          "name": "淺色",
+          "w": 58
+        }
+      ],
+      "scroll": 360,
+      "width": 375
+    },
+    {
+      "buttons": [
+        {
+          "h": 44,
+          "name": "深色",
+          "w": 58
+        },
+        {
+          "h": 44,
+          "name": "淺色",
+          "w": 58
+        }
+      ],
+      "scroll": 829,
+      "width": 844
+    },
+    {
+      "buttons": [
+        {
+          "h": 44,
+          "name": "深色",
+          "w": 58
+        },
+        {
+          "h": 44,
+          "name": "淺色",
+          "w": 58
+        }
+      ],
+      "scroll": 705,
+      "width": 720
+    }
+  ],
+  "keyboard": "true"
+}
