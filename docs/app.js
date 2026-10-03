@@ -138,7 +138,7 @@ function bindStatic() {
   panel.addEventListener('input', invalidateCustom);
   panel.addEventListener('change', invalidateCustom);
   panel.addEventListener('click', event => {
-    if (event.target.closest('#halfSeg button, #outs button, #diamond .base, #baseControls button, #roleSeg button, #innUp, #innDown, #benchAll, #benchNone, #penAll, #penNone')) invalidateCustom(event);
+    if (event.target.closest('#halfSeg button, #outs button, #diamond .base, #baseControls button, #roleSeg button, #innUp, #innDown, #benchList button[data-group], #benchAll, #benchNone, #penAll, #penNone')) invalidateCustom(event);
   });
   $$("#modeSeg button").forEach((b) => b.onclick = () => setMode(b.dataset.mode));
   $$("#viewSeg button").forEach((b) => b.onclick = () => setView(b.dataset.view));
