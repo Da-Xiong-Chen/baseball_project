@@ -121,8 +121,8 @@ function bindStatic() {
   $$("#outs button").forEach((b) => b.onclick = () => { const o = +b.dataset.o; S.outs = S.outs === o ? o - 1 : o; renderState(); });
   $$("#diamond .base").forEach((b) => b.onclick = () => { S.bases ^= +b.dataset.b; renderState(); });
   $$("#baseControls button").forEach(b => b.onclick = () => { S.bases ^= +b.dataset.b; renderState(); });
-  $("#myTeam").onchange = refreshCustom;
-  $("#oppTeam").onchange = refreshCustom;
+  $("#myTeam").onchange = () => { syncTeamChoices('myTeam'); refreshCustom(); };
+  $("#oppTeam").onchange = () => { syncTeamChoices('oppTeam'); refreshCustom(); };
   $("#dueBatter").onchange = () => { autoPos(); renderBench(); };
   $("#benchFilter").oninput = () => renderBench();
   $("#benchList").onchange = e => { if (e.target.matches('input')) { if (e.target.checked) S.bench.add(e.target.value); else S.bench.delete(e.target.value); } };
@@ -185,7 +185,14 @@ function syncPressed() {
 }
 
 /* ---------------- 自訂情境 ---------------- */
+function syncTeamChoices(changed = 'myTeam') {
+  const mine=$('#myTeam'),opp=$('#oppTeam'),other=changed==='myTeam'?opp:mine;
+  if(mine.value===opp.value) other.value=S.teams.find(t=>t!==(changed==='myTeam'?mine.value:opp.value))||'';
+  Array.from(mine.options).forEach(o=>{o.disabled=o.value===opp.value;});
+  Array.from(opp.options).forEach(o=>{o.disabled=o.value===mine.value;});
+}
 async function refreshCustom() {
+  syncTeamChoices();
   const token = ++rosterGeneration;
   S.ready = false;
   clearResult();
@@ -219,6 +226,7 @@ async function refreshCustom() {
     <label><input type="checkbox" value="${esc(p.name)}" ${p.role === "後援" ? "checked" : ""}>
       ${esc(p.name)} <span class="meta">${handChip(p.hand)}<span class="chip">${p.role}</span><span class="chip">${p.games} 場</span></span></label>`).join("");
   S.ready = true;
+  PitcherGroups.mount({element:$('#pitcherGroups'),list:$('#penList'),team:myName,pitchers:my.pitchers,changed:clearResult});
   $("#evalBtn").disabled = false;
 }
 function autoPos() {
