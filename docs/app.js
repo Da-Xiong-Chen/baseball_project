@@ -386,6 +386,14 @@ function comparisonPanel(R, selected, tab) {
   let choices = rows.filter(r => r !== current);
   if (selected && selected !== current[nameKey]) choices = choices.filter(r => r[nameKey] === selected);
   else choices = choices.slice(0, 2);
+  const deltaKey = pen ? '守方勝率增減' : '相對現任';
+  const chartScale = Math.max(0.01, ...rows.map(r => Math.abs(r[deltaKey])).filter(Number.isFinite));
+  const chart = choices.length ? `<div class="candidate-chart"><div class="candidate-chart-key"><span>較不利</span><span>現任 0</span><span>較有利</span></div>${choices.map(x => {
+    const delta = x[deltaKey];
+    if (!Number.isFinite(delta)) return '';
+    const width = Math.abs(delta) / chartScale * 48;
+    return `<div class="candidate-chart-row"><span class="candidate-chart-name">${esc(x[nameKey])}</span><div class="candidate-chart-track" aria-hidden="true"><i class="${delta >= 0 ? 'positive' : 'negative'}" style="left:${delta >= 0 ? 50 : 50-width}%;width:${width}%"></i></div><span class="num">${sign(delta)}<small> 百分點</small></span></div>`;
+  }).join('')}</div>` : '';
   const card = x => {
     const hDelta = x['階層式'] - current['階層式'];
     const gDelta = x['機器學習'] == null || current['機器學習'] == null ? null : x['機器學習'] - current['機器學習'];
@@ -407,7 +415,7 @@ function comparisonPanel(R, selected, tab) {
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
     <p class="mut">${pen ? `同樣面對接下來 ${R.bullpen.next.length} 棒；比較續投與換投。` : '固定對方投手與局勢；比較續打與代打。'}按「對決」切換比較人選。</p>
-    <div class="compare-grid">${choices.length ? choices.map(card).join('') : '<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
+    ${chart}<div class="compare-grid">${choices.length ? choices.map(card).join('') : '<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }
 function recommendation(cands) {
   const cur = cands.find((c) => c["角色"] === "現任");
@@ -434,7 +442,7 @@ function renderResult() {
   const view = R.view;
   const activeTab = view === 'replay' ? (S.tab || 'ph') : view === 'defense' ? 'pen' : 'ph';
   const halfZh = s.half === "away" ? "上" : "下";
-  const outs = [1, 2, 3].map((i) => `<i class="${i <= s.outs ? "on" : ""}"></i>`).join("");
+  const outs = [1, 2].map((i) => `<i class="${i <= s.outs ? "on" : ""}"></i>`).join("");
   const levPct = Math.min(100, R.leverage / 30 * 100), avgPct = R.league_leverage / 30 * 100;
   const diff = s.bat_score - s.fld_score;
   const levTxt = R.leverage >= 15 ? "高張力" : R.leverage >= 10 ? "中高張力" : R.leverage >= 6 ? "一般" : "低張力";
@@ -442,16 +450,18 @@ function renderResult() {
   let html = `
   <div class="card">
     <div class="scoreboard">
+      <div class="sb-top">
       <div class="sb-inning num">${s.inning}<small>局${halfZh}</small></div>
       <div class="sb-score">
         <div class="sb-team"><div class="t">${esc(s.bat_team || "進攻方")}</div><div class="s num">${s.bat_score}</div></div>
         <div class="sb-vs">:</div>
         <div class="sb-team"><div class="t">${esc(s.fld_team || "防守方")}</div><div class="s num">${s.fld_score}</div></div>
       </div>
+      </div><div class="sb-context">
       <div class="sb-mini">${miniDiamond(s.bases)}<div><div class="outs-ro">${outs}</div><div class="mut" style="font-size:12px;margin-top:2px">${s.outs} 出局・${BASES[s.bases]}</div></div></div>
       <div class="sb-pitcher"><span class="mut">投手</span> <b>${esc(s.pitcher)}</b> ${handChip(s.phand)}
         ${s.pitch_count != null ? `<div class="mut num" style="font-size:12px">${s.starter ? "先發" : "後援"}・本場已投 <b class="${(s.starter && s.pitch_count >= 90) || (!s.starter && s.pitch_count >= 30) ? "neg" : ""}">${s.pitch_count}</b> 球</div>` : ""}</div>
-      <div class="lev">
+      </div><div class="lev">
         <div class="lbl"><span>局勢張力：<b class="big">${levTxt}</b></span><span>1 分 ≈ <b class="num">${R.leverage.toFixed(1)} 百分點</b></span></div>
         <div class="bar"><div class="fill" style="width:${levPct}%"></div><div class="avg" style="left:${avgPct}%" title="聯盟平均每分 ${R.league_leverage.toFixed(1)} 百分點"></div></div>
         <div class="lbl" style="margin-top:2px"><span>${diff === 0 ? "平手" : diff > 0 ? `進攻方領先 ${diff}` : `進攻方落後 ${-diff}`}</span><span>平均每分 ${R.league_leverage.toFixed(1)} 百分點</span></div>
@@ -513,6 +523,8 @@ function renderResult() {
   $$(".player-official").forEach(link => link.onclick = event => event.stopPropagation());
   const first = $("tr[data-batter].best-row") || $("tr[data-batter]");
   if (first && (showTabs ? tab : view === "defense" ? "pen" : "ph") === "ph") showDetail(first.dataset.batter, R.situation.pitcher, first, false);
+  const currentPitcher = $('tr[data-pitcher].cur') || $('tr[data-pitcher]');
+  if (currentPitcher && (showTabs ? tab : view === 'defense' ? 'pen' : 'ph') === 'pen') showDetail(R.bullpen.next[0], currentPitcher.dataset.pitcher, currentPitcher, false);
 }
 
 const TIER = (v) => (v >= 80 ? ["s5", "極佳"] : v >= 60 ? ["s4", "佳"] : v >= 40 ? ["s3", "普通"] : v >= 20 ? ["s2", "不利"] : ["s1", "很不利"]);

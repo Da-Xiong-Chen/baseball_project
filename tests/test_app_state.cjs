@@ -56,6 +56,17 @@ test('comparison keeps both candidates initially and explains model disagreement
   assert.equal((selected.match(/<article/g)||[]).length,1);assert.match(selected,/<h3>Two/);
 });
 
+test('candidate chart preserves direction and a common scale when selection changes',()=>{
+  const f=fixture(),base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
+  f.context.result={candidates:[base,{...base,角色:'代打',球員:'Positive',相對現任:.2},
+    {...base,角色:'代打',球員:'Negative',相對現任:-.1}]};
+  const both=f.eval("comparisonPanel(result,null,'ph')");
+  assert.match(both,/class="positive" style="left:50%;width:48%"/);
+  assert.match(both,/class="negative" style="left:26%;width:24%"/);
+  assert.match(both,/現任 0/);assert.match(both,/百分點/);
+  assert.match(f.eval("comparisonPanel(result,'Negative','ph')"),/left:26%;width:24%/);
+});
+
 test('tiny positive differences never become a strong recommendation from SE',()=>{
   const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,誤差:0,階層式:0,機器學習:0,樣本球數:1000},
     {角色:'代打',球員:'One',守備:'ok',預估勝率:.00001,誤差:0,階層式:.00001,機器學習:.00001,樣本球數:1000}];
