@@ -7,13 +7,13 @@ const path = require('node:path');
 function fixture() {
   const nodes = new Map();
   const node = key => {
-    if (!nodes.has(key)) nodes.set(key, {value:'', innerHTML:'', disabled:false,
+    if (!nodes.has(key)) nodes.set(key, {value:'', innerHTML:'', disabled:false, options:[],
       classList:{add(){},remove(){},toggle(){}}, querySelector:()=>({}), focus(){}, setAttribute(){}, removeAttribute(){}, checkValidity:()=>true});
     return nodes.get(key);
   };
   const context = {document:{querySelector:node,querySelectorAll:()=>[]}, location:{href:'http://localhost/'}, console, URL, URLSearchParams, AbortSignal,
     window:{matchMedia:()=>({matches:false}),scrollTo(){}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
-    PitchChange:{mount:o=>context.lastMount=o,staticResult:()=>{}},fetch:async()=>({ok:true,json:async()=>({})})};
+    PitcherGroups:{mount:()=>{}},PitchChange:{mount:o=>context.lastMount=o,staticResult:()=>{}},fetch:async()=>({ok:true,json:async()=>({})})};
   let code = fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
   code = code.slice(0,code.lastIndexOf('init().catch'));
   vm.createContext(context); vm.runInContext(code,context);
@@ -128,6 +128,15 @@ test('older team list response cannot replace the latest team',async()=>{
   assert.equal(f.eval('S.games[0].game'),'B');
 });
 
+test('team choices disable the opposing team and recover duplicate selections',()=>{
+  const f=fixture();f.eval("S.teams=['A','B','C'];");
+  const mine=f.node('#myTeam'),opp=f.node('#oppTeam');
+  mine.options=['A','B','C'].map(value=>({value}));opp.options=['A','B','C'].map(value=>({value}));
+  mine.value='A';opp.value='B';f.eval('syncTeamChoices()');
+  assert.equal(mine.options[1].disabled,true);assert.equal(opp.options[0].disabled,true);
+  opp.value='A';f.eval("syncTeamChoices('oppTeam')");
+  assert.equal(opp.value,'A');assert.equal(mine.value,'B');assert.equal(mine.options[0].disabled,true);
+});
 test('slow roster response cannot reset the latest names',async()=>{
   const f=fixture(),a=deferred(),b=deferred();f.context.a=a.promise;f.context.b=b.promise;
   f.eval("team=n=>n==='A'?a:b;autoPos=()=>{};renderBench=()=>{};syncRole=()=>{};");

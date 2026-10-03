@@ -436,6 +436,21 @@ button:active:not(:disabled) { filter:brightness(.92); }
   html { scroll-behavior:auto; }
   *,*::before,*::after { animation:none!important; transition:none!important; }
 }
+.pitcher-group-select{padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)}
+.pitcher-group-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pitcher-group-actions select{flex:1;min-width:120px}
+.pitcher-group-actions button{min-height:44px;text-align:center}
+.pitcher-group-editor{margin:8px 0}
+.pitcher-group-editor summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--accent)}
+.pitcher-group-editor input{box-sizing:border-box;width:100%;min-height:44px;background:var(--panel);color:var(--text);border:1px solid var(--input-border);border-radius:6px;padding:8px;font-size:16px}
+.pitcher-group-editor p,.pitcher-group-status{font-size:12px;line-height:1.6}
+.pitcher-group-status{color:var(--muted);overflow-wrap:anywhere;margin:8px 0}
+.pitcher-group-status:empty{display:none}
+.group-members{max-height:240px;margin:10px 0}
+.pitcher-group-editor[open]{padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)}
+.pitcher-group-editor summary{font-size:14px}
+.pitcher-group-editor .pitcher-group-actions{justify-content:space-between}
+.pitcher-group-editor input[type=checkbox]{width:18px;min-height:18px;height:18px;flex:none}
 
 /* 板凳名單：依守位分組 */
 .bench-group-h { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between;
