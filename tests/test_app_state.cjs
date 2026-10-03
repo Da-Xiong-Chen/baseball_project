@@ -21,6 +21,23 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('pitch arsenal preserves exported ratios, sorts groups, and never presents missing personal mix',()=>{
+  const f=fixture(); f.context.result={situation:{pitcher:'P'},pitch_mix:{R:{n:10,cells:{速球高中:.3,速球低:.2,滑卡低:.4,曲球低:.1}},L:{n:0,cells:{速球高中:1}}}};
+  const html=f.eval('mixCard(result)');
+  assert.equal((html.match(/class="arsenal-pitch"/g)||[]).length,4);
+  assert.match(html,/50.0/);assert.match(html,/40.0/);
+  assert.ok(html.indexOf('<h3>速球')<html.indexOf('<h3>滑卡'));
+  assert.match(html,/此側沒有可用個人逐球紀錄/);
+  assert.doesNotMatch(html,/100.0|九宮格|內角|外角|球速/);
+});
+
+test('official profile uses unique validated ID and searches when name is ambiguous',()=>{
+  const f=fixture();f.eval("officialPlayers={'鋼龍':['0000006497'],'同名':['0000000001','0000000002']};");
+  assert.match(f.eval("officialPlayerLink('鋼龍')"),/person\?acnt=0000006497/);
+  assert.match(f.eval("officialPlayerLink('同名')"),/players\?playerName=/);
+  assert.match(f.eval("officialPlayerLink('未知')"),/noopener noreferrer/);
+});
+
 test('automatic detail does not collapse the initial two-candidate comparison',async()=>{
   const f=fixture();f.node('#candidateCompare').innerHTML='both selected candidates';
   f.eval("S.last={view:'offense',model_cutoff:'2026-01-01'};mountPitchChange=()=>{};api=async()=>{throw Error('controlled missing detail');};");
@@ -37,6 +54,17 @@ test('comparison keeps both candidates initially and explains model disagreement
   assert.match(html,/模型意見不同，難以區分/);assert.match(html,/排序尚未校準/);
   const selected=f.eval("comparisonPanel(result,'Two','ph')");
   assert.equal((selected.match(/<article/g)||[]).length,1);assert.match(selected,/<h3>Two/);
+});
+
+test('candidate chart preserves direction and a common scale when selection changes',()=>{
+  const f=fixture(),base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
+  f.context.result={candidates:[base,{...base,角色:'代打',球員:'Positive',相對現任:.2},
+    {...base,角色:'代打',球員:'Negative',相對現任:-.1}]};
+  const both=f.eval("comparisonPanel(result,null,'ph')");
+  assert.match(both,/class="positive" style="left:50%;width:48%"/);
+  assert.match(both,/class="negative" style="left:26%;width:24%"/);
+  assert.match(both,/現任 0/);assert.match(both,/百分點/);
+  assert.match(f.eval("comparisonPanel(result,'Negative','ph')"),/left:26%;width:24%/);
 });
 
 test('tiny positive differences never become a strong recommendation from SE',()=>{
