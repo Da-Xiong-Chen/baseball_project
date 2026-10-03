@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --bg: #f8fafc;
+  --bg: #ffffff;
   --panel: #ffffff;
   --panel-2: #f1f5f9;
   --line: #cbd5e1;
@@ -20,22 +20,25 @@
   --shadow: none;
   --club: #172554;
   --clay: #d97706;
+  --scoreboard-bg:#172554; --scoreboard-text:#f8fafc; --scoreboard-muted:#c4d6ed;
   --ease-ui: cubic-bezier(.2,.7,.2,1);
   --dirt: #c9a77c;
   --grass: #3f8f5f;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #08111f; --panel: #0f1b2d; --panel-2: #14243a; --line: #36506e; --input-border: #7b91ac; --text: #e5eef9; --muted: #a9bcd3;
-    --accent: #60a5fa; --on-accent: #071426; --accent-soft: #16365b; --pos: #4ade80; --neg: #fb7185; --warn: #fbbf24;
+    --bg: #000000; --panel: #111214; --panel-2: #1b1c20; --line: #42444b; --input-border: #878b94; --text: #f4f4f5; --muted: #b0b1b8;
+    --accent: #8bbcff; --on-accent: #071426; --accent-soft: #203046; --pos: #4ade80; --neg: #fb7185; --warn: #fbbf24;
+    --scoreboard-bg:#111214; --scoreboard-text:#f4f4f5; --scoreboard-muted:#b0b1b8;
     --warn-soft: #3d2e13; --bad-soft: #421d28; --ok-soft: #123a2a; --chip: #1b314d; --club: #172554; --clay: #f59e0b;
     --shadow: 0 1px 2px rgba(0,0,0,.3); --dirt: #8c7353; --grass: #2f6b47;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #08111f; --panel: #0f1b2d; --panel-2: #14243a; --line: #36506e; --input-border: #7b91ac; --text: #e5eef9; --muted: #a9bcd3;
-  --accent: #60a5fa; --on-accent: #071426; --accent-soft: #16365b; --pos: #4ade80; --neg: #fb7185; --warn: #fbbf24;
+  --bg: #000000; --panel: #111214; --panel-2: #1b1c20; --line: #42444b; --input-border: #878b94; --text: #f4f4f5; --muted: #b0b1b8;
+  --accent: #8bbcff; --on-accent: #071426; --accent-soft: #203046; --pos: #4ade80; --neg: #fb7185; --warn: #fbbf24;
+  --scoreboard-bg:#111214; --scoreboard-text:#f4f4f5; --scoreboard-muted:#b0b1b8;
   --warn-soft: #3d2e13; --bad-soft: #421d28; --ok-soft: #123a2a; --chip: #1b314d; --club: #172554; --clay: #f59e0b;
   --shadow: 0 1px 2px rgba(0,0,0,.3); --dirt: #8c7353; --grass: #2f6b47;
 }
@@ -61,6 +64,9 @@ header {
 .brand small { color: var(--muted); font-size: 12px; display: block; margin-top: -2px; }
 .spacer { flex: 1; }
 .theme-control button { min-width:44px; min-height:44px; }
+.theme-toggle { min-height:44px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:8px 14px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
+.theme-toggle svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+@media(max-width:600px) { .theme-toggle { margin-left:auto; } }
 .comparison { margin-top:16px; margin-bottom:16px; }
 .compare-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 .compare-card { border:1px solid var(--line); padding:14px; background:var(--panel-2); min-width:0; }
@@ -359,12 +365,12 @@ select, input[type=number], input[type=search] { min-height:44px; font-size:16px
 .checklist .meta { min-width:0; }
 .link { min-width:48px; min-height:44px; border:1px solid var(--line); padding:8px 12px; border-radius:4px; font-size:13px; }
 .btn-primary { min-height:52px; border-radius:4px; font-size:16px; letter-spacing:.04em; }
-.scoreboard { background:var(--club); color:#f6f5ed; border-radius:5px 5px 0 0; border-bottom:3px solid var(--clay); padding:24px; }
-.scoreboard :is(.sb-inning small,.sb-team .t,.sb-vs,.mut,.lev .lbl) { color:#c4d6ed; }
+.scoreboard { background:var(--scoreboard-bg); color:var(--scoreboard-text); border-radius:5px 5px 0 0; border-bottom:3px solid var(--clay); padding:24px; }
+.scoreboard :is(.sb-inning small,.sb-team .t,.sb-vs,.mut,.lev .lbl) { color:var(--scoreboard-muted); }
 .scoreboard .sb-team .s { font:700 40px/1.25 ui-monospace,monospace; }
 .scoreboard .sb-inning { font-size:32px; }
 .scoreboard .chip { background:#293f70; color:#fff; }
-.scoreboard .sb-mini svg { --panel:#172554; --muted:#c4d6ed; }
+.scoreboard .sb-mini svg { --panel:var(--scoreboard-bg); --muted:var(--scoreboard-muted); }
 .scoreboard .outs-ro i { border-color:#c4d6ed; }
 .scoreboard .lev .bar { background:#526a92; }
 .scoreboard .lev .avg { background:#fff; }
