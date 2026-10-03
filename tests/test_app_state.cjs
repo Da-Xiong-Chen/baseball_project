@@ -45,6 +45,15 @@ test('invalid submit clears the old result without evaluating',async()=>{
   assert.equal(f.eval('S.last'),null);assert.match(f.node('#formError').innerHTML,/非負整數/);
 });
 
+test('score steppers support typing, zero floor and stale-result invalidation',()=>{
+  const f=fixture();f.node('#myScore').value='2';f.eval("S.last={id:'old'};stepScore('myScore',1)");
+  assert.equal(f.node('#myScore').value,'3');assert.equal(f.eval('S.last'),null);
+  f.node('#myScore').value='0';f.eval("stepScore('myScore',-1)");assert.equal(f.node('#myScore').value,'0');
+  f.node('#myScore').value='';f.eval("stepScore('myScore',1)");assert.equal(f.node('#myScore').value,'1');
+  f.node('#myScore').value='2.5';f.eval("stepScore('myScore',1)");assert.equal(f.node('#myScore').value,'2.5');
+  assert.match(f.node('#formError').innerHTML,/非負整數/);
+});
+
 test('comparison keeps both candidates initially and explains model disagreement',()=>{
   const f=fixture();const base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
   f.context.result={candidates:[base,{...base,角色:'代打',球員:'One',階層式:.02,機器學習:-.01,相對現任:.2},

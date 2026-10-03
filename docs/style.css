@@ -442,3 +442,22 @@ button:active:not(:disabled) { filter:brightness(.92); }
   html { scroll-behavior:auto; }
   *,*::before,*::after { animation:none!important; transition:none!important; }
 }
+
+/* Compact, separate inning/outs and runner controls. */
+.state { grid-template-columns:1fr; gap:12px; }
+.state-control,.base-setting { padding:14px; border:1px solid var(--line); border-radius:8px; background:var(--panel-2); }
+.state .stepper { justify-content:center; gap:8px; flex-wrap:wrap; }
+.stepper .val { min-width:32px; font-size:24px; }
+.out-setting { margin-top:14px; padding-top:12px; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.out-setting .f { margin:0; color:var(--muted); }
+.out-setting output { min-width:45px; text-align:center; font-size:13px; font-variant-numeric:tabular-nums; }
+.state .base-setting { display:grid; grid-template-columns:120px minmax(0,1fr); gap:4px 12px; align-items:center; }
+.state .base-setting > label { grid-column:1 / -1; text-align:left!important; }
+.base-setting #baseControls { display:grid; grid-template-columns:1fr; gap:8px; }
+.score-stepper { display:grid; grid-template-columns:44px minmax(0,1fr) 44px; gap:4px; }
+.score-stepper button { min-height:44px; border:1px solid var(--line); border-radius:4px; background:var(--panel-2); cursor:pointer; display:grid; place-items:center; font-size:20px; }
+.score-stepper button:disabled { opacity:.4; cursor:default; }
+.score-stepper input { min-width:0; padding:7px 2px; appearance:textfield; font-weight:700; }
+.score-stepper input::-webkit-inner-spin-button { appearance:none; }
+.seg button,.tabs button,.mix-switch button,.link,.pc-toggle,.pc-retry { text-align:center; }
+@media(max-width:350px) { .score-controls { grid-template-columns:1fr; } .state-control,.base-setting { padding:10px; } }

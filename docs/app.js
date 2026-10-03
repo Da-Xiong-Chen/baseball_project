@@ -28,6 +28,20 @@ function invalidateCustom(event) {
   if (S.mode !== 'custom' || event?.target?.id === 'benchFilter') return;
   clearResult();
 }
+function stepScore(id, delta) {
+  const input = $('#' + id), value = input.value === '' ? 0 : Number(input.value);
+  if (!Number.isSafeInteger(value) || value < 0) {
+    input.setAttribute('aria-invalid','true'); input.focus();
+    $('#formError').innerHTML = '<p role="alert">得分請填寫非負整數。</p>'; return;
+  }
+  const next = Math.max(0, value + delta);
+  if (!Number.isSafeInteger(next)) return;
+  input.value = String(next); input.removeAttribute('aria-invalid');
+  invalidateCustom({target:input}); syncScoreControls();
+}
+function syncScoreControls() {
+  $$('[data-score][data-delta="-1"]').forEach(button => { button.disabled = Number($('#'+button.dataset.score).value) <= 0; });
+}
 function listError(selector, message, retry) {
   $(selector).innerHTML = `<div class="err-box" role="alert">${esc(message)}<button type="button" class="retry">重新載入</button></div>`;
   $(selector + " .retry").onclick = retry;
@@ -117,6 +131,9 @@ async function init() {
 }
 
 function bindStatic() {
+  $$('[data-score]').forEach(button => button.onclick = () => stepScore(button.dataset.score, Number(button.dataset.delta)));
+  ['#myScore','#oppScore'].forEach(id => $(id).oninput = syncScoreControls);
+  syncScoreControls();
   const panel = $("#customPanel");
   panel.addEventListener('input', invalidateCustom);
   panel.addEventListener('change', invalidateCustom);
@@ -184,6 +201,7 @@ function setView(v) {
 }
 function renderState() {
   $("#innVal").textContent = S.inning;
+  $("#outsValue").textContent = S.outs + ' 出局';
   $$("#baseControls button").forEach(b => b.setAttribute("aria-pressed", String((S.bases & +b.dataset.b) > 0)));
   $$("#halfSeg button").forEach((b) => b.classList.toggle("on", b.dataset.half === S.half));
   $$("#outs button").forEach((b) => b.classList.toggle("on", +b.dataset.o <= S.outs));
