@@ -50,7 +50,7 @@ window.PitchChange = (() => {
   }
   function mount({element, pitcher, cutoff, season=2025, hand="ALL", fetcher}) {
     if (!element || !pitcher) return;
-    const wasOpen = element.querySelector('.pc-toggle')?.getAttribute('aria-expanded') === 'true';
+    const wasOpen = element.querySelector('.pc-toggle')?.getAttribute('aria-expanded') !== 'false';
     let generation = 0;
     let opened = false;
     element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>同條件近期配球變化</h2><p class="pc-subtitle">${escape(pitcher)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球變化</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;

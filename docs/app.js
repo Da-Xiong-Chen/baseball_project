@@ -411,13 +411,13 @@ function recommendation(cands) {
   if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距小於顯示精度，難以區分',
     text:`相對 ${cur["球員"]}，估計差值 ${sign(diff,4)} 百分點；主畫面保留兩位小數。這是顯示精度限制，並非統計上的相等，不能只依排序認定必須換人。`};
   if (diff <= 0) return { kind: "neutral", title: `目前估計以 ${cur["球員"]} 續打較佳`, text: "可用候選沒有更高的估計值；這不是續打必然較好的保證。" };
-  const def = best["守備"] === "warn" ? `　⚠ ${best["守備說明"]}` : "";
+  const def = best["守備"] === "warn" ? `　${best["守備說明"]}` : "";
   const disagree = best["機器學習"] != null && cur["機器學習"] != null &&
     (best["階層式"] - cur["階層式"]) * (best["機器學習"] - cur["機器學習"]) <= 0;
   const low = best["樣本球數"] < 500 || cur["樣本球數"] < 500 || !!best['資料警示'] || !!cur['資料警示'];
   return {kind:best["守備"] === "warn" ? "warn" : "neutral", best:best["球員"],
     title:disagree ? "兩模型意見不同，難以區分" : low ? "候選資料有限，需審慎判斷" : `估計較佳人選：${best["球員"]}`,
-    text:`相對 ${cur["球員"]}，勝率換算差值 ${sign(diff)} 百分點。${disagree ? "階層式與逐球模型排序不同。" : "尚未校準候選差值區間，不能只依排序認定必須換人。"}${def}`};
+    text:`比 ${cur["球員"]} ${sign(diff)} 百分點。${disagree ? "估計有分歧，請審慎判斷。" : "差值僅供參考，仍須確認上場狀況。"}${def}`};
 }
 
 function renderResult() {
@@ -488,7 +488,7 @@ function renderResult() {
   html += `<div class="grid2"><div class="card">`;
   if (showTabs) html += `<div class="tabs"><button data-t="ph" class="${tab === "ph" ? "on" : ""}">代打評估（進攻方）</button><button data-t="pen" class="${tab === "pen" ? "on" : ""}">換投評估（防守方）</button></div>`;
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? `對上 ${R.bullpen.next.map(esc).join("、")}` : "點選列可看球路明細"}</span></div>`;
-  html += `<p class="table-help">點選球員姓名查看對決。小螢幕可左右滑動表格。</p><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
+  html += `<div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div>${mixCard(R)}<div id="detail"></div></div></div>`;
   html += `<div class="foot"><p>價值分數是相對排名，不是成功機率；勝率變化以百分點表示。請確認今日可上場名單。</p><details><summary>資料與評估依據</summary>評估方法：<b>${esc(R.method || "階層式")}</b>。<br>
     表中細線僅為階層式估計的近似標準誤，不是完整集成區間或排名把握度。球路拆解也只解釋階層式部分。失分價值可為負值，不是實際失分數。<br>
@@ -621,11 +621,11 @@ async function showDetail(batter, pitcher, tr, updateComparison = true) {
       <div class="heat"><div></div><div class="hh">高中位置</div><div class="hh">低球</div>
         ${GROUPS.map((g) => `<div class="rl">${g}</div>${tile(g + "高中")}${tile(g + "低")}`).join("")}</div>
       <p class="mut" style="font-size:12px;margin:10px 0 0">大字：配球估計。揮空：相對打者自身平均的差值。</p>
-      <div class="breakdown">
+      <p class="detail-unit">能力拆解 · 分／打席</p><div class="breakdown">
         <div><small>本身能力</small><b class="num ${cls(d.skill, 0.002)}">${sign(d.skill, 3)}</b></div>
         <div><small>球路適性</small><b class="num ${cls(d.fit, 0.002)}">${sign(d.fit, 3)}</b></div>
         <div><small>左右投打</small><b class="num ${cls(d.platoon, 0.002)}">${sign(d.platoon, 3)}</b></div>
-      </div><details class="detail-method"><summary>拆解與樣本</summary><p>階層式拆解，每打席得分值；不代表完整集成分數。打者有效樣本 ${Math.round(d.n)} 球；投手對此側 ${Math.round(d.mix_n)} 球${d.mix_n ? '' : '（使用聯盟配球估計）'}。</p></details></div></div>`;
+      </div></div></div>`;
   } catch (e) {
     if (token !== detailGeneration || box !== $("#detail")) return;
     box.innerHTML = `<div class="err-box" style="margin-top:16px">${esc(e.message)}</div>`;

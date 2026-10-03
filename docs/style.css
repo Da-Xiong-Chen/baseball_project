@@ -43,6 +43,7 @@
 .ui-icon { width:18px; height:18px; vertical-align:middle; margin-right:6px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .foot summary, .detail-method summary { min-height:44px; padding:10px 0; cursor:pointer; color:var(--accent); }
 .foot p { margin:0 0 6px; }
+.detail-unit { color:var(--muted); font-size:12px; margin:12px 0 0; }
 html, body { margin: 0; }
 body {
   background: var(--bg); color: var(--text);
