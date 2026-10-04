@@ -683,3 +683,24 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 .rules-note a { color:var(--accent); }
 .btn-primary .ui-icon { vertical-align:middle; }
 @media(max-width:600px) { #viewSeg .ui-icon { width:16px; height:16px; margin-right:3px; } }
+
+.today-availability { margin:10px 0; padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--panel-2); }
+.today-availability-head { display:flex; flex-wrap:wrap; gap:4px 12px; align-items:center; }
+.today-availability-head strong { font-size:var(--font-label); }
+.today-availability-head span { font-size:var(--font-meta); color:var(--muted); }
+.today-availability-names { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; font-size:var(--font-meta); }
+.matchup-legend { display:flex; gap:12px; font-size:var(--font-meta); color:var(--muted); margin-bottom:8px; }
+.matchup-legend span { display:inline-flex; align-items:center; gap:5px; }
+.matchup-legend i { width:14px; height:6px; background:var(--accent); }
+.matchup-legend b { width:3px; height:12px; background:var(--text); }
+.next-matchup-track .matchup-baseline { position:absolute; z-index:2; top:-3px; bottom:-3px; width:3px; background:var(--text); transform:translateX(-50%); border-radius:1px; }
+.next-matchup-row { grid-template-columns:70px minmax(30px,1fr) 88px; min-height:44px; }
+.next-matchup-row .num strong { display:block; font-weight:600; }
+.next-matchup-row .num small { display:block; color:var(--muted); font-size:11px; }
+.compare-card > p { margin:8px 0; }
+.compare-card .compare-warning { color:var(--warn); }
+.compare-grid { align-items:start; }
+@media(max-width:600px) { .next-matchup-row { grid-template-columns:64px minmax(30px,1fr) 80px; gap:6px; } }
+
+#penList label:has(input:disabled)::after { content:"場上"; color:var(--muted); font-size:var(--font-meta); margin-left:6px; }
+#penList input:disabled { opacity:.5; }

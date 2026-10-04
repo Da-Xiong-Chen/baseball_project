@@ -63,7 +63,7 @@
     if(!sessions.has(team))sessions.set(team,{drafts:new Map(),selected:state.selected,applied:null});
     const session=sessions.get(team);
     const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    element.innerHTML=`<label class="f" for="pitcherGroupSelect">投手群組</label><div class="pitcher-group-actions"><select id="pitcherGroupSelect"></select><button type="button" class="link" id="pitcherGroupApply">套用</button></div><details class="pitcher-group-editor"><summary>編輯群組成員</summary><p class="mut">2025 後援範本，非官方分組。</p><div class="checklist group-members" aria-label="群組成員"></div><label class="legacy-import hidden">從舊群組帶入<select aria-label="從舊群組帶入"><option value="">選擇舊群組</option></select></label><div class="pitcher-group-actions"><button type="button" class="link" id="pitcherGroupSave">儲存</button><button type="button" class="link" id="pitcherGroupCancel">取消修改</button><span class="draft-state" role="status"></span></div></details><p class="pitcher-group-status" role="status"></p>`;
+    element.innerHTML=`<label class="f" for="pitcherGroupSelect">投手群組</label><div class="pitcher-group-actions"><select id="pitcherGroupSelect"></select><button type="button" class="link" id="pitcherGroupApply">套用</button></div><details class="pitcher-group-editor"><summary>編輯群組成員</summary><p class="mut">2025 後援範本，非官方分組。</p><div class="checklist group-members" aria-label="群組成員"></div><label class="legacy-import hidden">從舊群組帶入<select aria-label="從舊群組帶入"><option value="">選擇舊群組</option></select></label><div class="pitcher-group-actions"><button type="button" class="link" id="pitcherGroupSave">儲存</button><button type="button" class="link" id="pitcherGroupCancel">取消修改</button><span class="draft-state" role="status"></span></div></details><p class="pitcher-group-status" role="status"></p><div class="today-availability" aria-live="polite"></div>`;
     const q=s=>element.querySelector(s),select=q('#pitcherGroupSelect'),status=q('.pitcher-group-status');
     const boxes=()=>Array.from(list.querySelectorAll('input[type=checkbox]'));
     const group=()=>groups.find(g=>g.name===select.value);
@@ -71,7 +71,9 @@
     const dirty=()=>!equal(draft(),new Set(group().members));
     const effective=()=>new Set(boxes().filter(i=>i.checked&&i.value!==current()).map(i=>i.value));
     function feedback(message='') {
-      const count=effective().size, applied=session.applied;
+      boxes().forEach(input=>{input.disabled=input.value===current();input.title=input.disabled?'場上投手，固定為比較基準':'';});
+      const selected=[...effective()],count=selected.length, applied=session.applied;
+      q('.today-availability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>請排除休息、未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.map(name=>`<span class="chip">${esc(name)}</span>`).join(''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
       const same=applied&&equal(effective(),new Set(applied.members.filter(n=>n!==current())));
       status.textContent=message||state.error||(applied?applied.name+' · '+(same?'已套用':'已微調')+' · ':'')+'今日候選 '+count+' 人'+(!count?'，目前只評估續投':'');
     }

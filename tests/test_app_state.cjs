@@ -273,3 +273,18 @@ test('per-batter chart retains a shared candidate scale',()=>{
  assert.match(f.eval('pitcherMatchupChart(details,.2)'),/width:24%/);
  assert.match(f.eval('pitcherMatchupChart(details,.2)'),/共用尺度/);
 });
+
+test('per-batter baseline matches batter identity, includes fatigue and does not invent missing data',()=>{
+ const f=fixture();f.context.details=[{batter:'A',runs:.1,fatigue:0},{batter:'B',runs:-.1,fatigue:0}];
+ f.context.baseline=[{batter:'Other',runs:9,fatigue:0},{batter:'A',runs:.15,fatigue:.05}];
+ const html=f.eval('pitcherMatchupChart(details,.2,baseline)');
+ assert.match(html,/left:98%/);assert.match(html,/現任 \+0.200/);assert.match(html,/現任 未提供/);assert.equal((html.match(/class="matchup-baseline"/g)||[]).length,1);
+});
+test('hitter decomposition is collapsed while the fielding warning remains visible',()=>{
+ const f=fixture(),base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
+ f.context.result={candidates:[base,{...base,角色:'代打',球員:'One',相對現任:.2,守備說明:'需確認捕手'}]};
+ const html=f.eval('comparisonPanel(result,null,"ph")');
+ assert.ok(html.indexOf('需確認捕手')<html.indexOf('<details>'));
+ assert.ok(html.indexOf('class="compare-values"')>html.indexOf('<details>'));
+ assert.doesNotMatch(html,/<details open/);
+});
