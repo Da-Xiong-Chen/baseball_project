@@ -721,6 +721,21 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 #detail .breakdown b { font-size:var(--font-title); }
 #detail .detail-caption { margin:10px 0 0; }
 .pitcher-group-status:empty { display:none; }
+/* Shared corner sizes: softer surfaces without changing chart geometry. */
+:root { --radius-card:14px; --radius-control:10px; --radius-inner:8px; }
+.card,.compare-card,.candidate-chart { border-radius:var(--radius-card); }
+.card > .card-h:first-child { border-radius:var(--radius-card) var(--radius-card) 0 0; }
+.scoreboard { border-radius:var(--radius-card) var(--radius-card) 0 0; }
+.actual { border-radius:0 0 var(--radius-card) var(--radius-card); }
+.arsenal-pitch,.pc-window,.pc-status,.pc-method,.today-availability,
+.state-control,.base-setting,.pitcher-group-select,.pitcher-group-editor[open],
+.checklist,.list,.heat .c,.breakdown div { border-radius:var(--radius-control); }
+.theme-toggle,.btn-primary,.link,.compare-chips button,.stepper button,
+.score-stepper button,select,input[type=number],input[type=search],
+.pitcher-group-editor input:not([type=checkbox]),.pc-card button,.pc-card select { border-radius:var(--radius-control); }
+.seg,.tabs,.mix-switch { border-radius:var(--radius-control); }
+.seg::before,.tabs::before,.mix-switch::before,
+.seg button,.tabs button,.mix-switch button { border-radius:var(--radius-inner); }
 /* Match existing mobile form text instead of shrinking specific dropdowns. */
 @media(max-width:600px) {
   .next-batter select,.pc-card select { font-size:16px; }
