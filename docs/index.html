@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261004-refinement1"></script>
-<link rel="stylesheet" href="style.css?v=20261004-refinement1">
+<script src="theme.js?v=20261004-interaction2"></script>
+<link rel="stylesheet" href="style.css?v=20261004-interaction2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -89,6 +89,7 @@
             </div>
             <div style="margin-top:14px">
               <label class="f">板凳可用野手（請確認今日可上場）</label>
+              <button type="button" class="link bench-toggle-all" id="benchToggleAll">全部展開</button>
               <input type="search" id="benchFilter" aria-label="搜尋板凳球員" placeholder="搜尋球員…">
               <div class="checklist" id="benchList" style="margin-top:6px"></div>
               <div class="mini-actions"><button class="link" id="benchAll" aria-label="全選所有板凳球員">全選</button><button class="link" id="benchNone" aria-label="清除所有板凳球員">清除</button></div>
@@ -105,7 +106,7 @@
             <p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
-              <div class="row3"><select id="nb1" aria-label="接下來第一棒"></select><select id="nb2" aria-label="接下來第二棒"></select><select id="nb3" aria-label="接下來第三棒"></select></div>
+              <div class="next-batters"><div class="next-batter"><label for="nb1">第 1 棒</label><select id="nb1" aria-label="接下來第一棒"></select><span class="next-hand" data-next-hand="nb1"></span></div><div class="next-batter"><label for="nb2">第 2 棒</label><select id="nb2" aria-label="接下來第二棒"></select><span class="next-hand" data-next-hand="nb2"></span></div><div class="next-batter"><label for="nb3">第 3 棒</label><select id="nb3" aria-label="接下來第三棒"></select><span class="next-hand" data-next-hand="nb3"></span></div></div>
             </div>
             <div style="margin-top:14px">
               <label class="f">牛棚可用投手（請確認今日可上場）</label>
@@ -153,9 +154,9 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261004-refinement1"></script>
-<script src="pitch-change.js?v=20261004-refinement1"></script>
-<script src="pitcher-groups.js?v=20261004-refinement1"></script>
-<script src="app.js?v=20261004-refinement1"></script>
+<script src="engine.js?v=20261004-interaction2"></script>
+<script src="pitch-change.js?v=20261004-interaction2"></script>
+<script src="pitcher-groups.js?v=20261004-interaction2"></script>
+<script src="app.js?v=20261004-interaction2"></script>
 </body>
 </html>

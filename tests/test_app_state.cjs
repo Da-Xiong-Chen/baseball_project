@@ -21,6 +21,30 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('both modes keep the latest two candidates in selection order and isolate new results',()=>{
+  const f=fixture();
+  f.context.result={candidates:[{角色:'現任',球員:'Current'},...['A','B','C'].map(球員=>({角色:'代打',球員}))],bullpen:{rows:[{角色:'場上',投手:'Pitcher'},...['X','Y','Z'].map(投手=>({角色:'牛棚',投手}))]}};
+  f.eval('comparisonNames(result,"ph");comparisonNames(result,"pen")');
+  for(const [tab,a,b,c] of [['ph','A','B','C'],['pen','X','Y','Z']]) {
+    assert.equal(f.eval(`setComparisonName(result,'${tab}','${c}',true)`),true);
+    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),`${b},${c}`);
+    assert.equal(f.eval(`setComparisonName(result,'${tab}','${c}',true)`),true);
+    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),`${b},${c}`);
+    assert.equal(f.eval(`comparisonNames(result,'${tab}').size`),2);
+    f.eval(`setComparisonName(result,'${tab}','${b}',false);setComparisonName(result,'${tab}','${c}',false)`);
+    assert.equal(f.eval(`comparisonNames(result,'${tab}').size`),0);
+  }
+  assert.equal(f.eval('setComparisonName(result,"ph","Current",true)'),false);
+  assert.equal(f.eval('comparisonNames({...result},"ph").size'),2);
+});
+
+test('manual detail browsing never replaces the independent comparison panel',async()=>{
+  const f=fixture();f.node('#candidateCompare').innerHTML='two independently chosen candidates';
+  f.eval("S.last={view:'offense',model_cutoff:'2026-01-01'};mountPitchChange=()=>{};api=async()=>{throw Error('missing detail');};");
+  await f.eval("showDetail('Other','Pitcher',null)");
+  assert.equal(f.node('#candidateCompare').innerHTML,'two independently chosen candidates');
+});
+
 test('position-group selection clears evaluation even when rendering removes its button',()=>{
   const f=fixture();f.node('#customPanel').addEventListener=()=>{};
   f.eval('bindStatic();S.last={id:"old"};S.bench=new Set();renderBench=()=>{};');
