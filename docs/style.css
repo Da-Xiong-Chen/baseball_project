@@ -670,3 +670,16 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 .pc-card { font-size:var(--font-body); }
 .pc-card h2 { font-size:var(--font-title); }
 .pc-card button,.pc-card select,.pc-controls label { font-size:var(--font-label); }
+
+/* Per-batter pitching value: zero reference, signed values, no probability gauge. */
+.next-matchup-chart { border-top:1px solid var(--line); padding-top:10px; margin-top:12px; }
+.next-matchup-chart p,.next-matchup-chart small { font-size:var(--font-meta); }
+.next-matchup-row { display:grid; grid-template-columns:70px minmax(40px,1fr) 64px; gap:8px; align-items:center; min-height:32px; font-size:var(--font-meta); }
+.next-matchup-row .num { text-align:right; }
+.next-matchup-track { height:12px; position:relative; background:var(--chip); border-radius:3px; }
+.next-matchup-track::after { content:""; position:absolute; left:50%; height:100%; border-left:1px solid var(--muted); }
+.next-matchup-track i { position:absolute; height:100%; background:var(--accent); border-radius:2px; }
+.rules-note li { margin:6px 0; }
+.rules-note a { color:var(--accent); }
+.btn-primary .ui-icon { vertical-align:middle; }
+@media(max-width:600px) { #viewSeg .ui-icon { width:16px; height:16px; margin-right:3px; } }

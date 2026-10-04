@@ -110,7 +110,7 @@ test('comparison keeps both candidates initially and explains model disagreement
     {...base,角色:'代打',球員:'Two',階層式:.01,機器學習:.01,相對現任:.1}]};
   const html=f.eval("comparisonPanel(result,null,'ph')");
   assert.equal((html.match(/<article/g)||[]).length,2);
-  assert.match(html,/模型意見不同，難以區分/);assert.match(html,/排序尚未校準/);
+  assert.match(html,/模型分歧/);assert.match(html,/排序僅供參考/);
   const selected=f.eval("comparisonPanel(result,'Two','ph')");
   assert.equal((selected.match(/<article/g)||[]).length,1);assert.match(selected,/<h3>Two/);
 });
@@ -131,7 +131,7 @@ test('tiny positive differences never become a strong recommendation from SE',()
     {角色:'代打',球員:'One',守備:'ok',預估勝率:.00001,誤差:0,階層式:.00001,機器學習:.00001,樣本球數:1000}];
   const rec=f.eval('recommendation(cands)');
   assert.equal(rec.kind,'neutral');assert.match(rec.text,/不能只依排序認定必須換人/);
-  assert.match(rec.title,/差距小於顯示精度/);assert.match(rec.text,/並非統計上的相等/);
+  assert.match(rec.title,/差距極小/);assert.match(rec.text,/並非統計上的相等/);
 });
 
 test('API and static reads work without the newer timeout API',async()=>{
@@ -254,4 +254,22 @@ test('unknown fielding stays visible in a collapsed DH group without inventing e
  const f=fixture();f.node('#myTeam').value='A';f.node('#dueBatter').value='Due';
  f.eval('S.roster.A={hitters:[{name:"Due",positions:{}},{name:"Unknown",positions:{},pa:5}]};S.bench=new Set(["Unknown"]);renderBench();');
  const html=f.node('#benchList').innerHTML;assert.match(html,/守位未收錄/);assert.match(html,/指定打擊/);assert.match(html,/aria-expanded="false"/);assert.equal((html.match(/class="bench-group"/g)||[]).length,4);
+});
+
+test('ended home and extra-inning away situations do not request an evaluation',async()=>{
+ for(const [view,half,inning,mine,opponent] of [['offense','home',9,4,3],['defense','home',10,2,3],['offense','away',10,2,3]]) {
+  const f=fixture();f.node('#myScore').value=String(mine);f.node('#oppScore').value=String(opponent);f.node('#pitchCount').value='10';f.node('#myTeam').value='A';f.node('#oppTeam').value='B';
+  f.eval(`S.ready=true;S.view='${view}';S.half='${half}';S.inning=${inning};api=()=>{throw Error('must not evaluate ended game')}`);
+  await f.eval('evaluateCustom()');assert.match(f.node('#formError').innerHTML,/比賽已結束/);assert.equal(f.eval('S.last'),null);
+ }
+});
+test('per-batter chart preserves signed values and ignores missing values',()=>{
+ const f=fixture();f.context.details=[{batter:'A',runs:.1,fatigue:.02},{batter:'B',runs:-.03,fatigue:0},{batter:'Missing',runs:NaN,fatigue:0}];
+ const html=f.eval('pitcherMatchupChart(details)');assert.match(html,/\+0.120/);assert.match(html,/−0.030/);assert.doesNotMatch(html,/Missing|NaN/);assert.match(html,/非實際失分/);
+});
+
+test('per-batter chart retains a shared candidate scale',()=>{
+ const f=fixture();f.context.details=[{batter:'A',runs:.1,fatigue:0}];
+ assert.match(f.eval('pitcherMatchupChart(details,.2)'),/width:24%/);
+ assert.match(f.eval('pitcherMatchupChart(details,.2)'),/共用尺度/);
 });

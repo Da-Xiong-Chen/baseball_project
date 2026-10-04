@@ -60,7 +60,7 @@ function clearResult() {
   $("#resultBody").classList.add("hidden");
   $("#emptyState").classList.remove("hidden");
   $("#evalBtn").disabled = !S.ready;
-  $("#evalBtn").textContent = "評估";
+  $("#evalBtn").innerHTML = uiIcon("compare") + "評估";
 }
 function invalidateCustom(event) {
   clearValidErrors();
@@ -381,7 +381,7 @@ function renderBench(reset) {
     }).join('');
     return `<section class="bench-group"><div class="bench-group-h"><button type="button" class="bench-expand" data-expand="${g.index}" aria-expanded="${!!(open.has(g.index))}" aria-controls="bench-group-${g.index}" ${!g.all.length?'disabled':''}><span class="bench-group-name">${g.label}</span><span class="mut bench-group-count">${picked}/${g.all.length}${q?' · 符合 '+g.players.length+' 人':''}</span><span aria-hidden="true" class="chevron">⌄</span></button><button type="button" class="link" data-group="${names}" aria-label="${esc(g.label)}：${allPicked?'取消選取':'全選'}${q?'符合者':''}" ${!g.players.length?'disabled':''}>${q?(allPicked?'取消符合者':'選取符合者'):(allPicked?'全不選':'全選')}</button></div><div id="bench-group-${g.index}" ${open.has(g.index)?'':'hidden'}>${rows}</div></section>`;
   }).join('');
-  $('#benchAll').textContent='全選球員';$('#benchNone').textContent='清除選取';
+  $('#benchAll').innerHTML=uiIcon('check')+'全選球員';$('#benchNone').innerHTML=uiIcon('clear')+'清除選取';
 
   const box = $("#benchList"), top = box.scrollTop;
   const focusValue=box.contains?.(document.activeElement)?document.activeElement.value:null;
@@ -409,6 +409,10 @@ async function evaluateCustom() {
   const my = $("#myTeam").value, opp = $("#oppTeam").value;
   if (my === opp) { $("#formError").innerHTML = '<p role="alert">我方與對手須為不同球隊。</p>'; return; }
   const myScore = +$("#myScore").value || 0, oppScore = +$("#oppScore").value || 0;
+  const battingScore=S.view==='offense'?myScore:oppScore, fieldingScore=S.view==='offense'?oppScore:myScore;
+  if(S.inning>=9&&((S.half==='home'&&battingScore>fieldingScore)||(S.half==='away'&&S.inning>=10&&fieldingScore>battingScore))) {
+    $('#formError').innerHTML='<p role="alert">此局面比賽已結束，沒有下一打席；請確認局數、上下半局與比分。</p>';return;
+  }
   let body;
   if (S.view === "offense") {
     const bench = [...S.bench].filter(n => n !== $("#dueBatter").value);
@@ -434,7 +438,7 @@ async function run(fn, view) {
   $("#emptyState").classList.add("hidden");
   const box = $("#resultBody");
   box.classList.remove("hidden");
-  if (!S.last) box.innerHTML = `<div class="card empty" role="status"><span class="loading"></span> 正在比較對決。首次載入歷史模型可能較久，請稍候。</div>`;
+  if (!S.last) box.innerHTML = `<div class="card empty" role="status"><span class="loading"></span> 正在比較人選…</div>`;
   try {
     const result = await fn();
     if (token !== runGeneration) return;
@@ -451,7 +455,7 @@ async function run(fn, view) {
     box.innerHTML = `<div class="err-box" role="alert">評估未完成，請重試。<button class="retry">重新評估</button></div>`;
     box.querySelector('.retry').onclick = () => run(fn, view);
   } finally {
-    if (token === runGeneration) { btn.disabled = !S.ready; btn.textContent = "評估"; }
+    if (token === runGeneration) { btn.disabled = !S.ready; btn.innerHTML = uiIcon("compare") + "評估"; }
   }
 }
 
@@ -523,6 +527,7 @@ function renderPAs() {
 
 /* ---------------- 結果呈現 ---------------- */
 const COMPARISON_LIMIT = 4;
+function uiIcon(name) { return `<svg class="ui-icon" aria-hidden="true"><use href="#icon-${name}"/></svg>`; }
 function comparisonNames(R,tab) {
   let state=comparisonSelections.get(R);if(!state){state=new Map();comparisonSelections.set(R,state);}
   if(!state.has(tab)) {
@@ -561,6 +566,15 @@ function bindTableComparison(R,tab) {
     if(input.checked){const tr=input.closest('tr');showDetail(tab==='pen'?R.bullpen.next[0]:input.value,tab==='pen'?input.value:R.situation.pitcher,tr);}
   });
 }
+function pitcherMatchupChart(details, sharedScale) {
+  const data=(details||[]).map(d=>({name:d.batter,value:d.runs+d.fatigue})).filter(d=>Number.isFinite(d.value));
+  if(!data.length)return '';
+  const scale=Math.max(.01,sharedScale||0,...data.map(d=>Math.abs(d.value)));
+  return `<div class="next-matchup-chart"><p class="mut">逐棒失分價值 · 分（越低越好）</p>${data.map(d=>{
+    const width=Math.abs(d.value)/scale*48;
+    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i style="left:${d.value>=0?50:50-width}%;width:${width}%"></i></div><span class="num">${sign(d.value,3)}</span></div>`;
+  }).join('')}<small class="mut">中線為 0；候選共用尺度。含疲勞，非實際失分。</small></div>`;
+}
 function comparisonPanel(R, selected, tab) {
   if (!R) return '';
   const pen = tab === 'pen', rows = pen ? R.bullpen?.rows : R.candidates;
@@ -584,18 +598,19 @@ function comparisonPanel(R, selected, tab) {
     const disagreement = gDelta != null && hDelta * gDelta <= 0;
     const delta = pen ? x['守方勝率增減'] : x['相對現任'];
     const low = x['樣本球數'] < 500 || current['樣本球數'] < 500 || !!x['資料警示'] || !!current['資料警示'];
-    const status = low ? '資料有限' : disagreement ? '模型意見不同，難以區分' : Math.abs(delta) < 0.005 ? '差距小於顯示精度，難以區分' : '排序尚未校準';
+    const status = low ? '資料有限' : disagreement ? '模型分歧' : Math.abs(delta) < 0.005 ? '差距極小，難以區分' : '排序僅供參考';
     const direction = pen ? '失分價值越低越好' : '得分值越高越好';
     const reason = pen
-      ? `<p>失分價值 ${x['預估失分'].toFixed(3)}；現任 ${current['預估失分'].toFixed(3)}。${esc(x['疲勞'] === '-' ? '無已觸發警示；仍須確認今日可用' : x['疲勞'])}</p>`
+      ? `<p>失分價值 ${x['預估失分'].toFixed(3)}；現任 ${current['預估失分'].toFixed(3)}。${esc(x['疲勞'] === '-' ? '未觸發疲勞警示' : x['疲勞'])}</p>`
       : `<p>${esc(x['守備說明'])}</p><dl class="compare-values">${[['本身能力','本身能力'],['球路適性','球路適性'],['左右投打','左右優勢']].map(([label,key]) => `<div><dt>${label}差值</dt><dd>${sign(x[key]-current[key],3)}</dd></div>`).join('')}</dl>`;
-    const details = pen && x['對決明細'] ? `<ol class="matchup-list">${x['對決明細'].map(d => `<li>${esc(d.batter)}<span class="num">${(d.runs + d.fatigue).toFixed(3)} 分${d.fatigue > 0 ? `（含疲勞 ${d.fatigue.toFixed(3)}）` : ''}</span></li>`).join('')}</ol>` : '';
+    const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>Math.abs(d.runs+d.fatigue))).filter(Number.isFinite));
+    const matchupChart = pen ? pitcherMatchupChart(x['對決明細'],matchupScale) : '';
     return `<article class="compare-card"><h3>${esc(x[nameKey])}<span class="chip">${status}</span></h3>
-      <p class="compare-delta num">相對現任 ${sign(delta)} 百分點</p>${reason}
-      <details><summary>查看模型與資料依據</summary><p>${direction}；${pen ? '以下為疲勞調整前的合計' : '以下為每打席得分值'}。</p>
+      <p class="compare-delta num">相對現任 ${sign(delta)} 百分點</p>${reason}${matchupChart}
+      <details><summary>計算依據</summary><p>${direction}；${pen ? '以下為疲勞調整前的合計' : '以下為每打席得分值'}。</p>
       <p class="num">階層式差值 ${Number.isFinite(hDelta) ? sign(hDelta,3) : '未匯出'}；逐球模型差值 ${gDelta == null ? '未使用／未匯出' : sign(gDelta,3)}</p>${pen ? '<p>這是得分期望變化的價值，可為負值；不是實際失分數。單位為分。</p>' : ''}
       <p>候選 ${Math.round(x['樣本球數'])} 球；現任 ${Math.round(current['樣本球數'])} 球。${!pen ? `投手對此側 ${x['投手對此側樣本'] ?? '未記錄'} 球。` : ''}比較池 ${x['比較池人數'] ?? '未記錄'} 人。</p>
-      ${details}<p>${esc(x['資料警示'] || '')}${x['資料警示'] && current['資料警示'] ? '；' : ''}${esc(current['資料警示'] || '')}</p><p>模型分歧與樣本量是判讀線索，不能解讀為候選勝出的機率。</p></details></article>`;
+      <p>${esc(x['資料警示'] || '')}${x['資料警示'] && current['資料警示'] ? '；' : ''}${esc(current['資料警示'] || '')}</p><p>模型分歧與樣本量是判讀線索，不能解讀為候選勝出的機率。</p></details></article>`;
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
     <p class="mut">${pen ? `對上接下來 ${R.bullpen.next.length} 棒。` : '同一投手、同一局勢。'}</p>
@@ -610,15 +625,15 @@ function recommendation(cands) {
   if (!playable.length) return { kind: "neutral", title: `建議讓 ${cur["球員"]} 續打`, text: "板凳沒有可用且守備排得出來的人選。" };
   const best = playable[0];
   const diff = best["預估勝率"] - cur["預估勝率"];
-  if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距小於顯示精度，難以區分',
-    text:`相對 ${cur["球員"]}，估計差值 ${sign(diff,4)} 百分點；主畫面保留兩位小數。這是顯示精度限制，並非統計上的相等，不能只依排序認定必須換人。`};
+  if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距極小，難以區分',
+    text:`相對 ${cur["球員"]}，估計差值 ${sign(diff,4)} 百分點；差距低於顯示精度，並非統計上的相等，不能只依排序認定必須換人。`};
   if (diff <= 0) return { kind: "neutral", title: `目前估計以 ${cur["球員"]} 續打較佳`, text: "可用候選沒有更高的估計值；這不是續打必然較好的保證。" };
   const def = best["守備"] === "warn" ? `　${best["守備說明"]}` : "";
   const disagree = best["機器學習"] != null && cur["機器學習"] != null &&
     (best["階層式"] - cur["階層式"]) * (best["機器學習"] - cur["機器學習"]) <= 0;
   const low = best["樣本球數"] < 500 || cur["樣本球數"] < 500 || !!best['資料警示'] || !!cur['資料警示'];
   return {kind:best["守備"] === "warn" ? "warn" : "neutral", best:best["球員"],
-    title:disagree ? "兩模型意見不同，難以區分" : low ? "候選資料有限，需審慎判斷" : `估計較佳人選：${best["球員"]}`,
+    title:disagree ? "兩模型分歧" : low ? "候選資料有限，需審慎判斷" : `估計較佳人選：${best["球員"]}`,
     text:`比 ${cur["球員"]} ${sign(diff)} 百分點。${disagree ? "估計有分歧，請審慎判斷。" : "差值僅供參考，仍須確認上場狀況。"}${def}`};
 }
 
@@ -668,10 +683,10 @@ function renderResult(preserveTabs = false) {
     const fat = curP && curP["疲勞調整"] > 0.0005 ? `已計入 ${esc(s.pitcher)} ${curP["用球數"]} 球的疲勞（${R.bullpen.next.length} 打席 +${curP["疲勞調整"].toFixed(3)} 分）。` : "";
     S.bestName = null;
     if (best && Math.abs(best["守方勝率增減"]) < 0.005) {
-      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距小於顯示精度，難以區分</h3><p>相對場上投手，估計差值 ${sign(best["守方勝率增減"],4)} 百分點；主畫面保留兩位小數。這是顯示精度限制，並非統計上的相等，不能只依排序決定換投。${fat}</p></div></div>`;
+      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距極小，難以區分</h3><p>相對場上投手，估計差值 ${sign(best["守方勝率增減"],4)} 百分點；差距低於顯示精度，不宜只依排序換投。${fat}</p></div></div>`;
     } else if (best && best["守方勝率增減"] > 0) {
       html += `<div class="reco" style="border-top:1px solid var(--line)"><div class="ic">↻</div><div><h3>可考慮換上 ${esc(best["投手"])}</h3>
-        <p>對上接下來 ${R.bullpen.next.length} 棒，相對場上投手的守方勝率換算差值 ${sign(best["守方勝率增減"])} 百分點。尚未校準排名穩定性，請確認可用狀態。${fat}${best["疲勞"] !== "-" ? `　警示 ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
+        <p>對上接下來 ${R.bullpen.next.length} 棒，相對場上投手的守方勝率換算差值 ${sign(best["守方勝率增減"])} 百分點。請確認今日可用狀態。${fat}${best["疲勞"] !== "-" ? `　警示 ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
     } else {
       html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>${best ? `目前估計以 ${esc(s.pitcher)} 續投較佳` : "沒有勾選可用牛棚"}</h3><p>${best ? "候選沒有較低的估計失分；不代表已證明續投最佳。" : "目前只能顯示場上投手；請確認是否有可用後援。"}${fat}</p></div></div>`;
     }
@@ -699,11 +714,11 @@ function renderResult(preserveTabs = false) {
   html += `<div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div id="candidateCompare">${comparisonPanel(R,null,activeTab)}</div><div id="pitchArsenal">${mixCard(R)}</div>`;
   html += `<div class="detail-grid"><div id="pitchChange"></div><div id="detail"></div></div>`;
-  html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot"><p>價值分數是相對排名，不是成功機率；勝率變化以百分點表示。請確認今日可上場名單。</p><details><summary>資料與評估依據</summary>評估方法：<b>${esc(R.method || "階層式")}</b>。<br>
+  html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot"><p>分數為相對排名，非成功機率。請確認今日可上場名單。</p><details><summary>資料與評估依據</summary>評估方法：<b>${esc(R.method || "階層式")}</b>。<br>
     表中細線僅為階層式估計的近似標準誤，不是完整集成區間或排名把握度。球路拆解也只解釋階層式部分。失分價值可為負值，不是實際失分數。<br>
     階層式截止：${esc(R.model_cutoff)}；逐球模型截止：${esc(R.ml_cutoff || '舊快照未記錄')}（均不含截止日）。<br>
     ${esc(R.availability || '歷史快照的可用名單與守位可能包含推估資訊，請審慎使用')}。<br>
-    ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</details></div>`;
+    ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</details><details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手、換局時已上丘投手須符合最低投球義務及例外規定；接下來三棒是評估範圍，不是換投規則。</li><li>2024–2025 一軍例行賽延長局最多 12 局；突破僵局的二壘預設可按實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/" target="_blank" rel="noopener noreferrer">CPBL 官方規則入口（官網頁尾）</a></details></div>`;
   $("#resultBody").innerHTML = html;
   if (retainedTabs) {
     $('#resultBody .tabs').replaceWith(retainedTabs);
