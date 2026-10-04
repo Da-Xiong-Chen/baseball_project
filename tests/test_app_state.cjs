@@ -270,7 +270,7 @@ test('per-batter chart preserves signed values and ignores missing values',()=>{
 
 test('per-batter chart retains a shared candidate scale',()=>{
  const f=fixture();f.context.details=[{batter:'A',runs:.1,fatigue:0}];
- assert.match(f.eval('pitcherMatchupChart(details,.2)'),/width:24%/);
+ assert.match(f.eval('pitcherMatchupChart(details,.2,[{batter:"A",runs:0,fatigue:0}])'),/width:24%/);
  assert.match(f.eval('pitcherMatchupChart(details,.2)'),/共用尺度/);
 });
 
@@ -278,7 +278,7 @@ test('per-batter baseline matches batter identity, includes fatigue and does not
  const f=fixture();f.context.details=[{batter:'A',runs:.1,fatigue:0},{batter:'B',runs:-.1,fatigue:0}];
  f.context.baseline=[{batter:'Other',runs:9,fatigue:0},{batter:'A',runs:.15,fatigue:.05}];
  const html=f.eval('pitcherMatchupChart(details,.2,baseline)');
- assert.match(html,/left:98%/);assert.match(html,/現任 \+0.200/);assert.match(html,/現任 未提供/);assert.equal((html.match(/class="matchup-baseline"/g)||[]).length,1);
+ assert.match(html,/left:50%;width:24%/);assert.match(html,/現任 \+0.200/);assert.match(html,/現任資料不足/);assert.doesNotMatch(html,/class="matchup-baseline"/);
 });
 test('hitter decomposition is collapsed while the fielding warning remains visible',()=>{
  const f=fixture(),base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
@@ -296,8 +296,8 @@ test('bench summary counts all selected names regardless of search and excludes 
 });
 test('pitching colors compare with current pitcher rather than the sign of run value',()=>{
  const f=fixture();f.context.details=[{batter:'A',runs:-.01,fatigue:0},{batter:'B',runs:.01,fatigue:0}];f.context.current=[{batter:'A',runs:-.03,fatigue:0},{batter:'B',runs:.03,fatigue:0}];
- const html=f.eval('pitcherMatchupChart(details,.1,current)');assert.match(html,/<i class="unfavorable" style="left:45.2%/);assert.match(html,/<i class="favorable" style="left:50%/);
- assert.match(f.eval('pitcherMatchupChart(details,.1,[])'),/class="neutral"/);
+ const html=f.eval('pitcherMatchupChart(details,.1,current)');assert.match(html,/<i class="unfavorable" style="left:40.4%/);assert.match(html,/<i class="favorable" style="left:50%/);
+ assert.match(f.eval('pitcherMatchupChart(details,.1,[])'),/現任資料不足/);
 });
 test('availability preview keeps all names in an optional disclosure and escapes them',()=>{
  const f=fixture();f.context.names=['A','B','C','D','<E>','F'];
@@ -312,8 +312,8 @@ test('pitcher comparison keeps fatigue warning visible and collapses per-batter 
  f.context.result={bullpen:{next:['A'],rows:[base,{...base,角色:'牛棚',投手:'One',守方勝率增減:.1,疲勞:'球數偏高'}]}};
  const html=f.eval('comparisonPanel(result,null,"pen")');
  assert.ok(html.indexOf('球數偏高')<html.indexOf('<details>'));
- assert.ok(html.indexOf('class="next-matchup-chart"')>html.indexOf('<details>'));
- assert.doesNotMatch(html,/<details open/);assert.match(html,/與現任比較/);
+ assert.ok(html.indexOf('class="next-matchup-chart benefit-chart"')>html.indexOf('<details>'));
+ assert.doesNotMatch(html,/<details open/);assert.match(html,/查看差距拆解/);
 });
 test('mobile row details preserve sample and fatigue-adjusted value without inventing another score',()=>{
  const f=fixture();f.context.row={樣本球數:321,預估失分:-.023,疲勞調整:.012,可信度:'低'};
@@ -326,8 +326,8 @@ test('hitter source chart compares actual values to current with a shared scale 
  const f=fixture();f.context.current={本身能力:.1,球路適性:.05};
  f.context.one={本身能力:.2,球路適性:.025};f.context.two={本身能力:.3,球路適性:.05};
  const html=f.eval('hitterComponentChart(one,current,[current,one,two])');
- assert.match(html,/class="favorable" style="left:50%;width:32/);
- assert.match(html,/class="unfavorable"/);assert.match(html,/\+0.025/);assert.match(html,/現任 \+0.050/);assert.match(html,/資料不足/);
+ assert.match(html,/class="favorable" style="left:50%;width:24/);
+ assert.match(html,/class="unfavorable"/);assert.match(html,/−0.025/);assert.match(html,/現任 \+0.050/);assert.match(html,/資料不足/);
  assert.match(html,/僅拆解階層式估計/);assert.doesNotMatch(html,/NaN|undefined/);
 });
 test('compact fielding message retains replacement person, position and extra bench cost',()=>{
@@ -349,7 +349,13 @@ test('shared comparison uses opposite benefit directions but identical baseline 
  const f=fixture();f.context.data=[{name:'A',value:-.05,base:-.1},{name:'B',value:.05,base:.1},{name:'C',value:.02}];
  const batting=f.eval('valueComparisonChart(data,.1,"test",true,"")');
  const pitching=f.eval('valueComparisonChart(data,.1,"test",false,"")');
- assert.match(batting,/<i class="favorable" style="left:26%;width:24%/);
+ assert.match(batting,/<i class="favorable" style="left:50%;width:24%/);
  assert.match(pitching,/<i class="unfavorable" style="left:26%;width:24%/);
- for(const html of [batting,pitching]){assert.equal((html.match(/class="matchup-baseline"/g)||[]).length,2);assert.match(html,/現任 未提供/);assert.match(html,/class="neutral"/);}
+ for(const html of [batting,pitching]){assert.doesNotMatch(html,/class="matchup-baseline"/);assert.match(html,/現任資料不足/);assert.match(html,/原始數值/);assert.match(html,/現任 0/);}
+});
+test('difference chart distinguishes equal, tiny and missing comparisons and never plots a missing baseline',()=>{
+ const f=fixture();f.context.data=[{name:'Equal',value:.1,base:.1},{name:'Tiny',value:.10001,base:.1},{name:'Unknown',value:.1},{name:'Absent',base:.1}];
+ const html=f.eval('valueComparisonChart(data,.1,"test",true,"")');
+ assert.match(html,/相同/);assert.match(html,/差距極小/);assert.match(html,/現任資料不足/);assert.match(html,/資料不足/);
+ assert.equal((html.match(/<i class=/g)||[]).length,2);assert.doesNotMatch(html,/NaN|undefined/);
 });

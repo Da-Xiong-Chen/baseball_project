@@ -730,6 +730,18 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 .hitter-component-chart p,.comparison-samples { font-size:var(--font-meta); }
 .hitter-component-chart small { display:block; font-size:var(--font-meta); }
 .component-missing { grid-column:2/-1; text-align:right; }
+.comparison-direction { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; font-size:var(--font-meta); color:var(--muted); margin:10px 0; }
+.comparison-direction span:last-child { text-align:right; }
+.benefit-chart .next-matchup-track { height:16px; background:var(--line); }
+.benefit-chart .next-matchup-track i { top:3px; height:10px; }
+.benefit-chart .next-matchup-track::after { border-color:var(--text); }
+.chart-raw summary { font-size:var(--font-meta); color:var(--muted); }
+.chart-raw p { font-size:var(--font-meta); margin:4px 0; overflow-wrap:anywhere; }
+@media(max-width:360px) {
+  .benefit-chart .next-matchup-row { grid-template-columns:minmax(0,1fr) 80px; row-gap:2px; margin:10px 0; }
+  .benefit-chart .next-matchup-row > span:first-child { grid-column:1/-1; }
+  .benefit-chart .component-missing { grid-column:1/-1; }
+}
 @media(max-width:600px) {
   table.t.evaluation-table,.evaluation-table tbody { display:block; width:100%; min-width:0; }
   .evaluation-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }

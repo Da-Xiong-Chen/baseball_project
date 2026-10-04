@@ -577,14 +577,14 @@ function bindTableComparison(R,tab) {
   });
 }
 function valueComparisonChart(data, sharedScale, title, higherBetter, note) {
-  const scale=Math.max(.001,sharedScale||0,...data.flatMap(d=>[d.value,d.base]).filter(Number.isFinite).map(Math.abs));
-  return `<div class="next-matchup-chart"><p class="mut">${title}</p><div class="matchup-legend"><span><i class="favorable"></i>較有利</span><span><i class="unfavorable"></i>較不利</span><span><b></b>現任</span></div>${data.map(d=>{
-    if(!Number.isFinite(d.value))return `<div class="next-matchup-row"><span>${esc(d.name)}</span><span class="component-missing mut">資料不足</span></div>`;
-    const width=Math.abs(d.value)/scale*48,base=d.base,hasBase=Number.isFinite(base);
-    const difference=d.value-base;
-    const tone=!hasBase||difference===0?'neutral':(higherBetter?difference>0:difference<0)?'favorable':'unfavorable';
-    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.value>=0?50:50-width}%;width:${width}%"></i>${hasBase?`<b class="matchup-baseline" style="left:${50+base/scale*48}%" title="現任 ${sign(base,3)} 分"></b>`:''}</div><span class="num"><strong class="${tone}">${sign(d.value,3)}</strong><small>現任 ${hasBase?sign(base,3):'未提供'}</small></span></div>`;
-  }).join('')}<small class="mut">中線為 0；候選共用尺度。${note}</small></div>`;
+  const compared=data.map(d=>({...d,delta:Number.isFinite(d.value)&&Number.isFinite(d.base)?(higherBetter?d.value-d.base:d.base-d.value):null}));
+  const scale=Math.max(.001,sharedScale||0,...compared.map(d=>d.delta).filter(Number.isFinite).map(Math.abs));
+  return `<div class="next-matchup-chart benefit-chart"><p class="mut">${title}</p><div class="comparison-direction"><span class="neg">← 較不利</span><span>現任 0</span><span class="pos">較有利 →</span></div>${compared.map(d=>{
+    if(d.delta===null)return `<div class="next-matchup-row"><span>${esc(d.name)}</span><span class="component-missing mut">${Number.isFinite(d.value)?'現任資料不足':'資料不足'}</span></div>`;
+    const width=Number((Math.abs(d.delta)/scale*48).toFixed(6)),tone=d.delta>0?'favorable':d.delta<0?'unfavorable':'neutral';
+    const label=d.delta===0?'相同':Math.abs(d.delta)<.0005?'差距極小':d.delta>0?'較有利':'較不利';
+    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.delta>=0?50:50-width}%;width:${width}%"></i></div><span class="num"><strong class="${tone}">${sign(d.delta,3)}</strong><small>${label}</small></span></div>`;
+  }).join('')}<small class="mut">候選共用尺度。${note}</small><details class="chart-raw"><summary>原始數值</summary>${data.map(d=>`<p class="num">${esc(d.name)}：候選 ${Number.isFinite(d.value)?sign(d.value,3):'未提供'}／現任 ${Number.isFinite(d.base)?sign(d.base,3):'未提供'}</p>`).join('')}</details></div>`;
 }
 function pitcherMatchupChart(details, sharedScale, currentDetails = []) {
   const baseline=new Map();
@@ -594,13 +594,13 @@ function pitcherMatchupChart(details, sharedScale, currentDetails = []) {
   }
   const data=(details||[]).map(d=>({name:d.batter,value:d.runs+d.fatigue,base:baseline.get(d.batter)})).filter(d=>Number.isFinite(d.value));
   if(!data.length)return '';
-  return valueComparisonChart(data,Math.max(.01,sharedScale||0),'逐棒失分價值 · 分（越低越好）',false,'含疲勞，非實際失分。');
+  return valueComparisonChart(data,Math.max(.01,sharedScale||0),'相對現任減少失分 · 分',false,'含疲勞，非實際失分。');
 }
 function hitterComponentChart(candidate, current, rows) {
   const fields=[['本身能力','本身能力'],['球路適性','球路適性'],['左右投打','左右優勢']];
-  const scale=Math.max(.001,...rows.flatMap(r=>fields.map(([,key])=>r[key])).filter(Number.isFinite).map(Math.abs));
+  const scale=Math.max(.001,...rows.flatMap(r=>fields.map(([,key])=>Number.isFinite(r[key])&&Number.isFinite(current[key])?r[key]-current[key]:null)).filter(Number.isFinite).map(Math.abs));
   const data=fields.map(([name,key])=>({name,value:candidate[key],base:current[key]}));
-  return `<div class="compare-values"><div class="hitter-component-chart">${valueComparisonChart(data,scale,'能力與適性 · 分／打席（越高越好）',true,'僅拆解階層式估計。')}</div></div>`;
+  return `<div class="compare-values"><div class="hitter-component-chart">${valueComparisonChart(data,scale,'相對現任得分優勢 · 分／打席',true,'僅拆解階層式估計。')}</div></div>`;
 }
 function compactFielding(text) {
   return String(text||'').replace(/^需由 (.+) 接守(.+)（再消耗 1 名板凳）$/,'接守：$1 · $2（另需 1 人）').replace(/^換下後板凳無人可守/,'無人接守').replace(/^.+ 可直接接守/,'可接守');
@@ -633,11 +633,11 @@ function comparisonPanel(R, selected, tab) {
       ? (x['疲勞'] && x['疲勞'] !== '-' ? `<p class="compare-warning">${esc(x['疲勞'])}</p>` : '')
       : `<p class="${x['守備']==='bad'||x['守備']==='warn'?'compare-warning':'mut'}">${esc(compactFielding(x['守備說明']))}</p>`;
     const decomposition=pen?'':hitterComponentChart(x,current,rows);
-    const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>Math.abs(d.runs+d.fatigue))).filter(Number.isFinite));
+    const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>{const bases=(current['對決明細']||[]).filter(b=>b.batter===d.batter);return bases.length===1?Math.abs((d.runs+d.fatigue)-(bases[0].runs+bases[0].fatigue)):NaN;})).filter(Number.isFinite));
     const matchupChart = pen ? pitcherMatchupChart(x['對決明細'],matchupScale,current['對決明細']) : '';
     return `<article class="compare-card"><h3>${esc(x[nameKey])}${status?`<span class="chip">${status}</span>`:''}</h3>
       <p class="compare-delta num ${cls(delta,.005)}">相對現任 ${sign(delta)} 百分點</p>${reason}
-      <details><summary>與現任比較</summary>${matchupChart}${decomposition}
+      <details><summary>查看差距拆解</summary>${matchupChart}${decomposition}
       <p class="comparison-samples mut">樣本：候選 ${Math.round(x['樣本球數'])}／現任 ${Math.round(current['樣本球數'])} 球</p>
       ${x['資料警示']||current['資料警示']?`<p class="compare-warning">${esc([x['資料警示'],current['資料警示']].filter(Boolean).join('；'))}</p>`:''}</details></article>`;
   };
