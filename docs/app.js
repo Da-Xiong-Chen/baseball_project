@@ -621,7 +621,9 @@ function recommendation(cands) {
     text:`比 ${cur["球員"]} ${sign(diff)} 百分點。${disagree ? "估計有分歧，請審慎判斷。" : "差值僅供參考，仍須確認上場狀況。"}${def}`};
 }
 
-function renderResult() {
+function renderResult(preserveTabs = false) {
+  const retainedTabs = preserveTabs ? $('#resultBody .tabs') : null;
+  const focusedTab = retainedTabs?.contains(document.activeElement) ? document.activeElement : null;
   ++detailGeneration;
   const R = S.last, s = R.situation;
   const view = R.view;
@@ -702,12 +704,24 @@ function renderResult() {
     ${esc(R.availability || '歷史快照的可用名單與守位可能包含推估資訊，請審慎使用')}。<br>
     ${esc(R.fielding_source || '守位來源未記錄')}。資料來源：Rebas、ldkrsi／中華職棒守位統計。</details></div>`;
   $("#resultBody").innerHTML = html;
+  if (retainedTabs) {
+    $('#resultBody .tabs').replaceWith(retainedTabs);
+    retainedTabs.getBoundingClientRect(); // Establish the previous marker position before changing sides.
+    retainedTabs.querySelectorAll('button').forEach(b=>{
+      b.classList.toggle('on', b.dataset.t===activeTab);
+      b.setAttribute('aria-pressed',String(b.dataset.t===activeTab));
+    });
+    focusedTab?.focus({preventScroll:true});
+  }
   bindComparison(R,activeTab);
   bindTableComparison(R,activeTab);
   bindMixSwitch();
   mountPitchChange(R.situation.pitcher);
 
-  $$(".tabs button").forEach((b) => b.onclick = () => { S.tab = b.dataset.t; renderResult(); });
+  $$(".tabs button").forEach((b) => {
+    b.setAttribute('aria-pressed',String(b.dataset.t===activeTab));
+    b.onclick = () => { if(S.tab===b.dataset.t)return;S.tab = b.dataset.t; renderResult(true); };
+  });
   $$("tr[data-batter]").forEach((tr) => tr.onclick = e => {if(e.target.closest('a,input,label'))return;showDetail(tr.dataset.batter, R.situation.pitcher, tr);});
   $$('tr[data-pitcher]').forEach(tr=>{
     const radio=tr.querySelector('[name="viewPitcher"]');
