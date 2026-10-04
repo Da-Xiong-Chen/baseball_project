@@ -73,7 +73,8 @@
     function feedback(message='') {
       boxes().forEach(input=>{input.disabled=input.value===current();input.title=input.disabled?'場上投手，固定為比較基準':'';});
       const selected=[...effective()],count=selected.length, applied=session.applied;
-      q('.today-availability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>請排除休息、未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.map(name=>`<span class="chip">${esc(name)}</span>`).join(''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
+      const namesOpen=q('.availability-more')?.open;
+      q('.today-availability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>請排除休息、未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.slice(0,4).map(name=>`<span class="chip">${esc(name)}</span>`).join('')+(selected.length>4?`<details class="availability-more" ${namesOpen?'open':''}><summary>另 ${selected.length-4} 人</summary><div class="availability-extra">${selected.slice(4).map(name=>`<span class="chip">${esc(name)}</span>`).join('')}</div></details>`:''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
       const same=applied&&equal(effective(),new Set(applied.members.filter(n=>n!==current())));
       status.textContent=message||state.error||(applied?applied.name+' · '+(same?'已套用':'已微調'):'');
     }

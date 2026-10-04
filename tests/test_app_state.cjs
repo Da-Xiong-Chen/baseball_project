@@ -299,3 +299,26 @@ test('pitching colors compare with current pitcher rather than the sign of run v
  const html=f.eval('pitcherMatchupChart(details,.1,current)');assert.match(html,/<i class="unfavorable" style="left:45.2%/);assert.match(html,/<i class="favorable" style="left:50%/);
  assert.match(f.eval('pitcherMatchupChart(details,.1,[])'),/class="neutral"/);
 });
+test('availability preview keeps all names in an optional disclosure and escapes them',()=>{
+ const f=fixture();f.context.names=['A','B','C','D','<E>','F'];
+ const html=f.eval('availabilityNames(names,"續打")');
+ assert.match(html,/另 2 人/);assert.ok(html.indexOf('>D<')<html.indexOf('<details'));
+ assert.ok(html.indexOf('&lt;E&gt;')>html.indexOf('<details'));assert.doesNotMatch(html,/<details[^>]* open/);
+ assert.match(f.eval('availabilityNames(names,"續打",true)'),/<details[^>]* open/);
+ assert.match(f.eval('availabilityNames([],"續打")'),/僅比較續打/);
+});
+test('pitcher comparison keeps fatigue warning visible and collapses per-batter charts',()=>{
+ const f=fixture(),base={角色:'場上',投手:'Current',階層式:0,機器學習:0,樣本球數:1000,預估失分:.2,對決明細:[{batter:'A',runs:.2,fatigue:0}]};
+ f.context.result={bullpen:{next:['A'],rows:[base,{...base,角色:'牛棚',投手:'One',守方勝率增減:.1,疲勞:'球數偏高'}]}};
+ const html=f.eval('comparisonPanel(result,null,"pen")');
+ assert.ok(html.indexOf('球數偏高')<html.indexOf('<details>'));
+ assert.ok(html.indexOf('class="next-matchup-chart"')>html.indexOf('<details>'));
+ assert.doesNotMatch(html,/<details open/);assert.match(html,/逐棒圖與詳細拆解/);
+});
+test('mobile row details preserve sample and fatigue-adjusted value without inventing another score',()=>{
+ const f=fixture();f.context.row={樣本球數:321,預估失分:-.023,疲勞調整:.012,可信度:'低'};
+ const html=f.eval('mobileRowDetails(row,true)');
+ assert.match(html,/321 球/);assert.match(html,/失分價值 -0.023 分/);assert.match(html,/含疲勞 \+0.012/);
+ assert.doesNotMatch(html,/<details[^>]* open|NaN|undefined/);
+ assert.match(f.eval('mobileRowDetails(row,false)'),/321 球 · 低樣本/);
+});

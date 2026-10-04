@@ -721,6 +721,33 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 #detail .breakdown b { font-size:var(--font-title); }
 #detail .detail-caption { margin:10px 0 0; }
 .pitcher-group-status:empty { display:none; }
+.availability-more { flex-basis:100%; }
+.availability-more summary { color:var(--accent); font-size:var(--font-label); }
+.availability-extra { display:flex; flex-wrap:wrap; gap:5px; padding-top:4px; }
+.mobile-row-details,.mobile-value-label { display:none; }
+@media(max-width:600px) {
+  table.t.evaluation-table,.evaluation-table tbody { display:block; width:100%; min-width:0; }
+  .evaluation-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+  .evaluation-table tbody tr { display:grid; grid-template-columns:minmax(0,1fr) 68px; padding:12px; gap:6px 10px; border-bottom:1px solid var(--line); }
+  .evaluation-table tbody tr:last-child { border-bottom:0; }
+  .evaluation-table tbody tr.cur { background:var(--accent-soft); }
+  table.t.evaluation-table tr.cur td { background:transparent; }
+  table.t.evaluation-table td { min-width:0; border:0; padding:0; }
+  .tbl-wrap .evaluation-table td.ncell { position:static; width:auto; max-width:none; min-width:0; grid-column:1; grid-row:1; background:transparent; }
+  .evaluation-score { grid-column:2; grid-row:1; }
+  .evaluation-table .evaluation-value,.evaluation-table .evaluation-warning { grid-column:1/-1; }
+  .evaluation-table .evaluation-secondary,.evaluation-table .dbar,.evaluation-table .absolute-value { display:none; }
+  .mobile-row-details,.mobile-value-label { display:block; }
+  .mobile-row-details { font-size:var(--font-meta); }
+  .mobile-row-details summary { color:var(--accent); font-size:var(--font-label); }
+  .mobile-row-details p { margin:4px 0; }
+  .mobile-value-label { font-size:var(--font-meta); color:var(--muted); }
+  .evaluation-table .vcell { display:block; }
+  .evaluation-table .vnum { text-align:left; }
+  .evaluation-table .parts { margin-top:2px; }
+  .evaluation-warning { font-size:var(--font-label); overflow-wrap:anywhere; }
+  .evaluation-table .cur td:first-child { background:transparent; }
+}
 /* Shared corner sizes: softer surfaces without changing chart geometry. */
 :root { --radius-card:14px; --radius-control:10px; --radius-inner:8px; }
 .card,.compare-card,.candidate-chart { border-radius:var(--radius-card); }
