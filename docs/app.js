@@ -522,11 +522,12 @@ function renderPAs() {
 }
 
 /* ---------------- 結果呈現 ---------------- */
+const COMPARISON_LIMIT = 4;
 function comparisonNames(R,tab) {
   let state=comparisonSelections.get(R);if(!state){state=new Map();comparisonSelections.set(R,state);}
   if(!state.has(tab)) {
     const rows=tab==='pen'?R.bullpen?.rows:R.candidates,key=tab==='pen'?'投手':'球員';
-    state.set(tab,new Set((rows||[]).filter(r=>r['角色']!==(tab==='pen'?'場上':'現任')).slice(0,2).map(r=>r[key])));
+    state.set(tab,new Set((rows||[]).filter(r=>r['角色']!==(tab==='pen'?'場上':'現任')).slice(0,COMPARISON_LIMIT).map(r=>r[key])));
   }
   return state.get(tab);
 }
@@ -534,7 +535,7 @@ function setComparisonName(R,tab,name,checked) {
   const rows=tab==='pen'?R.bullpen?.rows:R.candidates,key=tab==='pen'?'投手':'球員';
   if(!(rows||[]).some(r=>r[key]===name&&r['角色']!==(tab==='pen'?'場上':'現任')))return false;
   const names=comparisonNames(R,tab);
-  if(checked&&!names.has(name)&&names.size>=2)names.delete(names.values().next().value);
+  if(checked&&!names.has(name)&&names.size>=COMPARISON_LIMIT)names.delete(names.values().next().value);
   checked?names.add(name):names.delete(name);return true;
 }
 function bindComparison(R,tab) {
@@ -598,7 +599,7 @@ function comparisonPanel(R, selected, tab) {
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
     <p class="mut">${pen ? `對上接下來 ${R.bullpen.next.length} 棒。` : '同一投手、同一局勢。'}</p>
-    <p class="compare-limit mut" role="status">最近選取 ${choices.length}/2</p>
+    <p class="compare-limit mut" role="status">最近選取 ${choices.length}/${COMPARISON_LIMIT}</p>
     <div class="compare-chips">${choices.map(r=>`<button type="button" data-remove-compare="${esc(r[nameKey])}" aria-label="移除 ${esc(r[nameKey])} 的比較">${esc(r[nameKey])} <span aria-hidden="true">×</span></button>`).join('')}</div>
     ${chart}<div class="compare-grid">${choices.length ? choices.map(card).join('') : rows.length>1?'<p>選擇候選加入比較。</p>':'<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }

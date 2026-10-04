@@ -21,21 +21,22 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
-test('both modes keep the latest two candidates in selection order and isolate new results',()=>{
+test('both modes keep the latest four candidates, evict oldest at five and isolate results',()=>{
   const f=fixture();
-  f.context.result={candidates:[{角色:'現任',球員:'Current'},...['A','B','C'].map(球員=>({角色:'代打',球員}))],bullpen:{rows:[{角色:'場上',投手:'Pitcher'},...['X','Y','Z'].map(投手=>({角色:'牛棚',投手}))]}};
-  f.eval('comparisonNames(result,"ph");comparisonNames(result,"pen")');
-  for(const [tab,a,b,c] of [['ph','A','B','C'],['pen','X','Y','Z']]) {
-    assert.equal(f.eval(`setComparisonName(result,'${tab}','${c}',true)`),true);
-    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),`${b},${c}`);
-    assert.equal(f.eval(`setComparisonName(result,'${tab}','${c}',true)`),true);
-    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),`${b},${c}`);
-    assert.equal(f.eval(`comparisonNames(result,'${tab}').size`),2);
-    f.eval(`setComparisonName(result,'${tab}','${b}',false);setComparisonName(result,'${tab}','${c}',false)`);
+  f.context.result={candidates:[{角色:'現任',球員:'Current'},...['A','B','C','D','E'].map(球員=>({角色:'代打',球員}))],bullpen:{rows:[{角色:'場上',投手:'Pitcher'},...['V','W','X','Y','Z'].map(投手=>({角色:'牛棚',投手}))]}};
+  for(const [tab,initial,last] of [['ph',['A','B','C','D'],'E'],['pen',['V','W','X','Y'],'Z']]) {
+    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),initial.join(','));
+    assert.equal(f.eval(`setComparisonName(result,'${tab}','${initial[0]}',true)`),true);
+    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),initial.join(','));
+    assert.equal(f.eval(`setComparisonName(result,'${tab}','${last}',true)`),true);
+    assert.equal(f.eval(`[...comparisonNames(result,'${tab}')].join(',')`),[...initial.slice(1),last].join(','));
+    assert.equal(f.eval(`comparisonNames(result,'${tab}').size`),4);
+    for(const name of [...initial.slice(1),last]) f.eval(`setComparisonName(result,'${tab}','${name}',false)`);
     assert.equal(f.eval(`comparisonNames(result,'${tab}').size`),0);
   }
   assert.equal(f.eval('setComparisonName(result,"ph","Current",true)'),false);
-  assert.equal(f.eval('comparisonNames({...result},"ph").size'),2);
+  assert.equal(f.eval('setComparisonName(result,"pen","Pitcher",true)'),false);
+  assert.equal(f.eval('comparisonNames({...result},"ph").size'),4);
 });
 
 test('manual detail browsing never replaces the independent comparison panel',async()=>{
