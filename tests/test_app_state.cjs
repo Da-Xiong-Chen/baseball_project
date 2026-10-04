@@ -359,3 +359,12 @@ test('difference chart distinguishes equal, tiny and missing comparisons and nev
  assert.match(html,/相同/);assert.match(html,/差距極小/);assert.match(html,/現任資料不足/);assert.match(html,/資料不足/);
  assert.equal((html.match(/<i class=/g)||[]).length,2);assert.doesNotMatch(html,/NaN|undefined/);
 });
+test('fifth selection reports the actual evicted candidate and isolates feedback between offense and defense',()=>{
+ const f=fixture();f.context.result={candidates:[{角色:'現任',球員:'Current'},...['A','B','C','D','E'].map(球員=>({角色:'代打',球員}))],bullpen:{rows:[{角色:'場上',投手:'P'},...['V','W','X','Y','Z'].map(投手=>({角色:'牛棚',投手}))]}};
+ f.eval('comparisonNames(result,"ph");setComparisonName(result,"ph","E",true)');
+ assert.match(f.eval('comparisonNotices.get(result).get("ph").message'),/已加入 E，移除最早選取的 A/);
+ assert.equal(f.eval('comparisonNotices.get(result).has("pen")'),false);
+ f.eval('comparisonNames(result,"pen");setComparisonName(result,"pen","Z",true)');
+ assert.match(f.eval('comparisonNotices.get(result).get("pen").message'),/移除最早選取的 V/);
+ assert.match(f.eval('comparisonNotices.get(result).get("ph").message'),/移除最早選取的 A/);
+});

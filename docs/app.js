@@ -25,6 +25,7 @@ const S = {
 let resultInputKey = null, loadedTeams = {my:'',opp:''}, groupControl = null;
 const benchOpen = new Map(), benchSearchOpen = new Map(), fieldErrors = new Map();
 const comparisonSelections = new WeakMap();
+const comparisonNotices = new WeakMap();
 function evaluationKey() {
   const value=id=>$(id)?.value || '';
   return JSON.stringify([S.view,S.inning,S.half,S.outs,S.bases,value('#myTeam'),value('#oppTeam'),value('#myScore'),value('#oppScore'),
@@ -550,8 +551,12 @@ function setComparisonName(R,tab,name,checked) {
   const rows=tab==='pen'?R.bullpen?.rows:R.candidates,key=tab==='pen'?'投手':'球員';
   if(!(rows||[]).some(r=>r[key]===name&&r['角色']!==(tab==='pen'?'場上':'現任')))return false;
   const names=comparisonNames(R,tab);
-  if(checked&&!names.has(name)&&names.size>=COMPARISON_LIMIT)names.delete(names.values().next().value);
-  checked?names.add(name):names.delete(name);return true;
+  if(names.has(name)===checked)return true;
+  let removed=null;
+  if(checked&&names.size>=COMPARISON_LIMIT){removed=names.values().next().value;names.delete(removed);}
+  checked?names.add(name):names.delete(name);
+  let notices=comparisonNotices.get(R);if(!notices){notices=new Map();comparisonNotices.set(R,notices);}
+  notices.set(tab,{target:name,message:removed?`已加入 ${name}，移除最早選取的 ${removed}。`:checked?`已加入 ${name}。`:`已移除 ${name}。`});return true;
 }
 function bindComparison(R,tab) {
   const box=$('#candidateCompare');
@@ -567,7 +572,12 @@ function comparisonCircle(R,tab,name) {
   return `<label class="comparison-circle"><input type="checkbox" data-table-compare value="${esc(name)}" aria-label="比較並查看 ${esc(name)} 對決" ${comparisonNames(R,tab).has(name)?'checked':''}></label>`;
 }
 function syncComparisonChoices(R,tab) {
-  $$('[data-table-compare]').forEach(i=>i.checked=comparisonNames(R,tab).has(i.value));
+  const notice=comparisonNotices.get(R)?.get(tab);
+  $$('[data-table-compare]').forEach(i=>{
+    i.checked=comparisonNames(R,tab).has(i.value);
+    const cell=i.closest('td');cell?.querySelector('.comparison-row-notice')?.remove();
+    if(notice?.target===i.value)cell?.insertAdjacentHTML('beforeend',`<span class="comparison-row-notice" role="status">${esc(notice.message)}</span>`);
+  });
 }
 function bindTableComparison(R,tab) {
   $$('[data-table-compare]').forEach(input=>input.onchange=()=>{
@@ -641,9 +651,9 @@ function comparisonPanel(R, selected, tab) {
       <p class="comparison-samples mut">樣本：候選 ${Math.round(x['樣本球數'])}／現任 ${Math.round(current['樣本球數'])} 球</p>
       ${x['資料警示']||current['資料警示']?`<p class="compare-warning">${esc([x['資料警示'],current['資料警示']].filter(Boolean).join('；'))}</p>`:''}</details></article>`;
   };
-  return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
+  return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span><a class="comparison-back" href="#evaluationSection">返回選人 ↑</a></div><div class="card-b">
     <p class="mut">${pen ? `對上接下來 ${R.bullpen.next.length} 棒。` : '同一投手、同一局勢。'}</p>
-    <p class="compare-limit mut" role="status">最近選取 ${choices.length}/${COMPARISON_LIMIT}</p>
+    <p class="compare-limit mut" role="status">已選 ${choices.length}/${COMPARISON_LIMIT}${comparisonNotices.get(R)?.get(tab)?.message?` · ${esc(comparisonNotices.get(R).get(tab).message)}`:''}</p>
     <div class="compare-chips">${choices.map(r=>`<button type="button" data-remove-compare="${esc(r[nameKey])}" aria-label="移除 ${esc(r[nameKey])} 的比較">${esc(r[nameKey])} <span aria-hidden="true">×</span></button>`).join('')}</div>
     ${chart}<div class="compare-grid">${choices.length ? choices.map(card).join('') : rows.length>1?'<p>選擇候選加入比較。</p>':'<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }
@@ -749,11 +759,11 @@ function renderResult(preserveTabs = false) {
 
   const showTabs = view === "replay";
   const tab = S.tab || (view === "defense" ? "pen" : "ph");
-  html += `<div class="card evaluation-card">`;
+  html += `<div class="card evaluation-card" id="evaluationSection" tabindex="-1">`;
   if (showTabs) html += `<div class="tabs"><button data-t="ph" class="${tab === "ph" ? "on" : ""}">代打評估（進攻方）</button><button data-t="pen" class="${tab === "pen" ? "on" : ""}">換投評估（防守方）</button></div>`;
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? "" : ""}</span></div>`;
-  html += `<div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
-  html += `<div id="candidateCompare">${comparisonPanel(R,null,activeTab)}</div><div id="pitchArsenal">${mixCard(R)}</div>`;
+  html += `<nav class="evaluation-nav" aria-label="評估結果導航"><a class="link" href="#candidateCompare">${uiIcon("compare")}比較已選球員 ↓</a><span class="mut">最多 4 人</span></nav><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
+  html += `<div id="candidateCompare" tabindex="-1">${comparisonPanel(R,null,activeTab)}</div><div id="pitchArsenal">${mixCard(R)}</div>`;
   html += `<div class="detail-grid"><div id="pitchChange"></div><div id="detail"></div></div>`;
   html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手、換局時已上丘投手須符合最低投球義務及例外規定；接下來三棒是評估範圍，不是換投規則。</li><li>2024–2025 一軍例行賽延長局最多 12 局；突破僵局的二壘預設可按實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/" target="_blank" rel="noopener noreferrer">CPBL 官方規則入口（官網頁尾）</a></details></div>`;
   $("#resultBody").innerHTML = html;
