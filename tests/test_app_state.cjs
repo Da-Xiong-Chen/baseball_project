@@ -7,8 +7,8 @@ const path = require('node:path');
 function fixture() {
   const nodes = new Map();
   const node = key => {
-    if (!nodes.has(key)) nodes.set(key, {value:'', innerHTML:'', disabled:false,
-      classList:{add(){},remove(){},toggle(){}}, querySelector:()=>({}), focus(){}, setAttribute(){}, removeAttribute(){}, checkValidity:()=>true});
+    if (!nodes.has(key)) nodes.set(key, {value:'', innerHTML:'', disabled:false, options:[],
+      classList:{add(){},remove(){},toggle(){}}, querySelector:()=>({}), querySelectorAll:()=>[], focus(){}, setAttribute(){}, removeAttribute(){}, checkValidity:()=>true});
     return nodes.get(key);
   };
   const context = {document:{querySelector:node,querySelectorAll:()=>[]}, location:{href:'http://localhost/'}, console, URL, URLSearchParams, AbortSignal,
@@ -21,11 +21,62 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('position-group selection clears evaluation even when rendering removes its button',()=>{
+  const f=fixture();f.node('#customPanel').addEventListener=()=>{};
+  f.eval('bindStatic();S.last={id:"old"};S.bench=new Set();renderBench=()=>{};');
+  f.node('#benchList').onclick({target:{closest:()=>({dataset:{group:'One|Two'}})}});
+  assert.equal(f.eval('S.last'),null);
+  assert.equal(f.eval('S.bench.has("One")&&S.bench.has("Two")'),true);
+});
+
+test('pitch arsenal preserves exported ratios, sorts groups, and never presents missing personal mix',()=>{
+  const f=fixture(); f.context.result={situation:{pitcher:'P'},pitch_mix:{R:{n:10,cells:{速球高中:.3,速球低:.2,滑卡低:.4,曲球低:.1}},L:{n:0,cells:{速球高中:1}}}};
+  const html=f.eval('mixCard(result)');
+  assert.equal((html.match(/class="arsenal-pitch"/g)||[]).length,4);
+  assert.match(html,/50.0/);assert.match(html,/40.0/);
+  assert.ok(html.indexOf('<h3>速球')<html.indexOf('<h3>滑卡'));
+  assert.match(html,/此側沒有可用個人逐球紀錄/);
+  assert.doesNotMatch(html,/100.0|九宮格|內角|外角|球速/);
+});
+
+test('official profile uses unique validated ID and searches when name is ambiguous',()=>{
+  const f=fixture();f.eval("officialPlayers={'鋼龍':['0000006497'],'同名':['0000000001','0000000002']};");
+  assert.match(f.eval("officialPlayerLink('鋼龍')"),/person\?acnt=0000006497/);
+  assert.match(f.eval("officialPlayerLink('同名')"),/players\?playerName=/);
+  assert.match(f.eval("officialPlayerLink('未知')"),/noopener noreferrer/);
+});
+
 test('automatic detail does not collapse the initial two-candidate comparison',async()=>{
   const f=fixture();f.node('#candidateCompare').innerHTML='both selected candidates';
   f.eval("S.last={view:'offense',model_cutoff:'2026-01-01'};mountPitchChange=()=>{};api=async()=>{throw Error('controlled missing detail');};");
   await f.eval("showDetail('One','Pitcher',null,false)");
   assert.equal(f.node('#candidateCompare').innerHTML,'both selected candidates');
+});
+
+test('editing the situation invalidates a pending request while bench search preserves it',async()=>{
+  const f=fixture();const pending=deferred();f.context.pending=pending.promise;
+  f.eval('S.ready=true;renderResult=()=>{};');
+  const job=f.eval("run(()=>pending,'offense')");
+  f.node('#myScore').value='4';f.eval("invalidateCustom({target:{id:'myScore'}})");
+  pending.resolve({id:'stale'});await job;
+  assert.equal(f.eval('S.last'),null);
+  f.eval("S.last={id:'saved'};invalidateCustom({target:{id:'benchFilter'}})");
+  assert.equal(f.eval('S.last.id'),'saved');
+});
+
+test('invalid submit clears the old result without evaluating',async()=>{
+  const f=fixture();f.eval("S.ready=true;S.last={id:'old'};api=()=>{throw Error('must not evaluate');}");
+  f.node('#myScore').value='';await f.eval('evaluateCustom()');
+  assert.equal(f.eval('S.last'),null);assert.match(f.node('#formError').innerHTML,/非負整數/);
+});
+
+test('score steppers support typing, zero floor and stale-result invalidation',()=>{
+  const f=fixture();f.node('#myScore').value='2';f.eval("S.last={id:'old'};stepScore('myScore',1)");
+  assert.equal(f.node('#myScore').value,'3');assert.equal(f.eval('S.last'),null);
+  f.node('#myScore').value='0';f.eval("stepScore('myScore',-1)");assert.equal(f.node('#myScore').value,'0');
+  f.node('#myScore').value='';f.eval("stepScore('myScore',1)");assert.equal(f.node('#myScore').value,'1');
+  f.node('#myScore').value='2.5';f.eval("stepScore('myScore',1)");assert.equal(f.node('#myScore').value,'2.5');
+  assert.match(f.node('#formError').innerHTML,/非負整數/);
 });
 
 test('comparison keeps both candidates initially and explains model disagreement',()=>{
@@ -37,6 +88,17 @@ test('comparison keeps both candidates initially and explains model disagreement
   assert.match(html,/模型意見不同，難以區分/);assert.match(html,/排序尚未校準/);
   const selected=f.eval("comparisonPanel(result,'Two','ph')");
   assert.equal((selected.match(/<article/g)||[]).length,1);assert.match(selected,/<h3>Two/);
+});
+
+test('candidate chart preserves direction and a common scale when selection changes',()=>{
+  const f=fixture(),base={角色:'現任',球員:'Current',階層式:0,機器學習:0,樣本球數:1000,本身能力:0,球路適性:0,左右優勢:0};
+  f.context.result={candidates:[base,{...base,角色:'代打',球員:'Positive',相對現任:.2},
+    {...base,角色:'代打',球員:'Negative',相對現任:-.1}]};
+  const both=f.eval("comparisonPanel(result,null,'ph')");
+  assert.match(both,/class="positive" style="left:50%;width:48%"/);
+  assert.match(both,/class="negative" style="left:26%;width:24%"/);
+  assert.match(both,/現任 0/);assert.match(both,/百分點/);
+  assert.match(f.eval("comparisonPanel(result,'Negative','ph')"),/left:26%;width:24%/);
 });
 
 test('tiny positive differences never become a strong recommendation from SE',()=>{
@@ -89,7 +151,7 @@ test('pitcher identity switches even when detail fails',async()=>{
   const f=fixture();f.eval("S.last={view:'offense',situation:{date:'2026-01-01'},model_cutoff:'2026-01-01'};api=async()=>{throw Error('offline')};");
   await f.eval("showDetail('B','NEW')");
   assert.equal(f.context.lastMount.pitcher,'NEW');
-  assert.match(f.node('#detail').innerHTML,/offline/);
+  assert.match(f.node('#detail').innerHTML,/未提供或載入失敗/);assert.match(f.node('#pitchArsenal').innerHTML,/NEW/);
 });
 
 test('slow evaluation cannot replace the latest result',async()=>{
@@ -128,6 +190,18 @@ test('older team list response cannot replace the latest team',async()=>{
   assert.equal(f.eval('S.games[0].game'),'B');
 });
 
+test('team choices disable the opposing team and recover duplicate selections',()=>{
+  const f=fixture();f.eval("S.teams=['A','B','C'];");
+  const mine=f.node('#myTeam'),opp=f.node('#oppTeam');
+  mine.options=['A','B','C'].map(value=>({value}));
+  opp.options=['A','B','C'].map(value=>({value}));
+  mine.value='A';opp.value='B';f.eval('syncTeamChoices()');
+  assert.equal(mine.options[1].disabled,true);assert.equal(opp.options[0].disabled,true);
+  opp.value='A';f.eval("syncTeamChoices('oppTeam')");
+  assert.equal(opp.value,'A');assert.equal(mine.value,'B');
+  assert.equal(mine.options[0].disabled,true);
+});
+
 test('slow roster response cannot reset the latest names',async()=>{
   const f=fixture(),a=deferred(),b=deferred();f.context.a=a.promise;f.context.b=b.promise;
   f.eval("team=n=>n==='A'?a:b;autoPos=()=>{};renderBench=()=>{};syncRole=()=>{};");
@@ -136,4 +210,23 @@ test('slow roster response cannot reset the latest names',async()=>{
   b.resolve({pitchers:[{name:'B',role:'後援'}],hitters:[{name:'B'}]});await second;
   a.resolve({pitchers:[{name:'A',role:'後援'}],hitters:[{name:'A'}]});await first;
   assert.match(f.node('#dueBatter').innerHTML,/value="B"/);assert.doesNotMatch(f.node('#dueBatter').innerHTML,/value="A"/);
+});
+
+test('extra inning selection presets only second base and never changes outs',()=>{
+ const f=fixture();f.eval('renderState=()=>{};S.mode="custom";S.inning=9;S.bases=5;S.outs=2;changeInning(1);');
+ assert.equal(f.eval('S.inning'),10);assert.equal(f.eval('S.bases'),2);assert.equal(f.eval('S.outs'),2);
+ f.eval('S.inning=12;S.bases=0;changeInning(1);');assert.equal(f.eval('S.bases'),0);
+ f.eval('changeInning(-1)');assert.equal(f.eval('S.bases'),2);
+ f.eval('S.mode="replay";S.inning=9;S.bases=4;changeInning(1);');assert.equal(f.eval('S.bases'),4);
+});
+test('same effective input and group editing retain the result; changed input invalidates it',()=>{
+ const f=fixture();f.eval('S.last={id:"result"};resultInputKey=evaluationKey();');
+ f.eval('invalidateCustom({target:{closest:()=>({})}})');assert.equal(f.eval('S.last.id'),'result');
+ f.eval('invalidateCustom({target:{id:"innUp"}})');assert.equal(f.eval('S.last.id'),'result');
+ f.eval('S.bases=4;invalidateCustom({target:{id:"baseControls"}})');assert.equal(f.eval('S.last'),null);
+});
+test('unknown fielding stays visible in a collapsed DH group without inventing eligibility',()=>{
+ const f=fixture();f.node('#myTeam').value='A';f.node('#dueBatter').value='Due';
+ f.eval('S.roster.A={hitters:[{name:"Due",positions:{}},{name:"Unknown",positions:{},pa:5}]};S.bench=new Set(["Unknown"]);renderBench();');
+ const html=f.node('#benchList').innerHTML;assert.match(html,/守位未收錄/);assert.match(html,/指定打擊/);assert.match(html,/aria-expanded="false"/);assert.equal((html.match(/class="bench-group"/g)||[]).length,4);
 });

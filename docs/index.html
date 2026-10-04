@@ -4,25 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261002-v2"></script>
-<link rel="stylesheet" href="style.css?v=20261002-v2">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231f6f4a'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
+<script src="theme.js?v=20261004-refinement1"></script>
+<link rel="stylesheet" href="style.css?v=20261004-refinement1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></symbol>
+  <symbol id="icon-history" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1 8M3 4v6h6M12 7v5l3 2"/></symbol>
+  <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1 1M18 18l1 1M5 19l1-1M18 6l1-1"/></symbol>
+  <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol>
+</defs></svg>
 <a class="skip-link" href="#workspace">跳到情境設定</a>
 <header>
   <div class="brand">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--accent)"/><path d="M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--accent)"/><path d="M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14" stroke="var(--on-accent)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
     <div><h1>臨場用人決策</h1><small>CPBL · 對決分析 / 2024–2025</small></div>
   </div>
   <div class="spacer"></div>
-  <div class="seg theme-control" role="group" aria-label="版面主題">
-    <button type="button" data-set-theme="dark" aria-pressed="true">深色</button>
-    <button type="button" data-set-theme="light" aria-pressed="false">淺色</button>
-  </div>
+  <button type="button" class="theme-toggle" data-theme-toggle aria-label="切換為淺色主題"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><symbol id="theme-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1 1M18 18l1 1M5 19l1-1M18 6l1-1"/></symbol><symbol id="theme-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol></defs><use href="#theme-sun"/></svg><span>淺色</span></button>
   <div class="seg" id="modeSeg">
-    <button data-mode="custom" class="on">自訂情境</button>
-    <button data-mode="replay">歷史回放</button>
+    <button data-mode="custom" class="on"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"/></svg>自訂情境</button>
+    <button data-mode="replay"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>歷史回放</button>
   </div>
 </header>
 
@@ -47,7 +50,7 @@
             <div><label class="f" for="oppTeam">對手球隊</label><select id="oppTeam"></select></div>
           </div>
           <div class="state">
-            <div>
+            <div class="state-control">
               <label class="f">局數</label>
               <div class="stepper">
                 <button id="innDown" aria-label="減一局">−</button>
@@ -58,11 +61,10 @@
                   <button data-half="home" class="on">下</button>
                 </div>
               </div>
-              <label class="f" style="margin-top:12px">出局數</label>
-              <div class="outs" id="outs"><button data-o="1" aria-label="1 出局"></button><button data-o="2" aria-label="2 出局"></button></div>
+              <div class="out-setting"><span class="f">出局數</span><div class="outs" id="outs"><button data-o="1" aria-label="1 出局"></button><button data-o="2" aria-label="2 出局"></button></div><output id="outsValue">1 出局</output></div>
             </div>
-            <div>
-              <label class="f" style="text-align:center">壘包（點擊切換）</label>
+            <div class="base-setting">
+              <label class="f">壘上跑者</label>
               <svg class="diamond" viewBox="0 0 120 100" id="diamond">
                 <path d="M60 92 L100 52 L60 12 L20 52 Z" fill="none" stroke="var(--line)" stroke-width="2"/>
                 <rect class="base" data-b="2" x="51" y="3" width="18" height="18" transform="rotate(45 60 12)" fill="var(--panel)" stroke="var(--muted)" stroke-width="2"/>
@@ -73,9 +75,9 @@
               <div id="baseControls"><button type="button" data-b="1">一壘</button><button type="button" data-b="2">二壘</button><button type="button" data-b="4">三壘</button></div>
             </div>
           </div>
-          <div class="row2">
-            <div><label class="f" for="myScore">我方得分</label><input type="number" id="myScore" min="0" value="2"></div>
-            <div><label class="f" for="oppScore">對手得分</label><input type="number" id="oppScore" min="0" value="3"></div>
+          <div class="row2 score-controls">
+            <div><label class="f" for="myScore">我方得分</label><div class="score-stepper"><button type="button" data-score="myScore" data-delta="-1" aria-label="我方減一分">−</button><input type="number" id="myScore" min="0" step="1" value="2"><button type="button" data-score="myScore" data-delta="1" aria-label="我方加一分">+</button></div></div>
+            <div><label class="f" for="oppScore">對手得分</label><div class="score-stepper"><button type="button" data-score="oppScore" data-delta="-1" aria-label="對手減一分">−</button><input type="number" id="oppScore" min="0" step="1" value="3"><button type="button" data-score="oppScore" data-delta="1" aria-label="對手加一分">+</button></div></div>
           </div>
 
           <!-- 進攻 -->
@@ -98,15 +100,16 @@
             <div><label class="f" for="myPitcher">我方場上投手</label><select id="myPitcher"></select></div>
             <div class="row2" style="margin-top:14px">
               <div><label class="f" for="pitchCount">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
-              <div><label class="f">角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
+              <div><label class="f">本場角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
             </div>
-            <p class="mut" id="pcHint" style="font-size:11px;margin:6px 0 0"></p>
+            <p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
               <div class="row3"><select id="nb1" aria-label="接下來第一棒"></select><select id="nb2" aria-label="接下來第二棒"></select><select id="nb3" aria-label="接下來第三棒"></select></div>
             </div>
             <div style="margin-top:14px">
               <label class="f">牛棚可用投手（請確認今日可上場）</label>
+              <div id="pitcherGroups"></div>
               <div class="checklist" id="penList"></div>
               <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手">全選</button><button class="link" id="penNone" aria-label="清除牛棚投手">清除</button></div>
             </div>
@@ -150,8 +153,9 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261002-v2"></script>
-<script src="pitch-change.js?v=20261002-v2"></script>
-<script src="app.js?v=20261002-v5"></script>
+<script src="engine.js?v=20261004-refinement1"></script>
+<script src="pitch-change.js?v=20261004-refinement1"></script>
+<script src="pitcher-groups.js?v=20261004-refinement1"></script>
+<script src="app.js?v=20261004-refinement1"></script>
 </body>
 </html>
