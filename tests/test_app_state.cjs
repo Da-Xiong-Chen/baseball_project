@@ -335,3 +335,13 @@ test('compact fielding message retains replacement person, position and extra be
  assert.equal(f.eval('compactFielding("換下後板凳無人可守捕手")'),'無人接守捕手');
  assert.equal(f.eval('compactFielding("資格待確認")'),'資格待確認');
 });
+test('short assessment notes keep distinct cutoffs, missing metadata and historical roster uncertainty',()=>{
+ const f=fixture();f.context.result={view:'replay',method:'集成',model_cutoff:'2025-07-01',ml_cutoff:'2025-06-01'};
+ const html=f.eval('assessmentNotes(result)');
+ assert.match(html,/2025-07-01/);assert.match(html,/2025-06-01/);assert.match(html,/不含截止日/);
+ assert.match(html,/歷史名單與守位可能為推估/);assert.match(html,/不是完整預測區間/);
+ assert.match(f.eval('assessmentNotes({})'),/逐球資料截止：未記錄/);
+ assert.match(f.eval('assessmentNotes({method:"階層式"})'),/逐球資料截止：未使用/);
+ const same=f.eval('assessmentNotes({model_cutoff:"2025-07-01",ml_cutoff:"2025-07-01"})');
+ assert.equal((same.match(/2025-07-01/g)||[]).length,1);assert.match(same,/今日名單需人工確認/);
+});
