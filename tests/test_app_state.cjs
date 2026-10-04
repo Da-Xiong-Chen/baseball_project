@@ -313,7 +313,7 @@ test('pitcher comparison keeps fatigue warning visible and collapses per-batter 
  const html=f.eval('comparisonPanel(result,null,"pen")');
  assert.ok(html.indexOf('球數偏高')<html.indexOf('<details>'));
  assert.ok(html.indexOf('class="next-matchup-chart"')>html.indexOf('<details>'));
- assert.doesNotMatch(html,/<details open/);assert.match(html,/逐棒比較/);
+ assert.doesNotMatch(html,/<details open/);assert.match(html,/與現任比較/);
 });
 test('mobile row details preserve sample and fatigue-adjusted value without inventing another score',()=>{
  const f=fixture();f.context.row={樣本球數:321,預估失分:-.023,疲勞調整:.012,可信度:'低'};
@@ -322,12 +322,12 @@ test('mobile row details preserve sample and fatigue-adjusted value without inve
  assert.doesNotMatch(html,/<details[^>]* open|NaN|undefined/);
  assert.match(f.eval('mobileRowDetails(row,false)'),/321 球 · 低樣本/);
 });
-test('hitter source chart preserves signed differences and shared scale without inventing missing components',()=>{
+test('hitter source chart compares actual values to current with a shared scale and missing components',()=>{
  const f=fixture();f.context.current={本身能力:.1,球路適性:.05};
  f.context.one={本身能力:.2,球路適性:.025};f.context.two={本身能力:.3,球路適性:.05};
  const html=f.eval('hitterComponentChart(one,current,[current,one,two])');
- assert.match(html,/class="favorable" style="left:50%;width:24/);
- assert.match(html,/class="unfavorable"/);assert.match(html,/−0.025/);assert.match(html,/資料不足/);
+ assert.match(html,/class="favorable" style="left:50%;width:32/);
+ assert.match(html,/class="unfavorable"/);assert.match(html,/\+0.025/);assert.match(html,/現任 \+0.050/);assert.match(html,/資料不足/);
  assert.match(html,/僅拆解階層式估計/);assert.doesNotMatch(html,/NaN|undefined/);
 });
 test('compact fielding message retains replacement person, position and extra bench cost',()=>{
@@ -344,4 +344,12 @@ test('short assessment notes keep distinct cutoffs, missing metadata and histori
  assert.match(f.eval('assessmentNotes({method:"階層式"})'),/逐球資料截止：未使用/);
  const same=f.eval('assessmentNotes({model_cutoff:"2025-07-01",ml_cutoff:"2025-07-01"})');
  assert.equal((same.match(/2025-07-01/g)||[]).length,1);assert.match(same,/今日名單需人工確認/);
+});
+test('shared comparison uses opposite benefit directions but identical baseline markup',()=>{
+ const f=fixture();f.context.data=[{name:'A',value:-.05,base:-.1},{name:'B',value:.05,base:.1},{name:'C',value:.02}];
+ const batting=f.eval('valueComparisonChart(data,.1,"test",true,"")');
+ const pitching=f.eval('valueComparisonChart(data,.1,"test",false,"")');
+ assert.match(batting,/<i class="favorable" style="left:26%;width:24%/);
+ assert.match(pitching,/<i class="unfavorable" style="left:26%;width:24%/);
+ for(const html of [batting,pitching]){assert.equal((html.match(/class="matchup-baseline"/g)||[]).length,2);assert.match(html,/現任 未提供/);assert.match(html,/class="neutral"/);}
 });
