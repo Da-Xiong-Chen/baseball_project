@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261004-journey"></script>
-<link rel="stylesheet" href="style.css?v=20261004-journey">
+<script src="theme.js?v=20261004-aligned"></script>
+<link rel="stylesheet" href="style.css?v=20261004-aligned">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -116,9 +116,13 @@
             </div>
             <div style="margin-top:14px">
               <label class="f">牛棚可用投手（請確認今日可上場）</label>
+              <div id="penAvailability" class="today-availability" aria-live="polite"></div>
               <div id="pitcherGroups"></div>
-              <div class="checklist" id="penList"></div>
-              <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>全選</button><button class="link" id="penNone" aria-label="清除牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clear"/></svg>清除</button></div>
+              <button type="button" class="link bench-toggle-all" id="penToggleAll" aria-controls="penList" aria-expanded="false">全部展開</button>
+              <input type="search" id="penFilter" aria-label="搜尋牛棚投手" placeholder="搜尋球員…">
+              <p id="penSearchStatus" class="mut hidden" role="status"></p>
+              <div class="checklist" id="penList" hidden></div>
+              <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>全選</button><button class="link" id="penNone" aria-label="清除牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clear"/></svg>清除選取</button></div>
             </div>
           </div>
 
@@ -160,9 +164,9 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261004-journey"></script>
-<script src="pitch-change.js?v=20261004-journey"></script>
-<script src="pitcher-groups.js?v=20261004-journey"></script>
-<script src="app.js?v=20261004-journey"></script>
+<script src="engine.js?v=20261004-aligned"></script>
+<script src="pitch-change.js?v=20261004-aligned"></script>
+<script src="pitcher-groups.js?v=20261004-aligned"></script>
+<script src="app.js?v=20261004-aligned"></script>
 </body>
 </html>

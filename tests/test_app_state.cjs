@@ -368,3 +368,30 @@ test('fifth selection reports the actual evicted candidate and isolates feedback
  assert.match(f.eval('comparisonNotices.get(result).get("pen").message'),/移除最早選取的 V/);
  assert.match(f.eval('comparisonNotices.get(result).get("ph").message'),/移除最早選取的 A/);
 });
+
+
+test('bullpen search filters visible names without modifying checked selection',()=>{
+ const f=fixture(),labels=['One','Two','Current'].map((name,i)=>({hidden:false,input:{value:name,checked:i<2},querySelector(){return this.input;}}));
+ f.context.document.querySelectorAll=selector=>selector==='#penList label'?labels:[];
+ f.node('#penList').hidden=true;f.node('#penFilter').value='One';
+ f.eval('renderPenVisibility(true)');
+ assert.deepEqual(labels.map(x=>x.hidden),[false,true,true]);assert.equal(f.node('#penList').hidden,false);
+ assert.deepEqual(labels.map(x=>x.input.checked),[true,true,false]);
+ f.node('#penFilter').value='Absent';f.eval('renderPenVisibility(true)');
+ assert.equal(f.node('#penToggleAll').disabled,true);assert.match(f.node('#penSearchStatus').textContent,/搜尋不會清除/);
+ f.node('#penFilter').value='';f.eval('renderPenVisibility(true)');
+ assert.deepEqual(labels.map(x=>x.hidden),[false,false,false]);assert.equal(f.node('#penToggleAll').disabled,false);
+});
+
+test('both roster searches retain completed and pending evaluation state',()=>{
+ const f=fixture();f.eval('S.mode="custom";S.last={kept:true};');
+ for(const id of ['benchFilter','penFilter']){f.context.event={target:{id}};f.eval('invalidateCustom(event)');assert.equal(f.eval('S.last.kept'),true);}
+});
+
+test('hitter primary assessment uses incumbent difference and preserves league value in disclosure',()=>{
+ const f=fixture();f.context.result={situation:{pitcher:'P'},candidates:[{角色:'現任',球員:'A',相對現任:0,預估勝率:-.5,樣本球數:200,可信度:"中",價值分數:50,守備:'ok',守備說明:'目前守捕手'},{角色:'代打',球員:'B',相對現任:.2,預估勝率:-.3,樣本球數:100,可信度:"低",價值分數:60,守備:'ok',守備說明:'可接守捕手'}]};
+ const html=f.eval('phTable(result)');
+ assert.match(html,/勝率變化（相對現任）/);assert.match(html,/相對聯盟平均/);
+ const values=[...html.matchAll(/<td class="evaluation-value">([\s\S]*?)<\/td>/g)].map(m=>m[1]);
+ assert.match(values[0],/基準/);assert.match(values[1],/\+0.20 百分點/);assert.doesNotMatch(values.join(''),/−0.30|−0.50/);
+});
