@@ -725,6 +725,12 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 .availability-more summary { color:var(--accent); font-size:var(--font-label); }
 .availability-extra { display:flex; flex-wrap:wrap; gap:5px; padding-top:4px; }
 .mobile-row-details,.mobile-value-label { display:none; }
+.compare-values:has(.hitter-component-chart) { display:block; }
+.hitter-component-chart { border-top:1px solid var(--line); padding-top:10px; }
+.hitter-component-chart .next-matchup-row { grid-template-columns:70px minmax(30px,1fr) 64px; }
+.hitter-component-chart p,.comparison-samples { font-size:var(--font-meta); }
+.hitter-component-chart small { display:block; font-size:var(--font-meta); }
+.component-missing { grid-column:2/-1; text-align:right; }
 @media(max-width:600px) {
   table.t.evaluation-table,.evaluation-table tbody { display:block; width:100%; min-width:0; }
   .evaluation-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }

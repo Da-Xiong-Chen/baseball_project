@@ -110,7 +110,7 @@ test('comparison keeps both candidates initially and explains model disagreement
     {...base,角色:'代打',球員:'Two',階層式:.01,機器學習:.01,相對現任:.1}]};
   const html=f.eval("comparisonPanel(result,null,'ph')");
   assert.equal((html.match(/<article/g)||[]).length,2);
-  assert.match(html,/模型分歧/);assert.match(html,/排序僅供參考/);
+  assert.match(html,/模型分歧/);assert.doesNotMatch(html,/排序僅供參考/);
   const selected=f.eval("comparisonPanel(result,'Two','ph')");
   assert.equal((selected.match(/<article/g)||[]).length,1);assert.match(selected,/<h3>Two/);
 });
@@ -313,7 +313,7 @@ test('pitcher comparison keeps fatigue warning visible and collapses per-batter 
  const html=f.eval('comparisonPanel(result,null,"pen")');
  assert.ok(html.indexOf('球數偏高')<html.indexOf('<details>'));
  assert.ok(html.indexOf('class="next-matchup-chart"')>html.indexOf('<details>'));
- assert.doesNotMatch(html,/<details open/);assert.match(html,/逐棒圖與詳細拆解/);
+ assert.doesNotMatch(html,/<details open/);assert.match(html,/逐棒比較/);
 });
 test('mobile row details preserve sample and fatigue-adjusted value without inventing another score',()=>{
  const f=fixture();f.context.row={樣本球數:321,預估失分:-.023,疲勞調整:.012,可信度:'低'};
@@ -321,4 +321,17 @@ test('mobile row details preserve sample and fatigue-adjusted value without inve
  assert.match(html,/321 球/);assert.match(html,/失分價值 -0.023 分/);assert.match(html,/含疲勞 \+0.012/);
  assert.doesNotMatch(html,/<details[^>]* open|NaN|undefined/);
  assert.match(f.eval('mobileRowDetails(row,false)'),/321 球 · 低樣本/);
+});
+test('hitter source chart preserves signed differences and shared scale without inventing missing components',()=>{
+ const f=fixture();f.context.current={本身能力:.1,球路適性:.05};
+ f.context.one={本身能力:.2,球路適性:.025};f.context.two={本身能力:.3,球路適性:.05};
+ const html=f.eval('hitterComponentChart(one,current,[current,one,two])');
+ assert.match(html,/class="favorable" style="left:50%;width:24/);
+ assert.match(html,/class="unfavorable"/);assert.match(html,/−0.025/);assert.match(html,/資料不足/);
+ assert.match(html,/僅拆解階層式估計/);assert.doesNotMatch(html,/NaN|undefined/);
+});
+test('compact fielding message retains replacement person, position and extra bench cost',()=>{
+ const f=fixture();assert.equal(f.eval('compactFielding("需由 李勛傑 接守左外野（再消耗 1 名板凳）")'),'接守：李勛傑 · 左外野（另需 1 人）');
+ assert.equal(f.eval('compactFielding("換下後板凳無人可守捕手")'),'無人接守捕手');
+ assert.equal(f.eval('compactFielding("資格待確認")'),'資格待確認');
 });

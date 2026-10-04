@@ -591,6 +591,20 @@ function pitcherMatchupChart(details, sharedScale, currentDetails = []) {
     return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.value>=0?50:50-width}%;width:${width}%"></i>${hasBase?`<b class="matchup-baseline" style="left:${50+base/scale*48}%" title="現任 ${sign(base,3)} 分"></b>`:''}</div><span class="num"><strong class="${tone}">${sign(d.value,3)}</strong><small>現任 ${hasBase?sign(base,3):'未提供'}</small></span></div>`;
   }).join('')}<small class="mut">中線為 0；候選共用尺度。含疲勞，非實際失分。</small></div>`;
 }
+function hitterComponentChart(candidate, current, rows) {
+  const fields=[['本身能力','本身能力'],['球路適性','球路適性'],['左右投打','左右優勢']];
+  const difference=(r,key)=>Number.isFinite(r[key])&&Number.isFinite(current[key])?r[key]-current[key]:null;
+  const scale=Math.max(.001,...rows.flatMap(r=>fields.map(([,key])=>difference(r,key))).filter(Number.isFinite).map(Math.abs));
+  const data=fields.map(([label,key])=>({label,value:difference(candidate,key)}));
+  return `<div class="compare-values"><div class="hitter-component-chart"><p class="mut">優勢來源 · 分／打席</p>${data.map(d=>{
+    if(d.value===null)return `<div class="next-matchup-row"><span>${d.label}</span><span class="component-missing mut">資料不足</span></div>`;
+    const width=Math.abs(d.value)/scale*48,tone=d.value>0?'favorable':d.value<0?'unfavorable':'neutral';
+    return `<div class="next-matchup-row"><span>${d.label}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.value>=0?50:50-width}%;width:${width}%"></i></div><span class="num"><strong class="${tone}">${sign(d.value,3)}</strong></span></div>`;
+  }).join('')}<small class="mut">綠色較有利、紅色較不利；僅拆解階層式估計。</small></div></div>`;
+}
+function compactFielding(text) {
+  return String(text||'').replace(/^需由 (.+) 接守(.+)（再消耗 1 名板凳）$/,'接守：$1 · $2（另需 1 人）').replace(/^換下後板凳無人可守/,'無人接守').replace(/^.+ 可直接接守/,'可接守');
+}
 function comparisonPanel(R, selected, tab) {
   if (!R) return '';
   const pen = tab === 'pen', rows = pen ? R.bullpen?.rows : R.candidates;
@@ -614,20 +628,18 @@ function comparisonPanel(R, selected, tab) {
     const disagreement = gDelta != null && hDelta * gDelta <= 0;
     const delta = pen ? x['守方勝率增減'] : x['相對現任'];
     const low = x['樣本球數'] < 500 || current['樣本球數'] < 500 || !!x['資料警示'] || !!current['資料警示'];
-    const status = low ? '資料有限' : disagreement ? '模型分歧' : Math.abs(delta) < 0.005 ? '差距極小，難以區分' : '排序僅供參考';
-    const direction = pen ? '失分價值越低越好' : '得分值越高越好';
+    const status = low ? '資料有限' : disagreement ? '模型分歧' : Math.abs(delta) < 0.005 ? '難以區分' : '';
     const reason = pen
       ? (x['疲勞'] && x['疲勞'] !== '-' ? `<p class="compare-warning">${esc(x['疲勞'])}</p>` : '')
-      : `<p>${esc(x['守備說明'])}</p>`;
-    const decomposition=pen?'':`<dl class="compare-values">${[['本身能力','本身能力'],['球路適性','球路適性'],['左右投打','左右優勢']].map(([label,key]) => `<div><dt>${label}差值</dt><dd>${sign(x[key]-current[key],3)}</dd></div>`).join('')}</dl>`;
+      : `<p class="${x['守備']==='bad'||x['守備']==='warn'?'compare-warning':'mut'}">${esc(compactFielding(x['守備說明']))}</p>`;
+    const decomposition=pen?'':hitterComponentChart(x,current,rows);
     const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>Math.abs(d.runs+d.fatigue))).filter(Number.isFinite));
     const matchupChart = pen ? pitcherMatchupChart(x['對決明細'],matchupScale,current['對決明細']) : '';
-    return `<article class="compare-card"><h3>${esc(x[nameKey])}<span class="chip">${status}</span></h3>
+    return `<article class="compare-card"><h3>${esc(x[nameKey])}${status?`<span class="chip">${status}</span>`:''}</h3>
       <p class="compare-delta num ${cls(delta,.005)}">相對現任 ${sign(delta)} 百分點</p>${reason}
-      <details><summary>${pen?'逐棒圖與詳細拆解':'詳細拆解'}</summary>${matchupChart}${decomposition}${pen?`<p class="num">失分價值：候選 ${x['預估失分'].toFixed(3)}／現任 ${current['預估失分'].toFixed(3)}</p>`:''}<p>${direction}；${pen ? '以下為疲勞調整前的合計' : '以下為每打席得分值'}。</p>
-      <p class="num">階層式差值 ${Number.isFinite(hDelta) ? sign(hDelta,3) : '未匯出'}；逐球模型差值 ${gDelta == null ? '未使用／未匯出' : sign(gDelta,3)}</p>${pen ? '<p>這是得分期望變化的價值，可為負值；不是實際失分數。單位為分。</p>' : ''}
-      <p>候選 ${Math.round(x['樣本球數'])} 球；現任 ${Math.round(current['樣本球數'])} 球。${!pen ? `投手對此側 ${x['投手對此側樣本'] ?? '未記錄'} 球。` : ''}比較池 ${x['比較池人數'] ?? '未記錄'} 人。</p>
-      <p>${esc(x['資料警示'] || '')}${x['資料警示'] && current['資料警示'] ? '；' : ''}${esc(current['資料警示'] || '')}</p><p>模型分歧與樣本量是判讀線索，不能解讀為候選勝出的機率。</p></details></article>`;
+      <details><summary>${pen?'逐棒比較':'優勢來源'}</summary>${matchupChart}${decomposition}
+      <p class="comparison-samples mut">樣本：候選 ${Math.round(x['樣本球數'])}／現任 ${Math.round(current['樣本球數'])} 球</p>
+      ${x['資料警示']||current['資料警示']?`<p class="compare-warning">${esc([x['資料警示'],current['資料警示']].filter(Boolean).join('；'))}</p>`:''}</details></article>`;
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span></div><div class="card-b">
     <p class="mut">${pen ? `對上接下來 ${R.bullpen.next.length} 棒。` : '同一投手、同一局勢。'}</p>
