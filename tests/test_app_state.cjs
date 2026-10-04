@@ -288,3 +288,14 @@ test('hitter decomposition is collapsed while the fielding warning remains visib
  assert.ok(html.indexOf('class="compare-values"')>html.indexOf('<details>'));
  assert.doesNotMatch(html,/<details open/);
 });
+
+test('bench summary counts all selected names regardless of search and excludes current batter',()=>{
+ const f=fixture();f.node('#myTeam').value='A';f.node('#dueBatter').value='Due';f.node('#benchFilter').value='One';
+ f.eval('S.roster.A={hitters:[{name:"Due",positions:{}},{name:"One",positions:{}},{name:"Two",positions:{}}]};S.bench=new Set(["Due","One","Two"]);renderBench();');
+ const html=f.node('#benchAvailability').innerHTML;assert.match(html,/今日勾選 2 人/);assert.match(html,/One/);assert.match(html,/Two/);assert.doesNotMatch(html,/>Due</);
+});
+test('pitching colors compare with current pitcher rather than the sign of run value',()=>{
+ const f=fixture();f.context.details=[{batter:'A',runs:-.01,fatigue:0},{batter:'B',runs:.01,fatigue:0}];f.context.current=[{batter:'A',runs:-.03,fatigue:0},{batter:'B',runs:.03,fatigue:0}];
+ const html=f.eval('pitcherMatchupChart(details,.1,current)');assert.match(html,/<i class="unfavorable" style="left:45.2%/);assert.match(html,/<i class="favorable" style="left:50%/);
+ assert.match(f.eval('pitcherMatchupChart(details,.1,[])'),/class="neutral"/);
+});

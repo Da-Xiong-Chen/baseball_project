@@ -704,3 +704,19 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 
 #penList label:has(input:disabled)::after { content:"場上"; color:var(--muted); font-size:var(--font-meta); margin-left:6px; }
 #penList input:disabled { opacity:.5; }
+
+/* Comparison colors express advantage, rather than a third accent hue. */
+.candidate-chart-track .positive { background:var(--pos); }
+.candidate-chart-track .negative { background:var(--neg); }
+.compare-delta.pos,.next-matchup-row strong.favorable { color:var(--pos); }
+.compare-delta.neg,.next-matchup-row strong.unfavorable { color:var(--neg); }
+.compare-delta.mut,.next-matchup-row strong.neutral { color:var(--muted); }
+.next-matchup-track,.candidate-chart-track { background:var(--panel-2); }
+.next-matchup-track i.favorable,.matchup-legend i.favorable { background:var(--pos); }
+.next-matchup-track i.unfavorable,.matchup-legend i.unfavorable { background:var(--neg); }
+.next-matchup-track i.neutral { background:var(--muted); }
+#detail .card-h h2 { font-size:var(--font-title); }
+#detail .card-h .hint,#detail .heat,#detail .heat .hh,#detail .heat .w,#detail .heat .rl,#detail .breakdown small,#detail .detail-unit,#detail .detail-caption { font-size:var(--font-label); line-height:1.5; }
+#detail .heat .k { font-size:var(--font-subtitle); }
+#detail .breakdown b { font-size:var(--font-title); }
+#detail .detail-caption { margin:10px 0 0; }

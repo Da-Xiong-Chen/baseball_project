@@ -363,6 +363,8 @@ function renderBench(reset) {
   const regulars = new Set(my.hitters.slice(0, 9).map((h) => h.name));
   if (reset === true) S.bench = new Set(list.filter(h => !regulars.has(h.name)).map(h => h.name));
   S.bench.delete(due);
+  const pickedToday=list.filter(h=>S.bench.has(h.name));
+  $('#benchAvailability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${pickedToday.length} 人</strong><span>請排除休息、未登錄與已退場者</span></div><div class="today-availability-names">${pickedToday.length?pickedToday.map(h=>`<span class="chip">${esc(h.name)}</span>`).join(''):'<span>未勾選候選，僅比較續打</span>'}</div>`;
   const shown = list.filter((h) => !q || h.name.includes(q));
   const posRank = (h) => { const p = Object.keys(h.positions || {})[0]; const i = POS_ORDER.indexOf(p); return i < 0 ? 99 : i; };
   const teamKey=$('#myTeam').value;
@@ -575,9 +577,10 @@ function pitcherMatchupChart(details, sharedScale, currentDetails = []) {
     if(Number.isFinite(value))baseline.set(d.batter,baseline.has(d.batter)?null:value);
   }
   const scale=Math.max(.01,sharedScale||0,...data.map(d=>Math.abs(d.value)),...data.map(d=>baseline.get(d.name)).filter(Number.isFinite).map(Math.abs));
-  return `<div class="next-matchup-chart"><p class="mut">逐棒失分價值 · 分（越低越好）</p><div class="matchup-legend"><span><i></i>候選</span><span><b></b>現任</span></div>${data.map(d=>{
+  return `<div class="next-matchup-chart"><p class="mut">逐棒失分價值 · 分（越低越好）</p><div class="matchup-legend"><span><i class="favorable"></i>低於現任</span><span><i class="unfavorable"></i>高於現任</span><span><b></b>現任</span></div>${data.map(d=>{
     const width=Math.abs(d.value)/scale*48,base=baseline.get(d.name),hasBase=Number.isFinite(base);
-    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i style="left:${d.value>=0?50:50-width}%;width:${width}%"></i>${hasBase?`<b class="matchup-baseline" style="left:${50+base/scale*48}%" title="現任 ${sign(base,3)} 分"></b>`:''}</div><span class="num"><strong>${sign(d.value,3)}</strong><small>現任 ${hasBase?sign(base,3):'未提供'}</small></span></div>`;
+    const tone=hasBase?(d.value<base?'favorable':d.value>base?'unfavorable':'neutral'):'neutral';
+    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.value>=0?50:50-width}%;width:${width}%"></i>${hasBase?`<b class="matchup-baseline" style="left:${50+base/scale*48}%" title="現任 ${sign(base,3)} 分"></b>`:''}</div><span class="num"><strong class="${tone}">${sign(d.value,3)}</strong><small>現任 ${hasBase?sign(base,3):'未提供'}</small></span></div>`;
   }).join('')}<small class="mut">中線為 0；候選共用尺度。含疲勞，非實際失分。</small></div>`;
 }
 function comparisonPanel(R, selected, tab) {
@@ -612,7 +615,7 @@ function comparisonPanel(R, selected, tab) {
     const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>Math.abs(d.runs+d.fatigue))).filter(Number.isFinite));
     const matchupChart = pen ? pitcherMatchupChart(x['對決明細'],matchupScale,current['對決明細']) : '';
     return `<article class="compare-card"><h3>${esc(x[nameKey])}<span class="chip">${status}</span></h3>
-      <p class="compare-delta num">相對現任 ${sign(delta)} 百分點</p>${reason}${matchupChart}
+      <p class="compare-delta num ${cls(delta,.005)}">相對現任 ${sign(delta)} 百分點</p>${reason}${matchupChart}
       <details><summary>詳細拆解</summary>${decomposition}${pen?`<p class="num">失分價值：候選 ${x['預估失分'].toFixed(3)}／現任 ${current['預估失分'].toFixed(3)}</p>`:''}<p>${direction}；${pen ? '以下為疲勞調整前的合計' : '以下為每打席得分值'}。</p>
       <p class="num">階層式差值 ${Number.isFinite(hDelta) ? sign(hDelta,3) : '未匯出'}；逐球模型差值 ${gDelta == null ? '未使用／未匯出' : sign(gDelta,3)}</p>${pen ? '<p>這是得分期望變化的價值，可為負值；不是實際失分數。單位為分。</p>' : ''}
       <p>候選 ${Math.round(x['樣本球數'])} 球；現任 ${Math.round(current['樣本球數'])} 球。${!pen ? `投手對此側 ${x['投手對此側樣本'] ?? '未記錄'} 球。` : ''}比較池 ${x['比較池人數'] ?? '未記錄'} 人。</p>
@@ -877,7 +880,7 @@ async function showDetail(batter, pitcher, tr, updateComparison = true) {
       <span class="hint">${d.bhand === "L" ? "左" : "右"}打 vs ${d.phand === "L" ? "左" : "右"}投</span></div><div class="card-b">
       <div class="heat"><div></div><div class="hh">中高區</div><div class="hh">低球</div>
         ${GROUPS.map((g) => `<div class="rl">${g}</div>${tile(g + "高中")}${tile(g + "低")}`).join("")}</div>
-      <p class="mut" style="font-size:12px;margin:10px 0 0">配球：比例；揮空差值：百分點（相對自身平均）。</p>
+      <p class="detail-caption mut">配球：比例；揮空差值：百分點（相對自身平均）。</p>
       <p class="detail-unit">能力拆解 · 分／打席</p><div class="breakdown">
         <div><small>本身能力</small><b class="num ${cls(d.skill, 0.002)}">${sign(d.skill, 3)}</b></div>
         <div><small>球路適性</small><b class="num ${cls(d.fit, 0.002)}">${sign(d.fit, 3)}</b></div>
