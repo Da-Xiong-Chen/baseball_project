@@ -22,3 +22,7 @@
 
 ![手機分類排列](polish-bench-mobile.png)
 ![桌面結果](polish-desktop.png)
+
+## 動畫速度更新
+
+依使用者最新要求，所有操作過渡與進場動畫共用 `--motion-duration: 200ms`。瀏覽器實測滑動底板、按鈕、分類箭頭及主題圖示的計算時間均為 0.2s；JavaScript 48／48 測試通過。載入中的持續旋轉指示維持原有週期。
