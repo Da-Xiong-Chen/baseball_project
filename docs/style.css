@@ -720,3 +720,8 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 #detail .heat .k { font-size:var(--font-subtitle); }
 #detail .breakdown b { font-size:var(--font-title); }
 #detail .detail-caption { margin:10px 0 0; }
+.pitcher-group-status:empty { display:none; }
+/* Match existing mobile form text instead of shrinking specific dropdowns. */
+@media(max-width:600px) {
+  .next-batter select,.pc-card select { font-size:16px; }
+}

@@ -75,7 +75,7 @@
       const selected=[...effective()],count=selected.length, applied=session.applied;
       q('.today-availability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>請排除休息、未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.map(name=>`<span class="chip">${esc(name)}</span>`).join(''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
       const same=applied&&equal(effective(),new Set(applied.members.filter(n=>n!==current())));
-      status.textContent=message||state.error||(applied?applied.name+' · '+(same?'已套用':'已微調')+' · ':'')+'今日候選 '+count+' 人'+(!count?'，目前只評估續投':'');
+      status.textContent=message||state.error||(applied?applied.name+' · '+(same?'已套用':'已微調'):'');
     }
     function updateDraft() {
       session.dirty=[...session.drafts].some(([name,set])=>!equal(set,new Set(groups.find(g=>g.name===name).members)));
@@ -105,7 +105,7 @@
       const {selected,missing}=membership(group(),boxes().map(i=>i.value));
       if(!selected.length){feedback('此組沒有收錄的可選投手；請編輯成員。');return;}
       const chosen=new Set(selected);boxes().forEach(i=>{i.checked=chosen.has(i.value);});
-      session.applied={name:select.value,members:selected};changed();feedback(missing.length?'已套用 '+select.value+'；'+missing.length+' 人未收錄 · 今日候選 '+effective().size+' 人':'');
+      session.applied={name:select.value,members:selected};changed();feedback(missing.length?'已套用 '+select.value+'；'+missing.length+' 人未收錄':'');
     };
     const old=state.legacy.filter(g=>!names.includes(g.name));
     if(old.length){q('.legacy-import').classList.remove('hidden');old.forEach((g,i)=>q('.legacy-import select').add(new Option(g.name,String(i))));q('.legacy-import select').onchange=e=>{if(e.target.value==='')return;select.value=names[2];session.selected=names[2];session.drafts.set(names[2],new Set(old[Number(e.target.value)].members));choose();};}
