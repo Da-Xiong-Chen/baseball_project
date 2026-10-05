@@ -818,3 +818,6 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
   .candidate-chart-key span:first-child,.candidate-chart-key span:last-child { display:block; }
   .candidate-chart-key span:last-child { text-align:right; }
 }
+
+/* Search is always directly below the selected-roster summary. */
+#benchFilter,#penFilter { margin:0 0 10px; }
