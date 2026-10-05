@@ -821,3 +821,8 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 
 /* Search is always directly below the selected-roster summary. */
 #benchFilter,#penFilter { margin:0 0 10px; }
+
+.eligibility-note { margin:10px 16px; color:var(--muted); font-size:var(--font-meta); }
+.fielding-label { display:block; font-size:var(--font-label); }
+.def > span > span,.compare-card .fielding-label + span { display:block; }
+#extraInningHint,.pitch-input-limit { font-size:var(--font-meta); line-height:1.6; }

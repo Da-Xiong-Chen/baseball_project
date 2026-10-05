@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261005-search-aligned"></script>
-<link rel="stylesheet" href="style.css?v=20261005-search-aligned">
+<script src="theme.js?v=20261005-baseball-rules"></script>
+<link rel="stylesheet" href="style.css?v=20261005-baseball-rules">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -89,6 +89,7 @@
             <div><label class="f" for="oppScore">對手得分</label><div class="score-stepper"><button type="button" data-score="oppScore" data-delta="-1" aria-label="對手減一分">−</button><input type="number" id="oppScore" min="0" step="1" value="3"><button type="button" data-score="oppScore" data-delta="1" aria-label="對手加一分">+</button></div></div>
           </div>
 
+          <p id="extraInningHint" class="mut hidden">2024–2025 一軍例行賽：首次進入延長局預設二壘有人，請依實際打席調整；最多 12 局。</p>
           <!-- 進攻 -->
           <div id="offenseFields">
             <div><label class="f" for="oppPitcher">對方投手</label><select id="oppPitcher"></select></div>
@@ -113,7 +114,7 @@
               <div><label class="f" for="pitchCount">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
               <div><label class="f">本場角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
             </div>
-            <p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
+            <p class="mut pitch-input-limit">工具球數範圍 0–160；不是規則上限。</p><p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
               <div class="next-batters"><div class="next-batter"><label for="nb1">第 1 棒</label><select id="nb1" aria-label="接下來第一棒"></select><span class="next-hand" data-next-hand="nb1"></span></div><div class="next-batter"><label for="nb2">第 2 棒</label><select id="nb2" aria-label="接下來第二棒"></select><span class="next-hand" data-next-hand="nb2"></span></div><div class="next-batter"><label for="nb3">第 3 棒</label><select id="nb3" aria-label="接下來第三棒"></select><span class="next-hand" data-next-hand="nb3"></span></div></div>
@@ -168,9 +169,9 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261005-search-aligned"></script>
-<script src="pitch-change.js?v=20261005-search-aligned"></script>
-<script src="pitcher-groups.js?v=20261005-search-aligned"></script>
-<script src="app.js?v=20261005-search-aligned"></script>
+<script src="engine.js?v=20261005-baseball-rules"></script>
+<script src="pitch-change.js?v=20261005-baseball-rules"></script>
+<script src="pitcher-groups.js?v=20261005-baseball-rules"></script>
+<script src="app.js?v=20261005-baseball-rules"></script>
 </body>
 </html>

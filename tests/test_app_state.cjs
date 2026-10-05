@@ -241,7 +241,8 @@ test('extra inning selection presets only second base and never changes outs',()
  const f=fixture();f.eval('renderState=()=>{};S.mode="custom";S.inning=9;S.bases=5;S.outs=2;changeInning(1);');
  assert.equal(f.eval('S.inning'),10);assert.equal(f.eval('S.bases'),2);assert.equal(f.eval('S.outs'),2);
  f.eval('S.inning=12;S.bases=0;changeInning(1);');assert.equal(f.eval('S.bases'),0);
- f.eval('changeInning(-1)');assert.equal(f.eval('S.bases'),2);
+ f.eval('changeInning(-1)');assert.equal(f.eval('S.bases'),0);
+ f.eval('S.inning=10;S.bases=5;changeInning(1);');assert.equal(f.eval('S.bases'),5);assert.equal(f.eval('S.outs'),2);
  f.eval('S.mode="replay";S.inning=9;S.bases=4;changeInning(1);');assert.equal(f.eval('S.bases'),4);
 });
 test('same effective input and group editing retain the result; changed input invalidates it',()=>{
@@ -394,4 +395,13 @@ test('hitter primary assessment uses incumbent difference and preserves league v
  assert.match(html,/勝率變化（相對現任）/);assert.match(html,/相對聯盟平均/);
  const values=[...html.matchAll(/<td class="evaluation-value">([\s\S]*?)<\/td>/g)].map(m=>m[1]);
  assert.match(values[0],/基準/);assert.match(values[1],/\+0.20 百分點/);assert.doesNotMatch(values.join(''),/−0.30|−0.50/);
+});
+
+
+test('fielding guidance retains cover cost, catcher reserve warning and uncertain status',()=>{
+ const f=fixture();f.context.row={守備:'warn',守備說明:'需由 A 接守捕手（再消耗 1 名板凳）；之後板凳已無備用捕手'};
+ const html=f.eval('fieldingMessage(row)');assert.match(html,/另需接守人選/);assert.match(html,/A · 捕手（另需 1 人）/);assert.match(html,/無備用捕手/);
+ assert.match(f.eval('fieldingMessage({守備:"ok",守備說明:"B 接任指定打擊"})'),/承接原 DH 棒次/);
+ assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/守位待確認/);
+ assert.doesNotMatch(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/推估可接守/);
 });

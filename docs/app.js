@@ -49,7 +49,8 @@ function clearValidErrors() {
 function changeInning(delta) {
   const next=Math.max(1,Math.min(12,S.inning+delta));
   if(next===S.inning)return;
-  S.inning=next;if(S.mode==='custom'&&next>=10)S.bases=2;renderState();
+  const enteringExtras=S.inning<10&&next>=10;
+  S.inning=next;if(S.mode==='custom'&&enteringExtras)S.bases=2;renderState();
 }
 let rosterGeneration = 0, gamesGeneration = 0, gameGeneration = 0, runGeneration = 0;
 function clearResult() {
@@ -265,6 +266,7 @@ function renderState() {
   $$("#halfSeg button").forEach((b) => b.classList.toggle("on", b.dataset.half === S.half));
   $$("#outs button").forEach((b) => b.classList.toggle("on", +b.dataset.o <= S.outs));
   $$("#diamond .base").forEach((b) => b.classList.toggle("on", (S.bases & +b.dataset.b) > 0));
+  $('#extraInningHint').classList.toggle('hidden',S.inning<10);
   syncPressed();
 }
 function syncPressed() {
@@ -387,7 +389,7 @@ function renderBench(reset) {
   if (reset === true) S.bench = new Set(list.filter(h => !regulars.has(h.name)).map(h => h.name));
   S.bench.delete(due);
   const pickedToday=list.filter(h=>S.bench.has(h.name));
-  $('#benchAvailability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${pickedToday.length} 人</strong><span>請排除休息、未登錄與已退場者</span></div><div class="today-availability-names">${availabilityNames(pickedToday.map(h=>h.name),'續打',$('#benchAvailability').querySelector?.('.availability-more')?.open)}</div>`;
+  $('#benchAvailability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${pickedToday.length} 人</strong><span>名單需確認；排除未登錄與已退場者</span></div><div class="today-availability-names">${availabilityNames(pickedToday.map(h=>h.name),'續打',$('#benchAvailability').querySelector?.('.availability-more')?.open)}</div>`;
   const shown = list.filter((h) => !q || h.name.includes(q));
   const posRank = (h) => { const p = Object.keys(h.positions || {})[0]; const i = POS_ORDER.indexOf(p); return i < 0 ? 99 : i; };
   const teamKey=$('#myTeam').value;
@@ -427,7 +429,7 @@ async function evaluateCustom() {
   for (const id of ['myScore','oppScore', ...(S.view === 'defense' ? ['pitchCount'] : [])]) {
     const input = $('#' + id);
     if (input.value === '' || !input.checkValidity() || !Number.isInteger(Number(input.value))) {
-      showFieldError(id,id==='pitchCount'?'本場球數須為 0–160 的整數。':(id==='myScore'?'我方':'對手')+'得分須為非負整數。');return;
+      showFieldError(id,id==='pitchCount'?'工具接受 0–160 球的整數；160 並非規則上限。':(id==='myScore'?'我方':'對手')+'得分須為非負整數。');return;
     }
     input.removeAttribute('aria-invalid');
   }
@@ -627,7 +629,14 @@ function hitterComponentChart(candidate, current, rows) {
   return `<div class="compare-values"><div class="hitter-component-chart">${valueComparisonChart(data,scale,'相對現任得分優勢 · 分／打席',true,'僅拆解階層式估計。')}</div></div>`;
 }
 function compactFielding(text) {
-  return String(text||'').replace(/^需由 (.+) 接守(.+)（再消耗 1 名板凳）$/,'接守：$1 · $2（另需 1 人）').replace(/^換下後板凳無人可守/,'無人接守').replace(/^.+ 可直接接守/,'可接守');
+  return String(text||'').replace(/^需由 (.+?) 接守(.+?)（再消耗 1 名板凳）/,'接守：$1 · $2（另需 1 人）').replace(/^換下後板凳無人可守/,'無人接守').replace(/^.+? 可直接接守/,'可接守');
+}
+function fieldingMessage(x, current=false) {
+  const text=x['守備說明']||'守位資料待確認';
+  if(current)return esc(text);
+  const dh=text.includes('接任指定打擊');
+  const label=dh?'承接原 DH 棒次':x['守備']==='bad'?'無人接守':text.startsWith('需由 ')?'另需接守人選':text.includes('可直接接守')?'推估可接守':'守位待確認';
+  return `<strong class="fielding-label">${label}</strong><span>${esc(compactFielding(text))}</span>${dh?'<span class="mut">改守備或涉及投手打擊時，請確認 DH 存續。</span>':''}`;
 }
 function comparisonPanel(R, selected, tab) {
   if (!R) return '';
@@ -655,7 +664,7 @@ function comparisonPanel(R, selected, tab) {
     const status = low ? '資料有限' : disagreement ? '模型分歧' : Math.abs(delta) < 0.005 ? '難以區分' : '';
     const reason = pen
       ? (x['疲勞'] && x['疲勞'] !== '-' ? `<p class="compare-warning">${esc(x['疲勞'])}</p>` : '')
-      : `<p class="${x['守備']==='bad'||x['守備']==='warn'?'compare-warning':'mut'}">${esc(compactFielding(x['守備說明']))}</p>`;
+      : `<p class="${x['守備']==='bad'||x['守備']==='warn'?'compare-warning':'mut'}">${fieldingMessage(x)}</p>`;
     const decomposition=pen?'':hitterComponentChart(x,current,rows);
     const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>{const bases=(current['對決明細']||[]).filter(b=>b.batter===d.batter);return bases.length===1?Math.abs((d.runs+d.fatigue)-(bases[0].runs+bases[0].fatigue)):NaN;})).filter(Number.isFinite));
     const matchupChart = pen ? pitcherMatchupChart(x['對決明細'],matchupScale,current['對決明細']) : '';
@@ -776,10 +785,11 @@ function renderResult(preserveTabs = false) {
   html += `<div class="card evaluation-card" id="evaluationSection" tabindex="-1">`;
   if (showTabs) html += `<div class="tabs"><button data-t="ph" class="${tab === "ph" ? "on" : ""}">代打評估（進攻方）</button><button data-t="pen" class="${tab === "pen" ? "on" : ""}">換投評估（防守方）</button></div>`;
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? "" : ""}</span></div>`;
+  html += `<p class="eligibility-note">${R.view==='replay'?'名單與守位為歷史推估':'勾選名單尚需確認登錄與退場狀態'}；評估結果不代表換人資格已驗證。</p>`;
   html += `<nav class="evaluation-nav" aria-label="評估結果導航"><a class="link" href="#candidateCompare">${uiIcon("compare")}比較已選球員 ↓</a><span class="mut">最多 4 人</span></nav><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div id="candidateCompare" tabindex="-1">${comparisonPanel(R,null,activeTab)}</div><div id="pitchArsenal">${mixCard(R)}</div>`;
   html += `<div class="detail-grid"><div id="pitchChange"></div><div id="detail"></div></div>`;
-  html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手、換局時已上丘投手須符合最低投球義務及例外規定；接下來三棒是評估範圍，不是換投規則。</li><li>2024–2025 一軍例行賽延長局最多 12 局；突破僵局的二壘預設可按實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/" target="_blank" rel="noopener noreferrer">CPBL 官方規則入口（官網頁尾）</a></details></div>`;
+  html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手、換局時已上丘投手須符合最低投球義務及例外規定；接下來三棒是評估範圍，不是換投規則。</li><li>2024–2025 一軍例行賽延長局最多 12 局；突破僵局的二壘預設可按實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/files/file_pool/1/0p065549820043528193/2025%E6%A3%92%E7%90%83%E8%A6%8F%E5%89%87%28%E5%AE%98%E7%B6%B2%E7%94%A8%29.pdf" target="_blank" rel="noopener noreferrer">CPBL 官方棒球規則（2025）</a></details></div>`;
   $("#resultBody").innerHTML = html;
   if (retainedTabs) {
     $('#resultBody .tabs').replaceWith(retainedTabs);
@@ -850,7 +860,7 @@ function phTable(R) {
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div>${mobileRowDetails(x,false)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比较池百分位；截止日之前達門檻的打者，早季回退前一季`)}</td>
       <td class="evaluation-value"><span class="mobile-value-label">相對現任</span><div class="vcell"><span class="vnum num ${cls(cur?0:x['相對現任'],.02)}">${cur?'基準':sign(x['相對現任'])+' 百分點'}</span>${dbar(cur?0:x['相對現任'],0,scale)}</div></td>
-      <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${esc(x["守備說明"])}</span></div></td>
+      <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>
     </tr>`;
   }).join("");
   return `<div class="card-b" style="padding-bottom:0">${SCORE_LEGEND}</div><table class="t evaluation-table"><thead><tr><th>球員</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>`;
@@ -869,7 +879,7 @@ function penTable(R) {
       <td class="evaluation-value"><span class="mobile-value-label">${cur?'現任基準 · 0 百分點':'相對現任'}</span><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
       <td class="evaluation-warning">${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
   }).join("");
-  return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">對上接下來 ${R.bullpen.next.length} 棒：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${SCORE_LEGEND}</div></div>
+  return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">比較接下來 ${R.bullpen.next.length} 棒 · 未模擬換局與後續調度<br>打者：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${SCORE_LEGEND}</div></div>
     <table class="t evaluation-table"><caption class="sr-only">固定三打席比較，未模擬換局與後續調度。</caption><thead><tr><th>投手</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>疲勞／警示</th></tr></thead><tbody>${body}</tbody></table>`;
 }
 
