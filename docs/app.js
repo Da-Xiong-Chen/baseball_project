@@ -320,7 +320,7 @@ function renderPenVisibility(searching=false) {
   let count=0;
   $$('#penList label').forEach(label=>{const name=label.querySelector('input').value;label.hidden=!!query&&!name.includes(query);if(!label.hidden)count++;});
   if(searching&&query)list.hidden=false;
-  const button=$('#penToggleAll');button.textContent=list.hidden?'全部展開':'全部收起';button.setAttribute('aria-expanded',String(!list.hidden));
+  const button=$('#penToggleAll');button.innerHTML=uiIcon(list.hidden?'expand':'collapse')+(list.hidden?'全部展開':'全部收起');button.setAttribute('aria-expanded',String(!list.hidden));
   button.disabled=!!query&&!count;
   $('#penSearchStatus').textContent=query&&!count?'沒有符合的投手；搜尋不會清除已選名單。':'';
   $('#penSearchStatus').classList.toggle('hidden',!query||!!count);
@@ -357,7 +357,7 @@ function syncNextBatters() {
 function updateBenchToggle() {
   const buttons=$$('#benchList [data-expand]:not(:disabled)'),control=$('#benchToggleAll');
   const all=buttons.length>0&&buttons.every(b=>b.getAttribute('aria-expanded')==='true'),q=$('#benchFilter').value.trim();
-  control.textContent=q?(all?'收起搜尋結果':'展開搜尋結果'):(all?'全部收起':'全部展開');
+  control.innerHTML=uiIcon(all?'collapse':'expand')+(q?(all?'收起搜尋結果':'展開搜尋結果'):(all?'全部收起':'全部展開'));
   control.disabled=!buttons.length;
 }
 function toggleBenchGroups() {

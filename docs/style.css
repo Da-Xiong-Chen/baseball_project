@@ -798,3 +798,23 @@ label.f,.out-setting .f { font-size:var(--font-label); line-height:1.5; }
 @media(max-width:600px) {
   .next-batter select,.pc-card select { font-size:16px; }
 }
+
+/* Center icon and label together; classification headers remain left-aligned. */
+.link,.btn-primary,.seg button,.tabs button,.mix-switch button,.compare-chips button {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  text-align:center; line-height:1.5;
+}
+button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
+.seg button,.tabs button,.mix-switch button { white-space:normal; overflow-wrap:anywhere; }
+.bench-group-name,.next-matchup-row > span:first-child { min-width:0; overflow-wrap:anywhere; }
+.pitcher-group-actions > button { flex-shrink:0; }
+@media(max-width:600px) {
+  #viewSeg button { padding:8px 6px; }
+  #viewSeg .ui-icon { margin-right:0; }
+}
+/* Direction labels are essential on mobile, too; give them their own full row. */
+@media(max-width:400px) {
+  .candidate-chart-key { margin:0 0 10px; display:grid; grid-template-columns:1fr auto 1fr; gap:8px; white-space:normal; }
+  .candidate-chart-key span:first-child,.candidate-chart-key span:last-child { display:block; }
+  .candidate-chart-key span:last-child { text-align:right; }
+}
