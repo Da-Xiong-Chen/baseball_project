@@ -414,3 +414,22 @@ test('2025 number aliases use team-specific exact strings, preserve 00, and keep
  }
  f.eval('playerNumbers2025={}');assert.equal(f.eval('matchesPlayerSearch("Name","A","Nam")'),true);assert.equal(f.eval('matchesPlayerSearch("Name","A","1")'),false);
 });
+
+test('every exported roster number searches exactly all matching 2025 team members',()=>{
+ const aliases=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/player-numbers-2025.json'),'utf8'));
+ const model=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model.json'),'utf8'));
+ assert.equal(aliases.season,2025);
+ const f=fixture();f.context.aliases=aliases.teams;f.eval('playerNumbers2025=aliases');
+ for(const [team,roster] of Object.entries(model.rosters)) {
+  for(const kind of ['hitters','pitchers']) {
+   const players=roster[kind];
+   for(const player of players) {
+    const number=aliases.teams[team][player.name];assert.match(number,/^[0-9]+$/);
+    const expected=players.filter(p=>aliases.teams[team][p.name]===number).map(p=>p.name);
+    f.context.players=players;f.context.team=team;f.context.number=number;
+    const actual=f.eval('players.filter(p=>matchesPlayerSearch(p.name,team,number)).map(p=>p.name)');
+    assert.deepEqual(Array.from(actual),expected);
+   }
+  }
+ }
+});
