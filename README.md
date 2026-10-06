@@ -36,7 +36,7 @@ python server.py              # 或雙擊「啟動系統.bat」
 ```
 
 2025 守位資料（`data/cpbl/positions_2025.csv`，欄位 `ID,Name,Team Name,POS,G`）由中職官網「全記錄查詢」依守備位置篩選整理，
-屬中職官網內容，**不隨 repo 公開**；沒有此檔時使用可取得的 2023–2024 守位紀錄。歷史回放不使用當季整季守位；缺少守位紀錄時不能當成已確認可守。守位是經驗門檻與分配推估，不是實際當場守位或守備品質。
+隨 repo 提供，著作權屬中華職棒、僅供本競賽分析使用（來源見 [資料來源.md](資料來源.md)）；沒有此檔時使用可取得的 2023–2024 守位紀錄。歷史回放不使用當季整季守位；缺少守位紀錄時不能當成已確認可守。守位是經驗門檻與分配推估，不是實際當場守位或守備品質。
 
 啟動 `http://127.0.0.1:8011/`（PowerShell）：
 
@@ -248,7 +248,7 @@ XGBoost 最佳，顯著優於 scikit-learn 梯度提升樹（每球 Log Loss 低
 |---|---|---|
 | 逐球、打席、WPA、RE24 | [Rebas Open Data](https://github.com/rebas-tw/rebas.tw-open-data) 2024、2025 | ODC-By v1.0 |
 | 2022–2024 守位出賽 | [ldkrsi/cpbl-opendata](https://github.com/ldkrsi/cpbl-opendata) | MIT（`data/ldkrsi/LICENSE`） |
-| 2025 守位出賽 | 中華職棒官網「全記錄查詢」依守備位置篩選（本機 `data/cpbl/positions_2025.csv`，不公開） | 僅供本競賽分析，著作權歸中華職棒；線上版只含推導出的「可守位置」 |
+| 2025 守位出賽 | 中華職棒官網「全記錄查詢」依守備位置篩選（`data/cpbl/positions_2025.csv`） | 僅供本競賽分析，著作權歸中華職棒 |
 
 ## 已知限制
 

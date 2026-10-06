@@ -41,7 +41,7 @@ def main():
     for y in (2022, 2023, 2024):
         open(os.path.join(out, f"fieldings_{y}.csv"), "wb").write(fetch(f"{LDKRSI}CPBL/fieldings/{y}.csv"))
     open(os.path.join(out, "LICENSE"), "wb").write(fetch(LDKRSI + "LICENSE"))
-    print("完成。2025 守位資料（data/cpbl/positions_2025.csv）需自行由中職官網整理，格式見 README。")
+    print("完成。2025 守位資料（data/cpbl/positions_2025.csv）已隨 repo 提供，來源見「資料來源.md」。")
 
 
 if __name__ == "__main__":
