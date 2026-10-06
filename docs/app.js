@@ -7,6 +7,14 @@ const POS = { C: "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", SS: "
 const GROUPS = ["速球", "滑卡", "曲球", "低落"];
 const GROUP_COLOR = { 速球: "#d9534f", 滑卡: "#e0a03a", 曲球: "#4a7fd0", 低落: "#3f9a6b" };
 let officialPlayers = {};
+let playerNumbers2025 = {};
+function matchesPlayerSearch(name,team,query) {
+  const q=String(query||'').normalize('NFKC').trim();
+  if(!q)return true;
+  const number=q.replace(/^#/, '').replace(/號$/, '').trim();
+  if(/^\d+$/.test(number))return playerNumbers2025[team]?.[name]===number;
+  return String(name).normalize('NFKC').includes(q);
+}
 function officialPlayerLink(name) {
   const ids = officialPlayers[name];
   const direct = Array.isArray(ids) && ids.length === 1 && /^\d{10}$/.test(ids[0]);
@@ -150,6 +158,7 @@ const posChips = (p) => Object.keys(p || {}).slice(0, 3).map((k) => `<span class
 
 /* ---------------- 初始化 ---------------- */
 async function init() {
+  try { const numbers=await json('data/player-numbers-2025.json'); if(numbers.season===2025&&numbers.teams)playerNumbers2025=numbers.teams; } catch { /* Name search remains usable without number aliases. */ }
   try { officialPlayers = (await json('data/cpbl-players.json')).players || {}; } catch { /* Search remains available when the mapping cannot load. */ }
   try {
     const r = await fetchTimed("api/meta");
@@ -320,7 +329,7 @@ async function refreshCustom() {
 function renderPenVisibility(searching=false) {
   const query=$('#penFilter').value.trim(),list=$('#penList');
   let count=0;
-  $$('#penList label').forEach(label=>{const name=label.querySelector('input').value;label.hidden=!!query&&!name.includes(query);if(!label.hidden)count++;});
+  $$('#penList label').forEach(label=>{const name=label.querySelector('input').value;label.hidden=!!query&&!matchesPlayerSearch(name,$('#myTeam').value,query);if(!label.hidden)count++;});
   if(searching&&query)list.hidden=false;
   const button=$('#penToggleAll');button.innerHTML=uiIcon(list.hidden?'expand':'collapse')+(list.hidden?'全部展開':'全部收起');button.setAttribute('aria-expanded',String(!list.hidden));
   button.disabled=!!query&&!count;
@@ -390,7 +399,7 @@ function renderBench(reset) {
   S.bench.delete(due);
   const pickedToday=list.filter(h=>S.bench.has(h.name));
   $('#benchAvailability').innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${pickedToday.length} 人</strong><span>名單需確認；排除未登錄與已退場者</span></div><div class="today-availability-names">${availabilityNames(pickedToday.map(h=>h.name),'續打',$('#benchAvailability').querySelector?.('.availability-more')?.open)}</div>`;
-  const shown = list.filter((h) => !q || h.name.includes(q));
+  const shown = list.filter((h) => matchesPlayerSearch(h.name,$('#myTeam').value,q));
   const posRank = (h) => { const p = Object.keys(h.positions || {})[0]; const i = POS_ORDER.indexOf(p); return i < 0 ? 99 : i; };
   const teamKey=$('#myTeam').value;
   if(!benchOpen.has(teamKey))benchOpen.set(teamKey,new Set());

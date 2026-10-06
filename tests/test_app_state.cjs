@@ -405,3 +405,12 @@ test('fielding guidance retains cover cost, catcher reserve warning and uncertai
  assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/守位待確認/);
  assert.doesNotMatch(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/推估可接守/);
 });
+
+
+test('2025 number aliases use team-specific exact strings, preserve 00, and keep names searchable',()=>{
+ const f=fixture();f.eval('playerNumbers2025={A:{Zero:"0",Double:"00",One:"1",Eleven:"11"},B:{Other:"1"}}');
+ for(const [name,team,q,expected] of [['One','A','1',true],['Eleven','A','1',false],['Zero','A','00',false],['Double','A','00',true],['Double','A','００',true],['One','A','#1',true],['One','A','1號',true],['Other','A','1',false],['Other','B','1',true],['Missing','A','99',false],['Missing','A','Miss',true]]) {
+  assert.equal(f.eval(`matchesPlayerSearch(${JSON.stringify(name)},${JSON.stringify(team)},${JSON.stringify(q)})`),expected);
+ }
+ f.eval('playerNumbers2025={}');assert.equal(f.eval('matchesPlayerSearch("Name","A","Nam")'),true);assert.equal(f.eval('matchesPlayerSearch("Name","A","1")'),false);
+});
