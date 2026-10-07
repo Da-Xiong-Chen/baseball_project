@@ -862,3 +862,9 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .lineup-page button:disabled { opacity:.45;cursor:default; }
 .lineup-page .card-h h3 { font-size:16px;margin:0; }.lineup-page .card-h{justify-content:space-between;}.lineup-tools label{white-space:nowrap;flex-shrink:0;}.lineup-tools select{width:auto;min-width:140px;}.lineup-layout .card{margin:0;}.lineup-name span{flex-shrink:0;}.lineup-field button{border-radius:16px;}.lineup-page .lineup-move button{border-radius:9px;}
 @media(prefers-reduced-motion:reduce){.feature-nav button,.lineup-page button,.lineup-summary button{transition:none;}}
+
+.lineup-swap-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0}.lineup-swap-tools span{flex:1;min-width:180px}.swap-selected{outline:3px solid var(--accent,#568cff);outline-offset:3px}.swap-selected::after{content:'✓';position:absolute;right:5px;top:3px;font-size:14px}.lineup-name.swap-selected{position:relative}.lineup-name,.lineup-field button{transition:background-color 200ms,outline-color 200ms,box-shadow 200ms}.lineup-name.swap-selected{padding-right:28px}
+
+.lineup-field-card .card-h,.lineup-order-card .card-h{flex-wrap:wrap;gap:8px}.lineup-field-card .card-h button,.lineup-order-card .card-h button{min-height:44px}.swap-updated{animation:lineup-swap-flash 200ms ease-out}@keyframes lineup-swap-flash{from{box-shadow:0 0 0 3px var(--accent,#568cff)}to{box-shadow:0 0 0 0 transparent}}@media(prefers-reduced-motion:reduce){.swap-updated{animation:none}}
+
+#lineupFieldHint,#lineupOrderHint{flex-basis:100%;overflow-wrap:anywhere;line-height:1.5}

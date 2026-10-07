@@ -187,6 +187,7 @@ async function init() {
 function ownLineup() { if(typeof LineupBoard==='undefined')return null;const name=$('#myTeam').value,c=LineupBoard.current(name),r=S.roster[name];return c&&r&&LineupBoard.validate(c,r).length===0?c:null; }
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name); }
 async function showFeaturePage(page) {
+  if(typeof LineupBoard!=='undefined')LineupBoard.cancelSwap();
   const lineup=page==='lineup';
   $('#lineupPage').hidden=!lineup;$('#evaluationPage').hidden=lineup;
   $('.matchday-intro').hidden=lineup;$('.mobile-jump').hidden=lineup;$('#modeSeg').hidden=lineup;
