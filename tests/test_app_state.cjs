@@ -433,3 +433,13 @@ test('every exported roster number searches exactly all matching 2025 team membe
   }
  }
 });
+
+test('confirmed own lineup excludes field players and pitcher from bench without affecting reserves',()=>{
+ const f=fixture();f.context.LineupBoard={current:()=>({slots:[{name:'Starter1',pos:'C'},{name:'Starter2',pos:'DH'}],pitcher:'P'}),validate:()=>[],unavailable:()=>['Retired']};
+ f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');
+ assert.equal(f.eval('benchEligible("Starter1")'),false);assert.equal(f.eval('benchEligible("Starter2")'),false);assert.equal(f.eval('benchEligible("Retired")'),true);assert.equal(f.eval('benchEligible("Reserve")'),true);
+ assert.equal(f.eval('benchEligible("P")'),false);
+});
+test('invalid saved lineup cannot restrict manual evaluation',()=>{
+ const f=fixture();f.context.LineupBoard={current:()=>({slots:[]}),validate:()=>['invalid'],unavailable:()=>[]};f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');assert.equal(f.eval('ownLineup()'),null);assert.equal(f.eval('benchEligible("Reserve")'),true);
+});
