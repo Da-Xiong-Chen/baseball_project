@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261007-lineup-swap-polish"></script>
-<link rel="stylesheet" href="style.css?v=20261007-lineup-swap-polish">
+<script src="theme.js?v=20261009-timing"></script>
+<link rel="stylesheet" href="style.css?v=20261009-timing">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -54,8 +54,8 @@
     <section class="card lineup-order-card" aria-labelledby="lineupOrderTitle"><div class="card-h"><h3 id="lineupOrderTitle">打擊順序</h3><button id="lineupSwapOrder" type="button" aria-pressed="false">⇄ 互換棒次</button><span id="lineupOrderHint" class="mut" role="status">↑↓ 調整棒次</span></div><div class="card-b"><div class="lineup-pitcher"><span>場上投手</span><button type="button" id="lineupPitcherPick"><strong id="lineupPitcherName">選擇投手</strong><span aria-hidden="true">⌄</span></button></div><div id="lineupRows"></div></div></section>
   </div>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>↶ 復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
-  <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" data-page="evaluation">返回評估 →</button></div>
-  <p class="mut lineup-footnote">2025 球員資料；今日可用名單仍須自行確認。配置保存在此瀏覽器。</p>
+  <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">返回評估 →</button></div>
+  <p class="mut lineup-footnote">2025 球員資料；預設名單取自各隊 2025 最後 30 場最常先發的球員，今日可用名單仍須自行確認。配置保存在此瀏覽器。</p>
   <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2025 背號…"><div id="lineupPlayerList"></div></dialog>
 </section>
 
@@ -168,6 +168,10 @@
           <div class="list" id="gameList"></div>
         </div>
       </div>
+      <div class="card" id="timingCard" hidden>
+        <div class="card-h"><h2>換人時機比對</h2><span class="hint">2025・6 局以後</span></div>
+        <div class="card-b" id="timingSummary"></div>
+      </div>
       <div class="card">
         <div class="card-h"><h2>選擇打席</h2><span class="hint">在該打席開始前做決策</span></div>
         <div class="card-b">
@@ -191,10 +195,10 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261007-lineup-swap-polish"></script>
-<script src="pitch-change.js?v=20261007-lineup-swap-polish"></script>
-<script src="pitcher-groups.js?v=20261007-lineup-swap-polish"></script>
-<script src="lineup.js?v=20261007-lineup-swap-polish"></script>
-<script src="app.js?v=20261007-lineup-swap-polish"></script>
+<script src="engine.js?v=20261009-timing"></script>
+<script src="pitch-change.js?v=20261009-timing"></script>
+<script src="pitcher-groups.js?v=20261009-timing"></script>
+<script src="lineup.js?v=20261009-timing"></script>
+<script src="app.js?v=20261009-timing"></script>
 </body>
 </html>

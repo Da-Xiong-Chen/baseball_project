@@ -868,3 +868,15 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .lineup-field-card .card-h,.lineup-order-card .card-h{flex-wrap:wrap;gap:8px}.lineup-field-card .card-h button,.lineup-order-card .card-h button{min-height:44px}.swap-updated{animation:lineup-swap-flash 200ms ease-out}@keyframes lineup-swap-flash{from{box-shadow:0 0 0 3px var(--accent,#568cff)}to{box-shadow:0 0 0 0 transparent}}@media(prefers-reduced-motion:reduce){.swap-updated{animation:none}}
 
 #lineupFieldHint,#lineupOrderHint{flex-basis:100%;overflow-wrap:anywhere;line-height:1.5}
+
+/* 換人時機比對：系統建議用外框標籤，實際調度沿用實心標籤，不靠顏色也能分辨 */
+.tag-sys { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 700; }
+#paList .item { flex-wrap: wrap; row-gap: 4px; }
+.timing-h { font-size: var(--font-label, 14px); margin: 12px 0 4px; }
+.timing-list { margin: 0; padding-left: 18px; line-height: 1.6; font-size: 13px; }
+.timing-check { margin-top: 12px; font-size: 13px; line-height: 1.6; }
+.timing-check summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+.timing-legend { margin-top: 10px; font-size: 12px; line-height: 1.8; }
+.timing-legend .chip { margin: 0 2px; }
+.actual.timing-note { border-top: 1px dashed var(--line); }
+.actual:has(+ .timing-note) { border-radius: 0; }
