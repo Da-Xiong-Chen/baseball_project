@@ -36,15 +36,17 @@ class PenTimingTests(unittest.TestCase):
 class SummaryTests(unittest.TestCase):
     def test_counts_and_stay_comparison(self):
         d = pd.DataFrame(dict(pen_gain=[2.0, 2.0, 0.1, 0.1, 3.0], pen_change=[False, False, False, False, True],
-                              ph_gain=[0.0, 1.5, None, 0.2, 0.0], is_ph=[False, True, False, False, False],
-                              RE24=[0.5, 0.3, -0.1, -0.3, 0.0]))
+                              ph_gain=[0.0, 1.5, None, 0.2, None], ph_has_bench=[True, True, True, True, False],
+                              is_ph=[False, True, False, False, False], RE24=[0.5, 0.3, -0.1, -0.3, 0.0]))
         s = tb.summarize(d, 1.0)
         self.assertEqual((s["pen"]["n"], s["pen"]["actual"], s["pen"]["suggested"], s["pen"]["both"]), (5, 1, 3, 1))
         self.assertEqual((s["pen"]["sys_only"], s["pen"]["actual_only"]), (2, 0))
         # 系統建議但續投（0.5、0.3）平均 0.4；不建議（-0.1、-0.3）平均 -0.2
         self.assertAlmostEqual(s["pen"]["stay_diff"], 0.6)
         self.assertLess(s["pen"]["stay_diff_ci"][0], s["pen"]["stay_diff"])
+        # 有板凳但全員守備不成立（ph_gain 空值）仍是決策點、視為不建議；沒有板凳的打席不算
         self.assertEqual((s["ph"]["n"], s["ph"]["actual"], s["ph"]["suggested"]), (4, 1, 1))
+        self.assertEqual(s["ph"]["stay_n_not"], 3)
 
 
 class DecisionPointTests(unittest.TestCase):

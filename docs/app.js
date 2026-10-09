@@ -565,7 +565,7 @@ function timingFor(paId) {
   const t = timingData && paId && timingData.games[paId.split('-').slice(0, 2).join('-')]?.[paId];
   if (!t) return null;
   const T = timingData.threshold;
-  return {penGain:t[0], penBest:t[1], inc:t[2], phGain:t[3], phBest:t[4], due:t[5],
+  return {penGain:t[0], penBest:t[1], inc:t[2], phGain:t[3], phBest:t[4], due:t[5], phHasBench:!!t[6],
     penSug:t[0] != null && t[0] >= T, phSug:t[3] != null && t[3] >= T};
 }
 function timingVerdict(x, higherIsWorse) {
@@ -937,7 +937,8 @@ function renderResult(preserveTabs = false) {
       const changed = tm.inc !== s.pitcher;
       html += `<div class="actual timing-note"><span class="mut">時機比對：</span>
         ${tm.penGain != null ? `<span>換投（${esc(tm.inc)} 續投 vs 牛棚）系統${tm.penSug ? `建議換上 <b>${esc(tm.penBest)}</b>（${sign(tm.penGain)} 百分點）` : '未建議'}・實際${changed ? `換上 <b>${esc(s.pitcher)}</b>` : '續投'}</span>` : ''}
-        ${tm.phGain != null ? `<span>代打 系統${tm.phSug ? `建議 <b>${esc(tm.phBest)}</b>（${sign(tm.phGain)} 百分點）` : '未建議'}・實際${a.is_ph ? '代打' : '未代打'}</span>` : ''}</div>`;
+        ${tm.phGain != null ? `<span>代打 系統${tm.phSug ? `建議 <b>${esc(tm.phBest)}</b>（${sign(tm.phGain)} 百分點）` : '未建議'}・實際${a.is_ph ? '代打' : '未代打'}</span>`
+          : tm.phHasBench ? `<span>代打 系統未建議（板凳換下後守備排不出來）・實際${a.is_ph ? '代打' : '未代打'}</span>` : ''}</div>`;
     }
   }
   html += `</div>`;

@@ -883,6 +883,8 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 
 /* ---------- 滑動效果（docs/motion.js）：位移小、時間短；減少動態效果時由上方規則全部關閉 ---------- */
 html { scroll-behavior: smooth; }
+/* 滑入時元素會暫時往旁邊位移，避免手機在這 0.2 秒內出現橫向捲動（clip 不會影響頁首固定） */
+body { overflow-x: clip; }
 /* 名單頁、進攻／防守欄位原本有較高權重的淡入動畫，滑入時需優先（減少動態效果時 JS 不會加上這兩個 class） */
 .slide-from-right { animation: slide-from-right 240ms var(--ease-ui) !important; }
 .slide-from-left { animation: slide-from-left 240ms var(--ease-ui) !important; }
