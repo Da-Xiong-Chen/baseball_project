@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261004-aligned"></script>
-<link rel="stylesheet" href="style.css?v=20261004-aligned">
+<script src="theme.js?v=20261007-lineup-swap-polish"></script>
+<link rel="stylesheet" href="style.css?v=20261007-lineup-swap-polish">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -17,6 +17,10 @@
   <symbol id="icon-compare" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M13 16V7M18 16v-8"/></symbol>
   <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/><path d="M20 13v7H4V4h11"/></symbol>
   <symbol id="icon-clear" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></symbol>
+  <symbol id="icon-expand" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16m5-12 3-3 3 3m-6 16 3 3 3-3"/></symbol>
+  <symbol id="icon-collapse" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16m5-15 3 3 3-3m-6 22 3-3 3 3"/></symbol>
+  <symbol id="icon-save" viewBox="0 0 24 24"><path d="M4 3h13l4 4v14H3V3h1Zm3 0v6h9V3M7 21v-8h10v8"/></symbol>
+  <symbol id="icon-apply" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
   <symbol id="icon-bat" viewBox="0 0 24 24"><path d="m4 20 3-3m0 0 4-3 9-9-1-1-9 9-3 4Zm-3 0 3 3"/></symbol>
   <symbol id="icon-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 5c5 4 5 10 0 14M17 5c-5 4-5 10 0 14"/></symbol>
 </defs></svg>
@@ -34,12 +38,33 @@
   </div>
 </header>
 
+<nav class="feature-nav" aria-label="功能選單">
+  <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
+  <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
+</nav>
+<section id="lineupPage" class="lineup-page" hidden aria-labelledby="lineupTitle">
+  <div class="lineup-heading"><div><p class="eyebrow">MY TEAM / LINEUP</p><h2 id="lineupTitle" tabindex="-1">我方場上名單</h2><p class="mut">安排守位與九棒，隨時調整。</p></div><div><label class="f" for="lineupTeam">配置球隊</label><select id="lineupTeam"></select></div></div>
+  <div class="lineup-tools"><span id="lineupStatus"></span></div>
+  <div class="lineup-layout">
+    <section class="card lineup-field-card" aria-label="守備配置"><div class="card-h"><h3>守備配置</h3><button id="lineupSwapField" type="button" aria-pressed="false">⇄ 互換守位</button><span id="lineupFieldHint" class="mut" role="status">點守位選球員</span></div><div class="lineup-field">
+      <svg viewBox="0 0 600 520" aria-hidden="true"><path class="field-grass" d="M300 490 20 210Q300-80 580 210Z"/><path class="field-dirt" d="m300 470-150-150 150-150 150 150Z"/><path class="field-line" d="M60 230 300 470 540 230M300 470 150 320 300 170 450 320Z"/><circle class="field-mound" cx="300" cy="350" r="16"/><path class="field-base" d="m300 464 10 5v9l-10 8-10-8v-9Z"/></svg>
+      <button type="button" data-field="LF" style="--x:19%;--y:24%"></button><button type="button" data-field="CF" style="--x:50%;--y:15%"></button><button type="button" data-field="RF" style="--x:81%;--y:24%"></button>
+      <button type="button" data-field="SS" style="--x:34%;--y:44%"></button><button type="button" data-field="2B" style="--x:66%;--y:44%"></button><button type="button" data-field="3B" style="--x:19%;--y:62%"></button><button type="button" data-field="1B" style="--x:81%;--y:62%"></button><button type="button" data-field="P" style="--x:50%;--y:66%"></button><button type="button" data-field="C" style="--x:50%;--y:89%"></button>
+    </div><div class="lineup-dh"><button type="button" data-field="DH"></button><p class="mut">DH 不占守備位置</p></div></section>
+    <section class="card lineup-order-card" aria-labelledby="lineupOrderTitle"><div class="card-h"><h3 id="lineupOrderTitle">打擊順序</h3><button id="lineupSwapOrder" type="button" aria-pressed="false">⇄ 互換棒次</button><span id="lineupOrderHint" class="mut" role="status">↑↓ 調整棒次</span></div><div class="card-b"><div class="lineup-pitcher"><span>場上投手</span><button type="button" id="lineupPitcherPick"><strong id="lineupPitcherName">選擇投手</strong><span aria-hidden="true">⌄</span></button></div><div id="lineupRows"></div></div></section>
+  </div>
+  <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>↶ 復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
+  <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" data-page="evaluation">返回評估 →</button></div>
+  <p class="mut lineup-footnote">2025 球員資料；今日可用名單仍須自行確認。配置保存在此瀏覽器。</p>
+  <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2025 背號…"><div id="lineupPlayerList"></div></dialog>
+</section>
+
 <div class="matchday-intro">
   <div><p class="eyebrow">打席之間 / MATCHUP DESK</p><h2>下一個打席，先看對決。</h2><p class="intro-note">比較代打與換投人選，確認守位，再看投手近期配球。</p></div>
   <div class="season-note"><span>資料球季</span><strong>2024–25</strong><span>歷史資料分析</span></div>
 </div>
 <nav class="mobile-jump" aria-label="頁面區域"><a href="#workspace">情境設定</a><a href="#result">查看結果 <span aria-hidden="true">↓</span></a></nav>
-<main>
+<main id="evaluationPage">
   <aside id="workspace" tabindex="-1">
     <!-- 自訂情境 -->
     <div id="customPanel">
@@ -54,6 +79,7 @@
             <div><label class="f" for="myTeam">我方球隊</label><select id="myTeam"></select></div>
             <div><label class="f" for="oppTeam">對手球隊</label><select id="oppTeam"></select></div>
           </div>
+          <div id="lineupSummary" class="lineup-summary"><span>場上名單未設定；仍可直接評估。</span><button type="button" data-page="lineup">設定名單</button></div>
           <div class="state">
             <div class="state-control">
               <label class="f">局數</label>
@@ -85,6 +111,7 @@
             <div><label class="f" for="oppScore">對手得分</label><div class="score-stepper"><button type="button" data-score="oppScore" data-delta="-1" aria-label="對手減一分">−</button><input type="number" id="oppScore" min="0" step="1" value="3"><button type="button" data-score="oppScore" data-delta="1" aria-label="對手加一分">+</button></div></div>
           </div>
 
+          <p id="extraInningHint" class="mut hidden">2024–2025 一軍例行賽：首次進入延長局預設二壘有人，請依實際打席調整；最多 12 局。</p>
           <!-- 進攻 -->
           <div id="offenseFields">
             <div><label class="f" for="oppPitcher">對方投手</label><select id="oppPitcher"></select></div>
@@ -95,8 +122,8 @@
             <div style="margin-top:14px">
               <label class="f">板凳可用野手（請確認今日可上場）</label>
               <div id="benchAvailability" class="today-availability" aria-live="polite"></div>
+              <input type="search" id="benchFilter" aria-label="搜尋板凳球員" placeholder="姓名或 2025 背號…">
               <button type="button" class="link bench-toggle-all" id="benchToggleAll">全部展開</button>
-              <input type="search" id="benchFilter" aria-label="搜尋板凳球員" placeholder="搜尋球員…">
               <div class="checklist" id="benchList" style="margin-top:6px"></div>
               <div class="mini-actions"><button class="link" id="benchAll" aria-label="全選所有板凳球員">全選</button><button class="link" id="benchNone" aria-label="清除所有板凳球員">清除</button></div>
             </div>
@@ -109,7 +136,7 @@
               <div><label class="f" for="pitchCount">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
               <div><label class="f">本場角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
             </div>
-            <p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
+            <p class="mut pitch-input-limit">工具球數範圍 0–160；不是規則上限。</p><p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
               <div class="next-batters"><div class="next-batter"><label for="nb1">第 1 棒</label><select id="nb1" aria-label="接下來第一棒"></select><span class="next-hand" data-next-hand="nb1"></span></div><div class="next-batter"><label for="nb2">第 2 棒</label><select id="nb2" aria-label="接下來第二棒"></select><span class="next-hand" data-next-hand="nb2"></span></div><div class="next-batter"><label for="nb3">第 3 棒</label><select id="nb3" aria-label="接下來第三棒"></select><span class="next-hand" data-next-hand="nb3"></span></div></div>
@@ -117,9 +144,9 @@
             <div style="margin-top:14px">
               <label class="f">牛棚可用投手（請確認今日可上場）</label>
               <div id="penAvailability" class="today-availability" aria-live="polite"></div>
+              <input type="search" id="penFilter" aria-label="搜尋牛棚投手" placeholder="姓名或 2025 背號…">
               <div id="pitcherGroups"></div>
               <button type="button" class="link bench-toggle-all" id="penToggleAll" aria-controls="penList" aria-expanded="false">全部展開</button>
-              <input type="search" id="penFilter" aria-label="搜尋牛棚投手" placeholder="搜尋球員…">
               <p id="penSearchStatus" class="mut hidden" role="status"></p>
               <div class="checklist" id="penList" hidden></div>
               <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>全選</button><button class="link" id="penNone" aria-label="清除牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clear"/></svg>清除選取</button></div>
@@ -164,9 +191,10 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261004-aligned"></script>
-<script src="pitch-change.js?v=20261004-aligned"></script>
-<script src="pitcher-groups.js?v=20261004-aligned"></script>
-<script src="app.js?v=20261004-aligned"></script>
+<script src="engine.js?v=20261007-lineup-swap-polish"></script>
+<script src="pitch-change.js?v=20261007-lineup-swap-polish"></script>
+<script src="pitcher-groups.js?v=20261007-lineup-swap-polish"></script>
+<script src="lineup.js?v=20261007-lineup-swap-polish"></script>
+<script src="app.js?v=20261007-lineup-swap-polish"></script>
 </body>
 </html>
