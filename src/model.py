@@ -11,6 +11,10 @@ from load import CELLS, load, pitches_before
 
 PRIOR_SEASON_WEIGHT = 0.6  # 前一季資料的權重
 PITCHES_PER_PA = 3.76
+# 投手整體效果的近期加權：資料權重每經過 PITCHER_HALF_LIFE 天減半（天數不含休季）；None 為不加權。
+# 回測（src/recency_backtest.py，2024/6–9、2025/5–9 共 9 個月）：投手改善很小且 95% 區間含 0，
+# 打者持平或變差，因此目前不啟用；之後資料增加可重跑回測再決定。
+PITCHER_HALF_LIFE = None
 
 
 def _mom_k(sum_r, n, sigma2, w2=None):
@@ -46,6 +50,33 @@ class Model:
     slope_all: float
 
     # ---------- 對戰 ----------
+    def _lookup(self):
+        """matchup 用的查詢表（第一次呼叫時建立）。只是把 pandas 逐筆查詢換成字典，數值完全相同。"""
+        c = self.__dict__.get("_lookup_cache")
+        if c is None:
+            idx = {cell: i for i, cell in enumerate(CELLS)}
+            bat_cell = {}
+            for (b, cell), eff, var in zip(self.bat_cell.index, self.bat_cell["effect"].to_numpy(), self.bat_cell["var"].to_numpy()):
+                if cell in idx:
+                    e, v = bat_cell.setdefault(b, (np.zeros(len(CELLS)), np.zeros(len(CELLS))))
+                    e[idx[cell]], v[idx[cell]] = eff, var
+            mix_arr = self.mix.reindex(columns=CELLS).fillna(0).to_numpy()
+            c = dict(
+                league={pl: self.league.loc[pl].reindex(CELLS).fillna(0).to_numpy()
+                        for pl in self.league.index.get_level_values(0).unique()},
+                neutral=self.league.groupby(level=1).mean().reindex(CELLS).fillna(0).to_numpy(),
+                bat_all={b: (e, v, int(n)) for b, e, v, n in zip(self.bat_all.index, self.bat_all["effect"].to_numpy(),
+                                                                  self.bat_all["var"].to_numpy(), self.bat_all["n"].to_numpy())},
+                bat_cell=bat_cell,
+                pit=self.pit_all["effect"].to_dict(),
+                mix={k: mix_arr[i] for i, k in enumerate(self.mix.index)},
+                mix_n={k: int(v) for k, v in self.mix_n.items()},
+                league_mix={k: self.league_mix.loc[k].reindex(CELLS).fillna(0).to_numpy() for k in self.league_mix.index},
+                phand=self.phand.to_dict(),
+            )
+            self.__dict__["_lookup_cache"] = c
+        return c
+
     def pitch_mix(self, pitcher, bhand):
         bhand = bhand if bhand in ("L", "R") else "R"
         if (pitcher, bhand) in self.mix.index:
@@ -55,27 +86,25 @@ class Model:
 
     def matchup(self, batter, bhand, pitcher):
         """回傳 (每打席預期得分值，相對聯盟平均打者)、標準誤、打者總樣本球數、投手樣本。"""
+        L = self._lookup()
         bhand = bhand if bhand in ("L", "R") else "R"
-        mix, mix_n = self.pitch_mix(pitcher, bhand)
-        ph = self.phand.get(pitcher, "R")
+        if (pitcher, bhand) in L["mix"]:
+            m, mix_n = L["mix"][(pitcher, bhand)].copy(), L["mix_n"].get((pitcher, bhand), 0)
+        else:
+            m, mix_n = L["league_mix"][(L["phand"].get(pitcher, "R"), bhand)].copy(), 0
+        ph = L["phand"].get(pitcher, "R")
         ph = ph if ph in ("L", "R") else "R"
         platoon = "同側" if ph == bhand else "異側"
-        lg = self.league.loc[platoon].reindex(CELLS).fillna(0)
-        m = mix.reindex(CELLS).fillna(0).to_numpy()
-        lg_base = float((m * lg.to_numpy()).sum())
+        lg_base = float((m * L["league"][platoon]).sum())
 
-        a = self.bat_all.loc[batter] if batter in self.bat_all.index else None
-        a_eff, a_var, n = (a["effect"], a["var"], int(a["n"])) if a is not None else (0.0, self.k["sigma2"] / self.k["bat"], 0)
-        cell_eff = np.zeros(len(CELLS))
-        cell_var = np.zeros(len(CELLS))
-        for i, c in enumerate(CELLS):
-            if (batter, c) in self.bat_cell.index:
-                r = self.bat_cell.loc[(batter, c)]
-                cell_eff[i], cell_var[i] = r["effect"], r["var"]
-        q = float(self.pit_all["effect"].get(pitcher, 0.0))
+        a = L["bat_all"].get(batter)
+        a_eff, a_var, n = a if a is not None else (0.0, self.k["sigma2"] / self.k["bat"], 0)
+        bc = L["bat_cell"].get(batter)
+        cell_eff, cell_var = (bc[0].copy(), bc[1].copy()) if bc is not None else (np.zeros(len(CELLS)), np.zeros(len(CELLS)))
+        q = float(L["pit"].get(pitcher, 0.0))
 
         skill = a_eff + float((m * cell_eff).sum())          # 打者本身（含對這種球路的適性）
-        platoon = lg_base - self._neutral_base(m)              # 左右投打的優劣勢
+        platoon = lg_base - float((m * L["neutral"]).sum())    # 左右投打的優劣勢
         se = np.sqrt(a_var + (m ** 2 * cell_var).sum())
         f = PITCHES_PER_PA
         return dict(
@@ -105,8 +134,20 @@ def _state_key(inning, half, diff, bases, outs):
     return (inn_b, half, int(np.clip(diff, -4, 4)), int(bases), int(outs))
 
 
-def fit(cutoff, season=None):
-    """以 cutoff 之前的資料建模。season 為 cutoff 所屬球季（前一季資料降權）。"""
+def _age_days(p):
+    """每顆球距離最後一筆資料的天數，扣掉球季之間的休季天數。"""
+    age = (p["date"].max() - p["date"]).dt.days.to_numpy().astype(float)
+    b = p.groupby("season")["date"].agg(["min", "max"]).sort_index()
+    gap = ((b["min"].shift(-1) - b["max"]).dt.days - 1).fillna(0).clip(lower=0)
+    offset = gap[::-1].cumsum()[::-1]   # 該季之後所有休季天數合計
+    return age - p["season"].map(offset).to_numpy()
+
+
+def fit(cutoff, season=None, pitcher_half_life=PITCHER_HALF_LIFE):
+    """以 cutoff 之前的資料建模。season 為 cutoff 所屬球季（前一季資料降權）。
+
+    pitcher_half_life：投手整體效果的近期加權半衰期（天，不含休季）；None 表示不加權。
+    """
     cutoff = pd.Timestamp(cutoff)
     season = season or cutoff.year
     pa, _, _ = load()
@@ -159,11 +200,14 @@ def fit(cutoff, season=None):
         bc[comp] = c["sr"] / (c["n"] + kc)  # 揮空率／強勁擊球率的偏離（比例）
     k_cell = k_comp
 
-    # 投手整體效果（失分傾向）
-    pp = p.groupby("pitcher").agg(sr=("wr", "sum"), n=("w", "sum"), w2=("w2", "sum"))
-    k_pit = _mom_k(pp["sr"].to_numpy(), pp["n"].to_numpy(), sigma2, pp["w2"].to_numpy())
-    pp["effect"] = pp["sr"] / (pp["n"] + k_pit)
-    pp["var"] = sigma2 / (pp["n"] + k_pit)
+    # 投手整體效果（失分傾向），近期資料權重較高
+    wp = p["w"] * (0.5 ** (_age_days(p) / pitcher_half_life) if pitcher_half_life else 1.0)
+    tmp = pd.DataFrame({"pitcher": p["pitcher"], "wr": wp * p["resid"], "w": wp, "w2": wp ** 2})
+    pp = tmp.groupby("pitcher").agg(sr=("wr", "sum"), n_eff=("w", "sum"), w2=("w2", "sum"))
+    k_pit = _mom_k(pp["sr"].to_numpy(), pp["n_eff"].to_numpy(), sigma2, pp["w2"].to_numpy())
+    pp["effect"] = pp["sr"] / (pp["n_eff"] + k_pit)
+    pp["var"] = sigma2 / (pp["n_eff"] + k_pit)
+    pp["n"] = p.groupby("pitcher")["w"].sum()  # 樣本球數（顯示用），與加權前定義相同
 
     # 投手球路分布：投手對該左右打 → 投手整體 → 聯盟（同投打慣用手）
     league_mix = pd.crosstab([p["phand"], p["bhand"]], p["cell"], values=p["w"], aggfunc="sum", normalize="index").reindex(columns=CELLS, fill_value=0)

@@ -241,7 +241,8 @@ test('extra inning selection presets only second base and never changes outs',()
  const f=fixture();f.eval('renderState=()=>{};S.mode="custom";S.inning=9;S.bases=5;S.outs=2;changeInning(1);');
  assert.equal(f.eval('S.inning'),10);assert.equal(f.eval('S.bases'),2);assert.equal(f.eval('S.outs'),2);
  f.eval('S.inning=12;S.bases=0;changeInning(1);');assert.equal(f.eval('S.bases'),0);
- f.eval('changeInning(-1)');assert.equal(f.eval('S.bases'),2);
+ f.eval('changeInning(-1)');assert.equal(f.eval('S.bases'),0);
+ f.eval('S.inning=10;S.bases=5;changeInning(1);');assert.equal(f.eval('S.bases'),5);assert.equal(f.eval('S.outs'),2);
  f.eval('S.mode="replay";S.inning=9;S.bases=4;changeInning(1);');assert.equal(f.eval('S.bases'),4);
 });
 test('same effective input and group editing retain the result; changed input invalidates it',()=>{
@@ -394,4 +395,51 @@ test('hitter primary assessment uses incumbent difference and preserves league v
  assert.match(html,/勝率變化（相對現任）/);assert.match(html,/相對聯盟平均/);
  const values=[...html.matchAll(/<td class="evaluation-value">([\s\S]*?)<\/td>/g)].map(m=>m[1]);
  assert.match(values[0],/基準/);assert.match(values[1],/\+0.20 百分點/);assert.doesNotMatch(values.join(''),/−0.30|−0.50/);
+});
+
+
+test('fielding guidance retains cover cost, catcher reserve warning and uncertain status',()=>{
+ const f=fixture();f.context.row={守備:'warn',守備說明:'需由 A 接守捕手（再消耗 1 名板凳）；之後板凳已無備用捕手'};
+ const html=f.eval('fieldingMessage(row)');assert.match(html,/另需接守人選/);assert.match(html,/A · 捕手（另需 1 人）/);assert.match(html,/無備用捕手/);
+ assert.match(f.eval('fieldingMessage({守備:"ok",守備說明:"B 接任指定打擊"})'),/承接原 DH 棒次/);
+ assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/守位待確認/);
+ assert.doesNotMatch(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/推估可接守/);
+});
+
+
+test('2025 number aliases use team-specific exact strings, preserve 00, and keep names searchable',()=>{
+ const f=fixture();f.eval('playerNumbers2025={A:{Zero:"0",Double:"00",One:"1",Eleven:"11"},B:{Other:"1"}}');
+ for(const [name,team,q,expected] of [['One','A','1',true],['Eleven','A','1',false],['Zero','A','00',false],['Double','A','00',true],['Double','A','００',true],['One','A','#1',true],['One','A','1號',true],['Other','A','1',false],['Other','B','1',true],['Missing','A','99',false],['Missing','A','Miss',true]]) {
+  assert.equal(f.eval(`matchesPlayerSearch(${JSON.stringify(name)},${JSON.stringify(team)},${JSON.stringify(q)})`),expected);
+ }
+ f.eval('playerNumbers2025={}');assert.equal(f.eval('matchesPlayerSearch("Name","A","Nam")'),true);assert.equal(f.eval('matchesPlayerSearch("Name","A","1")'),false);
+});
+
+test('every exported roster number searches exactly all matching 2025 team members',()=>{
+ const aliases=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/player-numbers-2025.json'),'utf8'));
+ const model=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model.json'),'utf8'));
+ assert.equal(aliases.season,2025);
+ const f=fixture();f.context.aliases=aliases.teams;f.eval('playerNumbers2025=aliases');
+ for(const [team,roster] of Object.entries(model.rosters)) {
+  for(const kind of ['hitters','pitchers']) {
+   const players=roster[kind];
+   for(const player of players) {
+    const number=aliases.teams[team][player.name];assert.match(number,/^[0-9]+$/);
+    const expected=players.filter(p=>aliases.teams[team][p.name]===number).map(p=>p.name);
+    f.context.players=players;f.context.team=team;f.context.number=number;
+    const actual=f.eval('players.filter(p=>matchesPlayerSearch(p.name,team,number)).map(p=>p.name)');
+    assert.deepEqual(Array.from(actual),expected);
+   }
+  }
+ }
+});
+
+test('confirmed own lineup excludes field players and pitcher from bench without affecting reserves',()=>{
+ const f=fixture();f.context.LineupBoard={current:()=>({slots:[{name:'Starter1',pos:'C'},{name:'Starter2',pos:'DH'}],pitcher:'P'}),validate:()=>[],unavailable:()=>['Retired']};
+ f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');
+ assert.equal(f.eval('benchEligible("Starter1")'),false);assert.equal(f.eval('benchEligible("Starter2")'),false);assert.equal(f.eval('benchEligible("Retired")'),true);assert.equal(f.eval('benchEligible("Reserve")'),true);
+ assert.equal(f.eval('benchEligible("P")'),false);
+});
+test('invalid saved lineup cannot restrict manual evaluation',()=>{
+ const f=fixture();f.context.LineupBoard={current:()=>({slots:[]}),validate:()=>['invalid'],unavailable:()=>[]};f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');assert.equal(f.eval('ownLineup()'),null);assert.equal(f.eval('benchEligible("Reserve")'),true);
 });

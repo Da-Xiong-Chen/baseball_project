@@ -81,16 +81,22 @@ def ensemble_rel(m, ml, names, hands, pitcher):
     return (1 - ENSEMBLE_W) * h + ENSEMBLE_W * g, h, g
 
 
-def ensemble_runs(m, ml, pitchers, batters):
-    """每位投手對上 batters 的預期失分合計（集成）。"""
+def runs_matrix(m, ml, pitchers, batters):
+    """每位投手對上每位打者的預期每打席得分值：(階層式, 梯度提升樹或 None)，形狀為 投手數 × 打者數。"""
     cutoff = str(m.cutoff.date())
     _, phands = _hands(cutoff)
     rows = [(b, bat_hand(b, phands.get(p, "R"), cutoff), p) for p in pitchers for b in batters]
-    h = np.array([m.matchup(b, bh, p)["per_pa"] for b, bh, p in rows]).reshape(len(pitchers), len(batters)).sum(1)
-    if not ml:
-        return h
-    g = ml.abs_many(rows).reshape(len(pitchers), len(batters)).sum(1)
-    return (1 - ENSEMBLE_W) * h + ENSEMBLE_W * g
+    h = np.array([m.matchup(b, bh, p)["per_pa"] for b, bh, p in rows]).reshape(len(pitchers), len(batters))
+    g = ml.abs_many(rows).reshape(len(pitchers), len(batters)) if ml else None
+    return h, g
+
+
+def ensemble_runs(m, ml, pitchers, batters, matrix=None):
+    """每位投手對上 batters 的預期失分合計（集成）。matrix 為已算好的 runs_matrix 結果。"""
+    h, g = matrix or runs_matrix(m, ml, pitchers, batters)
+    if g is None:
+        return h.sum(1)
+    return (1 - ENSEMBLE_W) * h.sum(1) + ENSEMBLE_W * g.sum(1)
 
 
 _pool_cache = {}
@@ -120,8 +126,11 @@ def reliever_pool_runs(m, ml, batters):
     return _cached((id(m), id(ml), "P", tuple(batters)), lambda: ensemble_runs(m, ml, names, batters))
 
 
-def evaluate_pinch_hit(sit, model=None, ml=None):
-    """ml 為梯度提升樹模擬器（mlmodel.MLModel）；有提供時採用集成：階層式與梯度提升樹各半。"""
+def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
+    """ml 為梯度提升樹模擬器（mlmodel.MLModel）；有提供時採用集成：階層式與梯度提升樹各半。
+
+    scores=False 時不計算價值分數（省去全聯盟比較池，供大量回測使用），勝率估計不受影響。
+    """
     row = sit["row"]
     m = model or model_at(str(row["date"].date()))
     phand = row["phand"]
@@ -132,7 +141,7 @@ def evaluate_pinch_hit(sit, model=None, ml=None):
     cutoff = str(m.cutoff.date())
     hands = [bat_hand(n, phand, cutoff) for n in names]
     rels, rel_h, rel_g = ensemble_rel(m, ml, names, hands, row["pitcher"])
-    pool = hitter_pool_rels(m, ml, row["pitcher"], phand)
+    pool = hitter_pool_rels(m, ml, row["pitcher"], phand) if scores else np.array([])
 
     out = []
     for i, (name, bh) in enumerate(zip(names, hands)):
@@ -210,8 +219,8 @@ def matchup_detail(model, batter, pitcher):
                 skill=r["skill_pa"] - r["fit_pa"], fit=r["fit_pa"], platoon=r["platoon_pa"], n=r["n"])
 
 
-def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
-    """防守方換投：牛棚每位投手對上接下來 n_next 棒。"""
+def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
+    """防守方換投：牛棚每位投手對上接下來 n_next 棒。scores=False 時不計算價值分數。"""
     row = sit["row"]
     m = model or model_at(str(row["date"].date()))
     cutoff = str(m.cutoff.date())
@@ -237,15 +246,16 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None):
     pc, starter = sit.get("pitch_count"), sit.get("starter", False)
     fat_runs, fat_warn = outlook(pc, starter, len(nxt), cutoff)
     pitchers = [row["pitcher"]] + pen
-    all_runs = ensemble_runs(m, ml, pitchers, nxt)
-    pool = reliever_pool_runs(m, ml, nxt)
+    matrix = runs_matrix(m, ml, pitchers, nxt)
+    all_runs = ensemble_runs(m, ml, pitchers, nxt, matrix=matrix)
+    pool = reliever_pool_runs(m, ml, nxt) if scores else np.array([])
     for k, pit in enumerate(pitchers):
         ph = phands.get(pit, "R")
         runs = float(all_runs[k])
         cur = pit == row["pitcher"]
         extra = fat_runs if cur else 0.0
-        h_runs = [m.matchup(b, bat_hand(b, ph, cutoff), pit)["per_pa"] for b in nxt]
-        g_runs = list(ml.abs_many([(b, bat_hand(b, ph, cutoff), pit) for b in nxt])) if ml else None
+        h_runs = list(matrix[0][k])
+        g_runs = list(matrix[1][k]) if ml else None
         details = [dict(batter=b, runs=(1 - ENSEMBLE_W) * hr + ENSEMBLE_W * float(g_runs[i]) if ml else hr,
                         fatigue=(outlook(pc, starter, i + 1, cutoff)[0] - outlook(pc, starter, i, cutoff)[0]) if cur else 0.0)
                    for i, (b, hr) in enumerate(zip(nxt, h_runs))]
