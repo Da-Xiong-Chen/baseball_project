@@ -157,6 +157,14 @@ def validate_evaluation(body):
     nxt = body.get('next_batters')
     if nxt is not None and (not isinstance(nxt, list) or len(nxt) != 3 or any(not isinstance(v, str) for v in nxt) or len(set(nxt)) != 3 or not set(nxt) <= hitters):
         raise ValueError('接下來三棒須為三位有效且不同的打者')
+    streaks = body.get('streaks')
+    if streaks is not None and (not isinstance(streaks, dict) or
+                                any(k not in pitchers or type(v) is not int or not 0 <= v <= 10 for k, v in streaks.items())):
+        raise ValueError('連續登板天數須為 0–10 的整數，且投手須屬於防守球隊')
+    for key, high in (('fatigue_d2', 0.5), ('fatigue_d3', 0.5), ('recent_weight', 1.0)):
+        v = body.get(key)
+        if v is not None and (type(v) not in (int, float) or not 0 <= v <= high):
+            raise ValueError(f'{key} 須介於 0 至 {high}')
 
 
 def api(path, qs, body):

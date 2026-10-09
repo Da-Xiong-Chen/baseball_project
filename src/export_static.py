@@ -17,6 +17,7 @@ from engine import _hands, matchup_detail, situation  # noqa: E402
 from fatigue import CAP, RELIEVER_WARN, starter_curve  # noqa: E402
 from load import CELLS, ROOT, load  # noqa: E402
 import mlmodel  # noqa: E402
+import recent  # noqa: E402
 from model import PITCHES_PER_PA, fit  # noqa: E402
 from roster import can_play, hitter_pool, positions_of, reliever_pool  # noqa: E402
 
@@ -89,6 +90,11 @@ def export_model():
         grid[p] = list(ml.abs_many([(h, bh.get(h, "R") if bh.get(h) != "S" else ("L" if ph_ == "R" else "R"), p) for h in hitters]))
     model["pools"] = dict(hitters=hitter_pool(), relievers=reliever_pool())
     model["ml"] = dict(w=mlmodel.ENSEMBLE_W, hitters=hitters, grid=grid, ref={p: ml.ref(p) for p in pitchers})
+    # 近況偏離（每球得分值）：使用者可設定權重（預設 0），只匯出名單上的球員
+    rb, rp = recent.for_model(m)
+    model["recent"] = dict(half_life=recent.HALF_LIFE,
+                           bat={n: float(v) for n, v in rb.items() if n in set(hitters)},
+                           pit={n: float(v) for n, v in rp.items() if n in set(pitchers)})
     print("model.json", dump(model, "model.json") // 1024, "KB")
 
 

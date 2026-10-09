@@ -6,8 +6,9 @@ import pandas as pd
 from fatigue import outlook, pitch_count_before
 from load import load
 from mlmodel import ENSEMBLE_W
-from model import fit
+from model import PITCHES_PER_PA, fit
 import numpy as np
+import recent
 
 from roster import POS_ZH, active_roster, assign_positions, defense_check, hitter_pool, positions_of, reliever_pool
 
@@ -72,13 +73,21 @@ def value_score(v, pool, higher_better=True):
     return int(np.clip(round(1 + 99 * frac), 1, 100))
 
 
-def ensemble_rel(m, ml, names, hands, pitcher):
-    """每打席得分值（相對聯盟平均打者）：階層式與梯度提升樹集成。"""
+def recent_form(m, names, who="batter"):
+    """近況偏離（每打席得分值；打者正值＝近期較好，投手正值＝近期較差）。"""
+    b, p = recent.for_model(m)
+    s = b if who == "batter" else p
+    return np.array([float(s.get(n, 0.0)) * PITCHES_PER_PA for n in names])
+
+
+def ensemble_rel(m, ml, names, hands, pitcher, recent_w=0.0):
+    """每打席得分值（相對聯盟平均打者）：階層式與梯度提升樹集成；recent_w > 0 時加入使用者設定的近況權重。"""
     h = np.array([m.matchup(n, b, pitcher)["rel_pa"] for n, b in zip(names, hands)])
+    adj = recent_w * recent_form(m, names) if recent_w else 0.0
     if not ml:
-        return h, h, None
+        return h + adj, h, None
     g = ml.rel_many([(n, b, pitcher) for n, b in zip(names, hands)])
-    return (1 - ENSEMBLE_W) * h + ENSEMBLE_W * g, h, g
+    return (1 - ENSEMBLE_W) * h + ENSEMBLE_W * g + adj, h, g
 
 
 def runs_matrix(m, ml, pitchers, batters):
@@ -91,12 +100,22 @@ def runs_matrix(m, ml, pitchers, batters):
     return h, g
 
 
-def ensemble_runs(m, ml, pitchers, batters, matrix=None):
+def ensemble_runs(m, ml, pitchers, batters, matrix=None, recent_w=0.0):
     """每位投手對上 batters 的預期失分合計（集成）。matrix 為已算好的 runs_matrix 結果。"""
     h, g = matrix or runs_matrix(m, ml, pitchers, batters)
+    adj = recent_w * recent_form(m, pitchers, "pitcher") * len(batters) if recent_w else 0.0
     if g is None:
-        return h.sum(1)
-    return (1 - ENSEMBLE_W) * h.sum(1) + ENSEMBLE_W * g.sum(1)
+        return h.sum(1) + adj
+    return (1 - ENSEMBLE_W) * h.sum(1) + ENSEMBLE_W * g.sum(1) + adj
+
+
+def streak_penalty(streak, sit):
+    """連續登板疲勞（每打席額外失分值）：使用者設定；資料上估不出顯著影響，預設 0。"""
+    if streak >= 2:
+        return float(sit.get("fatigue_d3") or 0.0)
+    if streak == 1:
+        return float(sit.get("fatigue_d2") or 0.0)
+    return 0.0
 
 
 _pool_cache = {}
@@ -110,20 +129,21 @@ def _cached(key, fn):
     return _pool_cache[key]
 
 
-def hitter_pool_rels(m, ml, pitcher, phand):
+def hitter_pool_rels(m, ml, pitcher, phand, recent_w=0.0):
     cutoff = str(m.cutoff.date())
     names = hitter_pool(cutoff)
     if not names:
         return np.array([])
-    return _cached((id(m), id(ml), "H", pitcher),
-                   lambda: ensemble_rel(m, ml, names, [bat_hand(n, phand, cutoff) for n in names], pitcher)[0])
+    return _cached((id(m), id(ml), "H", pitcher, recent_w),
+                   lambda: ensemble_rel(m, ml, names, [bat_hand(n, phand, cutoff) for n in names], pitcher, recent_w)[0])
 
 
-def reliever_pool_runs(m, ml, batters):
+def reliever_pool_runs(m, ml, batters, recent_w=0.0):
     names = reliever_pool(str(m.cutoff.date()))
     if not names:
         return np.array([])
-    return _cached((id(m), id(ml), "P", tuple(batters)), lambda: ensemble_runs(m, ml, names, batters))
+    return _cached((id(m), id(ml), "P", tuple(batters), recent_w),
+                   lambda: ensemble_runs(m, ml, names, batters, recent_w=recent_w))
 
 
 def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
@@ -140,8 +160,10 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
     names = [due] + sit["bench"]
     cutoff = str(m.cutoff.date())
     hands = [bat_hand(n, phand, cutoff) for n in names]
-    rels, rel_h, rel_g = ensemble_rel(m, ml, names, hands, row["pitcher"])
-    pool = hitter_pool_rels(m, ml, row["pitcher"], phand) if scores else np.array([])
+    recent_w = float(sit.get("recent_weight") or 0.0)
+    rels, rel_h, rel_g = ensemble_rel(m, ml, names, hands, row["pitcher"], recent_w)
+    form = recent_form(m, names) if recent_w else np.zeros(len(names))
+    pool = hitter_pool_rels(m, ml, row["pitcher"], phand, recent_w) if scores else np.array([])
 
     out = []
     for i, (name, bh) in enumerate(zip(names, hands)):
@@ -153,6 +175,7 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
             預估勝率=rel * slope * 100, 誤差=r["se_pa"] * slope * 100,
             每打席得分值=rel, 階層式=r["rel_pa"], 機器學習=(float(rel_g[i]) if ml else None),
             本身能力=r["skill_pa"] - r["fit_pa"], 球路適性=r["fit_pa"], 左右優勢=r["platoon_pa"],
+            近況=(float(form[i]) if recent_w else None), 近況權重=recent_w,
             樣本球數=r["n"], 投手對此側樣本=r["mix_n"], 比較池人數=len(pool),
             可守=",".join(positions_of(name, cutoff)) or "-",
         )
@@ -177,8 +200,13 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
 
 def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, due, due_pos,
                      bench, lineup_positions=None, date="2025-12-31", bat_team=None, fld_team=None,
-                     next_batters=None, pen=None, pitch_count=None, starter=None):
-    """由使用者輸入建立情境（不依賴歷史打席）。"""
+                     next_batters=None, pen=None, pitch_count=None, starter=None,
+                     streaks=None, fatigue_d2=0.0, fatigue_d3=0.0, recent_weight=0.0):
+    """由使用者輸入建立情境（不依賴歷史打席）。
+
+    streaks：{投手: 今天之前連續登板天數}；fatigue_d2／fatigue_d3：連投第 2 天／第 3 天以上每打席額外失分值；
+    recent_weight：近況權重 0–1。三者皆為使用者設定，預設不影響評估。
+    """
     if starter is None:
         starter = is_starter(pitcher, date)
     _, phands = _hands(date)
@@ -189,7 +217,9 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
     positions[due] = due_pos
     return dict(row=row, lineup={1: due}, due=due, bench=list(bench), positions=positions,
                 used_pitchers={pitcher}, next_batters=next_batters or [due], pen=pen,
-                pitch_count=None if pitch_count in (None, "") else int(pitch_count), starter=bool(starter))
+                pitch_count=None if pitch_count in (None, "") else int(pitch_count), starter=bool(starter),
+                streaks=dict(streaks or {}), fatigue_d2=float(fatigue_d2 or 0), fatigue_d3=float(fatigue_d3 or 0),
+                recent_weight=min(1.0, max(0.0, float(recent_weight or 0))))
 
 
 def is_starter(pitcher, cutoff=None):
@@ -247,26 +277,32 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
     fat_runs, fat_warn = outlook(pc, starter, len(nxt), cutoff)
     pitchers = [row["pitcher"]] + pen
     matrix = runs_matrix(m, ml, pitchers, nxt)
-    all_runs = ensemble_runs(m, ml, pitchers, nxt, matrix=matrix)
-    pool = reliever_pool_runs(m, ml, nxt) if scores else np.array([])
+    recent_w = float(sit.get("recent_weight") or 0.0)
+    all_runs = ensemble_runs(m, ml, pitchers, nxt, matrix=matrix, recent_w=recent_w)
+    form = recent_form(m, pitchers, "pitcher") if recent_w else np.zeros(len(pitchers))
+    pool = reliever_pool_runs(m, ml, nxt, recent_w) if scores else np.array([])
     for k, pit in enumerate(pitchers):
         ph = phands.get(pit, "R")
         runs = float(all_runs[k])
         cur = pit == row["pitcher"]
-        extra = fat_runs if cur else 0.0
-        h_runs = list(matrix[0][k])
-        g_runs = list(matrix[1][k]) if ml else None
-        details = [dict(batter=b, runs=(1 - ENSEMBLE_W) * hr + ENSEMBLE_W * float(g_runs[i]) if ml else hr,
-                        fatigue=(outlook(pc, starter, i + 1, cutoff)[0] - outlook(pc, starter, i, cutoff)[0]) if cur else 0.0)
-                   for i, (b, hr) in enumerate(zip(nxt, h_runs))]
         h = hist[hist["name"] == pit]
         np3 = int(h.loc[h["date"] >= row["date"] - pd.Timedelta(days=3), "NP"].sum())
-        streak = 0
-        d = row["date"] - pd.Timedelta(days=1)
-        days = set(h["date"])
-        while d in days:
-            streak += 1
-            d -= pd.Timedelta(days=1)
+        if "streaks" in sit:          # 自訂情境：使用者標記今天之前的連續登板天數
+            streak = int(sit["streaks"].get(pit, 0) or 0)
+        else:                          # 歷史回放：由出賽紀錄計算
+            streak = 0
+            d = row["date"] - pd.Timedelta(days=1)
+            days = set(h["date"])
+            while d in days:
+                streak += 1
+                d -= pd.Timedelta(days=1)
+        pen_pa = streak_penalty(streak, sit)
+        extra = (fat_runs if cur else 0.0) + pen_pa * len(nxt)
+        h_runs = list(matrix[0][k])
+        g_runs = list(matrix[1][k]) if ml else None
+        details = [dict(batter=b, runs=((1 - ENSEMBLE_W) * hr + ENSEMBLE_W * float(g_runs[i]) if ml else hr) + recent_w * float(form[k]),
+                        fatigue=((outlook(pc, starter, i + 1, cutoff)[0] - outlook(pc, starter, i, cutoff)[0]) if cur else 0.0) + pen_pa)
+                   for i, (b, hr) in enumerate(zip(nxt, h_runs))]
         warn = [fat_warn] if cur and fat_warn else []
         if streak >= 2:
             warn.append(f"已連投 {streak} 天")
@@ -275,6 +311,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
         out.append(dict(角色="場上" if cur else "牛棚", 投手=pit, 投=ph,
                         價值分數=value_score(runs + extra, pool, higher_better=False),
                         預估失分=runs + extra, 疲勞調整=extra, 用球數=(pc if cur else 0),
+                        連投天數=streak, 近況=(float(form[k]) if recent_w else None),
                         樣本球數=int(m.pit_all["n"].get(pit, 0)),
                         階層式=float(sum(h_runs)), 機器學習=float(sum(g_runs)) if ml else None,
                         對決明細=details, 比較池人數=len(pool),
