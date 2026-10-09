@@ -61,7 +61,12 @@ function changeInning(delta) {
   S.inning=next;if(S.mode==='custom'&&enteringExtras)S.bases=2;renderState();
 }
 let rosterGeneration = 0, gamesGeneration = 0, gameGeneration = 0, runGeneration = 0;
+/* 滑動效果（docs/motion.js）；沒有載入時所有切換照常運作，只是沒有動畫。 */
+const motion = () => typeof Motion !== 'undefined' ? Motion : null;
+function slideIn(el, dir) { motion()?.slideIn(el, dir); }
+
 function clearResult() {
+  if (motion()?.drawerOpen()) motion().closeDrawer();
   ++runGeneration;
   ++detailGeneration;
   S.last = null;
@@ -183,14 +188,17 @@ async function init() {
   await refreshCustom();
   LineupBoard.mount({element:$('#lineupPage'),teams:S.teams,team,matches:matchesPlayerSearch,pitchCount:()=>$('#pitchCount').value,role:()=>S.starter,applied:applyOwnLineup});
   $$('[data-page]').forEach(b=>b.onclick=()=>showFeaturePage(b.dataset.page));
+  bindMotion();
 }
 
 function ownLineup() { if(typeof LineupBoard==='undefined')return null;const name=$('#myTeam').value,c=LineupBoard.current(name),r=S.roster[name];return c&&r&&LineupBoard.validate(c,r).length===0?c:null; }
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name); }
 async function showFeaturePage(page) {
   if(typeof LineupBoard!=='undefined')LineupBoard.cancelSwap();
-  const lineup=page==='lineup';
+  if(motion()?.drawerOpen())motion().closeDrawer();
+  const lineup=page==='lineup',changed=$('#lineupPage').hidden===lineup;
   $('#lineupPage').hidden=!lineup;$('#evaluationPage').hidden=lineup;
+  if(changed)slideIn(lineup?$('#lineupPage'):$('#evaluationPage'),lineup?1:-1);
   $('.matchday-intro').hidden=lineup;$('.mobile-jump').hidden=lineup;$('#modeSeg').hidden=lineup;
   $('.skip-link').href=lineup?'#lineupTitle':'#workspace';$('.skip-link').textContent=lineup?'跳到場上名單':'跳到情境設定';
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
@@ -300,6 +308,7 @@ function setMode(m) {
   syncPressed();
   $("#customPanel").classList.toggle("hidden", m !== "custom");
   $("#replayPanel").classList.toggle("hidden", m !== "replay");
+  slideIn(m === "replay" ? $("#replayPanel") : $("#customPanel"), m === "replay" ? 1 : -1);
   if (m === "replay" && !S.games.length) loadGames();
   if (m === "replay") loadTiming().then(() => { renderTimingSummary(); renderPAs(); });
 }
@@ -311,6 +320,7 @@ function setView(v) {
   syncPressed();
   $("#offenseFields").classList.toggle("hidden", v !== "offense");
   $("#defenseFields").classList.toggle("hidden", v !== "defense");
+  slideIn(v === "defense" ? $("#defenseFields") : $("#offenseFields"), v === "defense" ? 1 : -1);
 }
 function renderState() {
   $("#innVal").textContent = S.inning;
@@ -528,7 +538,8 @@ async function run(fn, view) {
     S.last.view = view;
     S.selected = null;
     renderResult();
-    if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (motion()?.openDrawer()) { /* 窄螢幕：結果抽屜 */ }
+    else if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     else window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   } catch (e) {
     if (token !== runGeneration) return;
@@ -664,6 +675,42 @@ function renderPAs() {
 }
 
 /* ---------------- 結果呈現 ---------------- */
+function activeResultTab() { return S.tab || (S.last?.view === "defense" ? "pen" : "ph"); }
+function switchTab(t) {
+  if (activeResultTab() === t) return;
+  S.tab = t;
+  renderResult(true);
+  slideIn($("#evaluationSection"), t === "pen" ? 1 : -1);
+}
+/* 手機左右滑動：結果抽屜中切換代打／換投分頁或向右滑關閉；其餘切換評估與名單頁。 */
+function handleSwipe(dir, target) {
+  const M = motion();
+  if (!M) return;
+  if (M.drawerOpen()) {
+    if (target.closest("#evaluationSection") && $$(".tabs button").length) {
+      const want = dir === "left" ? "pen" : "ph";
+      if (want !== activeResultTab()) { switchTab(want); return; }
+    }
+    if (dir === "right") M.closeDrawer();
+    return;
+  }
+  if ($("#lineupPicker")?.open) return;
+  const lineup = !$("#lineupPage").hidden;
+  if (dir === "left" && !lineup) showFeaturePage("lineup");
+  else if (dir === "right" && lineup) showFeaturePage("evaluation");
+}
+function bindMotion() {
+  const M = motion();
+  if (!M) return;
+  M.setupDrawer({element: $("#result"), onClose: () => {
+    const back = S.mode === "replay" && S.pa ? $(`#paList [data-p="${S.pa}"]`) : $("#evalBtn");
+    back?.focus({preventScroll: true});
+  }});
+  M.onSwipe(handleSwipe);
+  // 「查看結果」：有結果時開抽屜；「返回情境設定」：抽屜開著時關閉
+  $('.mobile-jump a[href="#result"]').addEventListener("click", e => { if (S.last && M.openDrawer()) e.preventDefault(); });
+  $(".result-return").addEventListener("click", e => { if (M.drawerOpen()) { e.preventDefault(); M.closeDrawer(); } });
+}
 const COMPARISON_LIMIT = 4;
 function uiIcon(name) { return `<svg class="ui-icon" aria-hidden="true"><use href="#icon-${name}"/></svg>`; }
 function comparisonNames(R,tab) {
@@ -925,7 +972,7 @@ function renderResult(preserveTabs = false) {
 
   $$(".tabs button").forEach((b) => {
     b.setAttribute('aria-pressed',String(b.dataset.t===activeTab));
-    b.onclick = () => { if(S.tab===b.dataset.t)return;S.tab = b.dataset.t; renderResult(true); };
+    b.onclick = () => switchTab(b.dataset.t);
   });
   $$("tr[data-batter]").forEach((tr) => tr.onclick = e => {if(e.target.closest('a,input,label,details'))return;showDetail(tr.dataset.batter, R.situation.pitcher, tr);});
   $$('tr[data-pitcher]').forEach(tr=>{

@@ -880,3 +880,43 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .timing-legend .chip { margin: 0 2px; }
 .actual.timing-note { border-top: 1px dashed var(--line); }
 .actual:has(+ .timing-note) { border-radius: 0; }
+
+/* ---------- 滑動效果（docs/motion.js）：位移小、時間短；減少動態效果時由上方規則全部關閉 ---------- */
+html { scroll-behavior: smooth; }
+/* 名單頁、進攻／防守欄位原本有較高權重的淡入動畫，滑入時需優先（減少動態效果時 JS 不會加上這兩個 class） */
+.slide-from-right { animation: slide-from-right 240ms var(--ease-ui) !important; }
+.slide-from-left { animation: slide-from-left 240ms var(--ease-ui) !important; }
+@keyframes slide-from-right { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes slide-from-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+/* 寬螢幕的評估結果改為由右側輕輕滑入（覆蓋前面的同名動畫） */
+@keyframes desk-enter { from { opacity: .6; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+/* 名單頁改由 motion.js 依切換方向滑入 */
+.lineup-page:not([hidden]) { animation: none; }
+
+/* 分段捲動：捲到接近區塊開頭時輕輕對齊（proximity，不會強制跳動） */
+html { scroll-snap-type: y proximity; }
+#resultBody > .card, .lineup-heading, .lineup-layout > .card { scroll-snap-align: start; }
+@media (max-width: 1000px) {
+  .matchday-intro, #customPanel > .card, #replayPanel > .card:not([hidden]), #result { scroll-snap-align: start; }
+}
+
+/* 窄螢幕結果抽屜：評估完成後從右側滑出蓋住畫面 */
+.rr-drawer { display: none; }
+@media (max-width: 1000px) {
+  body.result-drawer { overflow: hidden; }
+  body.result-drawer #result {
+    position: fixed; inset: 0; z-index: 30; overflow-y: auto; overscroll-behavior: contain;
+    background: var(--bg); padding: 0 16px 32px; scroll-snap-type: y proximity; scroll-padding-top: 60px;
+    box-shadow: -8px 0 24px rgb(0 0 0 / .25); animation: drawer-in 260ms var(--ease-ui);
+  }
+  body.result-drawer #result:focus { outline: none; }
+  body.result-drawer #result .result-return {
+    position: sticky; top: 0; z-index: 3; margin: 0 -16px 12px; padding: 8px 16px;
+    background: var(--panel); border-bottom: 1px solid var(--line);
+  }
+  body.result-drawer .rr-inline { display: none; }
+  body.result-drawer .rr-drawer { display: inline; }
+  #result.drawer-closing { animation: drawer-out 200ms var(--ease-ui) forwards; }
+}
+@keyframes drawer-in { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes drawer-out { to { transform: translateX(100%); } }
