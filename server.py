@@ -1,4 +1,4 @@
-"""本機網頁伺服器：python server.py 後開啟 http://localhost:8000
+"""本機網頁伺服器：python server.py 後開啟 http://127.0.0.1:8000
 
 只用 Python 標準函式庫 + 專案既有的 pandas/numpy/scipy。
 """
@@ -259,5 +259,5 @@ if __name__ == "__main__":
     rosters()
     model_for(FULL)
     mlmodel.get(FULL)
-    print(f"完成。請開啟 http://localhost:{PORT}")
+    print(f"完成。請開啟 http://127.0.0.1:{PORT}")
     ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
