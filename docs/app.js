@@ -1037,6 +1037,7 @@ function comparisonPanel(R, selected, tab) {
     <div class="compare-chips">${choices.map(r=>`<button type="button" data-remove-compare="${esc(r[nameKey])}" aria-label="移除 ${esc(r[nameKey])} 的比較">${esc(r[nameKey])} <span aria-hidden="true">×</span></button>`).join('')}</div>
     ${chart}<div class="compare-grid">${choices.length ? choices.map(card).join('') : rows.length>1?'<p>選擇候選加入比較。</p>':'<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }
+const SUGGEST_GAP = 1;
 function recommendation(cands) {
   const cur = cands.find((c) => c["角色"] === "現任");
   const bench = cands.filter((c) => c["角色"] === "代打");
@@ -1046,6 +1047,9 @@ function recommendation(cands) {
   const diff = best["預估勝率"] - cur["預估勝率"];
   if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距極小，難以區分',
     text:`相對 ${cur["球員"]}，估計差值 ${sign(diff,4)} 百分點；差距低於顯示精度，並非統計上的相等，不能只依排序認定必須換人。`};
+  // 與「賽季回顧」相同門檻：好不到 1 百分點不建議換人
+  if (diff > 0 && diff < SUGGEST_GAP) return {kind:'neutral', title:`差距不大，以 ${cur["球員"]} 續打為主`,
+    text:`最佳候選 ${best["球員"]} 只比 ${cur["球員"]} ${sign(diff)} 百分點，低於 ${SUGGEST_GAP} 百分點的建議門檻。`};
   if (diff <= 0) { const why = reasonText(batterReasons(cur, S.last)); return { kind: "neutral", title: `目前估計以 ${cur["球員"]} 續打較佳`, text: `${why ? `${cur["球員"]}：${why}。` : ''}可用候選沒有更高的估計值；這不是續打必然較好的保證。` }; }
   const def = best["守備"] === "warn" ? `　${best["守備說明"]}` : "";
   const disagree = best["機器學習"] != null && cur["機器學習"] != null &&
@@ -1114,11 +1118,14 @@ function renderResult(preserveTabs = false) {
     const curP = rows.find((r) => r["角色"] === "場上");
     const fat = curP && curP["疲勞調整"] > 0.0005 ? `已計入 ${esc(s.pitcher)} ${curP["用球數"]} 球的疲勞（${R.bullpen.next.length} 打席 +${curP["疲勞調整"].toFixed(3)} 分）。` : "";
     S.bestName = null;
+    const earlyNote = s.starter && s.inning <= 5 && (s.pitch_count ?? 0) < 75 ? `這只比較接下來 ${R.bullpen.next.length} 棒，未考慮先發吃局數的價值。` : "";
     if (best && Math.abs(best["守方勝率增減"]) < 0.005) {
       html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距極小，難以區分</h3><p>相對場上投手，估計差值 ${sign(best["守方勝率增減"],4)} 百分點；差距低於顯示精度，不宜只依排序換投。${fat}</p></div></div>`;
+    } else if (best && best["守方勝率增減"] > 0 && best["守方勝率增減"] < SUGGEST_GAP) {
+      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距不大，以 ${esc(s.pitcher)} 續投為主</h3><p>最佳候選 ${esc(best["投手"])} 只好 ${sign(best["守方勝率增減"])} 百分點，低於 ${SUGGEST_GAP} 百分點的建議門檻。${earlyNote}${fat}</p></div></div>`;
     } else if (best && best["守方勝率增減"] > 0) {
       html += `<div class="reco" style="border-top:1px solid var(--line)"><div class="ic">↻</div><div><h3>可考慮換上 ${esc(best["投手"])}</h3>
-        <p>${reasonText(pitcherReasons(best, R)) ? `主要原因：${esc(reasonText(pitcherReasons(best, R)))}。` : ''}對上接下來 ${R.bullpen.next.length} 棒，相對場上投手的守方勝率換算差值 ${sign(best["守方勝率增減"])} 百分點。請確認今日可用狀態。${fat}${best["疲勞"] !== "-" ? `　警示 ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
+        <p>${reasonText(pitcherReasons(best, R)) ? `主要原因：${esc(reasonText(pitcherReasons(best, R)))}。` : ''}對上接下來 ${R.bullpen.next.length} 棒，相對場上投手的守方勝率換算差值 ${sign(best["守方勝率增減"])} 百分點。請確認今日可用狀態。${earlyNote}${fat}${best["疲勞"] !== "-" ? `　警示 ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
     } else {
       html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>${best ? `目前估計以 ${esc(s.pitcher)} 續投較佳` : "沒有勾選可用牛棚"}</h3><p>${curP && reasonText(pitcherReasons(curP, R)) ? `${esc(s.pitcher)}：${esc(reasonText(pitcherReasons(curP, R)))}。` : ''}${best ? "候選沒有較低的估計失分；不代表已證明續投最佳。" : "目前只能顯示場上投手；請確認是否有可用後援。"}${fat}</p></div></div>`;
     }

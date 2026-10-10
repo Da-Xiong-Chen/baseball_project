@@ -919,7 +919,9 @@ body { overflow-x: clip; }
 .mode-caption[hidden] { display: none; }
 .feature-nav { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
 /* 評估按鈕固定在情境設定欄底部，不用捲到表單最後 */
-#evalBtn { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 4; box-shadow: 0 8px 20px rgb(0 0 0 / .35); }
+#evalBtn { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 4;
+  /* 第二層陰影是與面板同色的底條，蓋住按鈕後方的表單，不會看到半截控制項 */
+  box-shadow: 0 8px 20px rgb(0 0 0 / .35), 0 0 0 12px var(--panel); }
 /* 斷行只在「・」之後；小按鈕不拆字 */
 #viewSeg button { word-break: keep-all; }
 #benchList button[data-group], #penList button[data-group], .mini-actions button { white-space: nowrap; }
