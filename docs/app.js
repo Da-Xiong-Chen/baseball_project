@@ -59,7 +59,7 @@ function changeInning(delta) {
   const next=Math.max(1,Math.min(12,S.inning+delta));
   if(next===S.inning)return;
   const enteringExtras=S.inning<10&&next>=10;
-  S.inning=next;if(S.mode==='custom'&&enteringExtras)S.bases=2;renderState();
+  S.inning=next;if(S.mode==='custom'&&enteringExtras)S.bases=2;renderState();refreshAutoPitchCount();
 }
 let rosterGeneration = 0, gamesGeneration = 0, gameGeneration = 0, runGeneration = 0;
 /* 滑動效果（docs/motion.js）；沒有載入時所有切換照常運作，只是沒有動畫。 */
@@ -204,13 +204,13 @@ async function applySituation(sit, quiet = false) {
   S.outs = Math.min(2, Math.max(0, +sit.outs || 0)); S.bases = Math.min(7, Math.max(0, +sit.bases || 0));
   $('#myScore').value = Math.max(0, +sit.myScore || 0); $('#oppScore').value = Math.max(0, +sit.oppScore || 0);
   if (sit.view === 'defense' || sit.view === 'offense') setView(sit.view);
-  renderState(); syncScoreControls(); invalidateCustom();
+  renderState(); syncScoreControls(); refreshAutoPitchCount(); invalidateCustom();
   if (!quiet) presetStatus('已套用你的預設情境。');
 }
 function clearSituation() {
   S.inning = 1; S.half = 'away'; S.outs = 0; S.bases = 0;
   $('#myScore').value = 0; $('#oppScore').value = 0;
-  renderState(); syncScoreControls(); invalidateCustom(); presetStatus('已清空局面（1 局上、0 出局、無人、0:0）。');
+  renderState(); syncScoreControls(); refreshAutoPitchCount(); invalidateCustom(); presetStatus('已清空局面（1 局上、0 出局、無人、0:0）。');
 }
 /* 連投標記：今天之前連續登板天數（0／1／2 以上），只用在自訂情境的換投評估 */
 function streakMarks() {
@@ -418,11 +418,20 @@ function bindStatic() {
   $("#onlyChanges").onchange = renderPAs;
 }
 
+/* 預設球數：先發依已完成局數估算（每局約 15 球，上限 105；1 局 0 球、7 局 90 球），後援 15 球 */
+let autoPitchCount = null;
+function defaultPitchCount() { return S.starter ? Math.min(105, Math.max(0, (S.inning - 1) * 15)) : 15; }
 function syncRole() {
   const my = S.roster[$("#myTeam").value];
   const p = my && my.pitchers.find((x) => x.name === $("#myPitcher").value);
   S.starter = !!p && p.role === "先發";
-  $("#pitchCount").value = S.starter ? 90 : 15;
+  $("#pitchCount").value = autoPitchCount = defaultPitchCount();
+  renderRole();
+}
+/* 局數改變時，若球數仍是自動帶入的值（使用者沒改過）就跟著更新 */
+function refreshAutoPitchCount() {
+  if (autoPitchCount === null || +$("#pitchCount").value !== autoPitchCount) return;
+  $("#pitchCount").value = autoPitchCount = defaultPitchCount();
   renderRole();
 }
 function renderRole() {
@@ -502,6 +511,9 @@ async function refreshCustom() {
   const hOpt = hs => hs.map(h=>`<option value="${esc(h.name)}">${esc(h.name)}（${h.hand==='L'?'左':h.hand==='R'?'右':'兩'}打）</option>`).join('');
   if(oppChanged) {
     $('#oppPitcher').innerHTML=pOpt(opp.pitchers);
+    // 對方投手預設為對手預設名單的先發投手（沒有預設名單時維持清單第一位）
+    const oppStarter=typeof LineupBoard!=='undefined'&&LineupBoard.defaultFor(oppName)?.pitcher;
+    if(oppStarter&&opp.pitchers.some(p=>p.name===oppStarter))$('#oppPitcher').value=oppStarter;
     // 對手接下來三棒預設取對手預設名單的第 1–3 棒；沒有預設名單時才用打席數排序。
     const top=(typeof LineupBoard!=='undefined'&&LineupBoard.defaultFor(oppName)?.slots.map(s=>s.name).filter(n=>opp.hitters.some(h=>h.name===n)))||[];
     ['#nb1','#nb2','#nb3'].forEach((id,i)=>{$(id).innerHTML=hOpt(opp.hitters);if(top.length>=3)$(id).value=top[i];else $(id).selectedIndex=i;});syncNextBatters();

@@ -458,3 +458,8 @@ test('season review verdict is plain language and divergent list links each plat
   assert.match(f.eval("divergentList([],'ph')"),/沒有系統建議換人/);
   assert.deepEqual(JSON.parse(f.eval('JSON.stringify(PAGES)')),['evaluation','lineup','review']);
 });
+test('default pitch count follows the inning for starters and stays 15 for relievers',()=>{
+  const f=fixture();
+  const pc=(starter,inning)=>f.eval(`S.starter=${starter};S.inning=${inning};defaultPitchCount()`);
+  assert.equal(pc(true,1),0);assert.equal(pc(true,7),90);assert.equal(pc(true,12),105);assert.equal(pc(false,1),15);assert.equal(pc(false,9),15);
+});

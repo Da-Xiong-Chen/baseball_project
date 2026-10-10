@@ -878,7 +878,6 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .actual:has(+ .timing-note) { border-radius: 0; }
 
 /* ---------- 滑動效果（docs/motion.js）：位移小、時間短；減少動態效果時由上方規則全部關閉 ---------- */
-html { scroll-behavior: smooth; }
 /* 滑入時元素會暫時往旁邊位移，避免手機在這 0.2 秒內出現橫向捲動（clip 不會影響頁首固定） */
 body { overflow-x: clip; }
 /* 名單頁、進攻／防守欄位原本有較高權重的淡入動畫，滑入時需優先（減少動態效果時 JS 不會加上這兩個 class） */
@@ -891,12 +890,7 @@ body { overflow-x: clip; }
 /* 名單頁改由 motion.js 依切換方向滑入 */
 .lineup-page:not([hidden]) { animation: none; }
 
-/* 分段捲動：捲到接近區塊開頭時輕輕對齊（proximity，不會強制跳動） */
-html { scroll-snap-type: y proximity; }
-#resultBody > .card, .lineup-heading, .lineup-layout > .card { scroll-snap-align: start; }
-@media (max-width: 1000px) {
-  .matchday-intro, #customPanel > .card, #replayPanel > .card:not([hidden]), #result { scroll-snap-align: start; }
-}
+/* 捲動維持瀏覽器原生行為：不吸附、不全頁平滑（使用者回饋吸附與平滑捲動不自然） */
 
 /* 窄螢幕結果抽屜：評估完成後從右側滑出蓋住畫面 */
 .rr-drawer { display: none; }
@@ -904,7 +898,7 @@ html { scroll-snap-type: y proximity; }
   body.result-drawer { overflow: hidden; }
   body.result-drawer #result {
     position: fixed; inset: 0; z-index: 30; overflow-y: auto; overscroll-behavior: contain;
-    background: var(--bg); padding: 0 16px 32px; scroll-snap-type: y proximity; scroll-padding-top: 60px;
+    background: var(--bg); padding: 0 16px 32px; scroll-padding-top: 60px;
     box-shadow: -8px 0 24px rgb(0 0 0 / .25); animation: drawer-in 260ms var(--ease-ui);
   }
   body.result-drawer #result:focus { outline: none; }
@@ -920,8 +914,6 @@ html { scroll-snap-type: y proximity; }
 @keyframes drawer-out { to { transform: translateX(100%); } }
 
 /* ---------- 使用者體驗調整 ---------- */
-/* 頁面頂端也是吸附點，捲回最上方不會被拉回結果卡片 */
-.feature-nav { scroll-snap-align: start; }
 /* 兩層選單：功能選單（評估／名單）為主；頁首的「評估資料」切換只屬於評估頁 */
 .mode-caption { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .mode-caption[hidden] { display: none; }
@@ -957,8 +949,6 @@ html { scroll-snap-type: y proximity; }
   .evaluation-value .vcell { flex-wrap: wrap; row-gap: 4px; }
   table.t.evaluation-table th, table.t.evaluation-table td { padding-left: 6px; padding-right: 6px; }
 }
-/* 頁面頂端的吸附點拉到最上方（捲動位置 0），不留空隙 */
-.feature-nav { scroll-margin-top: 400px; }
 /* 偏好設定與我的預設情境 */
 .prefs { margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
 .prefs > summary { cursor: pointer; padding: 10px 12px; font-weight: 600; font-size: 13px; }
