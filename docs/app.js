@@ -303,6 +303,8 @@ async function init() {
   renderState();
   await refreshCustom();
   await applySituation(readPrefs().situation, true);
+  $('#reviewTeam').innerHTML = opts; $('#reviewTeam').value = $('#myTeam').value;
+  $('#reviewTeam').onchange = renderReview;
   LineupBoard.mount({element:$('#lineupPage'),teams:S.teams,team,matches:matchesPlayerSearch,pitchCount:()=>$('#pitchCount').value,role:()=>S.starter,applied:applyOwnLineup});
   $$('[data-page]').forEach(b=>b.onclick=()=>showFeaturePage(b.dataset.page));
   bindMotion();
@@ -311,16 +313,22 @@ async function init() {
 let dueFromLineup = false;  // 「輪到的打者」選項目前是否來自場上名單
 function ownLineup() { if(typeof LineupBoard==='undefined')return null;const name=$('#myTeam').value,c=LineupBoard.current(name),r=S.roster[name];return c&&r&&LineupBoard.validate(c,r).length===0?c:null; }
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name); }
+/* 功能頁依選單順序排列；滑入方向與手勢都依這個順序 */
+const PAGES = ["evaluation", "lineup", "review"];
+const PAGE_EL = {evaluation:"#evaluationPage", lineup:"#lineupPage", review:"#reviewPage"};
+const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lineupTitle","跳到場上名單"], review:["#reviewTitle","跳到賽季回顧"]};
+function currentPage() { return PAGES.find(p => !$(PAGE_EL[p]).hidden) || "evaluation"; }
 async function showFeaturePage(page) {
   if(typeof LineupBoard!=='undefined')LineupBoard.cancelSwap();
   if(motion()?.drawerOpen())motion().closeDrawer();
-  const lineup=page==='lineup',changed=$('#lineupPage').hidden===lineup;
-  $('#lineupPage').hidden=!lineup;$('#evaluationPage').hidden=lineup;
-  if(changed)slideIn(lineup?$('#lineupPage'):$('#evaluationPage'),lineup?1:-1);
-  $('.matchday-intro').hidden=lineup;$('.mobile-jump').hidden=lineup;$('#modeSeg').hidden=lineup;$('#modeCaption').hidden=lineup;
-  $('.skip-link').href=lineup?'#lineupTitle':'#workspace';$('.skip-link').textContent=lineup?'跳到場上名單':'跳到情境設定';
+  const from=currentPage(),evaluation=page==='evaluation';
+  PAGES.forEach(p=>{$(PAGE_EL[p]).hidden=p!==page;});
+  if(from!==page)slideIn($(PAGE_EL[page]),PAGES.indexOf(page)>PAGES.indexOf(from)?1:-1);
+  $('.matchday-intro').hidden=!evaluation;$('.mobile-jump').hidden=!evaluation;$('#modeSeg').hidden=!evaluation;$('#modeCaption').hidden=!evaluation;
+  $('.skip-link').href=PAGE_SKIP[page][0];$('.skip-link').textContent=PAGE_SKIP[page][1];
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-  if(lineup)await LineupBoard.selectTeam($('#myTeam').value);
+  if(page==='lineup')await LineupBoard.selectTeam($('#myTeam').value);
+  if(page==='review'){if(!$('#reviewTeam').value)$('#reviewTeam').value=$('#myTeam').value;await loadTiming();renderReview();}
   window.scrollTo({top:0,behavior:'auto'});
 }
 function syncOwnLineup() {
@@ -406,6 +414,8 @@ function bindStatic() {
   $("#rpTeam").onchange = loadGames;
   $("#onlyPhGames").onchange = renderGames;
   $("#lateOnly").onchange = renderPAs;
+  $("#showSuggest").onchange = renderPAs;
+  $("#onlyChanges").onchange = renderPAs;
 }
 
 function syncRole() {
@@ -435,7 +445,7 @@ function setMode(m) {
   $("#replayPanel").classList.toggle("hidden", m !== "replay");
   slideIn(m === "replay" ? $("#replayPanel") : $("#customPanel"), m === "replay" ? 1 : -1);
   if (m === "replay" && !S.games.length) loadGames();
-  if (m === "replay") loadTiming().then(() => { renderTimingSummary(); renderPAs(); });
+  if (m === "replay") loadTiming().then(renderPAs);
 }
 function setView(v) {
   if(v===S.view)return;
@@ -695,33 +705,76 @@ function timingFor(paId) {
   return {penGain:t[0], penBest:t[1], inc:t[2], phGain:t[3], phBest:t[4], due:t[5], phHasBench:!!t[6],
     penSug:t[0] != null && t[0] >= T, phSug:t[3] != null && t[3] >= T};
 }
+/* 白話結論：x 為全聯盟 summary；higherIsWorse：換投看失分（越高越差）、代打看得分（越低越差） */
 function timingVerdict(x, higherIsWorse) {
-  if (!x.stay_diff_ci) return '樣本不足，無法判斷。';
+  if (!x.stay_diff_ci) return {ok:false, text:'樣本不足，還無法判斷。'};
   const [lo, hi] = x.stay_diff_ci, ok = higherIsWorse ? lo > 0 : hi < 0, opposite = higherIsWorse ? hi < 0 : lo > 0;
-  return ok ? '差異明顯：系統挑出的時機，留在場上的人確實表現較差。' : opposite ? '差異方向與系統判斷相反。' : '差異不明顯（區間含 0），不能證明系統挑的時機較準。';
+  if (ok) return {ok:true, text:higherIsWorse ? '系統建議換投、但教練讓投手續投時，這些打席確實比較容易失分，系統挑出的換投時機有參考價值。' : '系統建議代打、但原打者上場時，這些打席確實比較難得分，系統挑出的代打時機有參考價值。'};
+  if (opposite) return {ok:false, text:'結果與系統判斷相反，這類建議請謹慎參考。'};
+  return {ok:false, text:higherIsWorse ? '系統建議換投與否，續投投手的表現沒有明顯差別，換投時機建議僅供參考。' : '系統建議代打與否，原打者的表現沒有明顯差別，代打時機建議僅供參考。'};
 }
-function renderTimingSummary() {
-  const card = $('#timingCard'), team = $('#rpTeam').value, d = timingData && timingData.by_team[team];
-  card.hidden = !d;
-  if (!d) return;
+const HALF_ZH = h => h === "away" ? "上" : "下";
+function divergentList(items, kind) {
+  if (!items?.length) return '<p class="mut">沒有系統建議換人、但實際沒換的打席。</p>';
+  return `<ol class="divergent-list">${items.map(x => {
+    const score = kind === "pen" ? `${x.fld_score}:${x.bat_score}` : `${x.bat_score}:${x.fld_score}`;
+    return `<li><button type="button" data-review-pa="${esc(x.pa)}" data-review-kind="${kind}">
+      <span class="dv-when num">${esc(x.date.slice(5))}・${x.inning} 局${HALF_ZH(x.half)}</span>
+      <span class="dv-who">${kind === "pen" ? `<b>${esc(x.who)}</b> 續投 → 建議換上 <b>${esc(x.best)}</b>` : `<b>${esc(x.who)}</b> 打擊 → 建議 <b>${esc(x.best)}</b> 代打`}</span>
+      <span class="dv-ctx mut">對 ${esc(x.opp)}・${x.outs} 出局${x.bases ? `・${BASES[x.bases]}` : ""}・我方 ${score}・結果 ${esc(resultLabel(x.result))}</span>
+      <span class="dv-gain num pos">${sign(x.gain)} 百分點</span><span class="dv-go" aria-hidden="true">→</span></button></li>`;
+  }).join("")}</ol>`;
+}
+function renderReview() {
+  const box = $('#reviewBody'), team = $('#reviewTeam').value, d = timingData && timingData.by_team[team];
+  if (timingData === false) { box.innerHTML = '<p class="mut">換人時機資料無法載入。</p>'; return; }
+  if (!d) { box.innerHTML = '<p class="mut">載入中…</p>'; return; }
   const T = timingData.threshold, key = Object.keys(timingData.summary).find(k => +k === T), all = timingData.summary[key];
-  const pen = d.pen, ph = d.ph, pt = d.pen_timing, n = v => `<b class="num">${v}</b>`;
-  const re = x => `${sign(x.stay_re24_suggested)}（n=${x.stay_n_suggested}）；系統不建議時 ${sign(x.stay_re24_not)}（n=${x.stay_n_not}）。差 ${sign(x.stay_diff)}，95% 區間 ${sign(x.stay_diff_ci[0])} ～ ${sign(x.stay_diff_ci[1])}`;
-  $('#timingSummary').innerHTML = `
-    <p class="mut">每個打席前，系統用當時可知的資料估計「換人」是否比「不換」好 ${T} 百分點以上，再與實際調度比對。</p>
-    <h3 class="timing-h">換投（${esc(team)} 防守）</h3>
-    <ul class="timing-list">
-      <li>實際換投 ${n(pen.actual)} 次・系統建議 ${n(pen.suggested)} 次・同一打席都換 ${n(pen.both)} 次</li>
-      <li>實際換投時，系統同一打席建議 ${n(pt.same)} 次、更早建議 ${n(pt.earlier)} 次${pt.earlier_median != null ? `（中位數早 ${pt.earlier_median} 個打席）` : ''}、未建議 ${n(pt.system_never)} 次</li>
-    </ul>
-    <h3 class="timing-h">代打（${esc(team)} 進攻）</h3>
-    <ul class="timing-list"><li>實際代打 ${n(ph.actual)} 次・系統建議 ${n(ph.suggested)} 次・同一打席都換 ${n(ph.both)} 次</li></ul>
-    <details class="timing-check"><summary>全聯盟驗證：系統挑的時機準不準？</summary>
-      <p>系統建議換投、但投手續投的打席，進攻方平均得分期望變化（RE24）${all.pen.stay_diff_ci ? re(all.pen) : '—'}。${timingVerdict(all.pen, true)}</p>
-      <p>系統建議代打、但原打者上場的打席，平均得分期望變化 ${all.ph.stay_diff_ci ? re(all.ph) : '—'}。${timingVerdict(all.ph, false)}</p>
+  const pen = d.pen, ph = d.ph, pt = d.pen_timing, vp = timingVerdict(all.pen, true), vh = timingVerdict(all.ph, false);
+  const stat = (v, label) => `<div class="review-stat"><strong class="num">${v}</strong><span>${label}</span></div>`;
+  const re = x => `系統建議但沒換時，平均得分期望變化（RE24）${sign(x.stay_re24_suggested)}（${x.stay_n_suggested} 個打席）；系統不建議時 ${sign(x.stay_re24_not)}（${x.stay_n_not} 個打席）。差 ${sign(x.stay_diff)}，95% 區間 ${sign(x.stay_diff_ci[0])} ～ ${sign(x.stay_diff_ci[1])}。`;
+  box.innerHTML = `
+    <section class="card review-card" aria-labelledby="reviewPenTitle"><div class="card-h"><h3 id="reviewPenTitle">換投（${esc(team)} 防守）</h3></div><div class="card-b">
+      <div class="review-stats">${stat(pen.actual, "實際換投")}${stat(pen.suggested, "系統建議")}${stat(pen.both, "同一打席都換")}${stat(pt.earlier_median != null ? `${pt.earlier_median} 個打席` : "—", "系統建議的中位數提早")}</div>
+      <p class="review-note">實際換投 ${pt.changes} 次中，系統在同一打席就建議 ${pt.same} 次、更早建議 ${pt.earlier} 次，整段登板都沒建議 ${pt.system_never} 次。</p>
+      <p class="review-verdict ${vp.ok ? "ok" : ""}">${vp.ok ? "✓" : "＝"} ${vp.text}</p>
+      <h4>分歧最大的打席：系統建議換投、教練讓投手續投</h4>${STATIC ? '<p class="mut">線上版只收錄有代打的打席完整評估；點選後可看到該場打席列表，完整換投評估請用本機版。</p>' : ''}${divergentList(d.divergent?.pen, "pen")}
+    </div></section>
+    <section class="card review-card" aria-labelledby="reviewPhTitle"><div class="card-h"><h3 id="reviewPhTitle">代打（${esc(team)} 進攻）</h3></div><div class="card-b">
+      <div class="review-stats">${stat(ph.actual, "實際代打")}${stat(ph.suggested, "系統建議")}${stat(ph.both, "同一打席都換")}</div>
+      <p class="review-verdict ${vh.ok ? "ok" : ""}">${vh.ok ? "✓" : "＝"} ${vh.text}</p>
+      <h4>分歧最大的打席：系統建議代打、教練讓原打者上場</h4>${divergentList(d.divergent?.ph, "ph")}
+    </div></section>
+    <details class="card review-method"><summary>方法與數據</summary><div class="card-b">
+      <p>每個打席開始前，用比賽當天以前的資料，以與「歷史回放」相同的模型比較「換人」與「不換」；最佳候選好 ${T} 百分點以上視為系統建議。換下後板凳無人能接守的代打不列入。</p>
+      <p>換投驗證（全聯盟）：${all.pen.stay_diff_ci ? re(all.pen) : "樣本不足。"}</p>
+      <p>代打驗證（全聯盟）：${all.ph.stay_diff_ci ? re(all.ph) : "樣本不足。"}</p>
       <p class="mut">${esc(timingData.limits)}</p>
-    </details>
-    <p class="mut timing-legend">打席列表：<span class="chip tag-sys">系統：換投</span><span class="chip tag-sys">系統：代打</span> 為系統建議，<span class="chip tag-ph">換投</span><span class="chip tag-ph">代打</span> 為實際調度。</p>`;
+    </div></details>`;
+  box.querySelectorAll("[data-review-pa]").forEach(b => b.onclick = () => openReplayPA(b.dataset.reviewPa, b.dataset.reviewKind));
+}
+/* 從賽季回顧跳到歷史回放的那個打席 */
+async function openReplayPA(pa, kind) {
+  const gid = pa.split("-").slice(0, 2).join("-");
+  const item = Object.values(timingData.by_team).flatMap(t => [...(t.divergent?.pen || []), ...(t.divergent?.ph || [])]).find(x => x.pa === pa);
+  await showFeaturePage("evaluation");
+  setMode("replay");
+  $("#rpTeam").value = $("#reviewTeam").value;
+  await loadGames();
+  if (!S.games.find(g => g.game === gid)?.ph && $("#onlyPhGames").checked) { $("#onlyPhGames").checked = false; renderGames(); }
+  await loadGame(gid);
+  const note = $("#replayNote");
+  if (!S.pas) { note.textContent = "線上版沒有收錄這場比賽的打席資料；請用本機版查看。"; note.hidden = false; return; }
+  if (item && item.inning < 7) $("#lateOnly").checked = false;
+  $("#onlyChanges").checked = false; $("#showSuggest").checked = true;
+  S.tab = kind === "pen" ? "pen" : "ph";
+  renderPAs();
+  const btn = $(`#paList [data-p="${pa}"]`);
+  if (!btn) return;
+  btn.scrollIntoView({block: "center"});
+  if (btn.disabled) { note.textContent = "線上版只收錄有代打的打席完整評估；這個打席請用本機版查看。"; note.hidden = false; btn.classList.add("on"); return; }
+  note.hidden = true;
+  btn.click();
 }
 
 /* ---------------- 歷史回放 ---------------- */
@@ -729,7 +782,6 @@ async function loadGames() {
   const token = ++gamesGeneration;
   ++gameGeneration;
   clearResult();
-  renderTimingSummary();
   S.games = []; S.pas = null; S.game = null; S.pa = null;
   $("#paList").innerHTML = '<p>先選一場比賽</p>';
   $("#gameList").innerHTML = `<div class="empty" style="padding:24px"><span class="loading"></span></div>`;
@@ -753,6 +805,7 @@ function renderGames() {
 }
 async function loadGame(gid) {
   const token = ++gameGeneration;
+  $("#replayNote").hidden = true;
   clearResult();
   S.pas = null; S.pa = null;
   S.game = gid;
@@ -768,7 +821,7 @@ async function loadGame(gid) {
 }
 function renderPAs() {
   if (!S.pas) return;
-  const late = $("#lateOnly").checked;
+  const late = $("#lateOnly").checked, showSuggest = $("#showSuggest").checked, onlyChanges = $("#onlyChanges").checked;
   let html = "", lastKey = "";
   // 實際換投：與同一防守隊上一打席的投手不同（第一個打席除外）
   const lastPitcher = {}, penChanged = new Set();
@@ -776,8 +829,14 @@ function renderPAs() {
     if (lastPitcher[p.fld_team] && lastPitcher[p.fld_team] !== p.pitcher) penChanged.add(p.pa_id);
     lastPitcher[p.fld_team] = p.pitcher;
   }
-  for (const p of S.pas.filter((p) => !late || p.inning >= 7)) {
+  const visible = p => {
+    if (late && p.inning < 7) return false;
+    if (!onlyChanges) return true;
     const tm = timingFor(p.pa_id);
+    return p.is_ph || penChanged.has(p.pa_id) || (showSuggest && (tm?.penSug || tm?.phSug));
+  };
+  for (const p of S.pas.filter(visible)) {
+    const tm = showSuggest ? timingFor(p.pa_id) : null;
     const key = `${p.inning}-${p.half}`;
     if (key !== lastKey) {
       html += `<div class="inning-h">${p.inning} 局${p.half === "away" ? "上" : "下"}・${esc(p.bat_team)} 攻擊</div>`;
@@ -823,9 +882,9 @@ function handleSwipe(dir, target) {
     return;
   }
   if ($("#lineupPicker")?.open) return;
-  const lineup = !$("#lineupPage").hidden;
-  if (dir === "left" && !lineup) showFeaturePage("lineup");
-  else if (dir === "right" && lineup) showFeaturePage("evaluation");
+  // 左滑到下一個功能頁、右滑回上一個（評估 → 名單 → 賽季回顧）
+  const i = PAGES.indexOf(currentPage()), next = PAGES[i + (dir === "left" ? 1 : -1)];
+  if (next) showFeaturePage(next);
 }
 function bindMotion() {
   const M = motion();

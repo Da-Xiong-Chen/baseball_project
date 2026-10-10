@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261010-ux"></script>
-<link rel="stylesheet" href="style.css?v=20261010-ux">
+<script src="theme.js?v=20261010-review4"></script>
+<link rel="stylesheet" href="style.css?v=20261010-review4">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -42,6 +42,7 @@
 <nav class="feature-nav" aria-label="功能選單">
   <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
   <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
+  <button type="button" data-page="review"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>賽季回顧</button>
 </nav>
 <section id="lineupPage" class="lineup-page" hidden aria-labelledby="lineupTitle">
   <div class="lineup-heading"><div><p class="eyebrow">MY TEAM / LINEUP</p><h2 id="lineupTitle" tabindex="-1">我方場上名單</h2><p class="mut">安排守位與九棒，隨時調整。</p></div><div><label class="f" for="lineupTeam">配置球隊</label><select id="lineupTeam"></select></div></div>
@@ -58,6 +59,11 @@
   <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">返回評估 →</button></div>
   <p class="mut lineup-footnote">2025 球員資料；預設名單取自各隊 2025 最後 30 場最常先發的球員，守位只排有守備經驗者；今日可用名單仍須自行確認。配置保存在此瀏覽器。</p>
   <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2025 背號…"><div id="lineupPlayerList"></div></dialog>
+</section>
+
+<section id="reviewPage" class="review-page" hidden aria-labelledby="reviewTitle">
+  <div class="review-heading"><div><p class="eyebrow">SEASON REVIEW / 2025</p><h2 id="reviewTitle" tabindex="-1">賽季回顧：換人時機</h2><p class="mut">2025 例行賽 6 局以後，每個打席前系統會不會建議換人，與教練實際調度比對。</p></div><div><label class="f" for="reviewTeam">球隊</label><select id="reviewTeam"></select></div></div>
+  <div id="reviewBody" aria-live="polite"><p class="mut">載入中…</p></div>
 </section>
 
 <div class="matchday-intro">
@@ -195,12 +201,12 @@
         <div class="card-h"><h2>選擇打席</h2><span class="hint">在該打席開始前做決策</span></div>
         <div class="card-b">
           <label class="toggle"><input type="checkbox" id="lateOnly" checked> 只顯示 7 局以後</label>
+          <label class="toggle"><input type="checkbox" id="showSuggest" checked> 顯示系統建議</label>
+          <label class="toggle"><input type="checkbox" id="onlyChanges"> 只看有換人或有建議的打席</label>
+          <p class="mut timing-legend"><span class="chip tag-sys">系統：換投</span><span class="chip tag-sys">系統：代打</span> 系統建議　<span class="chip tag-ph">換投</span><span class="chip tag-ph">代打</span> 實際調度</p>
+          <p id="replayNote" class="mut replay-note" role="status" hidden></p>
           <div class="list" id="paList" style="max-height:420px"><div class="empty" style="padding:24px">先選一場比賽</div></div>
         </div>
-      </div>
-      <div class="card" id="timingCard" hidden>
-        <div class="card-h"><h2>換人時機比對</h2><span class="hint">2025・6 局以後</span></div>
-        <div class="card-b" id="timingSummary"></div>
       </div>
     </div>
   </aside>
@@ -218,11 +224,11 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261010-ux"></script>
-<script src="pitch-change.js?v=20261010-ux"></script>
-<script src="pitcher-groups.js?v=20261010-ux"></script>
-<script src="motion.js?v=20261010-ux"></script>
-<script src="lineup.js?v=20261010-ux"></script>
-<script src="app.js?v=20261010-ux"></script>
+<script src="engine.js?v=20261010-review4"></script>
+<script src="pitch-change.js?v=20261010-review4"></script>
+<script src="pitcher-groups.js?v=20261010-review4"></script>
+<script src="motion.js?v=20261010-review4"></script>
+<script src="lineup.js?v=20261010-review4"></script>
+<script src="app.js?v=20261010-review4"></script>
 </body>
 </html>

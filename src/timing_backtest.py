@@ -174,6 +174,28 @@ def _txt(v):
     return None if pd.isna(v) else str(v)
 
 
+def divergent(ok, d, team, kind, t=THRESHOLD, n=10):
+    """系統建議換人、但實際沒換，且建議最強的打席（賽季回顧的「分歧最大的打席」）。
+
+    同一場同一位投手（換投）或打者（代打）只列建議最強的一次，避免同一段登板佔滿清單。
+    """
+    if kind == "pen":
+        x = ok[(ok["fld_team"] == team) & ~ok["pen_change"].astype(bool) & (ok["pen_gain"] >= t)]
+        x = x.sort_values("pen_gain", ascending=False).drop_duplicates(["game", "inc"]).head(n)
+        who, best, gain, opp = "inc", "pen_best", "pen_gain", "bat_team"
+    else:
+        x = ok[(ok["bat_team"] == team) & ~ok["is_ph"].astype(bool) & (ok["ph_gain"].fillna(-np.inf) >= t)]
+        x = x.sort_values("ph_gain", ascending=False).drop_duplicates(["game", "due"]).head(n)
+        who, best, gain, opp = "due", "ph_best", "ph_gain", "fld_team"
+    info = d.set_index("pa_id")
+    return [dict(pa=r["pa_id"], game=r["game"], date=str(r["date"])[:10], inning=int(r["inning"]), half=r["half"],
+                 opp=r[opp], who=_txt(r[who]), best=_txt(r[best]), gain=_num(r[gain]),
+                 outs=int(info.at[r["pa_id"], "outs"]), bases=int(info.at[r["pa_id"], "bases"]),
+                 bat_score=int(info.at[r["pa_id"], "bat_score"]), fld_score=int(info.at[r["pa_id"], "fld_score"]),
+                 result=_txt(info.at[r["pa_id"], "result"]))
+            for _, r in x.iterrows()]
+
+
 def build_outputs(res, d):
     """由模擬結果產生網站用的 JSON 並印出總覽。"""
     ok = res[res.get("error").isna()] if "error" in res else res
@@ -185,7 +207,8 @@ def build_outputs(res, d):
     for tm in teams:
         fld, bat = ok[ok["fld_team"] == tm], ok[ok["bat_team"] == tm]
         by_team[tm] = dict(pen=summarize(fld, THRESHOLD)["pen"], ph=summarize(bat, THRESHOLD)["ph"],
-                           pen_timing=timing_summary(pen_timing(fld, THRESHOLD)))
+                           pen_timing=timing_summary(pen_timing(fld, THRESHOLD)),
+                           divergent=dict(pen=divergent(ok, d, tm, "pen"), ph=divergent(ok, d, tm, "ph")))
     result = dict(
         season=SEASON, min_inning=MIN_INNING, threshold=THRESHOLD, generated=time.strftime("%Y-%m-%d"),
         method="每個打席前以與歷史回放相同的集成模型評估（只用比賽當天以前的資料）；換投比較上一打席投手續投與推估可用牛棚（接下來 3 棒），代打比較輪到的打者與推估板凳。最佳候選差值達門檻視為系統建議。",

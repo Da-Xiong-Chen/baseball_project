@@ -872,10 +872,6 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 /* 換人時機比對：系統建議用外框標籤，實際調度沿用實心標籤，不靠顏色也能分辨 */
 .tag-sys { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 700; }
 #paList .item { flex-wrap: wrap; row-gap: 4px; }
-.timing-h { font-size: var(--font-label, 14px); margin: 12px 0 4px; }
-.timing-list { margin: 0; padding-left: 18px; line-height: 1.6; font-size: 13px; }
-.timing-check { margin-top: 12px; font-size: 13px; line-height: 1.6; }
-.timing-check summary { cursor: pointer; font-weight: 700; min-height: 32px; }
 .timing-legend { margin-top: 10px; font-size: 12px; line-height: 1.8; }
 .timing-legend .chip { margin: 0 2px; }
 .actual.timing-note { border-top: 1px dashed var(--line); }
@@ -980,3 +976,47 @@ html { scroll-snap-type: y proximity; }
 .reasons li.neg .mark { color: var(--neg); }
 .reasons li.mut { color: var(--muted); }
 .reco .why { margin-top: 4px; }
+
+/* ---------- 賽季回顧頁 ---------- */
+.review-page { max-width: 1100px; margin: 0 auto; padding: 8px 24px 40px; }
+.review-page[hidden] { display: none; }
+.review-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.review-heading h2 { margin: 4px 0; font-size: 28px; }
+.review-heading select { min-width: 180px; }
+.review-card { margin-bottom: 16px; }
+.review-card h4 { margin: 18px 0 8px; font-size: 14px; }
+.review-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.review-stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.review-stat strong { font-size: 26px; line-height: 1.1; }
+.review-stat span { font-size: 12px; color: var(--muted); }
+.review-note { font-size: 13px; margin: 12px 0 0; }
+.review-verdict { margin: 12px 0 0; padding: 10px 12px; border-radius: 8px; background: var(--panel-2); border-left: 3px solid var(--muted); font-size: 14px; line-height: 1.6; }
+.review-verdict.ok { border-left-color: var(--pos); }
+.divergent-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.divergent-list li + li { border-top: 1px solid var(--line); }
+.divergent-list button { width: 100%; display: grid; grid-template-columns: 96px minmax(0, 1fr) auto 16px; grid-template-areas: "when who gain go" "when ctx gain go";
+  gap: 2px 12px; align-items: center; padding: 10px 12px; background: transparent; border: 0; color: var(--text); text-align: left; cursor: pointer; min-height: 56px; font: inherit; }
+.divergent-list button:hover { background: var(--panel-2); }
+.dv-when { grid-area: when; font-size: 13px; color: var(--muted); }
+.dv-who { grid-area: who; font-size: 14px; }
+.dv-ctx { grid-area: ctx; font-size: 12px; }
+.dv-gain { grid-area: gain; font-weight: 700; white-space: nowrap; }
+.dv-go { grid-area: go; color: var(--muted); }
+.review-method summary { cursor: pointer; padding: 12px 16px; font-weight: 700; }
+.review-method .card-b p { font-size: 13px; line-height: 1.7; }
+.replay-note { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: var(--warn-soft); color: var(--text); }
+.replay-note[hidden] { display: none; }
+@media (max-width: 600px) {
+  .review-page { padding: 8px 12px 32px; }
+  .review-heading h2 { font-size: 22px; }
+  .review-heading > div:last-child, .review-heading select { width: 100%; }
+  .review-card .review-stat strong { font-size: 22px; }
+  .divergent-list button { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "when gain" "who who" "ctx ctx"; }
+  .dv-go { display: none; }
+}
+/* 窄螢幕三個功能頁按鈕：省略圖示，文字保持一行 */
+@media (max-width: 520px) {
+  .feature-nav { gap: 6px; }
+  .feature-nav .ui-icon { display: none; }
+  .feature-nav button { font-size: 13px; padding: 10px 4px; word-break: keep-all; white-space: nowrap; }
+}
