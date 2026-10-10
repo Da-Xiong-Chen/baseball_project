@@ -922,3 +922,44 @@ html { scroll-snap-type: y proximity; }
 }
 @keyframes drawer-in { from { transform: translateX(100%); } to { transform: none; } }
 @keyframes drawer-out { to { transform: translateX(100%); } }
+
+/* ---------- 使用者體驗調整 ---------- */
+/* 頁面頂端也是吸附點，捲回最上方不會被拉回結果卡片 */
+.feature-nav { scroll-snap-align: start; }
+/* 兩層選單：功能選單（評估／名單）為主；頁首的「評估資料」切換只屬於評估頁 */
+.mode-caption { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.mode-caption[hidden] { display: none; }
+.feature-nav { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+/* 評估按鈕固定在情境設定欄底部，不用捲到表單最後 */
+#evalBtn { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 4; box-shadow: 0 8px 20px rgb(0 0 0 / .35); }
+/* 斷行只在「・」之後；小按鈕不拆字 */
+#viewSeg button { word-break: keep-all; }
+#benchList button[data-group], #penList button[data-group], .mini-actions button { white-space: nowrap; }
+.search-label { margin-top: 10px; }
+/* 「查看結果」有結果才顯示 */
+.mobile-jump a[hidden] { display: none; }
+.mobile-jump:has(a[href="#result"][hidden]) { display: none; }  /* 還沒有結果時，只剩「情境設定」沒有意義 */
+/* 價值分數圖例中的現任分數 */
+.score-baseline { flex-basis: 100%; color: var(--text); }
+/* 寬螢幕：表格不需左右捲動，數值不斷行；空白提示跟著捲動 */
+@media (min-width: 601px) {
+  table.t.evaluation-table { min-width: 0; }
+  .evaluation-value .vnum { white-space: nowrap; }
+}
+@media (min-width: 1001px) {
+  #emptyState { position: sticky; top: 96px; }
+}
+/* 手機：省略介紹區，讓表單從第一個畫面開始 */
+@media (max-width: 600px) {
+  html { scroll-padding-top: 156px; }   /* 頁首最高約 142px（320px 寬），原本 220px 會多空一大段 */
+  .matchday-intro { display: none; }
+  .mode-caption { display: none; }
+  .feature-nav { margin: 10px auto; padding-bottom: 10px; }
+}
+/* 中等寬度：勝率變化的長條圖移到數字下方，讓整張表放得下，不必左右捲動 */
+@media (min-width: 601px) and (max-width: 1250px) {
+  .evaluation-value .vcell { flex-wrap: wrap; row-gap: 4px; }
+  table.t.evaluation-table th, table.t.evaluation-table td { padding-left: 6px; padding-right: 6px; }
+}
+/* 頁面頂端的吸附點拉到最上方（捲動位置 0），不留空隙 */
+.feature-nav { scroll-margin-top: 400px; }

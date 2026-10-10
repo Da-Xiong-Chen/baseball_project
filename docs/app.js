@@ -74,6 +74,7 @@ function clearResult() {
   $("#resultBody").innerHTML = "";
   $("#resultBody").classList.add("hidden");
   $("#emptyState").classList.remove("hidden");
+  $('.mobile-jump a[href="#result"]').hidden = true;
   $("#evalBtn").disabled = !S.ready;
   $("#evalBtn").innerHTML = uiIcon("compare") + "評估";
 }
@@ -191,6 +192,7 @@ async function init() {
   bindMotion();
 }
 
+let dueFromLineup = false;  // 「輪到的打者」選項目前是否來自場上名單
 function ownLineup() { if(typeof LineupBoard==='undefined')return null;const name=$('#myTeam').value,c=LineupBoard.current(name),r=S.roster[name];return c&&r&&LineupBoard.validate(c,r).length===0?c:null; }
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name); }
 async function showFeaturePage(page) {
@@ -199,7 +201,7 @@ async function showFeaturePage(page) {
   const lineup=page==='lineup',changed=$('#lineupPage').hidden===lineup;
   $('#lineupPage').hidden=!lineup;$('#evaluationPage').hidden=lineup;
   if(changed)slideIn(lineup?$('#lineupPage'):$('#evaluationPage'),lineup?1:-1);
-  $('.matchday-intro').hidden=lineup;$('.mobile-jump').hidden=lineup;$('#modeSeg').hidden=lineup;
+  $('.matchday-intro').hidden=lineup;$('.mobile-jump').hidden=lineup;$('#modeSeg').hidden=lineup;$('#modeCaption').hidden=lineup;
   $('.skip-link').href=lineup?'#lineupTitle':'#workspace';$('.skip-link').textContent=lineup?'跳到場上名單':'跳到情境設定';
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   if(lineup)await LineupBoard.selectTeam($('#myTeam').value);
@@ -209,8 +211,11 @@ function syncOwnLineup() {
   const c=ownLineup(),my=S.roster[$('#myTeam').value];if(!my)return;
   const selected=$('#dueBatter').value;
   if(c) {
+    const fromLineup=dueFromLineup;
     $('#dueBatter').innerHTML=c.slots.map((s,i)=>`<option value="${esc(s.name)}">第 ${i+1} 棒 · ${esc(s.name)}</option>`).join('');
-    $('#dueBatter').value=c.slots.some(s=>s.name===selected)?selected:c.slots[0].name;
+    dueFromLineup=true;
+    // 預設輪到第 9 棒（代打多發生在打序後段）；使用者已在名單選項中選過時保留
+    $('#dueBatter').value=fromLineup&&c.slots.some(s=>s.name===selected)?selected:c.slots[8].name;
     // 換了場上投手時一併更新先發／後援與預設球數，畫面與送出的評估條件才會一致。
     if($('#myPitcher').value!==c.pitcher){$('#myPitcher').value=c.pitcher;syncRole();}
     $('#duePos').value=c.slots.find(s=>s.name===$('#dueBatter').value).pos;
@@ -225,7 +230,7 @@ async function applyOwnLineup(name,change={}) {
   if($('#myTeam').value!==name){$('#myTeam').value=name;syncTeamChoices('myTeam');await refreshCustom();}
   else {
     const c=ownLineup();
-    if(!c)$('#dueBatter').innerHTML=S.roster[name].hitters.map(h=>`<option value="${esc(h.name)}">${esc(h.name)}</option>`).join('');
+    if(!c){$('#dueBatter').innerHTML=S.roster[name].hitters.map(h=>`<option value="${esc(h.name)}">${esc(h.name)}</option>`).join('');dueFromLineup=false;}
     syncOwnLineup();autoPos();renderBench();
   }
   if(change.pitcherSelected)S.starter=S.roster[name].pitchers.find(p=>p.name===$('#myPitcher').value)?.role==='先發';
@@ -372,7 +377,7 @@ async function refreshCustom() {
     ['#nb1','#nb2','#nb3'].forEach((id,i)=>{$(id).innerHTML=hOpt(opp.hitters);if(top.length>=3)$(id).value=top[i];else $(id).selectedIndex=i;});syncNextBatters();
   }
   if(myChanged) {
-    $('#myPitcher').innerHTML=pOpt(my.pitchers);$('#dueBatter').innerHTML=hOpt(my.hitters);
+    $('#myPitcher').innerHTML=pOpt(my.pitchers);$('#dueBatter').innerHTML=hOpt(my.hitters);dueFromLineup=false;
     $('#dueBatter').selectedIndex=Math.min(8,my.hitters.length-1);autoPos();$('#benchFilter').value='';renderBench(true);syncRole();
     $('#penFilter').value='';$('#penList').hidden=true;
     $('#penList').innerHTML=my.pitchers.map(p=>`<label><input type="checkbox" value="${esc(p.name)}" ${p.role==='後援'?'checked':''}>${esc(p.name)}<span class="meta">${handChip(p.hand)}<span class="chip">${p.role}</span></span></label>`).join('');
@@ -538,6 +543,7 @@ async function run(fn, view) {
     S.last.view = view;
     S.selected = null;
     renderResult();
+    $('.mobile-jump a[href="#result"]').hidden = false;
     if (motion()?.openDrawer()) { /* 窄螢幕：結果抽屜 */ }
     else if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     else window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -637,6 +643,7 @@ async function loadGame(gid) {
     S.pas = pas;
   } catch (e) { if (token === gameGeneration) listError('#paList', '打席列表載入失敗。', () => loadGame(gid)); return; }
   renderPAs();
+  if (motion()?.narrow()) $("#paList").closest(".card").scrollIntoView({behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
 }
 function renderPAs() {
   if (!S.pas) return;
@@ -994,6 +1001,10 @@ function scoreBadge(v, tip) {
   const [c, lab] = TIER(v);
   return `<div class="score ${c}" title="${esc(tip)}"><div>${v}<small>${lab}</small></div></div>`;
 }
+function scoreLegend(cur, key) {
+  const now = cur && cur["價值分數"] != null ? `<span class="score-baseline">現任 ${esc(cur[key])} ${cur["價值分數"]} 分；是否比現任好，請看「勝率變化」</span>` : "";
+  return SCORE_LEGEND.replace("</div>", now + "</div>");
+}
 const SCORE_LEGEND = `<div class="score-legend"><span>價值分數：</span><span><i style="background:#1f8a55"></i>80+ 極佳</span>
   <span><i style="background:#7fd9a8"></i>60–79 佳</span><span><i style="background:#999"></i>40–59 普通</span>
   <span><i style="background:#f0b27a"></i>20–39 不利</span><span><i style="background:#c2412d"></i>&lt;20 很不利</span></div>`;
@@ -1029,7 +1040,7 @@ function phTable(R) {
       <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>
     </tr>`;
   }).join("");
-  return `<div class="card-b" style="padding-bottom:0">${SCORE_LEGEND}</div><table class="t evaluation-table"><thead><tr><th>球員</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<div class="card-b" style="padding-bottom:0">${scoreLegend(c.find(x => x["角色"] === "現任"), "球員")}</div><table class="t evaluation-table"><thead><tr><th>球員</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function penTable(R) {
@@ -1045,7 +1056,7 @@ function penTable(R) {
       <td class="evaluation-value"><span class="mobile-value-label">${cur?'現任基準 · 0 百分點':'相對現任'}</span><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
       <td class="evaluation-warning">${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
   }).join("");
-  return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">比較接下來 ${R.bullpen.next.length} 棒 · 未模擬換局與後續調度<br>打者：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${SCORE_LEGEND}</div></div>
+  return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">比較接下來 ${R.bullpen.next.length} 棒 · 未模擬換局與後續調度<br>打者：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${scoreLegend(R.bullpen.rows.find(x => x["角色"] === "場上"), "投手")}</div></div>
     <table class="t evaluation-table"><caption class="sr-only">固定三打席比較，未模擬換局與後續調度。</caption><thead><tr><th>投手</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>疲勞／警示</th></tr></thead><tbody>${body}</tbody></table>`;
 }
 
