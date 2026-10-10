@@ -443,3 +443,23 @@ test('confirmed own lineup excludes field players and pitcher from bench without
 test('invalid saved lineup cannot restrict manual evaluation',()=>{
  const f=fixture();f.context.LineupBoard={current:()=>({slots:[]}),validate:()=>['invalid'],unavailable:()=>[]};f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');assert.equal(f.eval('ownLineup()'),null);assert.equal(f.eval('benchEligible("Reserve")'),true);
 });
+test('season review verdict is plain language and divergent list links each plate appearance',()=>{
+  const f=fixture();
+  const sig={stay_diff_ci:[0.017,0.068]},none={stay_diff_ci:[-0.06,0.039]};
+  assert.equal(f.eval(`timingVerdict(${JSON.stringify(sig)},true).ok`),true);
+  assert.match(f.eval(`timingVerdict(${JSON.stringify(sig)},true).text`),/換投時機有參考價值/);
+  assert.equal(f.eval(`timingVerdict(${JSON.stringify(none)},false).ok`),false);
+  assert.match(f.eval(`timingVerdict(${JSON.stringify(none)},false).text`),/僅供參考/);
+  assert.match(f.eval('timingVerdict({},true).text'),/樣本不足/);
+  const items=[{pa:'2025-001-a030',date:'2025-07-29',inning:8,half:'home',opp:'B<隊>',who:'甲',best:'乙',gain:8.92,outs:1,bases:3,bat_score:0,fld_score:0,result:'FO'}];
+  const html=f.eval(`divergentList(${JSON.stringify(items)},'pen')`);
+  assert.match(html,/data-review-pa="2025-001-a030"/);assert.match(html,/8 局下/);assert.match(html,/甲<\/b> 續投 → 建議換上 <b>乙/);
+  assert.match(html,/B&lt;隊&gt;/);assert.doesNotMatch(html,/B<隊>/);
+  assert.match(f.eval("divergentList([],'ph')"),/沒有系統建議換人/);
+  assert.deepEqual(JSON.parse(f.eval('JSON.stringify(PAGES)')),['evaluation','lineup','review']);
+});
+test('default pitch count follows the inning for starters and stays 15 for relievers',()=>{
+  const f=fixture();
+  const pc=(starter,inning)=>f.eval(`S.starter=${starter};S.inning=${inning};defaultPitchCount()`);
+  assert.equal(pc(true,1),0);assert.equal(pc(true,7),90);assert.equal(pc(true,12),105);assert.equal(pc(false,1),15);assert.equal(pc(false,9),15);
+});
