@@ -86,14 +86,14 @@
               <label class="f">局數</label>
               <div class="stepper">
                 <button id="innDown" aria-label="減一局">−</button>
-                <span class="val num" id="innVal">7</span>
+                <span class="val num" id="innVal">1</span>
                 <button id="innUp" aria-label="加一局">+</button>
                 <div class="seg" id="halfSeg" style="margin-left:6px">
-                  <button data-half="away">上</button>
-                  <button data-half="home" class="on">下</button>
+                  <button data-half="away" class="on">上</button>
+                  <button data-half="home">下</button>
                 </div>
               </div>
-              <div class="out-setting"><span class="f">出局數</span><div class="outs" id="outs"><button data-o="1" aria-label="1 出局"></button><button data-o="2" aria-label="2 出局"></button></div><output id="outsValue">1 出局</output></div>
+              <div class="out-setting"><span class="f">出局數</span><div class="outs" id="outs"><button data-o="1" aria-label="1 出局"></button><button data-o="2" aria-label="2 出局"></button></div><output id="outsValue">0 出局</output></div>
             </div>
             <div class="base-setting">
               <label class="f">壘上跑者</label>
@@ -108,8 +108,8 @@
             </div>
           </div>
           <div class="row2 score-controls">
-            <div><label class="f" for="myScore">我方得分</label><div class="score-stepper"><button type="button" data-score="myScore" data-delta="-1" aria-label="我方減一分">−</button><input type="number" id="myScore" min="0" step="1" value="2"><button type="button" data-score="myScore" data-delta="1" aria-label="我方加一分">+</button></div></div>
-            <div><label class="f" for="oppScore">對手得分</label><div class="score-stepper"><button type="button" data-score="oppScore" data-delta="-1" aria-label="對手減一分">−</button><input type="number" id="oppScore" min="0" step="1" value="3"><button type="button" data-score="oppScore" data-delta="1" aria-label="對手加一分">+</button></div></div>
+            <div><label class="f" for="myScore">我方得分</label><div class="score-stepper"><button type="button" data-score="myScore" data-delta="-1" aria-label="我方減一分">−</button><input type="number" id="myScore" min="0" step="1" value="0"><button type="button" data-score="myScore" data-delta="1" aria-label="我方加一分">+</button></div></div>
+            <div><label class="f" for="oppScore">對手得分</label><div class="score-stepper"><button type="button" data-score="oppScore" data-delta="-1" aria-label="對手減一分">−</button><input type="number" id="oppScore" min="0" step="1" value="0"><button type="button" data-score="oppScore" data-delta="1" aria-label="對手加一分">+</button></div></div>
           </div>
 
           <p id="extraInningHint" class="mut hidden">2024–2025 一軍例行賽：首次進入延長局預設二壘有人，請依實際打席調整；最多 12 局。</p>
@@ -137,6 +137,7 @@
               <div><label class="f" for="pitchCount">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
               <div><label class="f">本場角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
             </div>
+            <div style="margin-top:10px"><label class="f" for="myStreak">今天之前連續登板</label><select id="myStreak"><option value="0">沒有（今天第 1 天）</option><option value="1">已連投 1 天（今天第 2 天）</option><option value="2">已連投 2 天以上（今天第 3 天起）</option></select></div>
             <p class="mut pitch-input-limit">工具球數範圍 0–160；不是規則上限。</p><p class="mut role-confirm">請確認本場角色與球數。</p><p class="mut" id="pcHint"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
@@ -154,6 +155,27 @@
             </div>
           </div>
 
+          <details class="prefs" id="prefsPanel">
+            <summary>我的預設情境與偏好設定</summary>
+            <div class="prefs-body">
+              <div class="prefs-row">
+                <span class="f">我的預設情境</span>
+                <p class="mut">開啟頁面時自動帶入；存的是球隊、攻守、局數、出局、壘上與比分。</p>
+                <div class="preset-actions"><button type="button" id="presetSave">存為我的預設</button><button type="button" id="presetLoad">套用我的預設</button><button type="button" id="presetClear">清空局面</button></div>
+                <p class="mut" id="presetStatus" role="status"></p>
+              </div>
+              <div class="prefs-row">
+                <label class="f" for="recentWeight">近況權重 <output id="recentWeightOut">0%</output></label>
+                <input type="range" id="recentWeight" min="0" max="100" step="10" value="0">
+                <p class="mut">讓近 30 天的表現影響評估。回測顯示加權後並沒有預測得更準，所以預設 0%；可依你對球員近況的判斷調高。只套用在自訂情境。</p>
+              </div>
+              <div class="prefs-row">
+                <span class="f">連續登板疲勞（每打席多失幾分）</span>
+                <div class="row2"><div><label class="f" for="fatigueD2">連投第 2 天</label><input type="number" id="fatigueD2" min="0" max="0.5" step="0.005" value="0"></div><div><label class="f" for="fatigueD3">連投第 3 天以上</label><input type="number" id="fatigueD3" min="0" max="0.5" step="0.005" value="0"></div></div>
+                <p class="mut">2024–2025 資料估不出連投的顯著影響（教練通常讓疲勞的投手休息），所以預設 0。參考：0.03 大約是從前 1/4 的投手變成後 1/4。連投天數在防守頁的投手與牛棚名單標記；只套用在自訂情境。</p>
+              </div>
+            </div>
+          </details>
           <div id="formError" aria-live="polite"></div><button class="btn-primary" id="evalBtn" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>評估</button>
         </div>
       </div>

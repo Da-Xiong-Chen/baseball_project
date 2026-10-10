@@ -134,40 +134,54 @@ const Engine = (() => {
     for (const x of pool) { if (x === v) eq++; else if (higherBetter ? x < v : x > v) beat++; }
     return Math.max(1, Math.min(100, Math.round(1 + 99 * (beat + 0.5 * eq) / pool.length)));
   }
-  function ensembleRel(name, bh, pitcher) {
-    const r = matchup(name, bh, pitcher), g = mlRel(name, pitcher), w = M.ml ? M.ml.w : 0;
-    return { rel: g == null ? r.rel_pa : (1 - w) * r.rel_pa + w * g, r, g };
+  // 近況偏離（每打席得分值；打者正值＝近期較好，投手正值＝近期較差），權重由使用者設定（預設 0）
+  function recentForm(name, who) {
+    const t = M.recent && M.recent[who];
+    return t && t[name] != null ? t[name] * M.ppa : 0;
   }
-  function ensembleRuns(pitcher, batters) {
+  // 連續登板疲勞（每打席額外失分值）：使用者設定，資料上估不出顯著影響，預設 0
+  function streakPenalty(streak, opts) {
+    if (streak >= 2) return +opts.fatigue_d3 || 0;
+    if (streak === 1) return +opts.fatigue_d2 || 0;
+    return 0;
+  }
+  function ensembleRel(name, bh, pitcher, rw = 0) {
+    const r = matchup(name, bh, pitcher), g = mlRel(name, pitcher), w = M.ml ? M.ml.w : 0;
+    const adj = rw ? rw * recentForm(name, "bat") : 0;
+    return { rel: (g == null ? r.rel_pa : (1 - w) * r.rel_pa + w * g) + adj, r, g };
+  }
+  function ensembleRuns(pitcher, batters, rw = 0) {
     const ph = hand(M.phand[pitcher]), w = M.ml ? M.ml.w : 0;
+    const adj = rw ? rw * recentForm(pitcher, "pit") * batters.length : 0;
     return batters.reduce((s, b) => {
       const h = matchup(b, batHand(b, ph), pitcher).per_pa, g = mlAbs(b, pitcher);
       return s + (g == null ? h : (1 - w) * h + w * g);
-    }, 0);
+    }, 0) + adj;
   }
   const poolCache = {};
-  function hitterPool(pitcher, phand) {
-    const k = "H|" + pitcher;
-    if (!poolCache[k]) poolCache[k] = M.pools.hitters.map((n) => ensembleRel(n, batHand(n, phand), pitcher).rel);
+  function hitterPool(pitcher, phand, rw = 0) {
+    const k = "H|" + pitcher + "|" + rw;
+    if (!poolCache[k]) poolCache[k] = M.pools.hitters.map((n) => ensembleRel(n, batHand(n, phand), pitcher, rw).rel);
     return poolCache[k];
   }
-  function relieverPool(batters) {
-    const k = "P|" + batters.join(",");
-    if (!poolCache[k]) poolCache[k] = M.pools.relievers.map((p) => ensembleRuns(p, batters));
+  function relieverPool(batters, rw = 0) {
+    const k = "P|" + batters.join(",") + "|" + rw;
+    if (!poolCache[k]) poolCache[k] = M.pools.relievers.map((p) => ensembleRuns(p, batters, rw));
     return poolCache[k];
   }
 
   // ---------- 評估 ----------
-  function evaluatePinchHit(row, due, duePos, bench) {
+  function evaluatePinchHit(row, due, duePos, bench, rw = 0) {
     const slope = runToWin(row.inning, row.half, row.bat_score, row.fld_score, row.bases, row.outs);
-    const pool = hitterPool(row.pitcher, row.phand);
+    const pool = hitterPool(row.pitcher, row.phand, rw);
     const out = [due, ...bench].map((name) => {
       const bh = batHand(name, row.phand);
-      const { rel, r, g } = ensembleRel(name, bh, row.pitcher);
+      const { rel, r, g } = ensembleRel(name, bh, row.pitcher, rw);
       const rec = {
         角色: name === due ? "現任" : "代打", 球員: name, 打擊: bh, 價值分數: valueScore(rel, pool),
         預估勝率: rel * slope * 100, 誤差: r.se_pa * slope * 100, 每打席得分值: rel, 階層式: r.rel_pa, 機器學習: g,
         本身能力: r.skill_pa - r.fit_pa, 球路適性: r.fit_pa, 左右優勢: r.platoon_pa, 樣本球數: r.n,
+        近況: rw ? recentForm(name, "bat") : null, 近況權重: rw,
         可守: positionsOf(name).join(",") || "-", 投手對此側樣本:r.mix_n, 比較池人數:pool.length,
         資料警示:[!M.bhand[name] ? '打者慣用手缺資料，暫以右打估計' : '', !M.phand[row.pitcher] ? '投手慣用手缺資料，球路基準暫以右投估計' : '', !r.mix_n ? '投手對此侧球路採聯盟回退' : ''].filter(Boolean).join('；'),
       };
@@ -181,25 +195,28 @@ const Engine = (() => {
     const rest = out.slice(1).sort((a, b) => b.預估勝率 - a.預估勝率);
     return { rows: [out[0], ...rest], slope };
   }
-  function evaluateBullpen(row, nextBatters, pen, pc, starter) {
+  function evaluateBullpen(row, nextBatters, pen, pc, starter, opts = {}) {
     const slope = runToWin(row.inning, row.half, row.bat_score, row.fld_score, row.bases, row.outs);
     const [fatRuns, fatWarn] = outlook(pc, starter, nextBatters.length);
-    const pool = relieverPool(nextBatters);
+    const rw = +opts.recent_weight || 0, streaks = opts.streaks || {};
+    const pool = relieverPool(nextBatters, rw);
     const rows = [row.pitcher, ...pen.filter((p) => p !== row.pitcher)].map((pit) => {
       const ph = hand(M.phand[pit]);
       const cur = pit === row.pitcher;
-      const runs = ensembleRuns(pit, nextBatters);
-      const extra = cur ? fatRuns : 0;
+      const runs = ensembleRuns(pit, nextBatters, rw);
+      const streak = +streaks[pit] || 0, penPa = streakPenalty(streak, opts);
+      const form = rw ? recentForm(pit, "pit") : 0;
+      const extra = (cur ? fatRuns : 0) + penPa * nextBatters.length;
       const hRuns = nextBatters.map(b => matchup(b, batHand(b, ph), pit).per_pa);
       const gRuns = nextBatters.map(b => mlAbs(b, pit));
       const details = nextBatters.map((b,i) => ({batter:b,
-        runs:gRuns[i] == null ? hRuns[i] : (1 - M.ml.w) * hRuns[i] + M.ml.w * gRuns[i],
-        fatigue:cur ? penalty((pc || 0) + M.ppa * i, starter) : 0}));
+        runs:(gRuns[i] == null ? hRuns[i] : (1 - M.ml.w) * hRuns[i] + M.ml.w * gRuns[i]) + rw * form,
+        fatigue:(cur ? penalty((pc || 0) + M.ppa * i, starter) : 0) + penPa}));
       return {
         角色: cur ? "場上" : "牛棚", 投手: pit, 投: ph, 價值分數: valueScore(runs + extra, pool, false),
-        預估失分: runs + extra, 疲勞調整: extra,
+        預估失分: runs + extra, 疲勞調整: extra, 連投天數: streak, 近況: rw ? form : null,
         用球數: cur ? pc : 0, 樣本球數: Math.trunc(M.pit_all[pit] ? M.pit_all[pit][1] : 0),
-        疲勞: cur && fatWarn ? fatWarn : "-",
+        疲勞: [cur && fatWarn ? fatWarn : "", streak >= 2 ? `已連投 ${streak} 天` : ""].filter(Boolean).join("；") || "-",
         階層式:hRuns.reduce((s,v)=>s+v,0), 機器學習:gRuns.some(v=>v==null) ? null : gRuns.reduce((s,v)=>s+v,0),
         對決明細:details, 比較池人數:pool.length,
         資料警示:[!M.phand[pit] ? '投手慣用手缺資料，暫以右投估計' : '', ...nextBatters.filter(b=>!M.bhand[b]).map(b=>`${b}慣用手缺資料，暫以右打估計`)].filter(Boolean).join('；'),
@@ -224,7 +241,8 @@ const Engine = (() => {
       inning: +b.inning, half: b.half, bat_score: +b.bat_score, fld_score: +b.fld_score, bases: +b.bases, outs: +b.outs,
       pitcher: b.pitcher, phand: hand(M.phand[b.pitcher]), bat_team: b.bat_team, fld_team: b.fld_team, date: M.cutoff,
     };
-    const ph = evaluatePinchHit(row, b.due, b.due_pos, b.bench);
+    const rw = Math.min(1, Math.max(0, +b.recent_weight || 0));
+    const ph = evaluatePinchHit(row, b.due, b.due_pos, b.bench, rw);
     const next = b.next_batters && b.next_batters.length ? b.next_batters.slice(0, 3) : [b.due];
     const starter = b.starter != null ? !!b.starter : isStarter(b.pitcher);
     const pc = b.pitch_count == null || b.pitch_count === "" ? null : +b.pitch_count;
@@ -233,7 +251,8 @@ const Engine = (() => {
       situation: { ...row, pitch_count: pc, starter, due: b.due, due_pos: b.due_pos, due_pos_zh: POS_ZH[b.due_pos] || b.due_pos },
       actual: null, leverage: ph.slope * 100, league_leverage: M.slope_all * 100,
       pitch_mix: pitchMixPayload(row.pitcher), candidates: ph.rows,
-      bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter) }, model_cutoff: M.cutoff,
+      bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter,
+        { streaks: b.streaks || {}, fatigue_d2: b.fatigue_d2, fatigue_d3: b.fatigue_d3, recent_weight: rw }) }, model_cutoff: M.cutoff,
       method: M.ml ? "集成（階層式＋梯度提升樹）" : "階層式",
       ml_cutoff:M.ml ? M.cutoff : null, schema_version:2,
       availability:'人工勾選可用名單；請確認當日登錄、健康與已用人選',
