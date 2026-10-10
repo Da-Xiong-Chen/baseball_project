@@ -65,7 +65,9 @@ def evaluate(r, m, ml):
                due=sit["due"], batter=r["batter"], is_ph=bool(r["is_ph"]), pen_change=bool(r["pitcher"] != r["inc"]),
                RE24=float(r["RE24"]) if pd.notna(r["RE24"]) else None)
     ph, _, _ = evaluate_pinch_hit(sit, model=m, ml=ml, scores=False)
-    bench = ph[ph["角色"] == "代打"]
+    # 與網站建議相同：換下後守備排不出來的人選（守備 = bad）不能代打，不列入
+    bench = ph[(ph["角色"] == "代打") & (ph["守備"] != "bad")]
+    out["ph_has_bench"] = bool((ph["角色"] == "代打").any())  # 有板凳就是代打決策點；全員守備不成立＝系統不建議
     out["ph_gain"] = float(bench["相對現任"].max()) if len(bench) else None
     out["ph_best"] = bench["球員"].iat[0] if len(bench) else None
     bp, _ = evaluate_bullpen(incumbent_situation(sit, r), model=m, ml=ml, scores=False)
@@ -103,11 +105,13 @@ def summarize(d, t):
     """d：成功評估的打席；t：建議門檻（百分點）。"""
     s = {}
     for kind, gain, actual in (("pen", "pen_gain", "pen_change"), ("ph", "ph_gain", "is_ph")):
-        x = d.dropna(subset=[gain])
-        sug, act = x[gain] >= t, x[actual]
+        # 決策點：換投需有可評估的牛棚；代打需有板凳（板凳全員換下後守備排不出來時，視為系統不建議）
+        x = d[d["ph_has_bench"].astype(bool)] if kind == "ph" else d.dropna(subset=[gain])
+        sug, act = x[gain].fillna(-np.inf) >= t, x[actual].astype(bool)
         stay = x[~act & x["RE24"].notna()]
         # 留在場上的人該打席的 RE24：換投看防守方失分（越高越差），代打看進攻方得分（越低越差）
-        re_sug, re_not = stay.loc[stay[gain] >= t, "RE24"], stay.loc[stay[gain] < t, "RE24"]
+        stay_sug = stay[gain].fillna(-np.inf) >= t
+        re_sug, re_not = stay.loc[stay_sug, "RE24"], stay.loc[~stay_sug, "RE24"]
         diff = ci = None
         if len(re_sug) > 1 and len(re_not) > 1:
             diff = float(re_sug.mean() - re_not.mean())
@@ -185,12 +189,12 @@ def build_outputs(res, d):
     result = dict(
         season=SEASON, min_inning=MIN_INNING, threshold=THRESHOLD, generated=time.strftime("%Y-%m-%d"),
         method="每個打席前以與歷史回放相同的集成模型評估（只用比賽當天以前的資料）；換投比較上一打席投手續投與推估可用牛棚（接下來 3 棒），代打比較輪到的打者與推估板凳。最佳候選差值達門檻視為系統建議。",
-        limits="可用名單由此前出賽推估，不含傷病與登錄；換了以後的結果無法觀測，只能比較模型估計；只看接下來 3 棒，不是整場最佳策略。",
+        limits="可用名單與守位由此前出賽推估，不含傷病與登錄；換下後板凳無人能接守的代打不列入建議；換了以後的結果無法觀測，只能比較模型估計；只看接下來 3 棒，不是整場最佳策略。",
         summary={str(t): summarize(ok, t) for t in THRESHOLDS},
         pen_timing=timing_summary(pen_timing(ok, THRESHOLD)),
         by_team=by_team,
         games={gid: {r["pa_id"]: [_num(r["pen_gain"]), _txt(r["pen_best"]), _txt(r["inc"]),
-                                  _num(r["ph_gain"]), _txt(r["ph_best"]), _txt(r["due"])]
+                                  _num(r["ph_gain"]), _txt(r["ph_best"]), _txt(r["due"]), int(bool(r["ph_has_bench"]))]
                      for _, r in g.iterrows()} for gid, g in ok.groupby("game")},
     )
     p = os.path.join(ROOT, "docs", "data", "timing-2025.json")

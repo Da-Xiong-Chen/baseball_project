@@ -136,7 +136,8 @@
       if(options.element.hasAttribute('aria-busy')||!defaults[teamName])return;
       const s=get(teamName);resetSwap();s.draft=clone(defaults[teamName]);s.confirmed=clone(defaults[teamName]);
       try{localStorage.removeItem(key(teamName));}catch{}
-      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:true,resetPitchCount:true});message('已恢復預設名單並套用。');
+      // 與開啟網站時相同：換回預設先發投手時依角色帶入預設球數（先發 90／後援 15），不歸零
+      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});message('已恢復預設名單並套用。');
     };
     q('#lineupApply').onclick=async()=>{
       const s=get(teamName),errors=validate(s.draft,roster);
