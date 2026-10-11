@@ -141,15 +141,13 @@ test('API and static reads work without the newer timeout API',async()=>{
   await f.eval("json('data/example.json')");
 });
 
-test('mobile result navigation respects reduced-motion preference',async()=>{
-  for (const reduced of [false,true]) {
-    const f=fixture();let scroll;
-    f.context.window.matchMedia=q=>({matches:q.includes('max-width')||reduced});
-    f.node('#result').scrollIntoView=o=>{scroll=o.behavior;};
-    f.eval('renderResult=()=>{};S.ready=true;');
-    await f.eval("run(async()=>({id:'new'}),'offense')");
-    assert.equal(scroll,reduced?'auto':'smooth');
-  }
+test('mobile result appears below the form and jumps there without smooth scrolling',async()=>{
+  const f=fixture();let scroll;
+  f.context.window.matchMedia=q=>({matches:q.includes('max-width')});
+  f.node('#result').scrollIntoView=o=>{scroll=o;};
+  f.eval('renderResult=()=>{};S.ready=true;');
+  await f.eval("run(async()=>({id:'new'}),'offense')");
+  assert.equal(scroll.block,'start');assert.notEqual(scroll.behavior,'smooth');
 });
 
 test('search preserves hidden selections and never treats InputEvent as reset',()=>{

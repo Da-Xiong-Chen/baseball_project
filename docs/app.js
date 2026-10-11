@@ -62,12 +62,10 @@ function changeInning(delta) {
   S.inning=next;if(S.mode==='custom'&&enteringExtras)S.bases=2;renderState();refreshAutoPitchCount();
 }
 let rosterGeneration = 0, gamesGeneration = 0, gameGeneration = 0, runGeneration = 0;
-/* 滑動效果（docs/motion.js）；沒有載入時所有切換照常運作，只是沒有動畫。 */
+/* 手機左右滑動手勢（docs/motion.js）；不播放任何動畫，沒有載入時其餘功能照常。 */
 const motion = () => typeof Motion !== 'undefined' ? Motion : null;
-function slideIn(el, dir) { motion()?.slideIn(el, dir); }
 
 function clearResult() {
-  if (motion()?.drawerOpen()) motion().closeDrawer();
   ++runGeneration;
   ++detailGeneration;
   S.last = null;
@@ -320,10 +318,8 @@ const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lin
 function currentPage() { return PAGES.find(p => !$(PAGE_EL[p]).hidden) || "evaluation"; }
 async function showFeaturePage(page) {
   if(typeof LineupBoard!=='undefined')LineupBoard.cancelSwap();
-  if(motion()?.drawerOpen())motion().closeDrawer();
-  const from=currentPage(),evaluation=page==='evaluation';
+  const evaluation=page==='evaluation';
   PAGES.forEach(p=>{$(PAGE_EL[p]).hidden=p!==page;});
-  if(from!==page)slideIn($(PAGE_EL[page]),PAGES.indexOf(page)>PAGES.indexOf(from)?1:-1);
   $('.matchday-intro').hidden=!evaluation;$('.mobile-jump').hidden=!evaluation;$('#modeSeg').hidden=!evaluation;$('#modeCaption').hidden=!evaluation;
   $('.skip-link').href=PAGE_SKIP[page][0];$('.skip-link').textContent=PAGE_SKIP[page][1];
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
@@ -345,8 +341,11 @@ function syncOwnLineup() {
     $('#duePos').value=c.slots.find(s=>s.name===$('#dueBatter').value).pos;
   }
   $('#duePos').disabled=!!c;$('#myPitcher').disabled=!!c;
-  $('#lineupSummary').innerHTML=`<span>${c?'已設定九棒 · 場上投手 '+esc(c.pitcher):'場上名單未設定；仍可直接評估。'}</span><button type="button" data-page="lineup">${c?'編輯配置':'設定名單'}</button>`;
-  $('#lineupSummary button').onclick=()=>showFeaturePage('lineup');
+  $('#lineupSummary').innerHTML=c
+    ?`<span>依場上名單評估 · 場上投手 ${esc(c.pitcher)}</span><span class="lineup-summary-actions"><button type="button" data-page="lineup">編輯配置</button><button type="button" id="lineupRelease">改為不使用名單</button></span>`
+    :`<span>可直接選擇所有球員；球隊使用可先設定場上名單。</span><button type="button" data-page="lineup">設定場上名單</button>`;
+  $('#lineupSummary [data-page]').onclick=()=>showFeaturePage('lineup');
+  if($('#lineupRelease'))$('#lineupRelease').onclick=async()=>{const name=$('#myTeam').value;LineupBoard.release(name);await applyOwnLineup(name);$('#lineupSummary button')?.focus();};
   S.bench.forEach(n=>{if(!benchEligible(n))S.bench.delete(n);});
   groupControl?.refresh();
 }
@@ -354,7 +353,7 @@ async function applyOwnLineup(name,change={}) {
   if($('#myTeam').value!==name){$('#myTeam').value=name;syncTeamChoices('myTeam');await refreshCustom();}
   else {
     const c=ownLineup();
-    if(!c){$('#dueBatter').innerHTML=S.roster[name].hitters.map(h=>`<option value="${esc(h.name)}">${esc(h.name)}</option>`).join('');dueFromLineup=false;}
+    if(!c&&dueFromLineup){const due=$('#dueBatter').value;$('#dueBatter').innerHTML=S.roster[name].hitters.map(h=>`<option value="${esc(h.name)}">${esc(h.name)}（${h.hand==='L'?'左':h.hand==='R'?'右':'兩'}打）</option>`).join('');$('#dueBatter').value=due;dueFromLineup=false;}
     syncOwnLineup();autoPos();renderBench();
   }
   if(change.pitcherSelected)S.starter=S.roster[name].pitchers.find(p=>p.name===$('#myPitcher').value)?.role==='先發';
@@ -452,7 +451,6 @@ function setMode(m) {
   syncPressed();
   $("#customPanel").classList.toggle("hidden", m !== "custom");
   $("#replayPanel").classList.toggle("hidden", m !== "replay");
-  slideIn(m === "replay" ? $("#replayPanel") : $("#customPanel"), m === "replay" ? 1 : -1);
   if (m === "replay" && !S.games.length) loadGames();
   if (m === "replay") loadTiming().then(renderPAs);
 }
@@ -464,7 +462,6 @@ function setView(v) {
   syncPressed();
   $("#offenseFields").classList.toggle("hidden", v !== "offense");
   $("#defenseFields").classList.toggle("hidden", v !== "defense");
-  slideIn(v === "defense" ? $("#defenseFields") : $("#offenseFields"), v === "defense" ? 1 : -1);
 }
 function renderState() {
   $("#innVal").textContent = S.inning;
@@ -520,7 +517,11 @@ async function refreshCustom() {
   }
   if(myChanged) {
     $('#myPitcher').innerHTML=pOpt(my.pitchers);$('#dueBatter').innerHTML=hOpt(my.hitters);dueFromLineup=false;
-    $('#dueBatter').selectedIndex=Math.min(8,my.hitters.length-1);autoPos();$('#benchFilter').value='';renderBench(true);syncRole();
+    // 一般模式（沒有套用場上名單）：所有球員都能選；預設帶入預設名單的先發投手與第 1 棒
+    const def=typeof LineupBoard!=='undefined'&&LineupBoard.defaultFor(myName);
+    if(def&&my.pitchers.some(p=>p.name===def.pitcher))$('#myPitcher').value=def.pitcher;
+    if(def&&my.hitters.some(h=>h.name===def.slots[0].name))$('#dueBatter').value=def.slots[0].name;else $('#dueBatter').selectedIndex=0;
+    autoPos();$('#benchFilter').value='';renderBench(true);syncRole();
     $('#penFilter').value='';$('#penList').hidden=true;
     $('#penList').innerHTML=my.pitchers.map(p=>`<label><input type="checkbox" value="${esc(p.name)}" ${p.role==='後援'?'checked':''}>${esc(p.name)}${STREAK_SELECT(p.name)}<span class="meta">${handChip(p.hand)}<span class="chip">${p.role}</span></span></label>`).join('');
     $('#myStreak').value='0';
@@ -598,7 +599,8 @@ function renderBench(reset) {
   const q = $("#benchFilter").value.trim();
   const list = my.hitters.filter((h) => h.name !== due && benchEligible(h.name));
   // 預設勾選：出賽較少的球員（較可能在板凳）
-  const regulars = new Set(my.hitters.slice(0, 9).map((h) => h.name));
+  const def = typeof LineupBoard !== 'undefined' && LineupBoard.defaultFor($("#myTeam").value);
+  const regulars = new Set(def ? def.slots.map(s => s.name) : my.hitters.slice(0, 9).map((h) => h.name));
   if (reset === true) S.bench = new Set(list.filter(h => !regulars.has(h.name)).map(h => h.name));
   S.bench.delete(due);
   const pickedToday=list.filter(h=>S.bench.has(h.name));
@@ -687,9 +689,9 @@ async function run(fn, view) {
     S.selected = null;
     renderResult();
     $('.mobile-jump a[href="#result"]').hidden = false;
-    if (motion()?.openDrawer()) { /* 窄螢幕：結果抽屜 */ }
-    else if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    else window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    // 結果接在表單下方：窄螢幕直接跳到結果開頭，寬螢幕回到頁首（不使用平滑捲動）
+    if (window.matchMedia("(max-width: 1000px)").matches) $("#result").scrollIntoView({ block: "start" });
+    else window.scrollTo({ top: 0, behavior: "auto" });
   } catch (e) {
     if (token !== runGeneration) return;
     S.last = null;
@@ -829,7 +831,7 @@ async function loadGame(gid) {
     S.pas = pas;
   } catch (e) { if (token === gameGeneration) listError('#paList', '打席列表載入失敗。', () => loadGame(gid)); return; }
   renderPAs();
-  if (motion()?.narrow()) $("#paList").closest(".card").scrollIntoView({behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+  if (motion()?.narrow()) $("#paList").closest(".card").scrollIntoView({block: "start"});
 }
 function renderPAs() {
   if (!S.pas) return;
@@ -879,36 +881,18 @@ function switchTab(t) {
   if (activeResultTab() === t) return;
   S.tab = t;
   renderResult(true);
-  slideIn($("#evaluationSection"), t === "pen" ? 1 : -1);
 }
-/* 手機左右滑動：結果抽屜中切換代打／換投分頁或向右滑關閉；其餘切換評估與名單頁。 */
+/* 手機左右滑動：切換評估、名單與賽季回顧頁（沒有動畫） */
 function handleSwipe(dir, target) {
   const M = motion();
   if (!M) return;
-  if (M.drawerOpen()) {
-    if (target.closest("#evaluationSection") && $$(".tabs button").length) {
-      const want = dir === "left" ? "pen" : "ph";
-      if (want !== activeResultTab()) { switchTab(want); return; }
-    }
-    if (dir === "right") M.closeDrawer();
-    return;
-  }
   if ($("#lineupPicker")?.open) return;
   // 左滑到下一個功能頁、右滑回上一個（評估 → 名單 → 賽季回顧）
   const i = PAGES.indexOf(currentPage()), next = PAGES[i + (dir === "left" ? 1 : -1)];
   if (next) showFeaturePage(next);
 }
 function bindMotion() {
-  const M = motion();
-  if (!M) return;
-  M.setupDrawer({element: $("#result"), onClose: () => {
-    const back = S.mode === "replay" && S.pa ? $(`#paList [data-p="${S.pa}"]`) : $("#evalBtn");
-    back?.focus({preventScroll: true});
-  }});
-  M.onSwipe(handleSwipe);
-  // 「查看結果」：有結果時開抽屜；「返回情境設定」：抽屜開著時關閉
-  $('.mobile-jump a[href="#result"]').addEventListener("click", e => { if (S.last && M.openDrawer()) e.preventDefault(); });
-  $(".result-return").addEventListener("click", e => { if (M.drawerOpen()) { e.preventDefault(); M.closeDrawer(); } });
+  motion()?.onSwipe(handleSwipe);
 }
 const COMPARISON_LIMIT = 4;
 function uiIcon(name) { return `<svg class="ui-icon" aria-hidden="true"><use href="#icon-${name}"/></svg>`; }

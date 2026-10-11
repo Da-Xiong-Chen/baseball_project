@@ -877,41 +877,9 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .actual.timing-note { border-top: 1px dashed var(--line); }
 .actual:has(+ .timing-note) { border-radius: 0; }
 
-/* ---------- 滑動效果（docs/motion.js）：位移小、時間短；減少動態效果時由上方規則全部關閉 ---------- */
-/* 滑入時元素會暫時往旁邊位移，避免手機在這 0.2 秒內出現橫向捲動（clip 不會影響頁首固定） */
-body { overflow-x: clip; }
-/* 名單頁、進攻／防守欄位原本有較高權重的淡入動畫，滑入時需優先（減少動態效果時 JS 不會加上這兩個 class） */
-.slide-from-right { animation: slide-from-right 240ms var(--ease-ui) !important; }
-.slide-from-left { animation: slide-from-left 240ms var(--ease-ui) !important; }
-@keyframes slide-from-right { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
-@keyframes slide-from-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
-/* 寬螢幕的評估結果改為由右側輕輕滑入（覆蓋前面的同名動畫） */
-@keyframes desk-enter { from { opacity: .6; transform: translateX(16px); } to { opacity: 1; transform: none; } }
-/* 名單頁改由 motion.js 依切換方向滑入 */
-.lineup-page:not([hidden]) { animation: none; }
 
 /* 捲動維持瀏覽器原生行為：不吸附、不全頁平滑（使用者回饋吸附與平滑捲動不自然） */
 
-/* 窄螢幕結果抽屜：評估完成後從右側滑出蓋住畫面 */
-.rr-drawer { display: none; }
-@media (max-width: 1000px) {
-  body.result-drawer { overflow: hidden; }
-  body.result-drawer #result {
-    position: fixed; inset: 0; z-index: 30; overflow-y: auto; overscroll-behavior: contain;
-    background: var(--bg); padding: 0 16px 32px; scroll-padding-top: 60px;
-    box-shadow: -8px 0 24px rgb(0 0 0 / .25); animation: drawer-in 260ms var(--ease-ui);
-  }
-  body.result-drawer #result:focus { outline: none; }
-  body.result-drawer #result .result-return {
-    position: sticky; top: 0; z-index: 3; margin: 0 -16px 12px; padding: 8px 16px;
-    background: var(--panel); border-bottom: 1px solid var(--line);
-  }
-  body.result-drawer .rr-inline { display: none; }
-  body.result-drawer .rr-drawer { display: inline; }
-  #result.drawer-closing { animation: drawer-out 200ms var(--ease-ui) forwards; }
-}
-@keyframes drawer-in { from { transform: translateX(100%); } to { transform: none; } }
-@keyframes drawer-out { to { transform: translateX(100%); } }
 
 /* ---------- 使用者體驗調整 ---------- */
 /* 兩層選單：功能選單（評估／名單）為主；頁首的「評估資料」切換只屬於評估頁 */
@@ -1012,3 +980,9 @@ body { overflow-x: clip; }
   .feature-nav .ui-icon { display: none; }
   .feature-nav button { font-size: 13px; padding: 10px 4px; word-break: keep-all; white-space: nowrap; }
 }
+
+/* ---------- 不使用動畫（使用者回饋滑入、淡入與平滑捲動卡頓） ----------
+   所有畫面直接切換到位；只保留不會移動版面的顏色變化，以及表示計算中的轉圈。 */
+*, *::before, *::after { animation: none !important; transition-property: background-color, color, border-color, box-shadow !important; }
+.loading { animation: spin .8s linear infinite !important; }
+.lineup-summary-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
