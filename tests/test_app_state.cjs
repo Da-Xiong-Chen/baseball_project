@@ -130,8 +130,8 @@ test('tiny positive differences never become a strong recommendation from SE',()
   const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,誤差:0,階層式:0,機器學習:0,樣本球數:1000},
     {角色:'代打',球員:'One',守備:'ok',預估勝率:.00001,誤差:0,階層式:.00001,機器學習:.00001,樣本球數:1000}];
   const rec=f.eval('recommendation(cands)');
-  assert.equal(rec.kind,'neutral');assert.match(rec.text,/不能只依排序認定必須換人/);
-  assert.match(rec.title,/差距極小/);assert.match(rec.text,/並非統計上的相等/);
+  assert.equal(rec.kind,'neutral');assert.match(rec.text,/不必只依排序換人/);
+  assert.match(rec.title,/差距極小/);
 });
 
 test('API and static reads work without the newer timeout API',async()=>{

@@ -986,3 +986,10 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 *, *::before, *::after { animation: none !important; transition-property: background-color, color, border-color, box-shadow !important; }
 .loading { animation: spin .8s linear infinite !important; }
 .lineup-summary-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.lock-note { margin: 4px 0 0; font-size: 12px; color: var(--muted); line-height: 1.5; }
+.range-ends { display: flex; justify-content: space-between; font-size: 11px; }
+/* 模型回測：說明與子分頁，位在功能選單下方 */
+.backtest-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; max-width: 1400px; margin: 12px auto 0; padding: 0 24px; }
+.backtest-bar[hidden] { display: none; }
+.backtest-bar p { margin: 0; font-size: 13px; }
+@media (max-width: 520px) { .backtest-bar { padding: 0 12px; } .backtest-bar .seg { width: 100%; } .backtest-bar .seg button { flex: 1; } }
