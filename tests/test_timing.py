@@ -36,15 +36,41 @@ class PenTimingTests(unittest.TestCase):
 class SummaryTests(unittest.TestCase):
     def test_counts_and_stay_comparison(self):
         d = pd.DataFrame(dict(pen_gain=[2.0, 2.0, 0.1, 0.1, 3.0], pen_change=[False, False, False, False, True],
-                              ph_gain=[0.0, 1.5, None, 0.2, 0.0], is_ph=[False, True, False, False, False],
-                              RE24=[0.5, 0.3, -0.1, -0.3, 0.0]))
+                              ph_gain=[0.0, 1.5, None, 0.2, None], ph_has_bench=[True, True, True, True, False],
+                              is_ph=[False, True, False, False, False], RE24=[0.5, 0.3, -0.1, -0.3, 0.0]))
         s = tb.summarize(d, 1.0)
         self.assertEqual((s["pen"]["n"], s["pen"]["actual"], s["pen"]["suggested"], s["pen"]["both"]), (5, 1, 3, 1))
         self.assertEqual((s["pen"]["sys_only"], s["pen"]["actual_only"]), (2, 0))
         # 系統建議但續投（0.5、0.3）平均 0.4；不建議（-0.1、-0.3）平均 -0.2
         self.assertAlmostEqual(s["pen"]["stay_diff"], 0.6)
         self.assertLess(s["pen"]["stay_diff_ci"][0], s["pen"]["stay_diff"])
+        # 有板凳但全員守備不成立（ph_gain 空值）仍是決策點、視為不建議；沒有板凳的打席不算
         self.assertEqual((s["ph"]["n"], s["ph"]["actual"], s["ph"]["suggested"]), (4, 1, 1))
+        self.assertEqual(s["ph"]["stay_n_not"], 3)
+
+
+class DivergentTests(unittest.TestCase):
+    def test_only_suggested_but_not_changed_sorted_by_strength(self):
+        ok = pd.DataFrame(dict(pa_id=["g-1", "g-2", "g-3", "g-4", "g-5"], game=["g1", "g2", "g3", "g4", "g5"], date=pd.Timestamp("2025-07-01"),
+                               inning=[7, 8, 8, 9, 9], half="away", fld_team="A", bat_team="B", inc="P", due="H",
+                               pen_gain=[2.0, 5.0, 0.5, 3.0, 9.0], pen_best="R", pen_change=[False, False, False, False, True],
+                               ph_gain=[None, 1.5, 2.5, 0.2, 4.0], ph_best="X", is_ph=[False, False, False, False, True]))
+        d = ok[["pa_id"]].assign(outs=1, bases=0, bat_score=2, fld_score=3, result="SO")
+        pen = tb.divergent(ok, d, "A", "pen", t=1.0)
+        # 實際換投（g-5）與未達門檻（g-3）不列入；依建議強度排序
+        self.assertEqual([x["pa"] for x in pen], ["g-2", "g-4", "g-1"])
+        self.assertEqual((pen[0]["who"], pen[0]["best"], pen[0]["opp"], pen[0]["gain"]), ("P", "R", "B", 5.0))
+        ph = tb.divergent(ok, d, "B", "ph", t=1.0)
+        self.assertEqual([x["pa"] for x in ph], ["g-3", "g-2"])
+        self.assertEqual(ph[0]["opp"], "A")
+
+    def test_one_entry_per_pitcher_stint(self):
+        ok = pd.DataFrame(dict(pa_id=["g-1", "g-2", "h-1"], game=["g", "g", "h"], date=pd.Timestamp("2025-07-01"),
+                               inning=8, half="away", fld_team="A", bat_team="B", inc="P", due="H",
+                               pen_gain=[3.0, 4.0, 2.0], pen_best="R", pen_change=False, ph_gain=None, ph_best=None, is_ph=False))
+        d = ok[["pa_id"]].assign(outs=1, bases=0, bat_score=2, fld_score=3, result="SO")
+        # 同一場同一位投手只留最強的 g-2；另一場的 h-1 保留
+        self.assertEqual([x["pa"] for x in tb.divergent(ok, d, "A", "pen", t=1.0)], ["g-2", "h-1"])
 
 
 class DecisionPointTests(unittest.TestCase):
