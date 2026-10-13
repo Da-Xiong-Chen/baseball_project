@@ -167,14 +167,13 @@ function readPrefs() { try { return JSON.parse(localStorage.getItem(PREF_KEY)) |
 function writePrefs(p) { try { localStorage.setItem(PREF_KEY, JSON.stringify(p)); return true; } catch { return false; } }
 const clampNum = (v, hi) => { const n = Number(v); return Number.isFinite(n) ? Math.min(hi, Math.max(0, n)) : 0; };
 function prefSettings() {
-  return { recent_weight: clampNum($('#recentWeight').value, 100) / 100,
-    fatigue_d2: clampNum($('#fatigueD2').value, 0.5), fatigue_d3: clampNum($('#fatigueD3').value, 0.5) };
+  return {recent_weight:0,fatigue_d2:0,fatigue_d3:0}; // 當下評估不套用歷史進階偏好。
 }
 function renderPrefOutputs() { $('#recentWeightOut').textContent = $('#recentWeight').value + '%'; }
 function savePrefSettings() {
   const p = readPrefs();
-  p.recentWeight = +$('#recentWeight').value; p.fatigueD2 = prefSettings().fatigue_d2; p.fatigueD3 = prefSettings().fatigue_d3;
-  writePrefs(p); renderPrefOutputs();
+  p.recentWeight = 0; p.fatigueD2=clampNum($('#fatigueD2').value,0.5);p.fatigueD3=clampNum($('#fatigueD3').value,0.5);
+  writePrefs(p); renderPrefOutputs();if(historyContext)renderHistoryContext();
 }
 function loadPrefSettings() {
   const p = readPrefs();
@@ -310,7 +309,7 @@ async function init() {
   loadPrefSettings();
   renderState();
   await refreshCustom();
-  await applySituation(readPrefs().situation, true);
+  $('#presetSave').onclick=saveHistoryPreset;$('#presetLoad').onclick=loadHistoryPreset;$('#presetClear').onclick=clearHistoryPreset;
   $('#reviewTeam').innerHTML = opts; $('#reviewTeam').value = $('#myTeam').value;
   $('#reviewTeam').onchange = ()=>{renderReview();loadHistoricalPitchers();loadHistoryContext();};
   $('#historyPlayer').onchange=renderHistoryContext;['#historyPitchCount','#historyStarter'].forEach(id=>$(id).oninput=renderHistoryContext);
@@ -783,6 +782,9 @@ function divergentList(items, kind) {
       <span class="dv-gain num pos">${sign(x.gain)} 百分點</span><span class="dv-go" aria-hidden="true">→</span></button></li>`;
   }).join("")}</ol>`;
 }
+function saveHistoryPreset(){const p=readPrefs();p.history={date:HISTORY_DATE,team:$('#reviewTeam').value,role:historyRole,player:$('#historyPlayer').value,pitchCount:$('#historyPitchCount').value,starter:$('#historyStarter').value,fatigueLevel:$('#fatigueLevel').value};presetStatus(writePrefs(p)?'歷史情境已保存。':'本次可用，但瀏覽器不允許儲存。');}
+async function loadHistoryPreset(){const p=readPrefs().history;if(!p||p.date!==HISTORY_DATE){presetStatus('尚未保存這一天的歷史情境。');return;}if(!S.teams.includes(p.team))return;$('#reviewTeam').value=p.team;historyRole=p.role==='hitters'?'hitters':'pitchers';$$('[data-history-role]').forEach(b=>{b.classList.toggle('on',b.dataset.historyRole===historyRole);b.setAttribute('aria-pressed',String(b.dataset.historyRole===historyRole));});await loadHistoryContext();if([...$('#historyPlayer').options].some(o=>o.value===p.player))$('#historyPlayer').value=p.player;$('#historyPitchCount').value=String(clampNum(p.pitchCount,160));$('#historyStarter').value=p.starter==='1'?'1':'0';$('#fatigueLevel').value=['0','1','2'].includes(p.fatigueLevel)?p.fatigueLevel:'0';setFatigueLevel();renderHistoryContext();await renderReview();await loadHistoricalPitchers();presetStatus('已載入歷史情境。');}
+function clearHistoryPreset(){$('#historyPitchCount').value='0';$('#historyStarter').value='0';$('#fatigueLevel').value='0';setFatigueLevel();renderHistoryContext();presetStatus('已重設歷史球數與疲勞假設。');}
 let historyRole='pitchers',historyContext=null,historyContextGeneration=0;
 async function loadHistoryContext(){
  const token=++historyContextGeneration;$('#historyPlayer').disabled=true;
@@ -800,7 +802,7 @@ function renderHistoryContext(){
  const p=historyContext?.teams[$('#reviewTeam').value]?.[historyRole]?.find(p=>p.name===$('#historyPlayer').value),box=$('#historyPlayerContext');if(!p){box.innerHTML='<p>沒有賽前出賽紀錄。</p>';return;}
  const pitcher=historyRole==='pitchers',pc=$('#historyPitchCount'),starter=$('#historyStarter').value==='1';
  const stat=(n,label)=>`<div class="review-stat"><strong>${n}</strong><span>${label}</span></div>`;
- let fatigue='';if(pitcher){if(pc.value===''||!pc.checkValidity()||!Number.isInteger(+pc.value)){fatigue='<p role="alert">球數請輸入 0–160 的整數。</p>';}else{const value=historicalFatigue(+pc.value,starter,historyContext.fatigue_curve);fatigue=`<p>${starter?'先發球數調整':'後援球數調整'}：<strong>+${value.toFixed(3)} 分／打席</strong>${!starter&&+pc.value>=30?' · 30 球以上樣本不足，僅提醒':''}</p><p class="mut">只估本場球數影響；賽前連投天數不自動扣分。先發曲線可能低估疲勞。</p>`;}}
+ let fatigue='';if(pitcher){if(pc.value===''||!pc.checkValidity()||!Number.isInteger(+pc.value)){fatigue='<p role="alert">球數請輸入 0–160 的整數。</p>';}else{const value=historicalFatigue(+pc.value,starter,historyContext.fatigue_curve);fatigue=`<p>${starter?'先發球數調整':'後援球數調整'}：<strong>+${value.toFixed(3)} 分／打席</strong>${!starter&&+pc.value>=30?' · 30 球以上樣本不足，僅提醒':''}</p><p class="mut">只估本場球數影響；賽前連投天數不自動扣分。先發曲線可能低估疲勞。</p><p>連投情境假設：+${(p.consecutive_days_before>=2?clampNum($('#fatigueD3').value,0.5):p.consecutive_days_before===1?clampNum($('#fatigueD2').value,0.5):0).toFixed(3)} 分／打席（使用者設定）</p>`;}}
  box.innerHTML=`<div class="review-stats" style="margin-top:16px">${stat(p.consecutive_days_before,'賽前連續出賽天數')}${stat(p.rest_days,'完整休息天數')}${stat(p.workload3,pitcher?'近三天球數':'近三天打席')}${stat(p.games14,'近14天出賽場數')}</div>${fatigue}<p>近14天：${pitcher?`${p.bf14} 打席 · ${p.so14} 三振 · ${p.bb14} 保送 · ${p.pitches14} 球`:`${p.pa14} 打席 · ${p.hits14} 安打 · ${p.so14} 三振`}</p><p class="mut">最後出賽 ${esc(p.last_date)}；不代表當日健康或出賽資格。資料截至 ${esc(HISTORY_DATE)} 賽前；樣本 ${pitcher?p.bf14:p.pa14} 打席。</p><details><summary>出賽與負荷紀錄</summary><ul>${p.log.map(x=>`<li>${esc(x.date)} · ${x.count} ${pitcher?'球':'打席'}</li>`).join('')||'<li>近14天沒有出賽。</li>'}</ul></details>`;
 }
 let historyReviewGeneration=0;
