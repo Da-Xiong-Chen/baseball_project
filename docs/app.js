@@ -312,7 +312,9 @@ async function init() {
   await refreshCustom();
   await applySituation(readPrefs().situation, true);
   $('#reviewTeam').innerHTML = opts; $('#reviewTeam').value = $('#myTeam').value;
-  $('#reviewTeam').onchange = ()=>{renderReview();loadHistoricalPitchers();};
+  $('#reviewTeam').onchange = ()=>{renderReview();loadHistoricalPitchers();loadHistoryContext();};
+  $('#historyPlayer').onchange=renderHistoryContext;['#historyPitchCount','#historyStarter'].forEach(id=>$(id).oninput=renderHistoryContext);
+  $$('[data-history-role]').forEach(b=>b.onclick=()=>{historyRole=b.dataset.historyRole;$$('[data-history-role]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});loadHistoryContext();});
   $('#historyPitcher').onchange=mountHistoricalPitch;
   LineupBoard.mount({element:$('#lineupPage'),teams:S.teams,team,matches:matchesPlayerSearch,pitchCount:()=>$('#pitchCount').value,role:()=>S.starter,applied:applyOwnLineup});
   $$('[data-page]').forEach(b=>b.onclick=()=>showFeaturePage(b.dataset.page));
@@ -355,15 +357,22 @@ async function showFeaturePage(page, sub) {
   const skip=PAGE_SKIP[replay?'replay':page];$('.skip-link').href=skip[0];$('.skip-link').textContent=skip[1];
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   if(page==='lineup')await LineupBoard.selectTeam($('#myTeam').value);
-  if(page==='review'&&!replay){if(!$('#reviewTeam').value)$('#reviewTeam').value=$('#myTeam').value;await loadTiming();await renderReview();await loadHistoricalPitchers();}
+  if(page==='review'&&!replay){if(!$('#reviewTeam').value)$('#reviewTeam').value=$('#myTeam').value;await loadTiming();await renderReview();await loadHistoricalPitchers();await loadHistoryContext();}
   window.scrollTo({top:0,behavior:'auto'});
+}
+function battingOptions(roster,configured,restricted){
+  const nine=configured.slots.map((s,i)=>`<option value="${esc(s.name)}">第 ${i+1} 棒 · ${esc(s.name)}</option>`).join('');
+  if(restricted)return nine;
+  const active=new Set(configured.slots.map(s=>s.name));
+  return `<optgroup label="已設定場上九棒">${nine}</optgroup><optgroup label="其他球員">${roster.hitters.filter(h=>!active.has(h.name)).map(h=>`<option value="${esc(h.name)}">${esc(h.name)}（${h.hand==='L'?'左':h.hand==='R'?'右':'兩'}打）</option>`).join('')}</optgroup>`;
 }
 function syncOwnLineup() {
   const c=ownLineup(),my=S.roster[$('#myTeam').value];if(!my)return;
   const selected=$('#dueBatter').value;
+  if(!c&&confirmedOwnLineup()){const configured=confirmedOwnLineup();$('#dueBatter').innerHTML=battingOptions(my,configured,false);$('#dueBatter').value=my.hitters.some(h=>h.name===selected)?selected:configured.slots[0].name;dueFromLineup=false;}
   if(c) {
     const fromLineup=dueFromLineup;
-    $('#dueBatter').innerHTML=c.slots.map((s,i)=>`<option value="${esc(s.name)}">第 ${i+1} 棒 · ${esc(s.name)}</option>`).join('');
+    $('#dueBatter').innerHTML=battingOptions(my,c,true);
     dueFromLineup=true;
     // 預設情境是比賽開始（1 局上、0 出局），輪到第 1 棒；使用者已在名單選項中選過時保留
     $('#dueBatter').value=fromLineup&&c.slots.some(s=>s.name===selected)?selected:c.slots[0].name;
@@ -374,7 +383,7 @@ function syncOwnLineup() {
   $('#duePos').disabled=!!c;$('#myPitcher').disabled=!!c;$('#duePosLock').hidden=!c;$('#myPitcherLock').hidden=!c;
   $('#lineupSummary').innerHTML=c
     ?`<span>依場上名單評估 · 場上投手 ${esc(c.pitcher)}</span><span class="lineup-summary-actions"><button type="button" data-page="lineup">編輯配置</button><button type="button" id="lineupRelease">切換一般使用者</button></span>`
-    :`<span>${audienceMode==='team'?'球隊模式：請先設定並套用場上名單。':'一般使用者：可直接評估，不需設定名單。'}</span><button type="button" data-page="lineup">設定場上名單</button>`;
+    :`<span>${audienceMode==='team'?'球隊模式：請先設定並套用場上名單。':(confirmedOwnLineup()?'已設定九棒列在前方；仍可選其他球員。':'一般使用者：可直接評估，不需設定名單。')}</span><button type="button" data-page="lineup">設定場上名單</button>`;
   $('#audienceStatus').textContent=audienceMode==='team'?(c?'依已套用的場上名單評估。':'請先完成九棒、守位與投手，再套用配置。'):'自由選擇球員；已存的球隊名單仍會保留。';
   $('#lineupSummary [data-page]').onclick=()=>showFeaturePage('lineup');
   if($('#lineupRelease'))$('#lineupRelease').onclick=async()=>{await setAudienceMode('general');$('#lineupSummary button')?.focus();};
@@ -578,7 +587,7 @@ function renderPenVisibility(searching=false) {
 function autoPos() {
   const my = S.roster[$("#myTeam").value];
   const h = my.hitters.find((x) => x.name === $("#dueBatter").value);
-  const top = ownLineup()?.slots.find(s=>s.name===h?.name)?.pos || (h && Object.keys(h.positions || {})[0]);
+  const top = confirmedOwnLineup()?.slots.find(s=>s.name===h?.name)?.pos || (h && Object.keys(h.positions || {})[0]);
   $("#duePos").value = top || "DH";
 }
 const POS_ORDER = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
@@ -773,6 +782,26 @@ function divergentList(items, kind) {
       <span class="dv-ctx mut">對 ${esc(x.opp)}・${x.outs} 出局${x.bases ? `・${BASES[x.bases]}` : ""}・我方 ${score}・結果 ${esc(resultLabel(x.result))}</span>
       <span class="dv-gain num pos">${sign(x.gain)} 百分點</span><span class="dv-go" aria-hidden="true">→</span></button></li>`;
   }).join("")}</ol>`;
+}
+let historyRole='pitchers',historyContext=null,historyContextGeneration=0;
+async function loadHistoryContext(){
+ const token=++historyContextGeneration;$('#historyPlayer').disabled=true;
+ try{historyContext=await json('data/history-context-2025-09-20.json');if(token!==historyContextGeneration)return;if(historyContext.date!==HISTORY_DATE)throw Error('date');
+ const list=[...(historyContext.teams[$('#reviewTeam').value]?.[historyRole]||[])].sort((a,b)=>b.games14-a.games14||b.last_date.localeCompare(a.last_date));
+ $('#historyPlayer').innerHTML=list.map(p=>`<option>${esc(p.name)}</option>`).join('');$('#historyPlayer').disabled=false;$('#historyPitchInputs').hidden=historyRole!=='pitchers';renderHistoryContext();
+ }catch{if(token===historyContextGeneration)$('#historyPlayerContext').innerHTML='<p role="alert">賽前狀態載入失敗。</p><button type="button" id="historyContextRetry">重新載入</button>';if($('#historyContextRetry'))$('#historyContextRetry').onclick=loadHistoryContext;}
+}
+function historicalFatigue(pc,starter,curve){
+ if(!starter||!curve?.length)return 0;let result=0;
+ for(let i=1;i<curve.length;i++){const [x,y]=curve[i], [prev,v]=curve[i-1];if(pc<=x)return Math.max(0,v+(y-v)*Math.max(0,pc-prev)/(x-prev));}
+ if(curve.length<2)return 0;const [x,y]=curve.at(-1),[prev,v]=curve.at(-2);result=y+(y-v)*Math.max(0,pc-x)/(x-prev);return Math.min(0.12,result);
+}
+function renderHistoryContext(){
+ const p=historyContext?.teams[$('#reviewTeam').value]?.[historyRole]?.find(p=>p.name===$('#historyPlayer').value),box=$('#historyPlayerContext');if(!p){box.innerHTML='<p>沒有賽前出賽紀錄。</p>';return;}
+ const pitcher=historyRole==='pitchers',pc=$('#historyPitchCount'),starter=$('#historyStarter').value==='1';
+ const stat=(n,label)=>`<div class="review-stat"><strong>${n}</strong><span>${label}</span></div>`;
+ let fatigue='';if(pitcher){if(pc.value===''||!pc.checkValidity()||!Number.isInteger(+pc.value)){fatigue='<p role="alert">球數請輸入 0–160 的整數。</p>';}else{const value=historicalFatigue(+pc.value,starter,historyContext.fatigue_curve);fatigue=`<p>${starter?'先發球數調整':'後援球數調整'}：<strong>+${value.toFixed(3)} 分／打席</strong>${!starter&&+pc.value>=30?' · 30 球以上樣本不足，僅提醒':''}</p><p class="mut">只估本場球數影響；賽前連投天數不自動扣分。先發曲線可能低估疲勞。</p>`;}}
+ box.innerHTML=`<div class="review-stats" style="margin-top:16px">${stat(p.consecutive_days_before,'賽前連續出賽天數')}${stat(p.rest_days,'完整休息天數')}${stat(p.workload3,pitcher?'近三天球數':'近三天打席')}${stat(p.games14,'近14天出賽場數')}</div>${fatigue}<p>近14天：${pitcher?`${p.bf14} 打席 · ${p.so14} 三振 · ${p.bb14} 保送 · ${p.pitches14} 球`:`${p.pa14} 打席 · ${p.hits14} 安打 · ${p.so14} 三振`}</p><p class="mut">最後出賽 ${esc(p.last_date)}；不代表當日健康或出賽資格。資料截至 ${esc(HISTORY_DATE)} 賽前；樣本 ${pitcher?p.bf14:p.pa14} 打席。</p><details><summary>出賽與負荷紀錄</summary><ul>${p.log.map(x=>`<li>${esc(x.date)} · ${x.count} ${pitcher?'球':'打席'}</li>`).join('')||'<li>近14天沒有出賽。</li>'}</ul></details>`;
 }
 let historyReviewGeneration=0;
 async function renderReview(){

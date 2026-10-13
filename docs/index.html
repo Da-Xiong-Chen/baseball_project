@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261013-audience-history-final"></script>
-<link rel="stylesheet" href="style.css?v=20261013-audience-history-final">
+<script src="theme.js?v=20261013-season-context"></script>
+<link rel="stylesheet" href="style.css?v=20261013-season-context">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -63,8 +63,9 @@
 </section>
 
 <section id="reviewPage" class="review-page" hidden aria-labelledby="reviewTitle">
-  <div class="review-heading"><div><p class="eyebrow">DAY REVIEW / 2025</p><h2 id="reviewTitle" tabindex="-1">2025/09/20：當日用人回顧</h2><p class="mut">比較當日實際代打與賽前系統標記。</p></div><div><label class="f" for="reviewTeam">球隊</label><select id="reviewTeam"></select></div></div>
-  <div id="reviewBody" aria-live="polite"><p class="mut">載入中…</p></div>
+  <div class="review-heading"><div><p class="eyebrow">DAY REVIEW / 2025</p><h2 id="reviewTitle" tabindex="-1">2025/09/20：賽季中情境</h2><p class="mut">回到這天賽前，查看球員負荷、近期表現與當日打席。</p></div><div><label class="f" for="reviewTeam">球隊</label><select id="reviewTeam"></select></div></div>
+  <section class="card"><div class="card-h"><h3>賽季中球員狀態</h3><div class="seg" id="historyRoleSeg"><button type="button" data-history-role="pitchers" class="on" aria-pressed="true">換投準備</button><button type="button" data-history-role="hitters" aria-pressed="false">換打準備</button></div></div><div class="card-b"><label class="f" for="historyPlayer">球員（當日前有出賽紀錄）</label><select id="historyPlayer"></select><div id="historyPitchInputs" class="row2" style="margin-top:12px"><div><label class="f" for="historyPitchCount">模擬本場已投球數</label><input id="historyPitchCount" type="number" min="0" max="160" step="1" value="0"></div><div><label class="f" for="historyStarter">本場角色</label><select id="historyStarter"><option value="0">後援</option><option value="1">先發</option></select></div></div><div id="historyPlayerContext" aria-live="polite"></div></div></section>
+<div id="reviewBody" aria-live="polite"><p class="mut">載入中…</p></div>
 <section class="card"><div class="card-h"><h3>賽前近期配球</h3></div><div class="card-b"><label class="f" for="historyPitcher">投手</label><select id="historyPitcher"></select><p class="mut">截止 2025/09/20 賽前，不含當日及之後比賽。</p></div></section><div id="historyPitchChange"></div></section>
 
 <div class="matchday-intro">
@@ -225,11 +226,11 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261013-audience-history-final"></script>
-<script src="pitch-change.js?v=20261013-audience-history-final"></script>
-<script src="pitcher-groups.js?v=20261013-audience-history-final"></script>
-<script src="motion.js?v=20261013-audience-history-final"></script>
-<script src="lineup.js?v=20261013-audience-history-final"></script>
-<script src="app.js?v=20261013-audience-history-final"></script>
+<script src="engine.js?v=20261013-season-context"></script>
+<script src="pitch-change.js?v=20261013-season-context"></script>
+<script src="pitcher-groups.js?v=20261013-season-context"></script>
+<script src="motion.js?v=20261013-season-context"></script>
+<script src="lineup.js?v=20261013-season-context"></script>
+<script src="app.js?v=20261013-season-context"></script>
 </body>
 </html>
