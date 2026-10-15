@@ -1,6 +1,6 @@
 {
   "base_commit": "ac41d7f2c961a62da8387e34bedf6ded96416bad",
-  "javascript_tests": 99,
+  "javascript_tests": 103,
   "python_tests": 51,
   "data_files": {
     "2024": 360,
@@ -20,5 +20,8 @@
   "timing_samples": 17,
   "timing_mismatches": 0,
   "model_retrained": false,
-  "publication": "via pull request"
+  "publication": "via pull request",
+  "deep_audit_fixes": 4,
+  "deep_audit_regressions": 4,
+  "deep_audit_pr": 17
 }

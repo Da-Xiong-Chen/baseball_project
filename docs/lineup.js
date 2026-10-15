@@ -101,7 +101,7 @@
     q('#lineupPlayerList').innerHTML=list.filter(p=>options.matches(p.name,teamName,filter)).map(p=>`<button type="button" data-player="${esc(p.name)}"><strong>${esc(p.name)}</strong><span>${p.hand==='L'?'左':p.hand==='R'?'右':'兩'}${pickerIndex==='P'?'投':'打'}${c.slots.some(s=>s.name===p.name)?' · 九棒中':''}</span></button>`).join('')||'<p>沒有符合的球員。</p>';
   }
   function openPicker(index,button){
-    if(options.element.hasAttribute('aria-busy'))return;
+    if(!roster||options.element.hasAttribute('aria-busy'))return;
     if(swapMode){if(index!=='P'&&((swapMode==='field')===!!button.hasAttribute?.('data-field')))swapSelect(index);else message('請在'+(swapMode==='field'?'球場圖':'棒次表')+'選擇兩位球員，或取消互換。');return;}
     pickerIndex=index;pickerField=button.hasAttribute?.('data-field')||false;returnFocus=button;
     q('#lineupPickerTitle').textContent=index==='P'?'選擇場上投手':'選擇第 '+(index+1)+' 棒球員';q('#lineupSearch').value='';pickerRender();q('#lineupPicker').showModal();q('#lineupSearch').focus();
@@ -111,8 +111,8 @@
     options.element.setAttribute('aria-busy','true');
     q('#lineupApply').disabled=true;
     try{const next=await options.team(name);if(token!==selectTeam.generation)return;teamName=name;roster=next;render();message(get(name).storageError?'保存記錄無法讀取；本次仍可設定。':'請依實際出賽名單設定。');}
-    catch{message('球員名單載入失敗，請重新選隊。',true);}
-    finally{if(token===selectTeam.generation){options.element.removeAttribute('aria-busy');q('#lineupApply').disabled=teamName!==name;}}
+    catch{if(token!==selectTeam.generation)return;if(roster)render();message('球員名單載入失敗，請重新選隊。',true);}
+    finally{if(token===selectTeam.generation){options.element.removeAttribute('aria-busy');q('#lineupApply').disabled=!roster;}}
   }
   selectTeam.generation=0;
   function mount(o){
@@ -133,7 +133,7 @@
       if(move){resetSwap();const c=get(teamName).draft,i=Number(move.dataset.move),j=i+Number(move.dataset.step);if(j>=0&&j<9){[c.slots[i],c.slots[j]]=[c.slots[j],c.slots[i]];draftChanged();const next=q(`[data-move="${j}"][data-step="${move.dataset.step}"]`);(next.disabled?q(`[data-pick="${j}"]`):next).focus();}}
     });
     options.element.querySelectorAll('[data-field]').forEach(button=>button.onclick=()=>{const pos=button.getAttribute('data-field');openPicker(pos==='P'?'P':get(teamName).draft.slots.findIndex(s=>s.pos===pos),button);});
-    q('#lineupRows').onchange=e=>{if(options.element.hasAttribute('aria-busy')||!e.target.matches('[data-position]'))return;resetSwap();const c=get(teamName).draft,i=Number(e.target.dataset.position),pos=e.target.value,j=c.slots.findIndex(s=>s.pos===pos);if(j!==-1)c.slots[j].pos=c.slots[i].pos;c.slots[i].pos=pos;draftChanged();};
+    q('#lineupRows').onchange=e=>{if(options.element.hasAttribute('aria-busy')||!e.target.matches('[data-position]'))return;resetSwap();const c=get(teamName).draft,i=Number(e.target.dataset.position),pos=e.target.value,j=c.slots.findIndex(s=>s.pos===pos);if(j!==-1)c.slots[j].pos=c.slots[i].pos;c.slots[i].pos=pos;draftChanged();q(`[data-position="${i}"]`).focus();};
     q('#lineupPitcherPick').onclick=e=>openPicker('P',e.currentTarget);
     q('#lineupReset').onclick=async()=>{
       if(options.element.hasAttribute('aria-busy')||!defaults[teamName])return;
