@@ -461,3 +461,7 @@ test('default pitch count follows the inning for starters and stays 15 for relie
   const pc=(starter,inning)=>f.eval(`S.starter=${starter};S.inning=${inning};defaultPitchCount()`);
   assert.equal(pc(true,1),0);assert.equal(pc(true,7),90);assert.equal(pc(true,12),105);assert.equal(pc(false,1),15);assert.equal(pc(false,9),15);
 });
+
+test('fatigue preference changes invalidate an existing score result',()=>{const f=fixture();f.node('#fatigueD2').value='0';f.eval('resultInputKey=evaluationKey();S.last={id:"old"};S.ready=true');f.node('#fatigueD2').value='0.03';f.eval('invalidateCustom()');assert.equal(f.eval('S.last'),null);});
+
+test('season review missing static game is explained without a doomed request and retry',async()=>{const f=fixture();f.eval("STATIC=true;timingData={by_team:{}};showFeaturePage=async()=>{};loadGames=async()=>{S.games=[]};loadGame=async()=>{throw Error('must not request absent file')}");await f.eval("openReplayPA('2025-999-a001','pen')");assert.equal(f.node('#replayNote').hidden,false);assert.match(f.node('#replayNote').textContent,/未收錄/);assert.match(f.node('#paList').innerHTML,/已收錄/);});

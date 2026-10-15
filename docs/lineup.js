@@ -30,7 +30,7 @@
     return errors;
   }
   function validState(s){
-    const shape=c=>c&&Array.isArray(c.slots)&&c.slots.length===9&&c.slots.every(x=>x&&typeof x.name==='string'&&POS[x.pos])&&typeof c.pitcher==='string';
+    const shape=c=>c&&Array.isArray(c.slots)&&c.slots.length===9&&c.slots.every(x=>x&&typeof x.name==='string'&&POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9&&typeof c.pitcher==='string';
     return s&&s.version===1&&s.season===2025&&shape(s.draft)&&(!s.confirmed||shape(s.confirmed));
   }
   const states=new Map();let defaults={},defaultsMeta={},options,teamName='',roster,pickerIndex=null,pickerField=false,returnFocus=null;
@@ -130,7 +130,7 @@
       if(options.element.hasAttribute('aria-busy'))return;
       const pick=e.target.closest('[data-pick]'),move=e.target.closest('[data-move]');
       if(pick)openPicker(Number(pick.dataset.pick),pick);
-      if(move){resetSwap();const c=get(teamName).draft,i=Number(move.dataset.move),j=i+Number(move.dataset.step);if(j>=0&&j<9){[c.slots[i],c.slots[j]]=[c.slots[j],c.slots[i]];draftChanged();q(`[data-move="${j}"][data-step="${move.dataset.step}"]`).focus();}}
+      if(move){resetSwap();const c=get(teamName).draft,i=Number(move.dataset.move),j=i+Number(move.dataset.step);if(j>=0&&j<9){[c.slots[i],c.slots[j]]=[c.slots[j],c.slots[i]];draftChanged();const next=q(`[data-move="${j}"][data-step="${move.dataset.step}"]`);(next.disabled?q(`[data-pick="${j}"]`):next).focus();}}
     });
     options.element.querySelectorAll('[data-field]').forEach(button=>button.onclick=()=>{const pos=button.getAttribute('data-field');openPicker(pos==='P'?'P':get(teamName).draft.slots.findIndex(s=>s.pos===pos),button);});
     q('#lineupRows').onchange=e=>{if(options.element.hasAttribute('aria-busy')||!e.target.matches('[data-position]'))return;resetSwap();const c=get(teamName).draft,i=Number(e.target.dataset.position),pos=e.target.value,j=c.slots.findIndex(s=>s.pos===pos);if(j!==-1)c.slots[j].pos=c.slots[i].pos;c.slots[i].pos=pos;draftChanged();};
@@ -139,9 +139,9 @@
       if(options.element.hasAttribute('aria-busy')||!defaults[teamName])return;
       const s=get(teamName);resetSwap();s.draft=clone(defaults[teamName]);s.confirmed=clone(defaults[teamName]);
       // 保存套用狀態，重新整理後仍維持依場上名單評估
-      persist();
+      const saved=persist();
       // 與開啟網站時相同：換回預設先發投手時依角色帶入預設球數（先發 90／後援 15），不歸零
-      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});message('已恢復預設名單並套用。');
+      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});message(saved?'已恢復預設名單並套用。':'已恢復預設並套用；本次可用，但無法保存到瀏覽器。');
     };
     q('#lineupApply').onclick=async()=>{
       const s=get(teamName),errors=validate(s.draft,roster);

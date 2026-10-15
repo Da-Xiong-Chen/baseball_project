@@ -38,8 +38,8 @@ function evaluationKey() {
   const value=id=>$(id)?.value || '';
   return JSON.stringify([S.view,S.inning,S.half,S.outs,S.bases,value('#myTeam'),value('#oppTeam'),value('#myScore'),value('#oppScore'),
     S.view==='offense'?[value('#dueBatter'),value('#duePos'),value('#oppPitcher'),[...S.bench].filter(n=>n!==value('#dueBatter')).sort()]:
-    [value('#myPitcher'),value('#pitchCount'),S.starter,...['#nb1','#nb2','#nb3'].map(value),$$('#penList input:checked').map(i=>i.value).filter(n=>n!==value('#myPitcher')).sort(),streakMarks()]],
-    [value('#recentWeight'),value('#fatigueD2'),value('#fatigueD3')]);
+    [value('#myPitcher'),value('#pitchCount'),S.starter,...['#nb1','#nb2','#nb3'].map(value),$$('#penList input:checked').map(i=>i.value).filter(n=>n!==value('#myPitcher')).sort(),streakMarks()],
+    [value('#recentWeight'),value('#fatigueD2'),value('#fatigueD3')]]);
 }
 function showFieldError(id,message) {
   fieldErrors.set(id,message);$('#'+id).setAttribute('aria-invalid','true');$('#'+id).setAttribute('aria-describedby','formError');
@@ -792,6 +792,7 @@ async function openReplayPA(pa, kind) {
   await showFeaturePage("review", "replay");
   $("#rpTeam").value = $("#reviewTeam").value;
   await loadGames();
+  if(STATIC&&!S.games.some(g=>g.game===gid)){const note=$('#replayNote');note.textContent='線上版未收錄這場比賽；請選其他比賽，或使用本機完整版。';note.hidden=false;$('#paList').innerHTML='<p>請從比賽列表選擇已收錄的場次。</p>';return;}
   if (!S.games.find(g => g.game === gid)?.ph && $("#onlyPhGames").checked) { $("#onlyPhGames").checked = false; renderGames(); }
   await loadGame(gid);
   const note = $("#replayNote");
