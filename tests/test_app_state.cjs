@@ -167,13 +167,14 @@ test('missing historical detail never falls back to full-season Engine',async()=
 
 test('result context controls season after a mode switch',()=>{
   const f=fixture();f.eval("S.mode='replay';S.last={view:'offense',situation:{date:'2026-01-01'},model_cutoff:'2026-01-01'};mountPitchChange('P');");
-  assert.equal(f.context.lastMount.season,2025);
+  assert.equal(f.context.lastMount,undefined);
+  f.eval("S.last={view:'replay',situation:{date:'2025-09-20'},model_cutoff:'2025-09-20'};mountPitchChange('P');");assert.equal(f.context.lastMount.cutoff,'2025-09-20');
 });
 
 test('pitcher identity switches even when detail fails',async()=>{
   const f=fixture();f.eval("S.last={view:'offense',situation:{date:'2026-01-01'},model_cutoff:'2026-01-01'};api=async()=>{throw Error('offline')};");
   await f.eval("showDetail('B','NEW')");
-  assert.equal(f.context.lastMount.pitcher,'NEW');
+  assert.equal(f.context.lastMount,undefined);
   assert.match(f.node('#detail').innerHTML,/未提供或載入失敗/);assert.match(f.node('#pitchArsenal').innerHTML,/NEW/);
 });
 
@@ -209,7 +210,7 @@ test('older team list response cannot replace the latest team',async()=>{
   f.eval("renderGames=()=>{};api=p=>p.endsWith('A')?a:b;");
   f.node('#rpTeam').value='A';const first=f.eval('loadGames()');
   f.node('#rpTeam').value='B';const second=f.eval('loadGames()');
-  b.resolve([{game:'B'}]);await second;a.resolve([{game:'A'}]);await first;
+  b.resolve([{game:'B',date:'2025-09-20'},{game:'Future',date:'2025-09-21'}]);await second;a.resolve([{game:'A',date:'2025-09-20'}]);await first;
   assert.equal(f.eval('S.games[0].game'),'B');
 });
 
@@ -434,7 +435,7 @@ test('every exported roster number searches exactly all matching 2025 team membe
 
 test('confirmed own lineup excludes field players and pitcher from bench without affecting reserves',()=>{
  const f=fixture();f.context.LineupBoard={current:()=>({slots:[{name:'Starter1',pos:'C'},{name:'Starter2',pos:'DH'}],pitcher:'P'}),validate:()=>[],unavailable:()=>['Retired']};
- f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');
+ f.node('#myTeam').value='A';f.eval("S.roster.A={hitters:[],pitchers:[]};audienceMode='team'");
  assert.equal(f.eval('benchEligible("Starter1")'),false);assert.equal(f.eval('benchEligible("Starter2")'),false);assert.equal(f.eval('benchEligible("Retired")'),true);assert.equal(f.eval('benchEligible("Reserve")'),true);
  assert.equal(f.eval('benchEligible("P")'),false);
 });
@@ -461,3 +462,22 @@ test('default pitch count follows the inning for starters and stays 15 for relie
   const pc=(starter,inning)=>f.eval(`S.starter=${starter};S.inning=${inning};defaultPitchCount()`);
   assert.equal(pc(true,1),0);assert.equal(pc(true,7),90);assert.equal(pc(true,12),105);assert.equal(pc(false,1),15);assert.equal(pc(false,9),15);
 });
+
+test('general audience ignores saved lineup without deleting team configuration',()=>{const f=fixture();f.context.LineupBoard={current:()=>({slots:[{name:'Starter',pos:'C'}],pitcher:'P'}),validate:()=>[]};f.node('#myTeam').value='A';f.eval('S.roster.A={hitters:[],pitchers:[]}');assert.equal(f.eval('ownLineup()'),null);assert.equal(f.eval('benchEligible("Starter")'),true);assert.ok(f.eval('confirmedOwnLineup()'));f.eval("audienceMode='team'");assert.equal(f.eval('benchEligible("Starter")'),false);});
+test('team audience blocks evaluation without confirmed lineup before requesting scores',async()=>{const f=fixture();f.eval("S.ready=true;audienceMode='team';showFeaturePage=async p=>{window.targetPage=p};api=()=>{throw Error('must not evaluate')}");await f.eval('evaluateCustom()');assert.equal(f.context.window.targetPage,'lineup');assert.match(f.node('#formError').innerHTML,/先完成並套用/);});
+
+test('changing fatigue preferences invalidates the evaluation identity',()=>{const f=fixture();f.node('#fatigueD2').value='0';f.node('#fatigueD3').value='0';const before=f.eval('evaluationKey()');f.node('#fatigueD2').value='0.03';assert.notEqual(f.eval('evaluationKey()'),before);});
+test('historical pitcher selector recovers failures through retry and ignores older team response',async()=>{const f=fixture(),a=deferred(),b=deferred();f.context.a=a.promise;f.context.b=b.promise;f.eval("mountHistoricalPitch=()=>{};team=n=>n==='A'?a:b");f.node('#reviewTeam').value='A';const first=f.eval('loadHistoricalPitchers()');f.node('#reviewTeam').value='B';const second=f.eval('loadHistoricalPitchers()');b.resolve({pitchers:[{name:'New'}]});await second;a.resolve({pitchers:[{name:'Old'}]});await first;assert.match(f.node('#historyPitcher').innerHTML,/New/);assert.doesNotMatch(f.node('#historyPitcher').innerHTML,/Old/);f.eval("team=async()=>{throw Error('offline')}");await f.eval('loadHistoricalPitchers()');assert.match(f.node('#historyPitchChange').innerHTML,/重新載入/);assert.equal(typeof f.node('#historyPitchRetry').onclick,'function');});
+test('single-day summary never substitutes whole-season significance and retries missing data',async()=>{const f=fixture();f.node('#reviewTeam').value='A';f.eval("timingData={games:{}};json=async url=>url.endsWith('games.json')?[{date:'2025-09-20',game:'2025-340',away:'A',home:'B',away_score:1,home_score:2}]:{pas:[{pa_id:'one',bat_team:'A',fld_team:'B',is_ph:true}]}" );await f.eval('renderReview()');assert.match(f.node('#reviewBody').innerHTML,/實際代打/);assert.doesNotMatch(f.node('#reviewBody').innerHTML,/95%|全聯盟/);f.eval("json=async()=>{throw Error('offline')}");await f.eval('renderReview()');assert.match(f.node('#reviewBody').innerHTML,/重新載入/);});
+
+test('rapid audience switches do not let an older team-mode action reopen lineup',async()=>{const f=fixture(),a=deferred(),b=deferred();f.context.a=a.promise;f.context.b=b.promise;f.eval("let audienceCall=0;applyOwnLineup=()=>++audienceCall===1?a:b;showFeaturePage=async p=>{window.targetPage=p}");const first=f.eval("setAudienceMode('team')"),second=f.eval("setAudienceMode('general')");b.resolve();await second;a.resolve();await first;assert.equal(f.eval('audienceMode'),'general');assert.equal(f.context.window.targetPage,undefined);});
+
+test('general batting options put configured nine first and retain every reserve exactly once',()=>{const f=fixture(),c={slots:Array.from({length:9},(_,i)=>({name:'P'+i}))},roster={hitters:[...c.slots,{name:'Reserve',hand:'L'}]};f.context.config=c;f.context.roster=roster;const html=f.eval('battingOptions(roster,config,false)');assert.match(html,/已設定場上九棒/);assert.match(html,/其他球員/);assert.ok(html.indexOf('第 9 棒')<html.indexOf('Reserve'));assert.equal((html.match(/value="P0"/g)||[]).length,1);assert.doesNotMatch(f.eval('battingOptions(roster,config,true)'),/Reserve/);});
+test('historical fatigue curve has onset, interpolation, capped extrapolation and reliever exclusion',()=>{const f=fixture();assert.equal(f.eval('historicalFatigue(80,true,[[85,0],[95,0.03],[105,0.05]])'),0);assert.equal(f.eval('historicalFatigue(95,true,[[85,0],[95,0.03],[105,0.05]])'),0.03);assert.equal(f.eval('historicalFatigue(160,true,[[85,0],[95,0.03],[105,0.05]])'),0.12);assert.equal(f.eval('historicalFatigue(100,false,[[85,0],[95,0.03]])'),0);});
+
+test('current evaluation never inherits historical recency or streak fatigue preferences',()=>{const f=fixture();f.node('#recentWeight').value='100';f.node('#fatigueD2').value='0.03';f.node('#fatigueD3').value='0.06';assert.equal(f.eval('prefSettings().recent_weight'),0);assert.equal(f.eval('prefSettings().fatigue_d2'),0);assert.equal(f.eval('prefSettings().fatigue_d3'),0);});
+test('advanced preset controls belong to the historical page instead of current evaluation',()=>{const html=fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8'),prefs=html.indexOf('id="prefsPanel"');assert.ok(prefs>html.indexOf('id="reviewPage"'));assert.ok(prefs<html.indexOf('id="evaluationPage"'));assert.match(html,/重設歷史情境/);});
+
+test('fatigue preference changes invalidate an existing score result',()=>{const f=fixture();f.node('#fatigueD2').value='0';f.eval('resultInputKey=evaluationKey();S.last={id:"old"};S.ready=true');f.node('#fatigueD2').value='0.03';f.eval('invalidateCustom()');assert.equal(f.eval('S.last'),null);});
+
+test('season review missing static game is explained without a doomed request and retry',async()=>{const f=fixture();f.eval("STATIC=true;timingData={by_team:{}};showFeaturePage=async()=>{};loadGames=async()=>{S.games=[]};loadGame=async()=>{throw Error('must not request absent file')}");await f.eval("openReplayPA('2025-999-a001','pen')");assert.equal(f.node('#replayNote').hidden,false);assert.match(f.node('#replayNote').textContent,/未收錄/);assert.match(f.node('#paList').innerHTML,/已收錄/);});

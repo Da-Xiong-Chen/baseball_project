@@ -57,7 +57,7 @@
     const known=new Set(available);return {selected:group.members.filter(n=>known.has(n)),missing:group.members.filter(n=>!known.has(n))};
   }
   const equal=(a,b)=>a.size===b.size&&[...a].every(n=>b.has(n));
-  function mount({element,list,team,pitchers,changed,availability,current=()=>'',storage}) {
+  function mount({element,list,team,pitchers,changed,availability,current=()=>'',unavailable=()=>[],storage}) {
     if(!storage){try{storage=root.localStorage;}catch{}}
     let state=loadState(storage,team,pitchers),groups=state.groups;
     if(!sessions.has(team))sessions.set(team,{drafts:new Map(),selected:state.selected,applied:null});
@@ -69,13 +69,13 @@
     const group=()=>groups.find(g=>g.name===select.value);
     const draft=()=>{if(!session.drafts.has(select.value))session.drafts.set(select.value,new Set(group().members));return session.drafts.get(select.value);};
     const dirty=()=>!equal(draft(),new Set(group().members));
-    const effective=()=>new Set(boxes().filter(i=>i.checked&&i.value!==current()).map(i=>i.value));
+    const effective=()=>new Set(boxes().filter(i=>i.checked&&i.value!==current()&&!unavailable().includes(i.value)).map(i=>i.value));
     function feedback(message='') {
-      boxes().forEach(input=>{input.disabled=input.value===current();input.title=input.disabled?'場上投手，固定為比較基準':'';});
+      boxes().forEach(input=>{input.disabled=input.value===current()||unavailable().includes(input.value);input.title=input.disabled?'場上投手，固定為比較基準':'';});
       const selected=[...effective()],count=selected.length, applied=session.applied;
       const namesOpen=availabilityBox.querySelector('.availability-more')?.open;
       availabilityBox.innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>名單需確認；排除未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.slice(0,4).map(name=>`<span class="chip">${esc(name)}</span>`).join('')+(selected.length>4?`<details class="availability-more" ${namesOpen?'open':''}><summary>另 ${selected.length-4} 人</summary><div class="availability-extra">${selected.slice(4).map(name=>`<span class="chip">${esc(name)}</span>`).join('')}</div></details>`:''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
-      const same=applied&&equal(effective(),new Set(applied.members.filter(n=>n!==current())));
+      const same=applied&&equal(effective(),new Set(applied.members.filter(n=>n!==current()&&!unavailable().includes(n))));
       status.textContent=message||state.error||(applied?applied.name+' · '+(same?'已套用':'已微調'):'');
     }
     function updateDraft() {
