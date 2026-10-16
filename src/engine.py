@@ -47,6 +47,10 @@ def situation(pa_id):
     lineup = box.groupby("order")["name"].first().to_dict()  # 先發
     for _, r in before.iterrows():
         lineup[r["pa_order"]] = r["batter"]
+    # 不是代打時，實際打者就是當下場上的人（可能是守備替補上場、還沒打過的球員）；
+    # 是代打時才取該棒次最後一位打過的人（守備替補未打過時無法得知，沿用前一位）。
+    if not row["is_ph"]:
+        lineup[row["pa_order"]] = row["batter"]
     due = lineup.get(row["pa_order"], row["batter"])        # 決策當下輪到的人（若實際換了代打，這裡是原打者）
     used = set(box.groupby("order")["name"].first()) | set(before["batter"])
 
