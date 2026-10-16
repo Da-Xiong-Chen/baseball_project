@@ -838,6 +838,7 @@ async function openReplayPA(pa, kind) {
   await showFeaturePage("review", "replay");
   $("#rpTeam").value = $("#reviewTeam").value;
   await loadGames();
+  if(STATIC&&!S.games.some(g=>g.game===gid)){const note=$('#replayNote');note.textContent='線上版未收錄這場比賽；請選其他比賽，或使用本機完整版。';note.hidden=false;$('#paList').innerHTML='<p>請從比賽列表選擇已收錄的場次。</p>';return;}
   if (!S.games.find(g => g.game === gid)?.ph && $("#onlyPhGames").checked) { $("#onlyPhGames").checked = false; renderGames(); }
   await loadGame(gid);
   const note = $("#replayNote");
