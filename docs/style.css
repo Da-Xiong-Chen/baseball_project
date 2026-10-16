@@ -993,3 +993,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .backtest-bar[hidden] { display: none; }
 .backtest-bar p { margin: 0; font-size: 13px; }
 @media (max-width: 520px) { .backtest-bar { padding: 0 12px; } .backtest-bar .seg { width: 100%; } .backtest-bar .seg button { flex: 1; } }
+
+.audience-control{max-width:1440px;margin:16px auto;padding:0 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}.audience-control p{margin:0}.audience-control .seg{flex-shrink:0}.audience-control button{min-height:44px}
+
+.history-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.history-actions button,.history-actions a{min-height:44px;display:inline-flex;align-items:center;justify-content:center}.history-actions button{padding:8px 12px}
