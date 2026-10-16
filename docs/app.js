@@ -741,9 +741,9 @@ function timingFor(paId) {
 function timingVerdict(x, higherIsWorse) {
   if (!x.stay_diff_ci) return {ok:false, text:'樣本不足，還無法判斷。'};
   const [lo, hi] = x.stay_diff_ci, ok = higherIsWorse ? lo > 0 : hi < 0, opposite = higherIsWorse ? hi < 0 : lo > 0;
-  if (ok) return {ok:true, text:higherIsWorse ? '系統建議換投、但教練讓投手續投時，這些打席確實比較容易失分，系統挑出的換投時機有參考價值。' : '系統建議代打、但原打者上場時，這些打席確實比較難得分，系統挑出的代打時機有參考價值。'};
-  if (opposite) return {ok:false, text:'結果與系統判斷相反，這類建議請謹慎參考。'};
-  return {ok:false, text:higherIsWorse ? '系統建議換投與否，續投投手的表現沒有明顯差別，換投時機建議僅供參考。' : '系統建議代打與否，原打者的表現沒有明顯差別，代打時機建議僅供參考。'};
+  if (ok) return {ok:true, text:higherIsWorse ? '系統建議換投卻續投時較容易失分：換投時機有參考價值。' : '系統建議代打卻沒換時較難得分：代打時機有參考價值。'};
+  if (opposite) return {ok:false, text:'結果與系統判斷相反，請謹慎參考。'};
+  return {ok:false, text:higherIsWorse ? '有無建議差別不明顯：換投時機僅供參考。' : '有無建議差別不明顯：代打時機僅供參考。'};
 }
 const HALF_ZH = h => h === "away" ? "上" : "下";
 function divergentList(items, kind) {
@@ -1072,12 +1072,12 @@ function assessmentNotes(R) {
   const cutoff=R.model_cutoff||'未記錄';
   const ml=R.ml_cutoff||(R.method==='階層式'?'未使用':'未記錄');
   const dates=cutoff!=='未記錄'&&ml===cutoff?`資料截止：${esc(cutoff)}`:`能力資料截止：${esc(cutoff)}；逐球資料截止：${esc(ml)}`;
-  return `<p>分數是相對排名，不是成功機率。換人前請確認今日名單與守備安排。</p>
+  return `<p>分數是相對排名，不是成功機率。</p>
     <details class="assessment-notes"><summary>資料與評估依據</summary><ul>
-    <li><b>評估方式：</b>依投打能力、球路適性與左右投打比較；換投另考慮用球數疲勞。</li>
+    <li><b>評估方式：</b>投打能力、球路適性、左右投打；換投另計用球數疲勞。</li>
     <li><b>資料範圍：</b>2024–2025 球季；${dates}（不含截止日）。來源：Rebas、ldkrsi／CPBL 守位統計。</li>
-    <li><b>圖表限制：</b>優勢來源僅拆解部分模型；細線不是完整預測區間，失分價值不是實際失分。</li>
-    <li><b>使用限制：</b>${R.view==='replay'?'歷史名單與守位可能為推估；':'今日名單需人工確認；'}未追蹤完整登錄、退場與 DH 狀態，請核對正式攻守名單。</li>
+    <li><b>圖表：</b>細線不是完整預測區間；失分價值不是實際失分。</li>
+    <li><b>使用限制：</b>${R.view==='replay'?'歷史名單與守位可能為推估；':'今日名單需人工確認；'}請核對正式攻守名單。</li>
     </ul></details>`;
 }
 function renderResult(preserveTabs = false) {
@@ -1169,7 +1169,7 @@ function renderResult(preserveTabs = false) {
   html += `<nav class="evaluation-nav" aria-label="評估結果導航"><a class="link" href="#candidateCompare">${uiIcon("compare")}比較已選球員 ↓</a><span class="mut">最多 4 人</span></nav><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div id="candidateCompare" tabindex="-1">${comparisonPanel(R,null,activeTab)}</div><div id="pitchArsenal">${mixCard(R)}</div>`;
   html += `<div class="detail-grid"><div id="pitchChange"></div><div id="detail"></div></div>`;
-  html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手、換局時已上丘投手須符合最低投球義務及例外規定；接下來三棒是評估範圍，不是換投規則。</li><li>2024–2025 一軍例行賽延長局最多 12 局；突破僵局的二壘預設可按實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/files/file_pool/1/0p065549820043528193/2025%E6%A3%92%E7%90%83%E8%A6%8F%E5%89%87%28%E5%AE%98%E7%B6%B2%E7%94%A8%29.pdf" target="_blank" rel="noopener noreferrer">CPBL 官方棒球規則（2025）</a></details></div>`;
+  html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手須符合最低投球義務（面對三位打者等規定）。</li><li>延長局最多 12 局，二壘跑者可依實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/files/file_pool/1/0p065549820043528193/2025%E6%A3%92%E7%90%83%E8%A6%8F%E5%89%87%28%E5%AE%98%E7%B6%B2%E7%94%A8%29.pdf" target="_blank" rel="noopener noreferrer">CPBL 官方棒球規則（2025）</a></details></div>`;
   $("#resultBody").innerHTML = html;
   if (retainedTabs) {
     $('#resultBody .tabs').replaceWith(retainedTabs);
@@ -1242,7 +1242,7 @@ function phTable(R) {
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""}">
       <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${cur?`<button type="button" class="baseline-detail" aria-label="查看 ${esc(x["球員"])} 對決">基準</button>`:comparisonCircle(R,"ph",x["球員"])}${officialPlayerLink(x["球員"])} ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div>${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
-      <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比较池百分位；截止日之前達門檻的打者，早季回退前一季`)}</td>
+      <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比較池百分位`)}</td>
       <td class="evaluation-value"><span class="mobile-value-label">相對現任</span><div class="vcell"><span class="vnum num ${cls(cur?0:x['相對現任'],.02)}">${cur?'基準':sign(x['相對現任'])+' 百分點'}</span>${dbar(cur?0:x['相對現任'],0,scale)}</div></td>
       <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>
     </tr>`;
@@ -1259,7 +1259,7 @@ function penTable(R) {
     return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""}">
       <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${cur?`<button type="button" class="baseline-detail" aria-label="查看 ${esc(x["投手"])} 配球與對決">基準</button>`:comparisonCircle(R,"pen",x["投手"])}${officialPlayerLink(x["投手"])} ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div>${reasonsHtml(pitcherReasons(x, R))}${mobileRowDetails(x,true)}</td>
-      <td class="evaluation-score">${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位；截止日之前達門檻的後援，早季回退前一季')}</td>
+      <td class="evaluation-score">${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位')}</td>
       <td class="evaluation-value"><span class="mobile-value-label">${cur?'現任基準 · 0 百分點':'相對現任'}</span><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
       <td class="evaluation-warning">${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
   }).join("");
