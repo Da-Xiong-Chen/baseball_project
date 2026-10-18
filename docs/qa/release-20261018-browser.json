@@ -1,0 +1,612 @@
+{
+  "url": "http://127.0.0.1:8032/baseball_project/",
+  "layouts": [
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 305,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1009,
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 305,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1009,
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "mode": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 305,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1009,
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 305,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1009,
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "mode": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 305,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1009,
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 305,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1009,
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "mode": "lineup",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 305,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 1009,
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 305,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 1009,
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "mode": "review",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    }
+  ],
+  "footerLayouts": [
+    {
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 305,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 305,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    }
+  ],
+  "contrastChecks": [
+    {
+      "mode": "defense",
+      "findings": [],
+      "theme": "dark"
+    },
+    {
+      "mode": "lineup",
+      "findings": [],
+      "theme": "dark"
+    },
+    {
+      "mode": "lineup",
+      "findings": [],
+      "theme": "light"
+    },
+    {
+      "mode": "review",
+      "findings": [],
+      "theme": "light"
+    },
+    {
+      "mode": "review",
+      "findings": [],
+      "theme": "dark"
+    },
+    {
+      "mode": "footer",
+      "findings": [],
+      "theme": "light"
+    }
+  ],
+  "console": [],
+  "flows": {
+    "offenseRows": 22,
+    "defenseRows": 15,
+    "candidateLimitBoth": 4,
+    "evictOldestBoth": true,
+    "lineupApply": true,
+    "groupSavedReloaded": [
+      "陳冠宇",
+      "朱承洋"
+    ],
+    "groupEvaluationRows": 3,
+    "replayGame": "2025-314",
+    "replayPA": "2025-314-a024",
+    "replayRows": 7,
+    "footerKeyboard": true
+  }
+}

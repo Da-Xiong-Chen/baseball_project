@@ -1,0 +1,99 @@
+{
+  "base": "e5eb34b",
+  "javascript": 123,
+  "python": 60,
+  "layout": [
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 306,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 306,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "page": "history",
+      "counts": 0,
+      "cropped": [],
+      "footer": true,
+      "headings": [],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    }
+  ],
+  "flows": {
+    "generalOffenseRows": 22,
+    "generalDefenseRows": 15,
+    "comparisonCardsBoth": 4,
+    "teamDueOptions": 9,
+    "generalDueOptions": 30,
+    "teamPitcherLocked": true,
+    "generalPitcherLocked": false,
+    "historyDate": "2025-09-20",
+    "historyPrefsOnly": true
+  },
+  "errors": []
+}

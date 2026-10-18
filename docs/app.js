@@ -156,15 +156,42 @@ async function team(name) {
   if (!S.roster[name]) S.roster[name] = await api(`api/team?team=${encodeURIComponent(name)}`);
   return S.roster[name];
 }
-const sign = (v, d = 2) => (v > 0 ? "+" : v < 0 ? "−" : "±") + Math.abs(v).toFixed(d);
+const sign = (v, d = 2) => {
+  if (!Number.isFinite(v)) return '未提供';
+  const magnitude = Math.abs(v).toFixed(d);
+  return (Number(magnitude) === 0 ? '' : v > 0 ? '+' : '−') + magnitude;
+};
+// 顯示精度只影響文字，不更動分數、排名或建議門檻。
+function deltaText(v, digits = 2) {
+  if (!Number.isFinite(v)) return '資料不足';
+  const step = 10 ** -digits;
+  if (v !== 0 && Math.abs(v) < step) return `${v > 0 ? '增加' : '減少'}不到 ${step.toFixed(digits)}`;
+  return sign(v, digits);
+}
+const deltaLabel = (v, digits = 2, unit = '百分點') => Number.isFinite(v) ? `${deltaText(v, digits)} ${unit}` : '資料不足';
+const deltaMarkup = v => Number.isFinite(v) ? `${deltaText(v)} <span class="delta-unit">百分點</span>` : '資料不足';
 const cls = (v, eps = 0.005) => (v > eps ? "pos" : v < -eps ? "neg" : "mut");
 const handChip = (h) => `<span class="chip hand-${esc(h)}">${h === "L" ? "左" : h === "R" ? "右" : "兩"}</span>`;
 const posChips = (p) => Object.keys(p || {}).slice(0, 3).map((k) => `<span class="chip">${POS[k] || k}</span>`).join("");
 
 /* ---------------- 偏好設定與我的預設情境（存在瀏覽器） ---------------- */
 const PREF_KEY = 'bb.prefs.v1';
-function readPrefs() { try { return JSON.parse(localStorage.getItem(PREF_KEY)) || {}; } catch { return {}; } }
-function writePrefs(p) { try { localStorage.setItem(PREF_KEY, JSON.stringify(p)); return true; } catch { return false; } }
+const validPrefs = p => p !== null && typeof p === 'object' && !Array.isArray(p);
+function readPrefs() {
+  try { const p = JSON.parse(localStorage.getItem(PREF_KEY)); return validPrefs(p) ? p : {}; }
+  catch { return {}; }
+}
+function writePrefs(p) {
+  try {
+    if (!validPrefs(p)) return false;
+    const old = localStorage.getItem(PREF_KEY);
+    // 損壞記錄先保留，避免把讀取失敗當成空設定覆寫。
+    if (old !== null && !validPrefs(JSON.parse(old))) return false;
+    const raw = JSON.stringify(p);
+    localStorage.setItem(PREF_KEY, raw);
+    return localStorage.getItem(PREF_KEY) === raw;
+  } catch { return false; }
+}
 const clampNum = (v, hi) => { const n = Number(v); return Number.isFinite(n) ? Math.min(hi, Math.max(0, n)) : 0; };
 function prefSettings() {
   return {recent_weight:0,fatigue_d2:0,fatigue_d3:0}; // 當下評估不套用歷史進階偏好。
@@ -173,7 +200,8 @@ function renderPrefOutputs() { $('#recentWeightOut').textContent = $('#recentWei
 function savePrefSettings() {
   const p = readPrefs();
   p.recentWeight = 0; p.fatigueD2=clampNum($('#fatigueD2').value,0.5);p.fatigueD3=clampNum($('#fatigueD3').value,0.5);
-  writePrefs(p); renderPrefOutputs();if(historyContext)renderHistoryContext();
+  const saved=writePrefs(p); renderPrefOutputs();if(historyContext)renderHistoryContext();
+  presetStatus(saved?'進階設定已保存。':'本次設定仍可使用，但無法保存到瀏覽器；原記錄未更新。');
 }
 function loadPrefSettings() {
   const p = readPrefs();
@@ -194,10 +222,13 @@ function setFatigueLevel() {
 }
 function presetStatus(t) { $('#presetStatus').textContent = t; }
 function saveSituation() {
+  if(['#myScore','#oppScore'].some(id=>{const input=$(id),n=Number(input.value);return input.value===''||!input.checkValidity()||!Number.isSafeInteger(n)||n<0;})){
+    presetStatus('得分請填寫非負整數，再存成預設。');return;
+  }
   const p = readPrefs();
   p.situation = { view: S.view, myTeam: $('#myTeam').value, oppTeam: $('#oppTeam').value, inning: S.inning, half: S.half,
     outs: S.outs, bases: S.bases, myScore: +$('#myScore').value || 0, oppScore: +$('#oppScore').value || 0 };
-  presetStatus(writePrefs(p) ? '已存成預設。' : '瀏覽器不允許儲存（例如無痕模式）。');
+  presetStatus(writePrefs(p) ? '已存成預設。' : '本次局面仍可使用，但無法保存到瀏覽器；原預設未更新。');
 }
 async function applySituation(sit, quiet = false) {
   if (!sit) { if (!quiet) presetStatus('還沒有存過預設。'); return; }
@@ -632,7 +663,7 @@ function availabilityNames(names, action, open=false) {
   return chips(names.slice(0,4))+(names.length>4?`<details class="availability-more" ${open?'open':''}><summary>另 ${names.length-4} 人</summary><div class="availability-extra">${chips(names.slice(4))}</div></details>`:'');
 }
 function mobileRowDetails(x, pen) {
-  return `<details class="mobile-row-details"><summary>樣本與數據</summary><p>${Math.round(x['樣本球數'])} 球${!pen?' · '+esc(x['可信度'])+'樣本':''}</p>${!pen&&Number.isFinite(x['預估勝率'])?`<p>相對聯盟平均 ${sign(x['預估勝率'])} 百分點</p>`:''}${pen?`<p>失分價值 ${x['預估失分'].toFixed(3)} 分${x['疲勞調整']>.0005?'（含疲勞 +'+x['疲勞調整'].toFixed(3)+'）':''}</p>`:''}</details>`;
+  return `<details class="mobile-row-details"><summary>樣本與數據</summary><p>${Math.round(x['樣本球數'])} 球${!pen?' · '+esc(x['可信度'])+'樣本':''}</p>${!pen&&Number.isFinite(x['預估勝率'])?`<p>相對聯盟平均 ${deltaLabel(x['預估勝率'])}</p>`:''}${pen?`<p>失分價值 ${x['預估失分'].toFixed(3)} 分${x['疲勞調整']>.0005?'（含疲勞 +'+x['疲勞調整'].toFixed(3)+'）':''}</p>`:''}</details>`;
 }
 function renderBench(reset) {
   const my = S.roster[$("#myTeam").value];
@@ -764,11 +795,11 @@ function timingFor(paId) {
 }
 /* 白話結論：x 為全聯盟 summary；higherIsWorse：換投看失分（越高越差）、代打看得分（越低越差） */
 function timingVerdict(x, higherIsWorse) {
-  if (!x.stay_diff_ci) return {ok:false, text:'樣本不足，還無法判斷。'};
+  if (!x.stay_diff_ci) return {ok:false, text:'全聯盟回測：樣本不足，還無法判斷。'};
   const [lo, hi] = x.stay_diff_ci, ok = higherIsWorse ? lo > 0 : hi < 0, opposite = higherIsWorse ? hi < 0 : lo > 0;
-  if (ok) return {ok:true, text:higherIsWorse ? '系統建議換投卻續投時較容易失分：換投時機有參考價值。' : '系統建議代打卻沒換時較難得分：代打時機有參考價值。'};
-  if (opposite) return {ok:false, text:'結果與系統判斷相反，請謹慎參考。'};
-  return {ok:false, text:higherIsWorse ? '有無建議差別不明顯：換投時機僅供參考。' : '有無建議差別不明顯：代打時機僅供參考。'};
+  if (ok) return {ok:true, text:higherIsWorse ? '全聯盟回測：建議換投卻續投的打席，平均失分價值較高；可作時機參考。' : '全聯盟回測：建議代打卻續打的打席，平均得分價值較低；可作時機參考。'};
+  if (opposite) return {ok:false, text:'全聯盟回測：觀察差異與預期方向相反，這類建議請謹慎參考。'};
+  return {ok:false, text:higherIsWorse ? '全聯盟回測：尚無明確證據區分建議與未建議的打席，換投時機建議僅供參考。' : '全聯盟回測：尚無明確證據區分建議與未建議的打席，代打時機建議僅供參考。'};
 }
 const HALF_ZH = h => h === "away" ? "上" : "下";
 function divergentList(items, kind) {
@@ -1020,8 +1051,8 @@ function valueComparisonChart(data, sharedScale, title, higherBetter, note) {
     if(d.delta===null)return `<div class="next-matchup-row"><span>${esc(d.name)}</span><span class="component-missing mut">${Number.isFinite(d.value)?'現任資料不足':'資料不足'}</span></div>`;
     const width=Number((Math.abs(d.delta)/scale*48).toFixed(6)),tone=d.delta>0?'favorable':d.delta<0?'unfavorable':'neutral';
     const label=d.delta===0?'相同':Math.abs(d.delta)<.0005?'差距極小':d.delta>0?'較有利':'較不利';
-    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.delta>=0?50:50-width}%;width:${width}%"></i></div><span class="num"><strong class="${tone}">${sign(d.delta,3)}</strong><small>${label}</small></span></div>`;
-  }).join('')}<small class="mut">候選共用尺度。${note}</small><details class="chart-raw"><summary>原始數值</summary>${data.map(d=>`<p class="num">${esc(d.name)}：候選 ${Number.isFinite(d.value)?sign(d.value,3):'未提供'}／現任 ${Number.isFinite(d.base)?sign(d.base,3):'未提供'}</p>`).join('')}</details></div>`;
+    return `<div class="next-matchup-row"><span>${esc(d.name)}</span><div class="next-matchup-track" aria-hidden="true"><i class="${tone}" style="left:${d.delta>=0?50:50-width}%;width:${width}%"></i></div><span class="num"><strong class="${tone}">${deltaText(d.delta,3)}</strong><small>${label}</small></span></div>`;
+  }).join('')}<small class="mut">共用尺度。${note}</small><details class="chart-raw"><summary>原始數值</summary>${data.map(d=>`<p class="num">${esc(d.name)}：候選 ${Number.isFinite(d.value)?sign(d.value,3):'未提供'}／現任 ${Number.isFinite(d.base)?sign(d.base,3):'未提供'}</p>`).join('')}</details></div>`;
 }
 function pitcherMatchupChart(details, sharedScale, currentDetails = []) {
   const baseline=new Map();
@@ -1045,9 +1076,11 @@ function compactFielding(text) {
 function fieldingMessage(x, current=false) {
   const text=x['守備說明']||'守位資料待確認';
   if(current)return esc(text);
+  if(x['守備']==='ok'&&text.includes('可直接接守'))return `<strong class="fielding-label">推估${esc(compactFielding(text))}</strong>`;
   const dh=text.includes('接任指定打擊');
-  const label=dh?'承接原 DH 棒次':x['守備']==='bad'?'無人接守':text.startsWith('需由 ')?'另需接守人選':text.includes('可直接接守')?'推估可接守':'守位待確認';
-  return `<strong class="fielding-label">${label}</strong><span>${esc(compactFielding(text))}</span>${dh?'<span class="mut">改守備或涉及投手打擊時，請確認 DH 存續。</span>':''}`;
+  if(dh)return '<strong class="fielding-label">承接原 DH 棒次</strong>';
+  const label=x['守備']==='bad'?'無人接守':text.startsWith('需由 ')?'另需接守人選':text.includes('可直接接守')?'推估可接守':'守位待確認';
+  return `<strong class="fielding-label">${label}</strong><span>${esc(compactFielding(text))}</span>`;
 }
 function comparisonPanel(R, selected, tab) {
   if (!R) return '';
@@ -1064,7 +1097,7 @@ function comparisonPanel(R, selected, tab) {
     const delta = x[deltaKey];
     if (!Number.isFinite(delta)) return '';
     const width = Math.abs(delta) / chartScale * 48;
-    return `<div class="candidate-chart-row"><span class="candidate-chart-name">${esc(x[nameKey])}</span><div class="candidate-chart-track" aria-hidden="true"><i class="${delta >= 0 ? 'positive' : 'negative'}" style="left:${delta >= 0 ? 50 : 50-width}%;width:${width}%"></i></div><span class="num">${sign(delta)}<small> 百分點</small></span></div>`;
+    return `<div class="candidate-chart-row"><span class="candidate-chart-name">${esc(x[nameKey])}</span><div class="candidate-chart-track" aria-hidden="true"><i class="${delta >= 0 ? 'positive' : 'negative'}" style="left:${delta >= 0 ? 50 : 50-width}%;width:${width}%"></i></div><span class="num">${deltaMarkup(delta)}</span></div>`;
   }).join('')}</div>` : '';
   const card = x => {
     const hDelta = x['階層式'] - current['階層式'];
@@ -1072,7 +1105,7 @@ function comparisonPanel(R, selected, tab) {
     const disagreement = gDelta != null && hDelta * gDelta <= 0;
     const delta = pen ? x['守方勝率增減'] : x['相對現任'];
     const low = x['樣本球數'] < 500 || current['樣本球數'] < 500 || !!x['資料警示'] || !!current['資料警示'];
-    const status = low ? '資料有限' : disagreement ? '模型分歧' : Math.abs(delta) < 0.005 ? '難以區分' : '';
+    const status = !Number.isFinite(delta) ? '資料不足' : low ? '資料有限' : disagreement ? '模型分歧' : Math.abs(delta) < 0.005 ? '難以區分' : '';
     const reason = pen
       ? (x['疲勞'] && x['疲勞'] !== '-' ? `<p class="compare-warning">${esc(x['疲勞'])}</p>` : '')
       : `<p class="${x['守備']==='bad'||x['守備']==='warn'?'compare-warning':'mut'}">${fieldingMessage(x)}</p>`;
@@ -1080,7 +1113,7 @@ function comparisonPanel(R, selected, tab) {
     const matchupScale=Math.max(.01,...rows.flatMap(r=>(r['對決明細']||[]).map(d=>{const bases=(current['對決明細']||[]).filter(b=>b.batter===d.batter);return bases.length===1?Math.abs((d.runs+d.fatigue)-(bases[0].runs+bases[0].fatigue)):NaN;})).filter(Number.isFinite));
     const matchupChart = pen ? pitcherMatchupChart(x['對決明細'],matchupScale,current['對決明細']) : '';
     return `<article class="compare-card"><h3>${esc(x[nameKey])}${status?`<span class="chip">${status}</span>`:''}</h3>
-      <p class="compare-delta num ${cls(delta,.005)}">相對現任 ${sign(delta)} 百分點</p>${reason}
+      <p class="compare-delta num ${cls(delta,.005)}">相對現任 ${deltaMarkup(delta)}</p>${reason}
       <details><summary>查看差距拆解</summary>${matchupChart}${decomposition}
       <p class="comparison-samples mut">樣本：候選 ${Math.round(x['樣本球數'])}／現任 ${Math.round(current['樣本球數'])} 球</p>
       ${x['資料警示']||current['資料警示']?`<p class="compare-warning">${esc([x['資料警示'],current['資料警示']].filter(Boolean).join('；'))}</p>`:''}</details></article>`;
@@ -1100,10 +1133,10 @@ function recommendation(cands) {
   const best = playable[0];
   const diff = best["預估勝率"] - cur["預估勝率"];
   if (Math.abs(diff) < 0.005) return {kind:'neutral', title:'差距極小，難以區分',
-    text:`與 ${cur["球員"]} 只差 ${sign(diff,4)} 百分點，不必只依排序換人。`};
+    text:`與 ${cur["球員"]} 的差距${diff===0?'為 0':'不到 0.01'} 百分點，不必只依排序換人。`};
   // 與模型回測相同門檻：好不到 1 百分點不建議換人
   if (diff > 0 && diff < SUGGEST_GAP) return {kind:'neutral', title:`差距不大，以 ${cur["球員"]} 續打為主`,
-    text:`最佳候選 ${best["球員"]} 只多 ${sign(diff)} 百分點（未達 ${SUGGEST_GAP}）。`};
+    text:`最佳候選 ${best["球員"]} 相對現任 ${deltaLabel(diff)}（未達 ${SUGGEST_GAP}）。`};
   if (diff <= 0) { const why = reasonText(batterReasons(cur, S.last)); return { kind: "neutral", title: `目前估計以 ${cur["球員"]} 續打較佳`, text: `${why ? `${cur["球員"]}：${why}。` : ''}板凳沒有估計更好的人選。` }; }
   const def = best["守備"] === "warn" ? `　${best["守備說明"]}` : "";
   const disagree = best["機器學習"] != null && cur["機器學習"] != null &&
@@ -1123,8 +1156,8 @@ function assessmentNotes(R) {
     <details class="assessment-notes"><summary>資料與評估依據</summary><ul>
     <li><b>評估方式：</b>投打能力、球路適性、左右投打；換投另計用球數疲勞。</li>
     <li><b>資料範圍：</b>2024–2025 球季；${dates}（不含截止日）。來源：Rebas、ldkrsi／CPBL 守位統計。</li>
-    <li><b>圖表：</b>細線不是完整預測區間；失分價值不是實際失分。</li>
-    <li><b>使用限制：</b>${R.view==='replay'?'歷史名單與守位可能為推估；':'今日名單需人工確認；'}請核對正式攻守名單。</li>
+    <li><b>圖表限制：</b>拆解僅涵蓋部分模型；細線不是完整預測區間，失分價值是估計。</li>
+    <li><b>使用限制：</b>${R.view==='replay'?'歷史名單與守位可能為推估；':'今日名單需人工確認；'}未追蹤完整登錄、退場與 DH 狀態，請核對正式攻守名單。</li>
     </ul></details>`;
 }
 function renderResult(preserveTabs = false) {
@@ -1174,9 +1207,9 @@ function renderResult(preserveTabs = false) {
     S.bestName = null;
     const earlyNote = s.starter && s.inning <= 5 && (s.pitch_count ?? 0) < 75 ? `只比較接下來 ${R.bullpen.next.length} 棒，未計先發吃局數的價值。` : "";
     if (best && Math.abs(best["守方勝率增減"]) < 0.005) {
-      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距極小，難以區分</h3><p>與場上投手只差 ${sign(best["守方勝率增減"],4)} 百分點，不必只依排序換投。${fat}</p></div></div>`;
+      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距極小，難以區分</h3><p>與場上投手的差距${best["守方勝率增減"]===0?'為 0':'不到 0.01'} 百分點，不必只依排序換投。${fat}</p></div></div>`;
     } else if (best && best["守方勝率增減"] > 0 && best["守方勝率增減"] < SUGGEST_GAP) {
-      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距不大，以 ${esc(s.pitcher)} 續投為主</h3><p>最佳候選 ${esc(best["投手"])} 只多 ${sign(best["守方勝率增減"])} 百分點（未達 ${SUGGEST_GAP}）。${earlyNote}${fat}</p></div></div>`;
+      html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>差距不大，以 ${esc(s.pitcher)} 續投為主</h3><p>最佳候選 ${esc(best["投手"])} 相對現任 ${deltaLabel(best["守方勝率增減"])}（未達 ${SUGGEST_GAP}）。${earlyNote}${fat}</p></div></div>`;
     } else if (best && best["守方勝率增減"] > 0) {
       html += `<div class="reco" style="border-top:1px solid var(--line)"><div class="ic">↻</div><div><h3>可考慮換上 ${esc(best["投手"])}</h3>
         <p>${reasonText(pitcherReasons(best, R)) ? `主要原因：${esc(reasonText(pitcherReasons(best, R)))}。` : ''}對接下來 ${R.bullpen.next.length} 棒，比場上投手多 ${sign(best["守方勝率增減"])} 百分點。${earlyNote}${fat}${best["疲勞"] !== "-" ? `　警示 ${esc(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
@@ -1256,10 +1289,10 @@ function scoreBadge(v, tip) {
   return `<div class="score ${c}" title="${esc(tip)}"><div>${v}<small>${lab}</small></div></div>`;
 }
 function scoreLegend(cur, key) {
-  const now = cur && cur["價值分數"] != null ? `<span class="score-baseline">現任 ${esc(cur[key])} ${cur["價值分數"]} 分；是否比現任好，請看「勝率變化」</span>` : "";
+  const now = cur && cur["價值分數"] != null ? `<span class="score-baseline">現任 ${esc(cur[key])} · ${cur["價值分數"]} 分</span>` : "";
   return SCORE_LEGEND.replace("</div>", now + "</div>");
 }
-const SCORE_LEGEND = `<div class="score-legend"><span>價值分數：</span><span><i style="background:#1f8a55"></i>80+ 極佳</span>
+const SCORE_LEGEND = `<div class="score-legend"><span>價值分數（相對排名）：</span><span><i style="background:#1f8a55"></i>80+ 極佳</span>
   <span><i style="background:#7fd9a8"></i>60–79 佳</span><span><i style="background:#999"></i>40–59 普通</span>
   <span><i style="background:#f0b27a"></i>20–39 不利</span><span><i style="background:#c2412d"></i>&lt;20 很不利</span></div>`;
 
@@ -1272,6 +1305,7 @@ function miniDiamond(b) {
 }
 
 function dbar(v, err, scale) {
+  if (!Number.isFinite(v)) return '';
   const w = 45, px = (x) => Math.max(-w, Math.min(w, x / scale * w));
   const len = px(v);
   const left = len >= 0 ? w : w + len;
@@ -1290,7 +1324,7 @@ function phTable(R) {
       <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${cur?`<button type="button" class="baseline-detail" aria-label="查看 ${esc(x["球員"])} 對決">基準</button>`:comparisonCircle(R,"ph",x["球員"])}${officialPlayerLink(x["球員"])} ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div>${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比較池百分位`)}</td>
-      <td class="evaluation-value"><span class="mobile-value-label">相對現任</span><div class="vcell"><span class="vnum num ${cls(cur?0:x['相對現任'],.02)}">${cur?'基準':sign(x['相對現任'])+' 百分點'}</span>${dbar(cur?0:x['相對現任'],0,scale)}</div></td>
+      <td class="evaluation-value"><span class="mobile-value-label">相對現任</span><div class="vcell"><span class="vnum num ${cls(cur?0:x['相對現任'],.02)}">${cur?'基準':deltaMarkup(x['相對現任'])}</span>${dbar(cur?0:x['相對現任'],0,scale)}</div></td>
       <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>
     </tr>`;
   }).join("");
@@ -1307,7 +1341,7 @@ function penTable(R) {
       <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${cur?`<button type="button" class="baseline-detail" aria-label="查看 ${esc(x["投手"])} 配球與對決">基準</button>`:comparisonCircle(R,"pen",x["投手"])}${officialPlayerLink(x["投手"])} ${handChip(x["投"] || "R")}${best ? `<span class="best">估計較佳</span>` : ""}
         <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div>${reasonsHtml(pitcherReasons(x, R))}${mobileRowDetails(x,true)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位')}</td>
-      <td class="evaluation-value"><span class="mobile-value-label">${cur?'現任基準 · 0 百分點':'相對現任'}</span><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : sign(x["守方勝率增減"]) + " 百分點"}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
+      <td class="evaluation-value"><span class="mobile-value-label">${cur?'現任基準 · 0 百分點':'相對現任'}</span><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : deltaMarkup(x["守方勝率增減"])}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
       <td class="evaluation-warning">${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
   }).join("");
   return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">比較接下來 ${R.bullpen.next.length} 棒 · 未模擬換局與後續調度<br>打者：${R.bullpen.next.map(esc).join("、")}<div style="margin-top:6px">${scoreLegend(R.bullpen.rows.find(x => x["角色"] === "場上"), "投手")}</div></div>
@@ -1366,7 +1400,7 @@ async function showDetail(batter, pitcher, tr, updateComparison = true) {
       return `<div class="c" title="打者在此格的樣本 ${Math.round(c.n)} 球">
         <div class="u" style="height:${Math.min(100, c.usage * 100)}%"></div>
         <div class="k num">${c.usage>0&&c.usage<.01?"<1%":(c.usage*100).toFixed(0)+"%"}</div>
-        <div class="w num ${wd > 0.5 ? "neg" : wd < -0.5 ? "pos" : "mut"}">揮空 ${wd >= 0 ? "+" : "−"}${Math.abs(wd).toFixed(1)}</div></div>`;
+        <div class="w num ${wd > 0.5 ? "neg" : wd < -0.5 ? "pos" : "mut"}">揮空 ${sign(wd,1)}</div></div>`;
     };
     box.innerHTML = `<div class="card" style="margin-top:16px"><div class="card-h"><h2>${esc(d.batter)} vs ${esc(d.pitcher)}</h2>
       <span class="hint">${d.bhand === "L" ? "左" : "右"}打 vs ${d.phand === "L" ? "左" : "右"}投</span></div><div class="card-b">

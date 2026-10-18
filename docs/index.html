@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="以中華職棒 2024–2025 歷史資料，比較代打與換投人選、安排我方場上名單，查看對決與配球。">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261016-integrated"></script>
-<link rel="stylesheet" href="style.css?v=20261016-integrated">
+<script src="theme.js?v=20261018-release-audit"></script>
+<link rel="stylesheet" href="style.css?v=20261018-release-audit">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
+<noscript><p class="site-notice">本站需要 JavaScript 才能載入球員與計算評估。請啟用後重新整理；資料來源仍可在頁尾查看。</p></noscript>
 <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
   <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></symbol>
   <symbol id="icon-history" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1 8M3 4v6h6M12 7v5l3 2"/></symbol>
@@ -227,11 +229,23 @@
   </section>
 </main>
 
-<script src="engine.js?v=20261016-integrated"></script>
-<script src="pitch-change.js?v=20261016-integrated"></script>
-<script src="pitcher-groups.js?v=20261016-integrated"></script>
-<script src="motion.js?v=20261016-integrated"></script>
-<script src="lineup.js?v=20261016-integrated"></script>
-<script src="app.js?v=20261016-integrated"></script>
+<footer class="site-footer" aria-label="網站資訊">
+  <p>2024–2025 歷史資料 · 非即時賽況</p>
+  <details id="siteInfo">
+    <summary>資料與使用說明</summary>
+    <div class="site-info-body">
+      <p>逐球資料：<a href="https://github.com/rebas-tw/rebas.tw-open-data" target="_blank" rel="noopener noreferrer">野球革命 Rebas Sports</a>（<a href="https://github.com/rebas-tw/rebas.tw-open-data/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">ODC-By v1.0</a>）。2022–2024 守位資料：<a href="https://github.com/ldkrsi/cpbl-opendata" target="_blank" rel="noopener noreferrer">ldkrsi/cpbl-opendata</a>（<a href="licenses/ldkrsi-MIT.txt" target="_blank" rel="noopener noreferrer">MIT 授權</a>）。2025 守位與球員連結來源為中華職棒官網。</p>
+      <p>主題、群組、名單與預設保存在此瀏覽器；清除網站資料會移除，未提供跨裝置同步。</p>
+      <p>結果為對決估計；今日可上場名單與換人資格須自行確認。<a href="https://github.com/Da-Xiong-Chen/baseball_project#readme" target="_blank" rel="noopener noreferrer">方法、研究依據與使用限制</a></p>
+    </div>
+  </details>
+</footer>
+
+<script src="engine.js?v=20261018-release-audit"></script>
+<script src="pitch-change.js?v=20261018-release-audit"></script>
+<script src="pitcher-groups.js?v=20261018-release-audit"></script>
+<script src="motion.js?v=20261018-release-audit"></script>
+<script src="lineup.js?v=20261018-release-audit"></script>
+<script src="app.js?v=20261018-release-audit"></script>
 </body>
 </html>

@@ -1,0 +1,223 @@
+{
+  "sixTeamEvaluations": [
+    {
+      "error": "",
+      "mode": "ph",
+      "rows": 20,
+      "team": "中信兄弟"
+    },
+    {
+      "error": "",
+      "mode": "pen",
+      "rows": 20,
+      "team": "中信兄弟"
+    },
+    {
+      "error": "",
+      "mode": "ph",
+      "rows": 22,
+      "team": "台鋼雄鷹"
+    },
+    {
+      "error": "",
+      "mode": "pen",
+      "rows": 21,
+      "team": "台鋼雄鷹"
+    },
+    {
+      "error": "",
+      "mode": "ph",
+      "rows": 18,
+      "team": "味全龍"
+    },
+    {
+      "error": "",
+      "mode": "pen",
+      "rows": 22,
+      "team": "味全龍"
+    },
+    {
+      "error": "",
+      "mode": "ph",
+      "rows": 24,
+      "team": "富邦悍將"
+    },
+    {
+      "error": "",
+      "mode": "pen",
+      "rows": 21,
+      "team": "富邦悍將"
+    },
+    {
+      "error": "",
+      "mode": "ph",
+      "rows": 22,
+      "team": "樂天桃猿"
+    },
+    {
+      "error": "",
+      "mode": "pen",
+      "rows": 15,
+      "team": "樂天桃猿"
+    },
+    {
+      "error": "",
+      "mode": "ph",
+      "rows": 21,
+      "team": "統一7-ELEVEn獅"
+    },
+    {
+      "error": "",
+      "mode": "pen",
+      "rows": 18,
+      "team": "統一7-ELEVEn獅"
+    }
+  ],
+  "lineups": [
+    {
+      "players": [
+        "王威晨",
+        "黃韋盛",
+        "岳政華",
+        "宋晟睿",
+        "許基宏",
+        "詹子賢",
+        "江坤宇",
+        "岳東華",
+        "陳統恩"
+      ],
+      "positions": 9,
+      "team": "中信兄弟"
+    },
+    {
+      "players": [
+        "王博玄",
+        "曾子祐",
+        "吳念庭",
+        "魔鷹",
+        "張肇元",
+        "王柏融",
+        "顏郁軒",
+        "曾昱磬",
+        "林家鋐"
+      ],
+      "positions": 9,
+      "team": "台鋼雄鷹"
+    },
+    {
+      "players": [
+        "郭天信",
+        "李凱威",
+        "吉力吉撈．鞏冠",
+        "朱育賢",
+        "陳子豪",
+        "劉基鴻",
+        "張政禹",
+        "蔣少宏",
+        "曾聖安"
+      ],
+      "positions": 9,
+      "team": "味全龍"
+    },
+    {
+      "players": [
+        "林澤彬",
+        "林岳谷",
+        "張育成",
+        "范國宸",
+        "董子恩",
+        "陳真",
+        "戴培峰",
+        "蔡佳諺",
+        "孔念恩"
+      ],
+      "positions": 9,
+      "team": "富邦悍將"
+    },
+    {
+      "players": [
+        "林立",
+        "陳晨威",
+        "林智平",
+        "成晉",
+        "林泓育",
+        "林承飛",
+        "張閔勛",
+        "林子偉",
+        "林政華"
+      ],
+      "positions": 9,
+      "team": "樂天桃猿"
+    },
+    {
+      "players": [
+        "陳傑憲",
+        "林佳緯",
+        "林安可",
+        "蘇智傑",
+        "潘傑楷",
+        "林子豪",
+        "陳聖平",
+        "林岱安",
+        "林泓弦"
+      ],
+      "positions": 9,
+      "team": "統一7-ELEVEn獅"
+    }
+  ],
+  "apiReplay": {
+    "error": "",
+    "pitchers": 9,
+    "selected": "1 出・無人\n      王念好\n      \n      \n      系統：換投\n      \n      出局"
+  },
+  "reviewLayouts": [
+    {
+      "clipped": [],
+      "scroll": 305,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "scroll": 1385,
+      "theme": "dark",
+      "width": 1400
+    },
+    {
+      "clipped": [],
+      "scroll": 305,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "scroll": 1385,
+      "theme": "light",
+      "width": 1400
+    }
+  ]
+}

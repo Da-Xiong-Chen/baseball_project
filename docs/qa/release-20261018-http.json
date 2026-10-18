@@ -1,0 +1,10 @@
+{
+  "base": "http://127.0.0.1:8032/baseball_project/",
+  "files_200_and_sha256_match": 460,
+  "missing_artifacts_404": [
+    "qa/regression-20261018.md",
+    "data/cpbl/positions_2025.csv",
+    "models/gbt_full_v2.pkl"
+  ],
+  "bytes": 51404231
+}

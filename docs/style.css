@@ -997,3 +997,22 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .audience-control{max-width:1440px;margin:16px auto;padding:0 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}.audience-control p{margin:0}.audience-control .seg{flex-shrink:0}.audience-control button{min-height:44px}
 
 .history-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.history-actions button,.history-actions a{min-height:44px;display:inline-flex;align-items:center;justify-content:center}.history-actions button{padding:8px 12px}
+
+
+/* 微小差值用文字交代方向，數值欄可換行，避免手機裁切。 */
+.candidate-chart-row > .num { overflow-wrap:anywhere; line-height:1.5; font-size:var(--font-meta); }
+.compare-delta { overflow-wrap:anywhere; }
+.next-matchup-row > .num strong { overflow-wrap:anywhere; }
+
+.delta-unit { display:inline-block; white-space:nowrap; }
+
+/* 全功能頁共用的出處資訊；預設收合，不占用評估閱讀空間。 */
+.site-footer { max-width:1400px; margin:24px auto 0; padding:20px 24px 28px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+.site-footer > p { margin:0; }
+.site-footer summary { width:fit-content; min-height:44px; padding:12px 0; color:var(--accent); cursor:pointer; }
+.site-info-body { max-width:900px; line-height:1.8; overflow-wrap:anywhere; }
+.site-info-body p { margin:0 0 10px; }
+.site-footer a { color:var(--accent); text-underline-offset:3px; }
+.site-footer :is(a,summary):focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.site-notice { margin:16px; padding:16px; border:1px solid var(--input-border); border-radius:12px; background:var(--panel); color:var(--text); }
+@media(max-width:600px) { .site-footer { padding:16px 12px 24px; } }
