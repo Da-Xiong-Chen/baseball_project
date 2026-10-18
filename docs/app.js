@@ -813,15 +813,30 @@ function divergentList(items, kind) {
       <span class="dv-gain num pos">${sign(x.gain)} 百分點</span><span class="dv-go" aria-hidden="true">→</span></button></li>`;
   }).join("")}</ol>`;
 }
-function saveHistoryPreset(){const p=readPrefs();p.history={date:HISTORY_DATE,team:$('#reviewTeam').value,role:historyRole,player:$('#historyPlayer').value,pitchCount:$('#historyPitchCount').value,starter:$('#historyStarter').value,fatigueLevel:$('#fatigueLevel').value};presetStatus(writePrefs(p)?'歷史情境已保存。':'本次可用，但瀏覽器不允許儲存。');}
+function saveHistoryPreset(){
+ const player=$('#historyPlayer'),pc=$('#historyPitchCount');
+ if(player.disabled||!player.value){presetStatus('請先選擇已載入的球員，再保存。');return;}
+ if(historyRole==='pitchers'&&(pc.value===''||!pc.checkValidity()||!Number.isInteger(+pc.value)||+pc.value<0||+pc.value>160)){
+  presetStatus('球數請輸入 0–160 的整數，再保存。');pc.focus();return;
+ }
+ const p=readPrefs();p.history={date:HISTORY_DATE,team:$('#reviewTeam').value,role:historyRole,player:player.value,pitchCount:historyRole==='pitchers'?pc.value:'0',starter:$('#historyStarter').value,fatigueLevel:$('#fatigueLevel').value};
+ presetStatus(writePrefs(p)?'歷史情境已保存。':'本次可用，但瀏覽器不允許儲存。');
+}
 async function loadHistoryPreset(){const p=readPrefs().history;if(!p||p.date!==HISTORY_DATE){presetStatus('尚未保存這一天的歷史情境。');return;}if(!S.teams.includes(p.team))return;$('#reviewTeam').value=p.team;historyRole=p.role==='hitters'?'hitters':'pitchers';$$('[data-history-role]').forEach(b=>{b.classList.toggle('on',b.dataset.historyRole===historyRole);b.setAttribute('aria-pressed',String(b.dataset.historyRole===historyRole));});await loadHistoryContext();if([...$('#historyPlayer').options].some(o=>o.value===p.player))$('#historyPlayer').value=p.player;$('#historyPitchCount').value=String(clampNum(p.pitchCount,160));$('#historyStarter').value=p.starter==='1'?'1':'0';$('#fatigueLevel').value=['0','1','2'].includes(p.fatigueLevel)?p.fatigueLevel:'0';setFatigueLevel();renderHistoryContext();await renderReview();await loadHistoricalPitchers();presetStatus('已載入歷史情境。');}
 function clearHistoryPreset(){$('#historyPitchCount').value='0';$('#historyStarter').value='0';$('#fatigueLevel').value='0';setFatigueLevel();renderHistoryContext();presetStatus('已重設歷史球數與疲勞假設。');}
 let historyRole='pitchers',historyContext=null,historyContextGeneration=0;
+let historySelectionKey='';
+const historySelections=new Map();
 async function loadHistoryContext(){
- const token=++historyContextGeneration;$('#historyPlayer').disabled=true;
+ const player=$('#historyPlayer');
+ if(historySelectionKey&&!player.disabled&&player.value)historySelections.set(historySelectionKey,player.value);
+ const key=JSON.stringify([$('#reviewTeam').value,historyRole]);
+ const token=++historyContextGeneration;player.disabled=true;
  try{historyContext=await json('data/history-context-2025-09-20.json');if(token!==historyContextGeneration)return;if(historyContext.date!==HISTORY_DATE)throw Error('date');
  const list=[...(historyContext.teams[$('#reviewTeam').value]?.[historyRole]||[])].sort((a,b)=>b.games14-a.games14||b.last_date.localeCompare(a.last_date));
- $('#historyPlayer').innerHTML=list.map(p=>`<option>${esc(p.name)}</option>`).join('');$('#historyPlayer').disabled=false;$('#historyPitchInputs').hidden=historyRole!=='pitchers';renderHistoryContext();
+ player.innerHTML=list.map(p=>`<option>${esc(p.name)}</option>`).join('');
+ const saved=historySelections.get(key);player.value=list.some(p=>p.name===saved)?saved:(list[0]?.name||'');
+ historySelectionKey=key;player.disabled=!list.length;$('#historyPitchInputs').hidden=historyRole!=='pitchers';renderHistoryContext();
  }catch{if(token===historyContextGeneration)$('#historyPlayerContext').innerHTML='<p role="alert">賽前狀態載入失敗。</p><button type="button" id="historyContextRetry">重新載入</button>';if($('#historyContextRetry'))$('#historyContextRetry').onclick=loadHistoryContext;}
 }
 function historicalFatigue(pc,starter,curve){

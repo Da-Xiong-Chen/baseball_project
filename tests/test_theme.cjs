@@ -14,19 +14,21 @@ function page(saved,deny=false) {
   vm.runInNewContext(fs.readFileSync('docs/theme.js','utf8'),{document:doc,localStorage});
   ready();return {doc,buttons,toggle,label,icon,saved:()=>stored};
 }
-test('dark default and selected state exist before application initialization',()=>{
-  const p=page(null);assert.equal(p.doc.documentElement.dataset.theme,'dark');assert.equal(p.buttons[0].pressed,'true');
+test('light default exists before application initialization and saved dark stays dark',()=>{
+  const p=page(null);assert.equal(p.doc.documentElement.dataset.theme,'light');assert.equal(p.buttons[1].pressed,'true');
+  assert.equal(page('dark').doc.documentElement.dataset.theme,'dark');
+  assert.match(fs.readFileSync('docs/index.html','utf8'),/data-theme="light"/);
 });
 test('light preference survives reopening and controls update accessibly',()=>{
   const p=page('dark');p.buttons[1].click();assert.equal(p.saved(),'light');assert.equal(p.buttons[1].pressed,'true');
   assert.equal(p.buttons[0].pressed,'false');assert.equal(page(p.saved()).doc.documentElement.style.colorScheme,'light');
 });
 test('storage refusal and corrupted preference never prevent switching',()=>{
-  for(const p of [page('garbage'),page('light',true)]){assert.equal(p.doc.documentElement.dataset.theme,'dark');p.buttons[1].click();assert.equal(p.doc.documentElement.dataset.theme,'light');}
+  for(const p of [page('garbage'),page('dark',true)]){assert.equal(p.doc.documentElement.dataset.theme,'light');p.buttons[0].click();assert.equal(p.doc.documentElement.dataset.theme,'dark');}
 });
 
 test('one theme button toggles both ways and announces its next action',()=>{
-  const p=page(null);assert.equal(p.label.textContent,'淺色');p.toggle.click();
-  assert.equal(p.doc.documentElement.dataset.theme,'light');assert.equal(p.toggle.attributes['aria-label'],'切換為深色主題');
-  assert.equal(p.icon.href,'#theme-moon');p.toggle.click();assert.equal(p.saved(),'dark');assert.equal(p.label.textContent,'淺色');
+  const p=page(null);assert.equal(p.label.textContent,'深色');p.toggle.click();
+  assert.equal(p.doc.documentElement.dataset.theme,'dark');assert.equal(p.toggle.attributes['aria-label'],'切換為淺色主題');
+  assert.equal(p.icon.href,'#theme-sun');p.toggle.click();assert.equal(p.saved(),'light');assert.equal(p.label.textContent,'深色');
 });

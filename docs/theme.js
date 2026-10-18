@@ -1,7 +1,7 @@
 /* Apply before CSS is painted; storage failures must not block the application. */
 (() => {
   const key = 'matchup-theme';
-  let theme = 'dark';
+  let theme = 'light';
   try { const saved = localStorage.getItem(key); if (saved === 'light' || saved === 'dark') theme = saved; } catch {}
   const apply = value => {
     document.documentElement.dataset.theme = value;

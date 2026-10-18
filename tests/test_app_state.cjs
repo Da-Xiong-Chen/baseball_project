@@ -568,3 +568,33 @@ test('matchup detail rounds tiny whiff differences without negative zero',async(
  await f.eval('showDetail("B","P",null)');const html=f.node('#detail').innerHTML;
  assert.match(html,/揮空 0.0/);assert.doesNotMatch(html,/揮空 [−-]0.0/);
 });
+
+test('invalid historical pitcher counts never overwrite a valid saved preset',()=>{
+ const f=fixture();let raw=JSON.stringify({history:{pitchCount:'90'}}),writes=0;
+ f.context.localStorage={getItem:()=>raw,setItem:(k,v)=>{writes++;raw=v;}};
+ f.node('#historyPlayer').value='P';
+ for(const value of ['', '-1', '1.5', '161', 'Infinity']){
+  f.node('#historyPitchCount').value=value;f.eval('saveHistoryPreset()');
+  assert.equal(writes,0);assert.match(f.node('#presetStatus').textContent,/0–160/);
+ }
+ f.node('#historyPitchCount').value='90';f.eval('saveHistoryPreset()');
+ assert.equal(writes,1);assert.equal(JSON.parse(raw).history.pitchCount,'90');
+ f.node('#historyPlayer').disabled=true;f.eval('saveHistoryPreset()');assert.equal(writes,1);
+});
+
+test('hitter preset ignores a hidden invalid pitcher count',()=>{
+ const f=fixture();let raw=null;f.context.localStorage={getItem:()=>raw,setItem:(k,v)=>{raw=v;}};
+ f.node('#historyPlayer').value='H';f.node('#historyPitchCount').value='-1';f.eval('historyRole="hitters";saveHistoryPreset()');
+ assert.equal(JSON.parse(raw).history.pitchCount,'0');assert.match(f.node('#presetStatus').textContent,/已保存/);
+});
+
+test('history player selection survives revisits and stays isolated by team and role',async()=>{
+ const f=fixture();f.context.historyData={date:'2025-09-20',teams:{A:{pitchers:[{name:'P1',games14:3,last_date:'2025-09-19'},{name:'P2',games14:2,last_date:'2025-09-18'}],hitters:[{name:'H',games14:1,last_date:'2025-09-19'}]},B:{pitchers:[{name:'B1',games14:1,last_date:'2025-09-19'}]}}};
+ f.eval('json=async()=>historyData;renderHistoryContext=()=>{}');f.node('#reviewTeam').value='A';
+ await f.eval('loadHistoryContext()');f.node('#historyPlayer').value='P2';
+ await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'P2');
+ f.eval('historyRole="hitters"');await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'H');
+ f.eval('historyRole="pitchers"');await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'P2');
+ f.node('#reviewTeam').value='B';await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'B1');
+ f.node('#reviewTeam').value='A';await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'P2');
+});
