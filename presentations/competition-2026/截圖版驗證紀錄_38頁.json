@@ -1,0 +1,64 @@
+{
+  "status": "passed",
+  "slides": 38,
+  "website_visual_pages": {
+    "4": "記分板與局勢",
+    "5": "一般／球隊模式入口比較",
+    "8": "三項功能選單",
+    "17": "代打候選比較",
+    "18": "換投候選比較",
+    "19": "球場守備配置",
+    "20": "棒次交換",
+    "21": "投手群組",
+    "23": "近期配球變化",
+    "24": "單日比賽摘要",
+    "25": "同打席比較基準",
+    "27": "建議與實際結果",
+    "28": "陳冠宇賽前負荷",
+    "31": "實際操作影片"
+  },
+  "website_visual_page_count": 14,
+  "duplicate_image_uses": {
+    "chapter_branding_only": [
+      [
+        1,
+        3,
+        9,
+        14,
+        32
+      ]
+    ]
+  },
+  "new_capture_subjects": [
+    "一般／球隊入口狀態",
+    "功能選單",
+    "單日比賽摘要",
+    "陳冠宇賽前負荷"
+  ],
+  "capture_source": "http://127.0.0.1:8040/baseball_project/",
+  "capture_method": "CUA actual browser screenshots, no DOM modification; corrected document-coordinate cropping and rechecked the native output",
+  "native_text_objects": 423,
+  "off_canvas_text": 0,
+  "fonts": "標楷體 / Times New Roman",
+  "native_reopen": true,
+  "movie_slide": 31,
+  "movie_duration_ms": 25200,
+  "movie_bytes_retained": true,
+  "movie_decode": "passed",
+  "delivery_errors": [],
+  "delivery_advisories": [
+    {
+      "code": "font_portability",
+      "message": "Some fonts declared or referenced by the presentation are outside the common Office/OS portability set; target-system availability was not verified.",
+      "faces": [
+        "標楷體"
+      ]
+    }
+  ],
+  "pdf_pages": 38,
+  "source_research_values": "unchanged",
+  "hashes": {
+    "pptx_sha256": "d3ab95dd7b18774324ccf669a324f52b822b8ea2f78a8088c1a9317ad5d6aa03",
+    "pdf_sha256": "71dbc6b212343cf687d55b329b6bb8b725d044fda375fa419288378d085804d9"
+  }
+}
