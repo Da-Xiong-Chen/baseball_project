@@ -5,7 +5,9 @@ output/*.csv
 __pycache__/
 *.pyc
 .DS_Store
-models/
+# 模型權重：只納入目前程式使用的 v2 版（src/mlmodel.py 的 path_for）
+models/*
+!models/gbt_*_v2.pkl
 .qa-venv/
 .qa-reproduction/
 output/decision_v2/pre-sync-*.zip
