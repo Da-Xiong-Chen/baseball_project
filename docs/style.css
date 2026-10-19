@@ -1016,3 +1016,9 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .site-footer :is(a,summary):focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
 .site-notice { margin:16px; padding:16px; border:1px solid var(--input-border); border-radius:12px; background:var(--panel); color:var(--text); }
 @media(max-width:600px) { .site-footer { padding:16px 12px 24px; } }
+
+/* 單日分析為獨立工具；使用者模式只影響評估與場上名單。 */
+.audience-control[hidden], #customPanel select.streak[hidden] { display:none; }
+.history-method { margin:18px 0; padding:16px 20px; border:1px solid var(--line); border-radius:var(--radius-card); background:var(--panel); }
+.history-method summary { font-size:16px; font-weight:600; cursor:pointer; color:var(--accent); }
+.history-method p { font-size:14px; line-height:1.65; margin:10px 0 0; color:var(--muted); }

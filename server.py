@@ -124,6 +124,36 @@ def build_result(sit, m, ml=None, actual=None):
     ))
 
 
+def replay_result(pid, decision="ph"):
+    """Replay separate batting and pitching decisions without using the incoming pitcher as incumbent."""
+    if decision not in ("ph", "pen"):
+        raise ValueError("回放類型須為 ph 或 pen")
+    pa, _, _ = load()
+    found = pa.loc[pa["pa_id"] == pid]
+    if found.empty:
+        raise ValueError("找不到此打席")
+    row = found.iloc[0]
+    date = str(row["date"].date())
+    sit = situation(pid)
+    incumbent = row["pitcher"]
+    previous = pa[(pa["game"] == row["game"]) & (pa["fld_team"] == row["fld_team"])].sort_values(["inning", "seq"])
+    order = previous["pa_id"].tolist().index(pid)
+    if order:
+        prior = previous.iloc[order - 1]
+        incumbent = prior["pitcher"]
+        if decision == "pen":
+            from timing_backtest import incumbent_situation
+            sit = incumbent_situation(sit, dict(inc=incumbent, inc_hand=prior["phand"]))
+    with _lock:
+        ml = mlmodel.for_date(date)
+    actual = dict(batter=row["batter"], pitcher=row["pitcher"], is_ph=bool(row["is_ph"]),
+                  result=row["result"], WPA=row["WPA"])
+    result = build_result(sit, model_for(date), ml, actual)
+    result["replay_context"] = dict(decision=decision, incumbent_pitcher=incumbent,
+                                    actual_pitcher=row["pitcher"], pitcher_changed=incumbent != row["pitcher"])
+    return result
+
+
 # ---------- API ----------
 def validate_evaluation(body):
     if not isinstance(body, dict):
@@ -201,13 +231,7 @@ def api(path, qs, body):
         return clean(d[cols])
     if path == "/api/replay":
         pid = qs["pa"][0]
-        row = pa.loc[pa["pa_id"] == pid].iloc[0]
-        m = model_for(str(row["date"].date()))
-        sit = situation(pid)
-        actual = dict(batter=row["batter"], is_ph=bool(row["is_ph"]), result=row["result"], WPA=row["WPA"])
-        with _lock:
-            ml = mlmodel.for_date(str(row["date"].date()))
-        return build_result(sit, m, ml, actual)
+        return replay_result(pid, qs.get("decision", ["ph"])[0])
     if path == "/api/evaluate":
         validate_evaluation(body)
         m = model_for(FULL)

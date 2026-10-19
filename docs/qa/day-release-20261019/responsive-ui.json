@@ -1,0 +1,222 @@
+{
+  "pages": [
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "review",
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "lineup",
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "page": "evaluation",
+      "theme": "dark",
+      "width": 1440
+    }
+  ],
+  "results": [
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "offense",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "defense",
+      "width": 320
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "offense",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "defense",
+      "width": 390
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "offense",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "defense",
+      "width": 768
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "offense",
+      "width": 1440
+    },
+    {
+      "clipped": [],
+      "overflow": false,
+      "view": "defense",
+      "width": 1440
+    }
+  ]
+}

@@ -32,6 +32,21 @@ def main():
     body=fixtures[0]
     assert request('api/detail?'+urllib.parse.urlencode(dict(batter=body['due'],pitcher=body['pitcher'],date='2026-01-01')))['batter']==body['due']
     report['routes']['detail']='pass'
+    for pid in ['2025-340-a000', '2025-340-h018', '2025-341-a026']:
+        for decision in ['ph', 'pen']:
+            result=request('api/replay?'+urllib.parse.urlencode(dict(pa=pid,decision=decision)))
+            assert result['replay_context']['decision']==decision
+            context=result['replay_context']
+            expected=context['incumbent_pitcher'] if decision=='pen' else context['actual_pitcher']
+            assert result['situation']['pitcher']==expected
+            assert result['ml_cutoff']<=result['model_cutoff']<='2025-09-20'
+    report['routes']['replay']='pass (3 PAs, both decision contexts)'
+    try:
+        request('api/replay?pa=2025-340-a000&decision=unknown')
+        raise AssertionError('unknown replay decision accepted')
+    except urllib.error.HTTPError as e:
+        assert e.code==400
+        report['invalid_requests']+=1
     for payload in [b'{', b'\xff', b'']:
         req=urllib.request.Request(BASE+'api/evaluate',data=payload,headers={'Content-Type':'application/json'})
         try:urllib.request.urlopen(req,timeout=10);raise AssertionError('malformed JSON accepted')

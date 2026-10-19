@@ -79,6 +79,20 @@ def inspect_site(site):
     # Check dynamic replay and pitch-change references, not just the HTML shell.
     for game in read_json(site / 'data/replay/games.json'):
         local_asset(site, f'data/replay/{game["game"]}.json')
+    for index in (site / 'data/replay').glob('day-*/index.json'):
+        manifest=read_json(index)
+        if manifest.get('schema_version')!=1 or manifest.get('pa_count')!=len(manifest.get('files',{})):
+            raise ValueError(f'Invalid daily replay index: {index}')
+        for pid,filename in manifest['files'].items():
+            target=local_asset(site,str((index.parent / filename).relative_to(site)))
+            bundle=read_json(target)
+            if bundle.get('pa_id')!=pid or bundle.get('date')!=manifest.get('date'):
+                raise ValueError(f'Daily replay identity mismatch: {pid}')
+            for result in [bundle.get('ph'),bundle.get('pen')]:
+                if result is not None and not (result['ml_cutoff']<=result['model_cutoff']<=bundle['date']):
+                    raise ValueError(f'Daily replay future data: {pid}')
+            if hashlib.sha256(target.read_bytes()).hexdigest()!=manifest.get('sha256',{}).get(pid):
+                raise ValueError(f'Daily replay checksum mismatch: {pid}')
     for index in (site / 'data/pitch-change').glob('*/index.json'):
         for filename in read_json(index)['pitchers'].values():
             local_asset(site, str((index.parent / filename).relative_to(site)))

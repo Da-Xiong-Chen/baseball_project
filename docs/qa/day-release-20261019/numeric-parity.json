@@ -1,0 +1,9 @@
+{
+  "pa_count": 226,
+  "evaluated_views": 452,
+  "max_numeric_error": 4.9984146008874575e-06,
+  "timing_views_checked": 184,
+  "timing_mismatches": [],
+  "model_cutoff": "2025-09-20",
+  "ml_cutoff": "2025-09-01"
+}
