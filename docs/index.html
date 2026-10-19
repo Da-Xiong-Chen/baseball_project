@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="以中華職棒 2024–2025 歷史資料，比較代打與換投人選、安排我方場上名單，查看對決與配球。">
 <title>臨場用人決策</title>
-<script src="theme.js?v=20261018-light-ux"></script>
-<link rel="stylesheet" href="style.css?v=20261018-light-ux">
+<script src="theme.js?v=20261019-day-replay"></script>
+<link rel="stylesheet" href="style.css?v=20261019-day-replay">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -36,12 +36,12 @@
   <button type="button" class="theme-toggle" data-theme-toggle aria-label="切換為深色主題"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><symbol id="theme-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1 1M18 18l1 1M5 19l1-1M18 6l1-1"/></symbol><symbol id="theme-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol></defs><use href="#theme-moon"/></svg><span>深色</span></button>
 </header>
 
-<section class="audience-control" aria-label="使用方式"><div class="seg" id="audienceSeg"><button type="button" data-audience="general" class="on" aria-pressed="true">一般使用者</button><button type="button" data-audience="team" aria-pressed="false">球隊</button></div><p id="audienceStatus" class="mut" role="status">一般使用者可直接評估。</p></section>
 <nav class="feature-nav" aria-label="功能選單">
   <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
   <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
   <button type="button" data-page="review"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>2025 單日分析</button>
 </nav>
+<section class="audience-control" aria-label="評估與名單的使用方式"><div class="seg" id="audienceSeg"><button type="button" data-audience="general" class="on" aria-pressed="true">一般使用者</button><button type="button" data-audience="team" aria-pressed="false">球隊</button></div><p id="audienceStatus" class="mut" role="status">一般使用者可直接評估。</p></section>
 <!-- 模型回測：用 2024–2025 資料檢驗模型，與當下（2026）的換打／換投評估分開 -->
 <div id="backtestBar" class="backtest-bar" hidden>
   <p class="mut">2025/09/20 三場比賽 · 只用賽前資料</p>
@@ -89,6 +89,7 @@
             </div>
           </details>
 
+<details class="history-method"><summary>回測如何比較</summary><p>2025/09/20 六隊三場、226 個打席。代打面對該打席投手；換投以原投手若續投為基準。名單及守位依決策前紀錄推估。</p><p>能力估計只用 9/20 之前資料，逐球模型截止於 9/1。6 局起的系統標記採 1 百分點門檻；實際結果用於事後比對，不作為推薦輸入。</p><p>同日表現不能當成準確率或換人效益；建議與實際調度不同，不代表其中一方做錯。</p></details>
 <div id="reviewBody" aria-live="polite"><p class="mut">載入中…</p></div>
 <section class="card"><div class="card-h"><h3>賽前近期配球</h3></div><div class="card-b"><label class="f" for="historyPitcher">投手</label><select id="historyPitcher"></select><p class="mut">截至 2025/09/20 賽前。</p></div></section><div id="historyPitchChange"></div></section>
 
@@ -169,7 +170,7 @@
               <div><label class="f" for="pitchCount">本場已投球數</label><input type="number" id="pitchCount" min="0" max="160" value="0"></div>
               <div><label class="f">本場角色</label><div class="seg full" id="roleSeg"><button data-r="1">先發</button><button data-r="0" class="on">後援</button></div></div>
             </div>
-            <div style="margin-top:10px"><label class="f" for="myStreak">今天之前連續登板</label><select id="myStreak"><option value="0">沒有</option><option value="1">今天第 2 天</option><option value="2">今天第 3 天以上</option></select></div>
+            <div hidden><label class="f" for="myStreak">今天之前連續登板</label><select id="myStreak"><option value="0">沒有</option><option value="1">今天第 2 天</option><option value="2">今天第 3 天以上</option></select></div>
             <p class="mut" id="pcHint"></p>
             <div style="margin-top:14px">
               <label class="f">對手接下來 3 棒</label>
@@ -241,11 +242,11 @@
   </details>
 </footer>
 
-<script src="engine.js?v=20261018-light-ux"></script>
-<script src="pitch-change.js?v=20261018-light-ux"></script>
-<script src="pitcher-groups.js?v=20261018-light-ux"></script>
-<script src="motion.js?v=20261018-light-ux"></script>
-<script src="lineup.js?v=20261018-light-ux"></script>
-<script src="app.js?v=20261018-light-ux"></script>
+<script src="engine.js?v=20261019-day-replay"></script>
+<script src="pitch-change.js?v=20261019-day-replay"></script>
+<script src="pitcher-groups.js?v=20261019-day-replay"></script>
+<script src="motion.js?v=20261019-day-replay"></script>
+<script src="lineup.js?v=20261019-day-replay"></script>
+<script src="app.js?v=20261019-day-replay"></script>
 </body>
 </html>
