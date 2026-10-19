@@ -393,7 +393,7 @@ test('hitter primary assessment uses incumbent difference and preserves league v
  const html=f.eval('phTable(result)');
  assert.match(html,/勝率變化（相對現任）/);assert.match(html,/相對聯盟平均/);
  const values=[...html.matchAll(/<td class="evaluation-value">([\s\S]*?)<\/td>/g)].map(m=>m[1]);
- assert.match(values[0],/基準/);assert.match(values[1],/\+0.20 百分點/);assert.doesNotMatch(values.join(''),/−0.30|−0.50/);
+ assert.match(values[0],/基準/);assert.match(values[1].replace(/<[^>]+>/g,''),/\+0.20 百分點/);assert.doesNotMatch(values.join(''),/−0.30|−0.50/);
 });
 
 
@@ -446,7 +446,7 @@ test('season review verdict is plain language and divergent list links each plat
   const f=fixture();
   const sig={stay_diff_ci:[0.017,0.068]},none={stay_diff_ci:[-0.06,0.039]};
   assert.equal(f.eval(`timingVerdict(${JSON.stringify(sig)},true).ok`),true);
-  assert.match(f.eval(`timingVerdict(${JSON.stringify(sig)},true).text`),/換投時機有參考價值/);
+  assert.match(f.eval(`timingVerdict(${JSON.stringify(sig)},true).text`),/全聯盟回測：.*平均失分價值較高/);
   assert.equal(f.eval(`timingVerdict(${JSON.stringify(none)},false).ok`),false);
   assert.match(f.eval(`timingVerdict(${JSON.stringify(none)},false).text`),/僅供參考/);
   assert.match(f.eval('timingVerdict({},true).text'),/樣本不足/);
@@ -481,3 +481,120 @@ test('advanced preset controls belong to the historical page instead of current 
 test('fatigue preference changes invalidate an existing score result',()=>{const f=fixture();f.node('#fatigueD2').value='0';f.eval('resultInputKey=evaluationKey();S.last={id:"old"};S.ready=true');f.node('#fatigueD2').value='0.03';f.eval('invalidateCustom()');assert.equal(f.eval('S.last'),null);});
 
 test('season review missing static game is explained without a doomed request and retry',async()=>{const f=fixture();f.eval("STATIC=true;timingData={by_team:{}};showFeaturePage=async()=>{};loadGames=async()=>{S.games=[]};loadGame=async()=>{throw Error('must not request absent file')}");await f.eval("openReplayPA('2025-999-a001','pen')");assert.equal(f.node('#replayNote').hidden,false);assert.match(f.node('#replayNote').textContent,/未收錄/);assert.match(f.node('#paList').innerHTML,/已收錄/);});
+
+
+test('difference labels preserve tiny directions without rounding to signed zero or inventing missing values',()=>{
+ const f=fixture();
+ for(const [value,expected] of [[0,'0.00 百分點'],[-0,'0.00 百分點'],[.0001,'增加不到 0.01 百分點'],[-.009,'減少不到 0.01 百分點'],[.01,'+0.01 百分點'],[-.12,'−0.12 百分點']]){
+  f.context.value=value;assert.equal(f.eval('deltaLabel(value)'),expected);
+ }
+ for(const value of [null,undefined,NaN,Infinity]){f.context.value=value;assert.equal(f.eval('deltaLabel(value)'),'資料不足');}
+ assert.equal(f.eval('deltaLabel(-.00001,3,"分")'),'減少不到 0.001 分');
+ assert.equal(f.eval('sign(-.00001,3)'),'0.000');
+});
+
+test('both comparison panels and evaluation tables use identical tiny difference wording',()=>{
+ const f=fixture(),base={角色:'現任',球員:'Current',相對現任:0,階層式:0,機器學習:0,樣本球數:1000,預估勝率:0,價值分數:50,守備:'ok',守備說明:'目前守捕手'};
+ const pen={角色:'場上',投手:'Pitcher',守方勝率增減:0,樣本球數:1000,預估失分:0,疲勞調整:0,疲勞:'-',價值分數:50};
+ f.context.result={situation:{pitcher:'Pitcher'},candidates:[base,{...base,角色:'代打',球員:'Tiny',相對現任:-.00001}],bullpen:{next:['Next'],rows:[pen,{...pen,角色:'牛棚',投手:'Tiny',守方勝率增減:-.00001}]}};
+ for(const code of ['comparisonPanel(result,null,"ph")','comparisonPanel(result,null,"pen")','phTable(result)','penTable(result)']){
+  const html=f.eval(code);assert.match(html.replace(/<[^>]+>/g,''),/減少不到 0.01 百分點/);assert.doesNotMatch(html,/−0\.00|NaN|undefined/);
+ }
+ f.context.result.candidates[1]['相對現任']=null;
+ assert.match(f.eval('comparisonPanel(result,null,"ph")'),/資料不足/);
+ const missingTable=f.eval('phTable(result)');assert.match(missingTable,/資料不足/);assert.equal((missingTable.match(/class="dbar"/g)||[]).length,1);
+ for(const value of [null,undefined,NaN,Infinity]){f.context.value=value;assert.equal(f.eval('dbar(value,0,1)'), '');}
+});
+
+test('fielding copy removes direct coverage repetition but retains extra player and backup catcher warnings',()=>{
+ const f=fixture();assert.equal(f.eval('fieldingMessage({守備:"ok",守備說明:"A 可直接接守右外野"})'),'<strong class="fielding-label">推估可接守右外野</strong>');
+ assert.equal(f.eval('fieldingMessage({守備:"ok",守備說明:"B 接任指定打擊"})'),'<strong class="fielding-label">承接原 DH 棒次</strong>');
+ const html=f.eval('fieldingMessage({守備:"warn",守備說明:"需由 A 接守捕手（再消耗 1 名板凳）；之後板凳已無備用捕手"})');
+ assert.match(html,/A · 捕手（另需 1 人）/);assert.match(html,/無備用捕手/);
+});
+
+
+test('preset persistence verifies writes and reports blocked storage without losing the session setting',()=>{
+ const f=fixture();let raw=null;
+ f.context.localStorage={getItem:()=>raw,setItem:()=>{}};
+ assert.equal(f.eval('writePrefs({recentWeight:30})'),false);
+ f.node('#myScore').value='3';f.node('#oppScore').value='2';f.eval('saveSituation()');
+ assert.doesNotMatch(f.node('#presetStatus').textContent,/已存成預設/);
+ f.node('#recentWeight').value='30';f.node('#fatigueD2').value='0.015';f.node('#fatigueD3').value='0.03';
+ assert.doesNotThrow(()=>f.eval('savePrefSettings()'));assert.equal(f.node('#recentWeightOut').textContent,'30%');
+ assert.match(f.node('#presetStatus').textContent,/無法保存/);
+ f.context.localStorage.setItem=(k,value)=>{raw=value};
+ assert.equal(f.eval('writePrefs({recentWeight:30})'),true);
+});
+
+test('malformed preset records cannot crash saving or overwrite the damaged record',()=>{
+ for(const raw of ['broken','[]','42','"legacy string"','null']){
+  const f=fixture();let writes=0;f.context.localStorage={getItem:()=>raw,setItem:()=>writes++};
+  f.node('#myScore').value='0';f.node('#oppScore').value='0';
+  assert.equal(f.eval('Object.keys(readPrefs()).length'),0);
+  assert.doesNotThrow(()=>f.eval('saveSituation()'));assert.equal(writes,0);
+  assert.match(f.node('#presetStatus').textContent,/無法保存/);
+ }
+});
+
+test('saving a preset rejects invalid scores while preserving an existing valid preset',()=>{
+ const f=fixture(),raw=JSON.stringify({situation:{inning:7,myScore:3,oppScore:2}});let writes=0;
+ f.context.localStorage={getItem:()=>raw,setItem:()=>writes++};
+ f.node('#oppScore').value='0';
+ for(const score of ['', '-1', '2.5', 'Infinity']){
+  f.node('#myScore').value=score;f.eval('saveSituation()');assert.equal(writes,0);assert.match(f.node('#presetStatus').textContent,/非負整數/);
+ }
+});
+
+
+test('single-day review preserves the current date scope without reviving the seasonal dashboard',async()=>{
+ const f=fixture(),root=path.join(__dirname,'../docs/data');
+ const games=JSON.parse(fs.readFileSync(path.join(root,'replay/games.json'),'utf8'));
+ const selected=games.filter(g=>g.date==='2025-09-20'&&(g.away==='樂天桃猿'||g.home==='樂天桃猿'));
+ const files={'data/replay/games.json':games};
+ for(const g of selected)files[`data/replay/${g.game}.json`]=JSON.parse(fs.readFileSync(path.join(root,'replay',g.game+'.json'),'utf8'));
+ f.context.files=files;f.node('#reviewTeam').value='樂天桃猿';
+ f.eval('json=async url=>files[url];timingData=null;');await f.eval('renderReview()');
+ const html=f.node('#reviewBody').innerHTML;
+ assert.equal((html.match(/<article /g)||[]).length,1);
+ assert.match(html,/實際代打/);assert.match(html,/單日結果不代表模型準確度/);
+ assert.match(html,new RegExp('data-history-game="'+selected[0].game+'"'));
+ assert.doesNotMatch(html,/全聯盟回測|提早建議時的中位數|分歧最大的打席/);
+});
+
+test('matchup detail rounds tiny whiff differences without negative zero',async()=>{
+ const f=fixture();f.context.detail={batter:'B',pitcher:'P',bhand:'R',phand:'R',mix_n:100,skill:0,fit:0,platoon:0,cells:['速球','滑卡','曲球','低落'].flatMap(g=>['高中','低'].map(z=>({cell:g+z,n:10,usage:.125,whiff_dev:-.00001})))};
+ f.eval('S.last={model_cutoff:"2026-01-01",situation:{pitcher:"Other"}};mountPitchChange=()=>{};bindMixSwitch=()=>{};api=async()=>detail;');
+ await f.eval('showDetail("B","P",null)');const html=f.node('#detail').innerHTML;
+ assert.match(html,/揮空 0.0/);assert.doesNotMatch(html,/揮空 [−-]0.0/);
+});
+
+test('invalid historical pitcher counts never overwrite a valid saved preset',()=>{
+ const f=fixture();let raw=JSON.stringify({history:{pitchCount:'90'}}),writes=0;
+ f.context.localStorage={getItem:()=>raw,setItem:(k,v)=>{writes++;raw=v;}};
+ f.node('#historyPlayer').value='P';
+ for(const value of ['', '-1', '1.5', '161', 'Infinity']){
+  f.node('#historyPitchCount').value=value;f.eval('saveHistoryPreset()');
+  assert.equal(writes,0);assert.match(f.node('#presetStatus').textContent,/0–160/);
+ }
+ f.node('#historyPitchCount').value='90';f.eval('saveHistoryPreset()');
+ assert.equal(writes,1);assert.equal(JSON.parse(raw).history.pitchCount,'90');
+ f.node('#historyPlayer').disabled=true;f.eval('saveHistoryPreset()');assert.equal(writes,1);
+});
+
+test('hitter preset ignores a hidden invalid pitcher count',()=>{
+ const f=fixture();let raw=null;f.context.localStorage={getItem:()=>raw,setItem:(k,v)=>{raw=v;}};
+ f.node('#historyPlayer').value='H';f.node('#historyPitchCount').value='-1';f.eval('historyRole="hitters";saveHistoryPreset()');
+ assert.equal(JSON.parse(raw).history.pitchCount,'0');assert.match(f.node('#presetStatus').textContent,/已保存/);
+});
+
+test('history player selection survives revisits and stays isolated by team and role',async()=>{
+ const f=fixture();f.context.historyData={date:'2025-09-20',teams:{A:{pitchers:[{name:'P1',games14:3,last_date:'2025-09-19'},{name:'P2',games14:2,last_date:'2025-09-18'}],hitters:[{name:'H',games14:1,last_date:'2025-09-19'}]},B:{pitchers:[{name:'B1',games14:1,last_date:'2025-09-19'}]}}};
+ f.eval('json=async()=>historyData;renderHistoryContext=()=>{}');f.node('#reviewTeam').value='A';
+ await f.eval('loadHistoryContext()');f.node('#historyPlayer').value='P2';
+ await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'P2');
+ f.eval('historyRole="hitters"');await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'H');
+ f.eval('historyRole="pitchers"');await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'P2');
+ f.node('#reviewTeam').value='B';await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'B1');
+ f.node('#reviewTeam').value='A';await f.eval('loadHistoryContext()');assert.equal(f.node('#historyPlayer').value,'P2');
+});

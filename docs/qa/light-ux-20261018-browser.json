@@ -1,0 +1,353 @@
+{
+  "cases": [
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 306,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 306,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "page": "offense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 306,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 306,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "page": "defense",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 306,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 306,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 375,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 753,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "page": "history",
+      "counts": 4,
+      "cropped": [],
+      "footer": true,
+      "headings": [
+        "18px",
+        "18px",
+        "18px"
+      ],
+      "scroll": 1425,
+      "theme": "light",
+      "width": 1440
+    }
+  ],
+  "flows": {
+    "firstTheme": "light",
+    "savedDarkAfterReload": "dark",
+    "offenseRows": 22,
+    "defenseRows": 15,
+    "comparisonCardsBoth": 4,
+    "revisitPlayer": "陳冠宇",
+    "crossTeamRestoredPlayer": "陳冠宇",
+    "invalidCountRejected": true,
+    "originalPresetAfterInvalid": "90",
+    "hiddenPitchCountIgnoredForHitter": true
+  },
+  "errors": []
+}

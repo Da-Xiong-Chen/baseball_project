@@ -11,3 +11,8 @@ models/
 output/decision_v2/pre-sync-*.zip
 output/decision_v2/pre-sync-*.patch
 output/experiment_pa.csv
+# 本機發布包與執行紀錄；正式證據另存 docs/qa/
+output/site-release*/
+output/release-*.txt
+output/release-baseline-*.json
+output/serve_release_*.py

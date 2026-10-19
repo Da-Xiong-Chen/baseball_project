@@ -1,0 +1,20 @@
+{
+  "base_commit": "d1df18dddebfc9515075afa9837832875e54452d",
+  "javascript_tests": 111,
+  "python_tests": 51,
+  "custom_scenarios": 18,
+  "max_numeric_error": 9.626920703720288e-06,
+  "replay_games": 275,
+  "replay_cases": 498,
+  "missing_cases": 0,
+  "stale_snapshots": 0,
+  "timing_samples": 17,
+  "timing_mismatches": 0,
+  "six_team_evaluations": 12,
+  "new_storage_regressions": 3,
+  "new_review_regressions": 1,
+  "new_whiff_regressions": 1,
+  "model_retrained": false,
+  "commit_created": false,
+  "pushed": false
+}
