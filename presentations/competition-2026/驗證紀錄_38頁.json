@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "accepted_advisory": "指定標楷體已於本機 PowerPoint 驗證；交付 PDF 保留固定字型版面。",
+  "slides": 38,
+  "pdf_pages": 38,
+  "native_text_objects": 451,
+  "all_paragraphs_centered": true,
+  "east_asian_font": "標楷體",
+  "latin_font": "Times New Roman",
+  "native_text_off_canvas": 0,
+  "source_numeric_content_preserved": true,
+  "confidence_interval_axis_positions_checked": true,
+  "native_reopen_passed": true,
+  "video": {
+    "page": 31,
+    "duration_ms": 25200,
+    "sha256": "0f71c00c53c4d32c770c503a7447a05aaf76b17c0dbea050a19aa917adcb424e",
+    "original_bytes_retained": true,
+    "full_decode": "passed",
+    "mouse_playback_tested": false
+  },
+  "enlarged_screenshots_height_ratio": {
+    "19": 1.111,
+    "20": 1.19,
+    "21": 1.163,
+    "23": 1.111,
+    "27": 1.177
+  },
+  "all_pdf_pages_searchable": true,
+  "external_links": [
+    "https://da-xiong-chen.github.io/baseball_project/",
+    "https://github.com/Da-Xiong-Chen/baseball_project",
+    "https://doi.org/10.1080/01621459.1975.10479864",
+    "https://doi.org/10.1214/aos/1176344552",
+    "https://doi.org/10.1198/016214506000001437",
+    "https://da-xiong-chen.github.io/baseball_project/",
+    "https://github.com/Da-Xiong-Chen/baseball_project"
+  ],
+  "svg_errors": 0,
+  "svg_warnings": 0,
+  "native_png_pages": 38,
+  "website_model_modified_in_this_revision": false
+}
