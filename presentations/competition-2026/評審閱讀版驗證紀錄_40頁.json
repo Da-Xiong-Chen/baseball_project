@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "slides": 40,
+  "native_text_objects": 446,
+  "off_canvas_text": 0,
+  "fonts": {
+    "latin": "Times New Roman",
+    "chinese": "標楷體"
+  },
+  "sample_flow": {
+    "valid": 11868,
+    "changed": 2184,
+    "stayed": 9684,
+    "suggested_stay": 1954,
+    "not_suggested_stay": 7730
+  },
+  "interval_method": "normal approximation of independent-observation standard errors; not bootstrap, not game-cluster adjusted",
+  "outcome_unit": "RE24 runs per PA",
+  "threshold": "1 percentage point is current product setting, not validated optimal",
+  "old_model_performance_not_reused": true,
+  "movie_slide": 33,
+  "movie_duration_ms": 25200,
+  "movie_source_bytes_identical": true,
+  "movie_decode": "passed",
+  "mouse_playback_test": false,
+  "native_reopen": {
+    "slides": 40,
+    "movie_duration_ms": 25200,
+    "reopened": true
+  },
+  "pdf_searchable_pages": 40,
+  "duplicate_images_branding_only": [
+    [
+      1,
+      3,
+      9,
+      16,
+      34
+    ]
+  ],
+  "delivery_errors": [],
+  "delivery_advisories": [
+    {
+      "code": "font_portability",
+      "message": "Some fonts declared or referenced by the presentation are outside the common Office/OS portability set; target-system availability was not verified.",
+      "faces": [
+        "標楷體"
+      ]
+    }
+  ],
+  "sha256": {
+    "pptx": "99e84929458172d5411aa74eb71a46a9ceb85e007aa81f9905ea40b086ab3a93",
+    "pdf": "0143a3786dbb2a7bcabe251fee8a3dda2394cec6318f39ee774cd24724d185b4"
+  }
+}
