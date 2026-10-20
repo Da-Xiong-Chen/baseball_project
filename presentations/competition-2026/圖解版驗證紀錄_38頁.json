@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "slides": 38,
+  "native_text_objects": 419,
+  "off_canvas": 0,
+  "latin_font": "Times New Roman",
+  "east_asian_font": "標楷體",
+  "movie_slide": 31,
+  "movie_duration_ms": 25200,
+  "movie_bytes_unchanged": true,
+  "movie_full_decode": "passed",
+  "native_reopen": "passed",
+  "critical_values": "passed",
+  "confidence_interval_geometry_unchanged": true,
+  "bar_charts": [
+    {
+      "source_percentages": [
+        18,
+        34
+      ],
+      "track_max": 100,
+      "geometry": "passed"
+    },
+    {
+      "source_percentages": [
+        53,
+        41
+      ],
+      "track_max": 100,
+      "geometry": "passed"
+    }
+  ],
+  "searchable_pdf_pages": 38,
+  "visual_review": "all pages contact sheet; enlarged key pages; corrected overlap, percentage scale, day unit and opposing arrows; reviewed again",
+  "delivery_note": "font-portability advisory; target PowerPoint confirmed installed and rendered, portable PDF supplied; font embedding not claimed",
+  "hashes": {
+    "一球兩面_正式競賽版_38頁_圖解整合_20261019.pptx": "dd35465604ee309b49abdfe5ec2c149cb0d208a0d616a43e45893c3b5a5796c1",
+    "pdf": "1747ef8760ca231ba20716123f3c3112a2e1e66f9a0c9be785948d8f23d03954"
+  }
+}

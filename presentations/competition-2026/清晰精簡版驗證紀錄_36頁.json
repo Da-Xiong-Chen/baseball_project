@@ -1,0 +1,193 @@
+{
+  "status": "passed",
+  "slides": 36,
+  "native_text_objects": 384,
+  "off_canvas_text": 0,
+  "fonts": "標楷體 / Times New Roman",
+  "source_screenshot_pages_fixed": [
+    5,
+    8,
+    23
+  ],
+  "output_screenshot_pages": [
+    5,
+    8,
+    21
+  ],
+  "resolution": {
+    "method": "Actual website source HTML/CSS/JS rendered at browser CSS zoom 3x/4x in a private capture copy. Navigation buttons captured separately and arranged in original order in PPT; capture-only sticky position/layout overrides, no data or production website files modified, no AI upscaling.",
+    "screenshots": [
+      {
+        "file": "一般使用者_4x.jpg",
+        "source_px": [
+          848,
+          228
+        ],
+        "slide_px": [
+          560.0,
+          150.56603773584905
+        ],
+        "scale": 0.660377358490566
+      },
+      {
+        "file": "球隊_4x.jpg",
+        "source_px": [
+          848,
+          228
+        ],
+        "slide_px": [
+          560.0,
+          150.56603773584905
+        ],
+        "scale": 0.660377358490566
+      },
+      {
+        "file": "選單評估_4x.jpg",
+        "source_px": [
+          692,
+          210
+        ],
+        "slide_px": [
+          346.0,
+          105.0
+        ],
+        "scale": 0.5
+      },
+      {
+        "file": "選單名單_4x.jpg",
+        "source_px": [
+          632,
+          210
+        ],
+        "slide_px": [
+          316.0,
+          105.0
+        ],
+        "scale": 0.5
+      },
+      {
+        "file": "選單回放_4x.jpg",
+        "source_px": [
+          660,
+          210
+        ],
+        "slide_px": [
+          330.0,
+          105.0
+        ],
+        "scale": 0.5
+      },
+      {
+        "file": "投手群組選取_3x.jpg",
+        "source_px": [
+          1060,
+          690
+        ],
+        "slide_px": [
+          620.0,
+          403.58490566037733
+        ],
+        "scale": 0.5849056603773585
+      }
+    ],
+    "all_images_not_upscaled": true,
+    "all_images_have_1080p_pixel_budget": true,
+    "source_pages_fixed": [
+      5,
+      8,
+      23
+    ],
+    "dropped_source_pages": {
+      "17": "模式限制併入第5頁",
+      "18": "代打條件併入實際比較頁",
+      "24": "數字圖解併入實際配球截圖頁",
+      "31": "操作流程與前面功能演示重複"
+    },
+    "output_pages": 36
+  },
+  "source_pages_consolidated": [
+    17,
+    18,
+    24,
+    31
+  ],
+  "competition_requirements": {
+    "problem": [
+      4,
+      6,
+      7
+    ],
+    "users": [
+      5,
+      8,
+      17,
+      18
+    ],
+    "data": [
+      10,
+      25,
+      32
+    ],
+    "methods": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      25,
+      35
+    ],
+    "product": [
+      8,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "outcomes_plan": [
+      31,
+      32,
+      33,
+      34
+    ]
+  },
+  "movie_slide": 29,
+  "movie_duration_ms": 25200,
+  "movie_bytes_retained": true,
+  "movie_decode": "passed",
+  "mouse_playback_test": false,
+  "native_reopen": true,
+  "pdf_searchable_pages": 36,
+  "duplicate_images_branding_only": [
+    [
+      1,
+      3,
+      9,
+      16,
+      30
+    ]
+  ],
+  "delivery_errors": [],
+  "delivery_advisories": [
+    {
+      "code": "font_portability",
+      "message": "Some fonts declared or referenced by the presentation are outside the common Office/OS portability set; target-system availability was not verified.",
+      "faces": [
+        "標楷體"
+      ]
+    }
+  ],
+  "sha256": {
+    "pptx": "989541df9b08783c385d50b6d0857a2c046db99ac11ac31a65e61bcbc8d4f4d5",
+    "pdf": "302ff3c6ebc4fd16c918559ed82349c3b4f1c273d33bcb2663f7a35e55d73352"
+  }
+}
