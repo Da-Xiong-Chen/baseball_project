@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "slides": 40,
-  "native_text_objects": 446,
+  "native_text_objects": 438,
   "off_canvas_text": 0,
   "fonts": {
     "latin": "Times New Roman",
@@ -25,8 +25,8 @@
   "mouse_playback_test": false,
   "native_reopen": {
     "slides": 40,
-    "movie_duration_ms": 25200,
-    "reopened": true
+    "reopened": true,
+    "movie_duration_ms": 25200
   },
   "pdf_searchable_pages": 40,
   "duplicate_images_branding_only": [
@@ -49,7 +49,23 @@
     }
   ],
   "sha256": {
-    "pptx": "99e84929458172d5411aa74eb71a46a9ceb85e007aa81f9905ea40b086ab3a93",
-    "pdf": "0143a3786dbb2a7bcabe251fee8a3dda2394cec6318f39ee774cd24724d185b4"
+    "pptx": "19a45b2459b688f41646cb79febee569a4ea2b7750d3dfbec6f2bf577467ded3",
+    "pdf": "708cb698df8bc455697a2cc95119124e4c03bb64c4de652823b1093cbb406cb9"
+  },
+  "footer_cleanup": {
+    "removed_note_pages": [
+      11,
+      12,
+      13,
+      17,
+      18,
+      25,
+      31,
+      35
+    ],
+    "removed_notes": 8,
+    "source_unchanged_pages": 32,
+    "source_rebuilt_pages": 8,
+    "essential_evidence_retained": true
   }
 }
