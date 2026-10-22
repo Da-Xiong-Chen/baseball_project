@@ -1,4 +1,4 @@
-/* 手機左右滑動手勢：切換功能頁。網站不播放任何滑入、淡入或抽屜動畫（使用者回饋動畫卡頓）。 */
+/* 手機左右滑動手勢：頁面直接切換；短暫操作回饋由 style.css 控制並尊重減少動態效果。 */
 (function(root){
   'use strict';
   const doc = root.document;

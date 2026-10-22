@@ -981,8 +981,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
   .feature-nav button { font-size: 13px; padding: 10px 4px; word-break: keep-all; white-space: nowrap; }
 }
 
-/* ---------- 不使用動畫（使用者回饋滑入、淡入與平滑捲動卡頓） ----------
-   所有畫面直接切換到位；只保留不會移動版面的顏色變化，以及表示計算中的轉圈。 */
+/* 預設保持資料與版面穩定；只在檔案末尾開放少量操作回饋。 */
 *, *::before, *::after { animation: none !important; transition-property: background-color, color, border-color, box-shadow !important; }
 .loading { animation: spin .8s linear infinite !important; }
 .lineup-summary-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
@@ -1068,3 +1067,21 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .replay-disclosure summary{cursor:pointer;min-height:32px}
 
 @media(max-width:360px){.feature-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.feature-nav button{min-width:0;white-space:normal;word-break:normal}}
+
+/* Short feedback only: data, bars and page geometry update immediately. */
+@media (prefers-reduced-motion: no-preference) {
+  #viewSeg::before, #audienceSeg::before, .tabs::before, .mix-switch::before {
+    transition: transform 140ms var(--ease-ui) !important;
+  }
+  .reco, .bt-verdict,
+  .replay-disclosure[open] > .actual, [data-reveal-outcome][open] > .actual,
+  [data-bt-action][open] > p, [data-bt-outcome][open] > p,
+  .pc-body:not([hidden]) {
+    animation: feedback-reveal 140ms ease-out !important;
+  }
+}
+@keyframes feedback-reveal { from { opacity: .65; } to { opacity: 1; } }
+/* This final rule also disables the otherwise continuous loading indicator. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

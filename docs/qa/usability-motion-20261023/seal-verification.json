@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "changed_assets": [
+    "app.js",
+    "index.html",
+    "motion.js",
+    "style.css"
+  ],
+  "numerical_data_changed": false,
+  "model_weights_changed": false
+}

@@ -69,7 +69,7 @@ function changeInning(delta) {
   S.inning=next;if(S.mode==='custom'&&enteringExtras)S.bases=2;renderState();refreshAutoPitchCount();
 }
 let rosterGeneration = 0, gamesGeneration = 0, gameGeneration = 0, runGeneration = 0;
-/* 手機左右滑動手勢（docs/motion.js）；不播放任何動畫，沒有載入時其餘功能照常。 */
+/* 手機左右滑動手勢（docs/motion.js）；頁面直接切換，回饋動態由 CSS 控制。 */
 const motion = () => typeof Motion !== 'undefined' ? Motion : null;
 
 function clearResult() {
