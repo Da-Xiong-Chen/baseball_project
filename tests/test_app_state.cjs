@@ -667,3 +667,87 @@ test('API mode obtains the batch identity from meta without loading static Engin
  const f=fixture();f.context.Engine.model=()=>null;f.eval("S.batch_id='api-batch'");
  assert.equal(f.eval('activeBatchId()'),'api-batch');
 });
+
+test('model validation retry refetches a schema-invalid JSON response instead of reusing it forever',async()=>{
+ const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model-evaluation.json'),'utf8'));
+ let requests=0;f.context.Engine.model=()=>({batch_id:good.batch_id});
+ f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{batch_id:good.batch_id}:good});
+ const control={insertAdjacentHTML(){}};
+ const el={innerHTML:'',querySelector:()=>control,querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
+ const view=require('../docs/backtest.js'),fetcher=f.eval('json');
+ await view.validation(el,fetcher,good.batch_id);assert.match(el.innerHTML,/role="alert"/);
+ await control.onclick();
+ assert.equal(requests,2);assert.match(el.innerHTML,/bt-verdict/);assert.doesNotMatch(el.innerHTML,/role="alert"/);
+});
+
+test('retrying unavailable timing markers replaces a cached invalid response',async()=>{
+ const f=fixture();let requests=0;f.context.Engine.model=()=>({batch_id:'expected'});
+ f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{}:{schema_version:2,training_version:4,engine_contract:4,batch_id:'expected',season:2025,games:{}}});
+ assert.equal(await f.eval('loadTiming()'),false);
+ assert.ok(await f.eval('timingData=null;loadTiming()'));
+ assert.equal(requests,2);
+});
+
+test('an older failed JSON request cannot evict a newer successful reload',async()=>{
+ const f=fixture(),old=deferred();f.context.old=old.promise;let requests=0;
+ f.context.fetch=()=>++requests===1?old.promise:Promise.resolve({ok:true,json:async()=>({fresh:true})});
+ const first=f.eval("json('data/test.json')");
+ assert.equal((await f.eval("json('data/test.json',{reload:true})")).fresh,true);
+ old.reject(Error('older request failed'));await assert.rejects(first,/older request failed/);
+ assert.equal((await f.eval("json('data/test.json')")).fresh,true);assert.equal(requests,2);
+});
+
+test('all 226 fixed-day PAs load and render both decision views through the static app workflow',async()=>{
+ const f=fixture(),dataRoot=path.join(__dirname,'../docs'),model=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/model.json'),'utf8'));
+ const index=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/replay/day-2025-09-20/index.json'),'utf8'));
+ f.context.Engine.model=()=>model;
+ f.context.fetch=async url=>process.env.BASEBALL_QA_BASE_URL?fetch(new URL(url,process.env.BASEBALL_QA_BASE_URL)):
+  {ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(dataRoot,url),'utf8'))};
+ f.eval('STATIC=true;S.mode="replay";S.ready=true;showDetail=()=>{};');
+ f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
+ await f.eval('loadTiming()');
+ for(const name of model.teams){
+  f.node('#rpTeam').value=name;
+  await f.eval('loadGames()');
+  assert.equal(f.eval('S.games.length'),1);
+  assert.equal(f.eval('S.games[0].date'),'2025-09-20');
+  assert.ok(f.eval('S.games[0].away')===name||f.eval('S.games[0].home')===name);
+  const before=f.node('#gameList').innerHTML;
+  f.eval("audienceMode='team'");await f.eval('loadGames()');
+  assert.equal(f.node('#gameList').innerHTML,before);
+  f.eval("audienceMode='general'");
+ }
+ let views=0,changes=0;
+ for(const [game,ids] of Object.entries(index.games)){
+  await f.eval(`loadGame(${JSON.stringify(game)})`);
+  assert.equal(f.eval('S.pas.length'),ids.length);
+  assert.doesNotMatch(f.node('#paList').innerHTML,/尚未匯出/);
+  f.node('#lateOnly').checked=true;f.eval('renderPAs()');
+  assert.equal((f.node('#paList').innerHTML.match(/data-p="/g)||[]).length,f.eval('S.pas.filter(p=>p.inning>=6).length'));
+  f.node('#lateOnly').checked=false;f.eval('renderPAs()');
+  assert.equal((f.node('#paList').innerHTML.match(/data-p="/g)||[]).length,ids.length);
+  for(const pa of ids){
+   const bundle=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/replay/day-2025-09-20',index.files[pa]),'utf8'));
+   if(bundle.pen)changes++;
+   for(const decision of ['ph','pen']){
+    f.eval(`S.pa=${JSON.stringify(pa)};S.tab=${JSON.stringify(decision)};historyDisclosure.select(S.pa);`);
+    await f.eval(`run(()=>api('api/replay?pa='+S.pa+'&decision='+S.tab),'replay')`);
+    const html=f.node('#resultBody').innerHTML;
+    assert.match(html,/data-reveal-action/,[pa,decision].join(' '));assert.match(html,/id="candidateCompare"/);
+    assert.doesNotMatch(html,/評估未完成|NaN|undefined|data-reveal-action open|data-reveal-outcome open/);
+    assert.equal(f.eval('S.last.replay_context.decision'),decision);
+    assert.equal(f.eval('S.last.situation.pitcher'),decision==='pen'&&bundle.pen?bundle.pen.situation.pitcher:bundle.ph.situation.pitcher);
+    views++;
+   }
+  }
+ }
+ assert.equal(views,452);assert.equal(changes,19);
+ f.eval('historyDisclosure.set("outcome",true)');
+ await f.eval('switchTab("ph")');
+ assert.match(f.node('#resultBody').innerHTML,/data-reveal-action open/);
+ assert.match(f.node('#resultBody').innerHTML,/data-reveal-outcome open/);
+ const next=Object.values(index.games)[0][0];
+ f.eval(`S.pa=${JSON.stringify(next)};historyDisclosure.select(S.pa)`);
+ await f.eval("run(()=>api('api/replay?pa='+S.pa+'&decision=ph'),'replay')");
+ assert.doesNotMatch(f.node('#resultBody').innerHTML,/data-reveal-action open|data-reveal-outcome open/);
+});

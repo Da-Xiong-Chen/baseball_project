@@ -123,8 +123,12 @@ async function fetchTimed(url, options = {}, ms = 30000) {
 }
 const activeBatchId=()=>Engine.model()?.batch_id||S.batch_id;
 function batchMismatch(){const error=new Error('資料與模型批次不同，請重新載入完整版本');error.code='BATCH_MISMATCH';return error;}
-async function json(url) {
-  if (!cache[url]) cache[url] = fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).then(data=>{const identity=typeof Engine!=='undefined'?activeBatchId():S.batch_id;if(identity&&data?.batch_id&&data.batch_id!==identity)throw batchMismatch();return data;}).catch(e => { delete cache[url]; throw e; });
+async function json(url, {reload=false}={}) {
+  if(reload)delete cache[url];
+  if (!cache[url]) {
+    const request=fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).then(data=>{const identity=typeof Engine!=='undefined'?activeBatchId():S.batch_id;if(identity&&data?.batch_id&&data.batch_id!==identity)throw batchMismatch();return data;}).catch(e => { if(cache[url]===request)delete cache[url]; throw e; });
+    cache[url]=request;
+  }
   return cache[url];
 }
 async function staticApi(path, body) {
@@ -843,7 +847,7 @@ async function run(fn, view) {
 let timingData = null;
 async function loadTiming() {
   if (timingData === null) {
-    try { const d = await json('data/timing-2025.json'); timingData = d.schema_version===2 && d.training_version===4 && d.engine_contract===4 && d.batch_id===activeBatchId() && d.season === 2025 && d.games ? d : false; }
+    try { const d = await json('data/timing-2025.json',{reload:true}); timingData = d.schema_version===2 && d.training_version===4 && d.engine_contract===4 && d.batch_id===activeBatchId() && d.season === 2025 && d.games ? d : false; }
     catch { timingData = false; }  // 沒有時機資料時，回放照常使用
   }
   return timingData;

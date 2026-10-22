@@ -74,7 +74,9 @@ const BacktestView = (() => {
     render();
   }
 
+  const validationRequests=new WeakMap();
   async function validation(element,fetcher,expectedBatch){
+    const request={};validationRequests.set(element,request);
     element.innerHTML='<p role="status">載入同測試集模型比較…</p>';
     let report;
     const nonnegative=v=>Number.isFinite(v)&&v>=0;
@@ -85,8 +87,9 @@ const BacktestView = (() => {
     const validReport=r=>Array.isArray(r.candidates)&&Array.isArray(r.monthly)&&
       ['s1_w0','s1_w1',r.current_key,r.selected_key].every(key=>typeof key==='string'&&r.candidates.filter(c=>c.key===key).length===1&&['development','time_check'].every(period=>validMetric(r.candidates.find(c=>c.key===key)[period])))&&
       r.monthly.every(m=>typeof m.month==='string'&&['development','time_check'].includes(m.period)&&validMetric(m.current)&&validMetric(m.selected))&&validDiagnostics(r);
-    try{report=await fetcher('data/model-evaluation.json');if(report.schema_version!==1||report.training_version!==4||report.engine_contract!==4||!report.batch_id||(expectedBatch&&report.batch_id!==expectedBatch)||report.status!=='evaluated'||!validReport(report))throw Error('schema');}
-    catch{element.innerHTML='<div role="alert"><h3>無法載入模型驗證</h3><p>驗證資料載入失敗、內容不完整或與目前模型版本不一致。請重新載入；若仍失敗，重新整理網站後再試。</p></div><button type="button">重新載入驗證結果</button>';element.querySelector('button').onclick=()=>validation(element,fetcher,expectedBatch);return;}
+    try{report=await fetcher('data/model-evaluation.json',{reload:true});if(report.schema_version!==1||report.training_version!==4||report.engine_contract!==4||!report.batch_id||(expectedBatch&&report.batch_id!==expectedBatch)||report.status!=='evaluated'||!validReport(report))throw Error('schema');}
+    catch{if(validationRequests.get(element)!==request)return;element.innerHTML='<div role="alert"><h3>無法載入模型驗證</h3><p>驗證資料載入失敗、內容不完整或與目前模型版本不一致。請重新載入；若仍失敗，重新整理網站後再試。</p></div><button type="button">重新載入驗證結果</button>';element.querySelector('button').onclick=()=>validation(element,fetcher,expectedBatch);return;}
+    if(validationRequests.get(element)!==request)return;
     const names=[['s1_w0','階層式'],['s1_w1','GBT'],[report.current_key,'現行集成'],[report.selected_key,'開發期最佳候選']];
     function render(period){
       const list=names.map(([key,label])=>({label,row:report.candidates.find(c=>c.key===key)?.[period]})).filter(x=>x.row);

@@ -87,6 +87,19 @@ test('complete release diagnostics render with finite values',async()=>{
  assert.match(el.innerHTML,/bt-verdict/);assert.match(el.innerHTML,/最大差值位移/);assert.doesNotMatch(el.innerHTML,/NaN|undefined/);
 });
 
+test('an older validation response cannot replace the latest success or error',async()=>{
+ const good=require('../docs/data/model-evaluation.json');
+ for(const staleSuccess of [false,true]){
+  let resolve,reject;const pending=new Promise((a,b)=>{resolve=a;reject=b});
+  const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
+  const first=B.validation(el,()=>pending,good.batch_id);
+  await B.validation(el,async()=>{if(staleSuccess)throw Error('latest unavailable');return good;},good.batch_id);
+  const latest=el.innerHTML;
+  if(staleSuccess)resolve(good);else reject(Error('older unavailable'));
+  await first;assert.equal(el.innerHTML,latest);
+ }
+});
+
 
 test('timeline PA opens details, formats outcome and forwards disclosure to full comparison',()=>{
  const action={open:false},outcome={open:false},openButton={},button={dataset:{btPa:'p'},setAttribute(){}};
