@@ -51,7 +51,7 @@ def main():
     report=dict(pitchers=len(index['pitchers']), totals=dict(totals), elapsed_seconds=time.perf_counter()-start,
                 total_bytes=sum(sizes), maximum_pitcher_bytes=max(sizes), median_pitcher_bytes=sorted(sizes)[len(sizes)//2],
                 errors=0, scope='all exported snapshots and all three hands; exact Python recomputation')
-    out=ROOT/'output/qa';out.mkdir(parents=True,exist_ok=True)
+    out=ROOT/'output/closeout';out.mkdir(parents=True,exist_ok=True)
     (out/'data_audit.json').write_text(json.dumps(report,indent=2),encoding='utf8')
     print(json.dumps(report,indent=2))
 

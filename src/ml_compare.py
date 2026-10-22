@@ -197,7 +197,10 @@ def boot_ci(per_row, games, n=1000):
 def main():
     t0 = time.time()
     p = add_velocity(prepare())
-    train = p[p["date"] < CUTOFF].copy()
+    # Use the same cutoff-local RE labels as formal training. Import here to
+    # avoid the mlmodel -> ml_compare feature-builder import cycle.
+    from mlmodel import training_pitches
+    train = training_pitches(p, CUTOFF)
     test = p[p["date"] >= CUTOFF].copy()
     log(f"訓練 {len(train):,} 球（2024 + 2025/7/1 前），測試 {len(test):,} 球（2025/7/1 後）")
 

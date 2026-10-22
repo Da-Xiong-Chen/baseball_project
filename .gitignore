@@ -5,9 +5,10 @@ output/*.csv
 __pycache__/
 *.pyc
 .DS_Store
-# 模型權重：只納入目前程式使用的 v2 版（src/mlmodel.py 的 path_for）
+# 模型權重：舊 v2/v3 作歷史保留；正式 v4 於下方明列，候選目錄不納入
 models/*
 !models/gbt_*_v2.pkl
+!models/gbt_*_v3.pkl
 .qa-venv/
 .qa-reproduction/
 output/decision_v2/pre-sync-*.zip
@@ -18,3 +19,39 @@ output/site-release*/
 output/release-*.txt
 output/release-baseline-*.json
 output/serve_release_*.py
+# Local run checkpoints, staged data and raw prediction records are not release files.
+output/closeout/staging-site/
+output/closeout/timing-checkpoints/
+output/closeout/*.csv
+output/closeout/*.zip
+output/closeout/previous-data/
+output/closeout/ppt-roundtrip/
+output/closeout/recovery-drill/
+output/closeout/unreferenced-pitch-change/
+output/closeout/tmp/
+output/closeout/*.pptx
+
+# v4 active weights and immutable context; local revision copies stay local.
+!models/gbt_*_v4.pkl
+!models/active-batch.json
+output/revision-20261021/baseline-site/
+output/revision-20261021/staging-site/
+output/revision-20261021/promotion-backup/
+output/revision-20261021/*.csv
+
+# Local research, round-trip workspaces and revision backups are not Git deliverables.
+# Curated release evidence and final slides belong in docs/qa/ and presentations/.
+output/revision-20261021/
+output/final-closeout-20261022/
+
+output/usability-20261022/
+
+output/ppt-final-20261022/
+
+output/ppt-visual-20261022/
+
+output/ppt-consistent-20261022/
+
+output/ppt-problems-20261022/
+
+output/ppt-final-audit-20261022/

@@ -37,7 +37,8 @@ def load():
     pa_rows, pitch_rows, box_rows = [], [], []
     for f in _game_files():
         with open(f, encoding="utf8") as source:
-            g = json.load(source)
+            from identity import normalize_game
+            g = normalize_game(json.load(source))
         season = int(g["date"][:4])
         gid = f"{season}-{g['seq']:03d}"
         date = pd.Timestamp(g["date"][:10])

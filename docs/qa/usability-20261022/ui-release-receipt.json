@@ -1,0 +1,20 @@
+{
+  "status": "promoted_local_only",
+  "changed_files": [
+    "index.html"
+  ],
+  "numerical_files_changed": [],
+  "model_batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "prior_manifest_sha256": "699a32041faf03658bc1560e7d49c85105376eafb880c56e8f11f59c042d956a",
+  "new_manifest_sha256": "283f945ad25c31e61e7ef4ad19551738ad1df9826ba27b6d897910d6477d2d26",
+  "source_change": {
+    "file": "docs/index.html",
+    "before_sha256": "3f9364e609978d539603e8a15fd879700ebb2af315e2cf361444dfbc23c3cfd4",
+    "after_sha256": "10cfc3cc03a8b19c61e983a0b92e550eca5d9663c42ef0dd2597505fa591aa26",
+    "changes": [
+      "Match pitcher-lock helper wording to the visible Switch to general user control, found during task walkthrough"
+    ]
+  },
+  "backup": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\usability-20261022\\promotion-backup",
+  "remote_changes": false
+}

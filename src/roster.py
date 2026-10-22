@@ -99,7 +99,7 @@ def defense_check(out_name, out_pos, in_name, bench_after, cutoff=None):
             msg = f"需由 {cover[0]} 接守{POS_ZH[out_pos]}（再消耗 1 名板凳）"
             status = "warn"
         else:
-            return "bad", f"換下後板凳無人可守{POS_ZH[out_pos]}"
+            return "unknown", f"沒有已確認可接守{POS_ZH[out_pos]}的紀錄；需人工確認"
     if out_pos == "C":
         backups = [b for b in bench_after if can_play(b, "C", cutoff) and b != in_name]
         if len(backups) == 0:

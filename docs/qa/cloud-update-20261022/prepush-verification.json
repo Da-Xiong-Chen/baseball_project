@@ -1,0 +1,16 @@
+{
+  "staged_site_and_source_files_verified": 725,
+  "sha256_mismatches": [],
+  "line_endings": "Exact bytes preserved with per-path -text attributes",
+  "python_tests": {
+    "passed": 84,
+    "failed": 0
+  },
+  "node_tests": {
+    "passed": 153,
+    "failed": 0
+  },
+  "live_batch_verification": "passed",
+  "static_site_files": 692,
+  "static_json_files": 680
+}

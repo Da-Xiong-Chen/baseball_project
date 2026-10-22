@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const root=path.join(__dirname,'../docs/data/replay'),day='2025-09-20',dir=path.join(root,'day-'+day);
+const root=path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'replay'),day='2025-09-20',dir=path.join(root,'day-'+day);
 const index=JSON.parse(fs.readFileSync(path.join(dir,'index.json'),'utf8'));
 test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
  let count=0,changed=0;

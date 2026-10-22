@@ -19,6 +19,7 @@ import pandas as pd  # noqa: E402
 from engine import (_hands, bat_hand, custom_situation, evaluate_bullpen, evaluate_pinch_hit,  # noqa: E402
                     matchup_detail, situation)
 from load import CELLS, load  # noqa: E402
+from batch_contract import metadata as batch_metadata, ensure_available
 import mlmodel  # noqa: E402
 from model import fit  # noqa: E402
 from roster import POS_ZH, can_play, pitcher_names, positions_of  # noqa: E402
@@ -118,6 +119,7 @@ def build_result(sit, m, ml=None, actual=None):
         pitch_mix=pitch_mix_payload(m, row["pitcher"]),
         candidates=ph_df, bullpen=dict(next=nxt, rows=bp_df), model_cutoff=str(m.cutoff.date()),
         ml_cutoff=str(ml.cutoff) if ml else None, schema_version=2,
+        **batch_metadata(),
         availability="人工勾選可用名單；請確認當日登錄、健康與已用人選" if not row.get("game") else "依此前 10 天出賽推估，非官方當日登錄名單；守位由既有紀錄推估",
         fielding_source="截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位",
         method="集成（階層式＋梯度提升樹）" if ml else "階層式",
@@ -198,6 +200,7 @@ def validate_evaluation(body):
 
 
 def api(path, qs, body):
+    ensure_available()
     if path == "/api/pitch-change":
         from pitch_change import pitch_change
         return pitch_change(qs["pitcher"][0], int(qs.get("season", ["2025"])[0]),
@@ -205,7 +208,7 @@ def api(path, qs, body):
     pa, _, boxes = load()
     if path == "/api/meta":
         r = rosters()
-        return dict(teams=sorted(r), cells=CELLS, positions=POS_ZH)
+        return dict(teams=sorted(r), cells=CELLS, positions=POS_ZH, **batch_metadata())
     if path == "/api/team":
         return rosters()[qs["team"][0]]
     if path == "/api/games":

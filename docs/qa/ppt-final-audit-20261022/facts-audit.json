@@ -1,0 +1,97 @@
+{
+  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "fresh_static_case_recalculation": {
+    "p16": 1.07,
+    "p17": 3.11
+  },
+  "model_validation": {
+    "n": 5396,
+    "games": 72,
+    "relative_mse_reduction_percent": 0.1798606319771342,
+    "relative_mse_reduction_ci_percent": [
+      -0.18816980388748478,
+      0.5377684433711869
+    ],
+    "mse": 0.2255913044336861,
+    "baseline_mse": 0.22599778547890279,
+    "ensemble_weights": [
+      0.5,
+      0.5
+    ]
+  },
+  "timing": {
+    "evaluated": 11868,
+    "actual_change": 2184,
+    "actual_stay": 9684,
+    "suggested_stay": 1949,
+    "not_suggested_stay": 7735,
+    "stay_diff": 0.043,
+    "ci": [
+      0.015,
+      0.069
+    ],
+    "bootstrap_reps": 2000
+  },
+  "historical_day": {
+    "pa_counts": [
+      70,
+      74,
+      82
+    ],
+    "views": 452,
+    "model_cutoff": "2025-09-20",
+    "ml_cutoff": "2025-09-01"
+  },
+  "replay_case": {
+    "gain": 1.11105,
+    "pitch_count": 89,
+    "result": {
+      "batter": "陳真",
+      "pitcher": "王躍霖",
+      "is_ph": false,
+      "result": "2B",
+      "WPA": 0.022
+    }
+  },
+  "load": {
+    "name": "陳冠宇",
+    "role": "P",
+    "consecutive_days_before": 0,
+    "last_date": "2025-09-18",
+    "rest_days": 1,
+    "games14": 4,
+    "workload3": 17,
+    "log": [
+      {
+        "date": "2025-09-18",
+        "count": 17
+      },
+      {
+        "date": "2025-09-16",
+        "count": 17
+      },
+      {
+        "date": "2025-09-14",
+        "count": 20
+      },
+      {
+        "date": "2025-09-09",
+        "count": 14
+      }
+    ],
+    "pitches14": 68,
+    "bf14": 18,
+    "so14": 2,
+    "bb14": 1,
+    "whiff14": 0.0882
+  },
+  "pitch_change": "Source snapshot checked; both rounded shares and deltas match",
+  "citations": "All3 title/year/author/volume/issue/pages checked against Crossref",
+  "changed_pages": [
+    12,
+    14,
+    20
+  ],
+  "unchanged_native_pages": 29,
+  "all_numeric_checks": "passed"
+}

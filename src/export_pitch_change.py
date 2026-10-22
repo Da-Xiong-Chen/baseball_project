@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -12,7 +13,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--season', type=int, default=2025)
     args = parser.parse_args()
-    out = ROOT / 'docs/data/pitch-change' / str(args.season)
+    out = Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data')) / 'pitch-change' / str(args.season)
     out.mkdir(parents=True, exist_ok=True)
     index = dict(schema_version=SCHEMA, season=args.season, pitchers={})
     dataset = observations()

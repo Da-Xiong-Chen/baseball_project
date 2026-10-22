@@ -1,0 +1,29 @@
+[
+  {
+    "url": "https://da-xiong-chen.github.io/baseball_project/",
+    "status": 200,
+    "resolved_url": "https://da-xiong-chen.github.io/baseball_project/"
+  },
+  {
+    "url": "https://github.com/Da-Xiong-Chen/baseball_project",
+    "status": 200,
+    "resolved_url": "https://github.com/Da-Xiong-Chen/baseball_project"
+  },
+  {
+    "url": "https://doi.org/10.1080/01621459.1975.10479864",
+    "status": 403,
+    "resolved_url": "https://www.tandfonline.com/doi/full/10.1080/01621459.1975.10479864",
+    "note": "HTTP restrictions do not by themselves prove link failure"
+  },
+  {
+    "url": "https://doi.org/10.1214/aos/1176344552",
+    "status": 200,
+    "resolved_url": "https://projecteuclid.org/journals/annals-of-statistics/volume-7/issue-1/Bootstrap-Methods-Another-Look-at-the-Jackknife/10.1214/aos/1176344552.full"
+  },
+  {
+    "url": "https://doi.org/10.1198/016214506000001437",
+    "status": 403,
+    "resolved_url": "https://www.tandfonline.com/doi/abs/10.1198/016214506000001437",
+    "note": "HTTP restrictions do not by themselves prove link failure"
+  }
+]

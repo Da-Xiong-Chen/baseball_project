@@ -1,0 +1,90 @@
+{
+  "updated": "2026-10-22T17:39:18.073934+08:00",
+  "files": [
+    {
+      "path": "presentations/competition-2026/release-20261022/README.md",
+      "bytes": 580,
+      "sha256": "026800b3d1f7accd66fda77655c5bf3437f07211f60f218028ef61f3d65a36d4"
+    },
+    {
+      "path": "presentations/competition-2026/release-20261022/一球兩面_正式競賽版_32頁_20261021.pdf",
+      "bytes": 2740478,
+      "sha256": "32389743494319b1b68f405a113d54fcd1293fad52b46ca3bfd6899c49cf5394"
+    },
+    {
+      "path": "presentations/competition-2026/release-20261022/一球兩面_正式競賽版_32頁_20261021.pptx",
+      "bytes": 3862638,
+      "sha256": "aee61c983b961556056500a897bc50b77f46d8501ec73e7695873af59b75e0b6"
+    },
+    {
+      "path": "presentations/competition-2026/release-20261022/一球兩面_正式競賽版_操作展示_20261021.mp4",
+      "bytes": 1244523,
+      "sha256": "da9bde7cf26c4e16f258ee8920f34acb9a1e0b76231fb2f9a608b67b749f38e0"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/cache-release-receipt.json",
+      "bytes": 931,
+      "sha256": "3f59af9703843c3deb5c9fd8ba73f6571befcb8c0432753e9ebf626cf7add569"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/CLOSEOUT.md",
+      "bytes": 3391,
+      "sha256": "984d9089da17a4122051286c64c7ac4a76c2b2203a3993fa1c65365eeb508d20"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/mobile-validation.png",
+      "bytes": 43401,
+      "sha256": "ef2e0e160e89aa38fc177c44d862078fc4d74bafb060540aea6218f474bce2a7"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/model-diagnostics-summary.json",
+      "bytes": 1117,
+      "sha256": "332cb513570e487cfeeeb9cc536a9b9b4b8f627843cd66fa9a32e60ce21bb859"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/model-interval-decision.json",
+      "bytes": 632,
+      "sha256": "876fc880d7ef0907bff61cdc81575a783f48dbbddaeef65e396eff5c94d0012e"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/model-uncertainty-result.md",
+      "bytes": 1719,
+      "sha256": "fea365441801c42703c77f4ed9571aedf0f4698277ff297604f75aa164139627"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/node-tests.txt",
+      "bytes": 14212,
+      "sha256": "7392d7707907ce9dbf0f142e0558f5e163264c0faf96c4fd35fbf6388da33d5b"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/python-tests.txt",
+      "bytes": 11518,
+      "sha256": "3093730953655dfc4f182a8bb35efae97b58270b019094ab5a05bb545df9b2d7"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/README.md",
+      "bytes": 1666,
+      "sha256": "689faaaee0ad0b6c07708816ad9ebda3ff64f57008462712c058ea916dc33913"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/ui-release-receipt.json",
+      "bytes": 1049,
+      "sha256": "96b95fc402b0c8e7dbfd8685c64221709691601517b5aff15d377fb929b570f4"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/USER_TASK_CHECKLIST.md",
+      "bytes": 930,
+      "sha256": "8af90eeee6daa90f68671781bdbff2122c4129a7b0774b24f5e7ee466ee2d3b5"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/validation-final.png",
+      "bytes": 160329,
+      "sha256": "027ee0e75abdd01836863b80bf467088fd9e9ec2e010bfa13e2a783f6fe17304"
+    },
+    {
+      "path": "docs/qa/final-closeout-20261022/verification-summary.json",
+      "bytes": 2057,
+      "sha256": "2fad06c974bc208377aa4742c5765aff42c27029f14f1d828d2e8ec7a6c5ce47"
+    }
+  ]
+}

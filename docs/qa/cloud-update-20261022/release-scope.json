@@ -1,0 +1,21 @@
+{
+  "base_commit": "c5d2180a5fb029d16ffd2a574274a4c8150d983a",
+  "branch": "release/v4-competition-20261022",
+  "staged_count": 637,
+  "new_v4_weights": [
+    "models/gbt_2025-03_v4.pkl",
+    "models/gbt_2025-04_v4.pkl",
+    "models/gbt_2025-05_v4.pkl",
+    "models/gbt_2025-06_v4.pkl",
+    "models/gbt_2025-07_v4.pkl",
+    "models/gbt_2025-08_v4.pkl",
+    "models/gbt_2025-09_v4.pkl",
+    "models/gbt_2025-10_v4.pkl",
+    "models/gbt_full_v4.pkl"
+  ],
+  "latest_presentation_dir": "presentations/competition-2026/audited-20261022",
+  "open_prs_before_upload": 0,
+  "remote_main_unchanged_at_start": true,
+  "line_ending_check": "Git indexed blobs verified against sealed SHA-256; -text prevents conversion; whitespace check treats CR as EOL",
+  "unrelated_output_staged": false
+}

@@ -1,0 +1,20 @@
+{
+  "status": "promoted_local_only",
+  "changed_files": [
+    "index.html"
+  ],
+  "numerical_files_changed": [],
+  "model_batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "prior_manifest_sha256": "56bcff3e6f01d2da3e38a0f0de3949b57617c561bbedb9115dc0e634f4fc0ee0",
+  "new_manifest_sha256": "699a32041faf03658bc1560e7d49c85105376eafb880c56e8f11f59c042d956a",
+  "source_change": {
+    "file": "docs/index.html",
+    "before_sha256": "c39897488ce4f0b99016cc9a09fb235d9b54c4ab13c0e9bda5d3a1ebb659125c",
+    "after_sha256": "3f9364e609978d539603e8a15fd879700ebb2af315e2cf361444dfbc23c3cfd4",
+    "changes": [
+      "Version validation script URL so existing browser caches fetch the reviewed new code"
+    ]
+  },
+  "backup": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\final-closeout-20261022\\promotion-backup-cache",
+  "remote_changes": false
+}

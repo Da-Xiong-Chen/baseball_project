@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from engine import _hands, matchup_detail, situation  # noqa: E402
 from fatigue import CAP, RELIEVER_WARN, starter_curve  # noqa: E402
 from load import CELLS, ROOT, load  # noqa: E402
+from batch_contract import metadata as batch_metadata
 import mlmodel  # noqa: E402
 import recent  # noqa: E402
 from model import PITCHES_PER_PA, fit  # noqa: E402
@@ -24,7 +25,7 @@ from roster import can_play, hitter_pool, positions_of, reliever_pool  # noqa: E
 sys.path.insert(0, ROOT)
 import server  # noqa: E402
 
-OUT = os.path.join(ROOT, "docs", "data")
+OUT = os.environ.get('BASEBALL_STATIC_OUT', os.path.join(ROOT, "docs", "data"))
 
 
 def rnd(o, d=5):
@@ -67,7 +68,7 @@ def export_model():
     for (p, h), r in m.mix.iterrows():
         mix.setdefault(p, {})[h] = [r[c] for c in CELLS] + [float(m.mix_n.get((p, h), 0))]
     model = dict(
-        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, training_version=2,
+        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, **batch_metadata(),
         league={f"{a}|{c}": v for (a, c), v in m.league.items()},
         league_mix={f"{a}|{b}": [r[c] for c in CELLS] for (a, b), r in m.league_mix.iterrows()},
         bat_all={b: [r["effect"], r["var"], r["n"]] for b, r in m.bat_all.iterrows()},
@@ -76,6 +77,7 @@ def export_model():
         slope_fine={"|".join(map(str, k)): v for k, v in m.slope_fine.items()},
         slope_coarse={"|".join(map(str, k)): v for k, v in m.slope_coarse.items()},
         slope_all=m.slope_all,
+        calibration=m.calibration_audit,
         bhand=bh.to_dict(), phand=ph.to_dict(), eligible=eligible,
         fatigue=dict(curve=starter_curve(), cap=CAP, reliever_warn=RELIEVER_WARN),
         rosters=rosters, teams=sorted(rosters),
@@ -126,7 +128,7 @@ def export_replays():
         g = g.assign(h=g["half"].map({"away": 0, "home": 1})).sort_values(["inning", "h", "seq"])
         cols = ["pa_id", "inning", "half", "outs", "bases", "bat_team", "fld_team", "bat_score", "fld_score",
                 "batter", "pitcher", "is_ph", "result", "WPA"]
-        dump(dict(pas=g[cols], results=results), "replay", f"{gid}.json")
+        dump(dict(pas=g[cols], results=results, **batch_metadata()), "replay", f"{gid}.json")
         aw, hm = g[g["half"] == "away"], g[g["half"] == "home"]
         index.append(dict(game=gid, date=str(g["date"].iat[0].date()),
                           away=aw["bat_team"].iat[0] if len(aw) else hm["fld_team"].iat[0],

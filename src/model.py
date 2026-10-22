@@ -122,10 +122,21 @@ class Model:
     # ---------- 局勢 ----------
     def run_to_win(self, inning, half, bat_score, fld_score, bases, outs):
         key = _state_key(inning, half, bat_score - fld_score, bases, outs)
-        if key in self.slope_fine.index:
-            return float(self.slope_fine[key])
-        ck = key[:3]
-        return float(self.slope_coarse.get(ck, self.slope_all))
+        return valid_slope(self.slope_fine.get(key),
+                           self.slope_coarse.get(key[:3]), self.slope_all)
+
+
+def valid_slope(*values):
+    """Sparse empirical WPA/RE24 ratios may reverse sign; use a valid parent.
+
+    A negative conversion is not evidence that scoring hurts the batting team.
+    Do not take its absolute value. Zero remains a valid low-leverage estimate.
+    Missing/invalid global calibration must fail explicitly rather than invent one.
+    """
+    for value in values:
+        if value is not None and np.isfinite(value) and value >= 0:
+            return float(value)
+    raise ValueError("局勢勝率換算缺少有效的非負校準，請重建模型")
 
 
 def _state_key(inning, half, diff, bases, outs):
@@ -232,10 +243,23 @@ def fit(cutoff, season=None, pitcher_half_life=PITCHER_HALF_LIFE):
     d["ck"] = d["key"].map(lambda k: k[:3])
     coarse = d.groupby("ck")[["xy", "xx"]].sum()
     slope_coarse = (coarse["xy"] + 5 * slope_all) / (coarse["xx"] + 5)
+    coarse_invalid=int((~np.isfinite(slope_coarse) | (slope_coarse<0)).sum())
+    slope_all = valid_slope(slope_all)
+    slope_coarse = pd.Series({k: valid_slope(v, slope_all) for k, v in slope_coarse.items()})
     fine = d.groupby("key")[["xy", "xx"]].sum()
     prior = slope_coarse.reindex([k[:3] for k in fine.index]).fillna(slope_all).to_numpy()
     slope_fine = pd.Series((fine["xy"].to_numpy() + 3 * prior) / (fine["xx"].to_numpy() + 3), index=fine.index)
+    fine_invalid=int((~np.isfinite(slope_fine) | (slope_fine<0)).sum())
 
-    return Model(cutoff, league, ba, bc, pp, mix, mix_n, league_mix, phand,
+    # Keep the regression definition, but a reversed/non-finite local ratio is
+    # unusable as a monotone run-to-win conversion. Fall back through parents.
+    slope_fine = pd.Series({k: valid_slope(v, slope_coarse.get(k[:3]), slope_all)
+                            for k, v in slope_fine.items()})
+
+    model = Model(cutoff, league, ba, bc, pp, mix, mix_n, league_mix, phand,
                  dict(sigma2=sigma2, bat=k_bat, cell=k_cell, pit=k_pit),
                  slope_fine, slope_coarse, slope_all)
+    model.calibration_audit=dict(policy='nonnegative_local_or_valid_parent',
+                                fine_fallbacks=fine_invalid,coarse_fallbacks=coarse_invalid,
+                                fine_states=len(slope_fine),coarse_states=len(slope_coarse))
+    return model

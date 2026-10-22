@@ -133,6 +133,12 @@ test('tiny positive differences never become a strong recommendation from SE',()
   assert.equal(rec.kind,'neutral');assert.match(rec.text,/不必只依排序換人/);
   assert.match(rec.title,/差距極小/);
 });
+test('empty bench differs from candidates whose fielding is unconfirmed',()=>{
+ const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0}];
+ assert.match(f.eval('recommendation(cands)').title,/只評估現任/);
+ f.context.cands.push({角色:'代打',球員:'Unknown',守備:'unknown',預估勝率:9});
+ const rec=f.eval('recommendation(cands)');assert.match(rec.title,/接守資格尚未確認/);assert.equal(rec.best,undefined);
+});
 
 test('API and static reads work without the newer timeout API',async()=>{
   const f=fixture();f.context.AbortSignal={};
@@ -401,7 +407,7 @@ test('fielding guidance retains cover cost, catcher reserve warning and uncertai
  const f=fixture();f.context.row={守備:'warn',守備說明:'需由 A 接守捕手（再消耗 1 名板凳）；之後板凳已無備用捕手'};
  const html=f.eval('fieldingMessage(row)');assert.match(html,/另需接守人選/);assert.match(html,/A · 捕手（另需 1 人）/);assert.match(html,/無備用捕手/);
  assert.match(f.eval('fieldingMessage({守備:"ok",守備說明:"B 接任指定打擊"})'),/承接原 DH 棒次/);
- assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/守位待確認/);
+ assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/接守未確認/);
  assert.doesNotMatch(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/推估可接守/);
 });
 
@@ -602,7 +608,23 @@ test('history player selection survives revisits and stays isolated by team and 
 
 test('single-day analysis ignores audience changes without clearing its result or opening lineup',async()=>{
  const f=fixture();f.eval("currentPage=()=> 'review';S.last={id:'historical'};applyOwnLineup=()=>{throw Error('must not apply current roster')}");
- await f.eval("setAudienceMode('team')");assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.eval('audienceMode'),'team');
+ await f.eval("setAudienceMode('team')");assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.eval('audienceMode'),'general');
+});
+
+test('historical analysis refuses custom roster application, refresh and evaluation',async()=>{
+ const f=fixture();f.node('#myTeam').value='Original';f.node('#oppTeam').value='Opponent';
+ f.eval("currentPage=()=> 'review';audienceMode='team';S.last={id:'historical'};S.ready=true;confirmedOwnLineup=()=>{throw Error('must not consult current lineup')};");
+ assert.equal(f.eval('ownLineup()'),null);
+ await f.eval("applyOwnLineup('Other',{pitcherSelected:true,resetPitchCount:true})");
+ await f.eval('refreshCustom()');await f.eval('evaluateCustom()');
+ assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.node('#myTeam').value,'Original');
+ assert.equal(f.node('#oppTeam').value,'Opponent');
+});
+
+test('manual unavailable list filters team candidates but never historical candidates',()=>{
+ const f=fixture();f.eval("currentPage=()=> 'evaluation';audienceMode='team';confirmedOwnLineup=()=>({pitcher:'P',slots:[{name:'Active'}],unavailable:['Out']})");
+ assert.equal(f.eval("benchEligible('Out')"),false);assert.equal(f.eval("benchEligible('Bench')"),true);
+ f.eval("currentPage=()=> 'review'");assert.equal(f.eval("benchEligible('Out')"),true);
 });
 test('history subpage team is synchronized without changing the evaluation teams',()=>{
  const f=fixture();f.node('#customPanel').addEventListener=()=>{};f.node('#myTeam').value='樂天桃猿';f.node('#oppTeam').value='味全龍';
@@ -619,4 +641,29 @@ test('static pitching replay uses the incumbent snapshot and retains actual inco
  const f=fixture();f.context.files={'data/replay/day-2025-09-20/index.json':{schema_version:1,date:'2025-09-20',games:{},files:{'2025-340-h018':'2025-340-h018.json'}},'data/replay/day-2025-09-20/2025-340-h018.json':{date:'2025-09-20',pa_id:'2025-340-h018',ph:{situation:{pitcher:'New'},replay_context:{}},pen:{situation:{pitcher:'Old'},actual:{pitcher:'New'},replay_context:{}}}};
  f.eval('json=async u=>files[u]');const r=await f.eval("staticApi('api/replay?pa=2025-340-h018&decision=pen')");
  assert.equal(r.situation.pitcher,'Old');assert.equal(r.actual.pitcher,'New');assert.equal(r.replay_context.decision,'pen');
+});
+
+
+test('reveal follows the same PA across views, resets on another PA and team reset',()=>{
+ const f=fixture();
+ f.eval("historyDisclosure.select('A');historyDisclosure.set('outcome',true)");
+ assert.equal(f.eval("historyDisclosure.select('A').outcome"),true);
+ assert.equal(f.eval("historyDisclosure.action"),true);
+ assert.equal(f.eval("historyDisclosure.select('B').outcome"),false);
+ f.eval("historyDisclosure.scores.add('game');historyDisclosure.set('outcome',true);historyDisclosure.reset()");
+ assert.equal(f.eval('historyDisclosure.scores.size'),0);
+ assert.equal(f.eval('historyDisclosure.outcome'),false);
+});
+
+
+test('late disclosure events from the previous PA cannot reveal the next PA',()=>{
+ const f=fixture();f.eval("historyDisclosure.select('B');historyDisclosure.setFor('A','outcome',true)");
+ assert.equal(f.eval('historyDisclosure.outcome'),false);
+ f.eval("historyDisclosure.setFor('B','outcome',true)");assert.equal(f.eval('historyDisclosure.outcome'),true);
+});
+
+
+test('API mode obtains the batch identity from meta without loading static Engine',()=>{
+ const f=fixture();f.context.Engine.model=()=>null;f.eval("S.batch_id='api-batch'");
+ assert.equal(f.eval('activeBatchId()'),'api-batch');
 });

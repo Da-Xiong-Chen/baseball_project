@@ -1,0 +1,56 @@
+{
+  "authorization": "User asks a complete check and possible refinements; stated direct corrections within existing 32-page scope, preserve prior constraints and local-only work.",
+  "source": "presentations/competition-2026/reviewed-20261022/一球兩面_完整校訂版_32頁_20261022.pptx",
+  "edited": {
+    "12": "Replace body MSE jargon with concise 得分預測誤差, keep MSE values and honest cross-zero interpretation.",
+    "14": "Clarify that the higher RE24 is the offense side and is worse for defense; retain observational, noncausal result.",
+    "20": "Explain project-specific 低落 pitch grouping with examples without changing existing percentages or chart geometry."
+  },
+  "referenced": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    13,
+    15,
+    16,
+    17,
+    18,
+    19,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "sources": {
+    "12": "docs/data/model-evaluation.json current_key=s1_w0.5; compute relative reduction and CI against same baseline.",
+    "14": "docs/data/timing-2025.json summary[1.0].pen; higher single-PA RE24 benefits offense.",
+    "20": "src/load.py PITCH_GROUP CH/FO/FS/KN→低落; current pitch-change snapshot; existing values unchanged."
+  },
+  "validation": "All32 new render review, font/format audit, same-version PDF all text/links, source numerical crosscheck, package/video hash. Native PowerPoint playback remains outside this read-only/raster verification; no pass claimed.",
+  "roster": 32,
+  "font": "中文DFKai-SB/標楷體; English/numbers Times New Roman",
+  "modules": {
+    "notes": false,
+    "animations": false,
+    "transitions": false,
+    "narration": false,
+    "video": "native source unchanged"
+  },
+  "remote": "No commit/push/PR/merge/deploy"
+}

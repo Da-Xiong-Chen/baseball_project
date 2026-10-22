@@ -23,6 +23,14 @@ test('denied and silently refusing storage never reports success',()=>{
 test('membership selects available names and keeps missing names for explicit feedback',()=>{
  assert.deepEqual(groups.membership({members:['A','OLD']},['A','B']),{selected:['A'],missing:['OLD']});
 });
+test('saved same-name pitchers migrate by team without overwriting legacy storage',()=>{
+ const s=store();
+ for(const [team,name] of [['樂天桃猿','林子崴〔樂天〕'],['統一7-ELEVEn獅','林子崴〔統一〕']]){
+  const data=groups.defaults(pitchers);data[0].members=['林子崴'];groups.write(s,team,data);
+  const key='cpbl-pitcher-groups-v3:'+team,raw=s.getItem(key);
+  assert.deepEqual(groups.read(s,team)[0].members,[name]);assert.equal(s.getItem(key),raw);
+ }
+});
 test('v2 selected custom group migrates while all old presets remain recoverable',()=>{
  const s=store(),old={groups:[{name:'勝投組',members:['D']},{name:'Travel',members:['A']},{name:'Rest',members:['B']}],selected:'Rest'};
  const raw=JSON.stringify(old);s.setItem('cpbl-pitcher-groups-v2:A',raw);

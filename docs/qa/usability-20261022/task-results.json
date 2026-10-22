@@ -1,0 +1,107 @@
+{
+  "executed_at": "2026-10-22T17:50:25.832154+08:00",
+  "method": "Single-agent scenario-based usability walkthrough / cognitive walkthrough",
+  "human_participants": 0,
+  "independent_human_validation": false,
+  "agent_already_familiar_with_product": true,
+  "scope": "Local frozen 2024–2025 competition prototype; isolated browser origin",
+  "tasks": [
+    {
+      "id": "T1",
+      "task": "八局上落後一分、一出局二壘有人，比較現任與兩名代打",
+      "status": "completed_by_agent",
+      "observed": "林立為基準；廖健富-0.18pp、梁家榮-0.45pp，皆低於續打；兩者另需鍾玉成接守右外野。可移除自動選取的其他兩位，確認已選2/4。",
+      "interpretation": "負值表示相對現任較不利，非成功率；接守配置不等於當日資格驗證。"
+    },
+    {
+      "id": "T2",
+      "task": "套用九棒與投手、選牛棚群組並評估換投",
+      "status": "completed_by_agent",
+      "observed": "樂天場上投手魔神龍固定；95球、接續郭天信/李凱威/吉力吉撈，套用勝投組後3名候選。朱承洋+0.72pp未達1pp門檻，提示以現任續投為主。",
+      "interpretation": "比較固定接續三棒；分數不能當整場策略效益或官方今日名單。"
+    },
+    {
+      "id": "T3",
+      "task": "找到2025/09/20台鋼六局下，先比較再分次揭示",
+      "status": "completed_by_agent",
+      "observed": "江承諺續投為基準，林詩翔+1.111pp；未揭示時未顯示打席結果，先揭示實際王躍霖，再揭示陳真二壘安打、攻方WPA+2.2pp。返回總覽同打席保留揭示。",
+      "interpretation": "未發生的替代選擇結果未知，不能據此證明林詩翔上場更好。"
+    },
+    {
+      "id": "T4",
+      "task": "讀取模型驗證，解釋誤差改善與跨零",
+      "status": "completed_by_agent",
+      "observed": "9–10月現行集成相對聯盟基準MSE誤差減少0.18%，區間-0.19%至0.54%，10月退步。",
+      "interpretation": "跨零仍無法確認優於基準；誤差減少0.18%不是勝率提高0.18百分點。"
+    }
+  ],
+  "recovery_checks": [
+    {
+      "name": "情境變更不保留過期結果",
+      "observed": "8局改9局後舊評估清空，回到評估準備",
+      "passed": true
+    },
+    {
+      "name": "板凳搜尋無結果不清除原選取",
+      "observed": "沒有符合的球員；搜尋不會清除已選名單",
+      "passed": true
+    },
+    {
+      "name": "選人對話框無結果可恢復",
+      "observed": "輸入不存在顯示無結果；清空後可再選",
+      "passed": true
+    },
+    {
+      "name": "Escape及焦點",
+      "observed": "另次DOM觀察確認dialog.open=false，焦點回第1棒選人按鈕；最初即時isVisible讀取競態不列缺陷",
+      "passed": true
+    },
+    {
+      "name": "九棒已有球員互換避免重複",
+      "observed": "陳晨威與林立互換棒次人選；守位經驗不符提示二壘/左外野；恢復預設後提示已套用",
+      "passed": true
+    },
+    {
+      "name": "空回測分類",
+      "observed": "只有系統提示0 顯示此分類沒有收錄打席，可切回其他分類",
+      "passed": true
+    },
+    {
+      "name": "跨頁揭示延續",
+      "observed": "完整比較與當日總覽同打席保留已揭示調度/結果",
+      "passed": true
+    },
+    {
+      "name": "390px手機淺深色操作",
+      "observed": "clientWidth與scrollWidth均375；回放按鈕高度80.6–103.1px；無整頁橫向溢出",
+      "passed": true
+    },
+    {
+      "name": "修正後提示可找到控制項",
+      "observed": "切換一般使用者後場上投手下拉可編輯，一般使用者aria-pressed=true",
+      "passed": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "U01",
+      "severity": "minor",
+      "issue": "Pitcher lock helper referenced an obsolete control name",
+      "before": "依場上名單固定，可在上方改為不使用名單。",
+      "after": "依場上名單固定；自由選人請按上方「切換一般使用者」。",
+      "status": "fixed_and_verified",
+      "changed_file": "docs/index.html"
+    }
+  ],
+  "blocking_issues_observed": 0,
+  "node_tests": 153,
+  "manifest_verified": true,
+  "models_changed": false,
+  "remote_changes": false,
+  "limits": [
+    "Agent task completion is not a human completion rate or proof of first-time user comprehension.",
+    "No human task-time, satisfaction score or interview evidence was fabricated.",
+    "PPT native playback and public-network/device performance are outside this browser task test."
+  ],
+  "release": "output/site-release-v4-usability-20261022"
+}

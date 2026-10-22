@@ -1,3 +1,4 @@
+import os
 """Export descriptive player context strictly before the fixed historical date."""
 import json,sys
 from pathlib import Path
@@ -24,5 +25,5 @@ def build(pa,pitches,boxes,date=DATE):
  return {'date':date,'window_days':14,'teams':teams}
 if __name__=='__main__':
  pa,p,b=load();out=build(pa,p,b);out['fatigue_curve']=starter_curve(DATE);out['source']='Rebas 2025，日期嚴格早於 2025-09-20；先發疲勞曲線以截止日前2024–2025資料估計'
- (ROOT/'docs/data/history-context-2025-09-20.json').write_text(json.dumps(out,ensure_ascii=False,allow_nan=False,indent=2)+'\n',encoding='utf-8')
+ (Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data'))/'history-context-2025-09-20.json').write_text(json.dumps(out,ensure_ascii=False,allow_nan=False,indent=2)+'\n',encoding='utf-8')
  print('Exported pregame player context')
