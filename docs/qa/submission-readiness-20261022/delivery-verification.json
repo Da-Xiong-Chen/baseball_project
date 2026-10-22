@@ -1,0 +1,184 @@
+{
+  "passed": true,
+  "pages": [
+    {
+      "page": 1,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 2,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 3,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 4,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 5,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 6,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 7,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 8,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 9,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 10,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 11,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 12,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 13,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 14,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 15,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 16,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 17,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 18,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 19,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 20,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 21,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 22,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 23,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 24,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 25,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 26,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 27,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 28,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 29,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 30,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 31,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    },
+    {
+      "page": 32,
+      "pdf_text_complete": true,
+      "fonts_pass": true
+    }
+  ],
+  "no_notes_animations_transitions": true,
+  "embedded_video_matches": true,
+  "cover_and_end_links": true,
+  "files": [
+    {
+      "path": "presentations/competition-2026/audited-20261022/一球兩面_檢查修訂版_32頁_20261022.pptx",
+      "sha256": "0edc2dac0fa5bd1df514df931ee668192467754a695d7ce2b07dc7edff3a386a"
+    },
+    {
+      "path": "presentations/competition-2026/audited-20261022/一球兩面_檢查修訂版_32頁_20261022.pdf",
+      "sha256": "66f32e392cb00298e27094adb160141e31ceca549a5154a7982ed6ff218fb9a6"
+    },
+    {
+      "path": "presentations/competition-2026/audited-20261022/一球兩面_操作展示_20261022.mp4",
+      "sha256": "da9bde7cf26c4e16f258ee8920f34acb9a1e0b76231fb2f9a608b67b749f38e0"
+    }
+  ],
+  "native_powerpoint_playback": "not verified",
+  "demo": "real UI screenshot montage; not continuous recording"
+}

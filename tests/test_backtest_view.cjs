@@ -63,6 +63,30 @@ test('relative error change uses baseline MSE and rejects zero or missing baseli
  assert.equal(B.relativeReduction({baseline_mse:0,mse_reduction:1}),null);
 });
 
+test('incomplete optional diagnostics fail before any model conclusion is displayed',async()=>{
+ const metric={n:1,mse:.2,mae:.1,baseline_mse:.3,mse_reduction:.1,mse_reduction_ci:[-.1,.2]};
+ const report={schema_version:1,training_version:4,engine_contract:4,batch_id:'expected',status:'evaluated',current_key:'current',selected_key:'candidate',
+  candidates:['s1_w0','s1_w1','current','candidate'].map(key=>({key,time_check:metric,development:metric})),monthly:[]};
+ const variant={sample:75,seed:0,top1_changes:0,threshold_changes:0,max_gain_shift:.01};
+ const diagnostic={cases:17,variants:[variant]};
+ const badFields=[{decision_sampling_sensitivity:{}},{decision_sampling_sensitivity:{...diagnostic,variants:[{...variant,max_gain_shift:null}]}},
+  {decision_sampling_sensitivity:{...diagnostic,variants:[{...variant,top1_changes:18}]}},
+  {sampling_sensitivity:'truncated'}, {sampling_sensitivity:[{}]}, {sampling_sensitivity:[{mean_absolute_prediction_shift:-.1}]},
+  {candidates:report.candidates.map(c=>({...c,time_check:{...metric,mse:-.2}}))}];
+ for(const extra of badFields){
+  const retry={insertAdjacentHTML(){}};const el={innerHTML:'',querySelector:()=>retry,querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
+  await B.validation(el,async()=>({...report,...extra}),'expected');
+  assert.match(el.innerHTML,/role="alert"/);assert.doesNotMatch(el.innerHTML,/bt-verdict/);assert.equal(typeof retry.onclick,'function');
+ }
+});
+
+test('complete release diagnostics render with finite values',async()=>{
+ const report=require('../docs/data/model-evaluation.json');
+ const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
+ await B.validation(el,async()=>report,report.batch_id);
+ assert.match(el.innerHTML,/bt-verdict/);assert.match(el.innerHTML,/最大差值位移/);assert.doesNotMatch(el.innerHTML,/NaN|undefined/);
+});
+
 
 test('timeline PA opens details, formats outcome and forwards disclosure to full comparison',()=>{
  const action={open:false},outcome={open:false},openButton={},button={dataset:{btPa:'p'},setAttribute(){}};
