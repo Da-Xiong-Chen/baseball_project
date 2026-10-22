@@ -198,6 +198,8 @@ function deltaText(v, digits = 2) {
 }
 const deltaLabel = (v, digits = 2, unit = '百分點') => Number.isFinite(v) ? `${deltaText(v, digits)} ${unit}` : '資料不足';
 const deltaMarkup = v => Number.isFinite(v) ? `${deltaText(v)} <span class="delta-unit">百分點</span>` : '資料不足';
+const countNumber = v => Number.isFinite(v)&&v>=0?Math.round(v).toLocaleString('zh-TW'):'—';
+const fixedNumber = (v,d=3) => Number.isFinite(v)?(Number(v.toFixed(d))===0?0:v).toFixed(d):'—';
 const cls = (v, eps = 0.005) => (v > eps ? "pos" : v < -eps ? "neg" : "mut");
 const handChip = (h) => `<span class="chip hand-${esc(h)}">${h === "L" ? "左" : h === "R" ? "右" : "兩"}</span>`;
 const posChips = (p) => Object.keys(p || {}).slice(0, 3).map((k) => `<span class="chip">${POS[k] || k}</span>`).join("");
@@ -722,7 +724,7 @@ function availabilityNames(names, action, open=false) {
   return chips(names.slice(0,4))+(names.length>4?`<details class="availability-more" ${open?'open':''}><summary>另 ${names.length-4} 人</summary><div class="availability-extra">${chips(names.slice(4))}</div></details>`:'');
 }
 function mobileRowDetails(x, pen) {
-  return `<details class="mobile-row-details"><summary>樣本與數據</summary><p>${Math.round(x['樣本球數'])} 球${!pen?' · '+esc(x['可信度'])+'樣本':''}</p>${!pen&&Number.isFinite(x['預估勝率'])?`<p>相對聯盟平均 ${deltaLabel(x['預估勝率'])}</p>`:''}${pen?`<p>失分價值 ${x['預估失分'].toFixed(3)} 分${x['疲勞調整']>.0005?'（含疲勞 +'+x['疲勞調整'].toFixed(3)+'）':''}</p>`:''}</details>`;
+  return `<details class="mobile-row-details"><summary>樣本與數據</summary><p>${countNumber(x['樣本球數'])} 球${!pen?' · '+esc(x['可信度'])+'樣本':''}</p>${!pen&&Number.isFinite(x['預估勝率'])?`<p>相對聯盟平均 ${deltaLabel(x['預估勝率'])}</p>`:''}${pen?`<p>失分價值 ${fixedNumber(x['預估失分'])} 分${x['疲勞調整']>.0005?'（含疲勞 +'+x['疲勞調整'].toFixed(3)+'）':''}</p>`:''}</details>`;
 }
 function renderBench(reset) {
   const my = S.roster[$("#myTeam").value];
@@ -1227,7 +1229,7 @@ function comparisonPanel(R, selected, tab) {
     return `<article class="compare-card"><h3>${esc(x[nameKey])}${status?`<span class="chip">${status}</span>`:''}</h3>
       <p class="compare-delta num ${cls(delta,.005)}">相對現任 ${deltaMarkup(delta)}</p>${reason}
       <details><summary>查看差距拆解</summary>${matchupChart}${decomposition}
-      <p class="comparison-samples mut">樣本：候選 ${Math.round(x['樣本球數'])}／現任 ${Math.round(current['樣本球數'])} 球</p>
+      <p class="comparison-samples mut">樣本：候選 ${countNumber(x['樣本球數'])}／現任 ${countNumber(current['樣本球數'])} 球</p>
       ${x['資料警示']||current['資料警示']?`<p class="compare-warning">${esc([x['資料警示'],current['資料警示']].filter(Boolean).join('；'))}</p>`:''}</details></article>`;
   };
   return `<div class="card comparison"><div class="card-h"><h2>現任與候選比較</h2><span class="hint">基準：${esc(current[nameKey])}</span><a class="comparison-back" href="#evaluationSection">返回選人 ↑</a></div><div class="card-b">
@@ -1405,7 +1407,7 @@ function renderResult(preserveTabs = false) {
 
 const TIER = (v) => (v >= 80 ? ["s5", "極佳"] : v >= 60 ? ["s4", "佳"] : v >= 40 ? ["s3", "普通"] : v >= 20 ? ["s2", "不利"] : ["s1", "很不利"]);
 function scoreBadge(v, tip) {
-  if (v == null) return '<span class="mut">基準不足</span>';
+  if (!Number.isInteger(v)||v<1||v>100) return '<span class="mut">基準不足</span>';
   const [c, lab] = TIER(v);
   return `<div class="score ${c}" title="${esc(tip)}"><div>${v}<small>${lab}</small></div></div>`;
 }
@@ -1437,7 +1439,7 @@ function dbar(v, err, scale) {
 
 function phTable(R) {
   const c = R.candidates;
-  const scale = Math.max(0.3, ...c.map((x) => Math.abs(x["相對現任"]||0)));
+  const scale = Math.max(0.3, ...c.map((x) => x["相對現任"]).filter(Number.isFinite).map(Math.abs));
   const rows = c.map((x) => {
     const cur = x["角色"] === "現任", best = x["球員"] === S.bestName;
     const d = x["守備"];
@@ -1454,7 +1456,7 @@ function phTable(R) {
 
 function penTable(R) {
   const rows = R.bullpen.rows;
-  const scale = Math.max(0.5, ...rows.map((x) => Math.abs(x["守方勝率增減"])));
+  const scale = Math.max(0.5, ...rows.map((x) => x["守方勝率增減"]).filter(Number.isFinite).map(Math.abs));
   const body = rows.map((x, i) => {
     const cur = x["角色"] === "場上";
     const best = !cur && i === 1 && x["守方勝率增減"] > 0;
@@ -1518,7 +1520,7 @@ async function showDetail(batter, pitcher, tr, updateComparison = true) {
     const tile = (k) => {
       const c = cell(k);
       const wd = c.whiff_dev * 100;
-      return `<div class="c" title="打者在此格的樣本 ${Math.round(c.n)} 球">
+      return `<div class="c" title="打者在此格的樣本 ${countNumber(c.n)} 球">
         <div class="u" style="height:${Math.min(100, c.usage * 100)}%"></div>
         <div class="k num">${c.usage>0&&c.usage<.01?"<1%":(c.usage*100).toFixed(0)+"%"}</div>
         <div class="w num ${wd > 0.5 ? "neg" : wd < -0.5 ? "pos" : "mut"}">揮空 ${sign(wd,1)}</div></div>`;

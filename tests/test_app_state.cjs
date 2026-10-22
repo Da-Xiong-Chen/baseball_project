@@ -668,6 +668,36 @@ test('API mode obtains the batch identity from meta without loading static Engin
  assert.equal(f.eval('activeBatchId()'),'api-batch');
 });
 
+test('numeric cards preserve missing samples, valid score bounds and safe chart scales',()=>{
+ const f=fixture();f.context.row={樣本球數:null,預估失分:null,疲勞調整:0};
+ const html=f.eval('mobileRowDetails(row,true)');
+ assert.match(html,/— 球/);assert.match(html,/失分價值 — 分/);assert.doesNotMatch(html,/NaN|undefined/);
+ for(const score of [NaN,Infinity,-1,0,101,null]){
+  f.context.score=score;assert.match(f.eval('scoreBadge(score,"test")'),/基準不足/);
+ }
+ const current={角色:'場上',投手:'P',守方勝率增減:0,預估失分:.1,疲勞調整:0,樣本球數:10};
+ f.context.r={situation:{pitcher:'P'},bullpen:{next:[],rows:[current,{...current,角色:'牛棚',投手:'Q',守方勝率增減:undefined}]}};
+ const table=f.eval('penTable(r)');assert.doesNotMatch(table,/NaN|Infinity|undefined/);assert.match(table,/資料不足/);
+});
+
+test('all 18 real-model custom scenarios render both assessment views with finite numbers',async()=>{
+ const f=fixture(),dataRoot=path.join(__dirname,'../docs');
+ const model=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/model.json'),'utf8'));
+ const engineContext={fetch:async()=>({json:async()=>model})};vm.createContext(engineContext);
+ vm.runInContext(fs.readFileSync(path.join(dataRoot,'engine.js'),'utf8')+'\nthis.numericEngine=Engine;',engineContext);
+ await engineContext.numericEngine.load();f.context.Engine=engineContext.numericEngine;
+ f.eval('STATIC=true;S.mode="custom";S.ready=true;showDetail=()=>{};');
+ f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
+ const scenarios=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/qa_scenarios.json'),'utf8'));
+ assert.equal(scenarios.length,18);
+ for(const request of scenarios)for(const [view,tab] of [['offense','ph'],['defense','pen']]){
+  f.context.numericRequest=request;f.context.numericView=view;f.context.numericTab=tab;
+  await f.eval('S.tab=numericTab;run(()=>api("api/evaluate",numericRequest),numericView)');
+  const html=f.node('#resultBody').innerHTML;
+  assert.match(html,/id="candidateCompare"/);assert.doesNotMatch(html,/評估未完成|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
+ }
+});
+
 test('model validation retry refetches a schema-invalid JSON response instead of reusing it forever',async()=>{
  const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model-evaluation.json'),'utf8'));
  let requests=0;f.context.Engine.model=()=>({batch_id:good.batch_id});
@@ -703,7 +733,7 @@ test('all 226 fixed-day PAs load and render both decision views through the stat
  f.context.Engine.model=()=>model;
  f.context.fetch=async url=>process.env.BASEBALL_QA_BASE_URL?fetch(new URL(url,process.env.BASEBALL_QA_BASE_URL)):
   {ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(dataRoot,url),'utf8'))};
- f.eval('STATIC=true;S.mode="replay";S.ready=true;showDetail=()=>{};');
+ f.eval('const qaShowDetail=showDetail;STATIC=true;S.mode="replay";S.ready=true;showDetail=()=>{};');
  f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
  await f.eval('loadTiming()');
  for(const name of model.teams){
@@ -717,7 +747,7 @@ test('all 226 fixed-day PAs load and render both decision views through the stat
   assert.equal(f.node('#gameList').innerHTML,before);
   f.eval("audienceMode='general'");
  }
- let views=0,changes=0;
+ let views=0,changes=0,details=0;
  for(const [game,ids] of Object.entries(index.games)){
   await f.eval(`loadGame(${JSON.stringify(game)})`);
   assert.equal(f.eval('S.pas.length'),ids.length);
@@ -735,13 +765,21 @@ test('all 226 fixed-day PAs load and render both decision views through the stat
     const html=f.node('#resultBody').innerHTML;
     assert.match(html,/data-reveal-action/,[pa,decision].join(' '));assert.match(html,/id="candidateCompare"/);
     assert.doesNotMatch(html,/評估未完成|NaN|undefined|data-reveal-action open|data-reveal-outcome open/);
+    assert.doesNotMatch(html,/[−-]0\.0+(?!\d)/,[pa,decision,'signed zero'].join(' '));
     assert.equal(f.eval('S.last.replay_context.decision'),decision);
     assert.equal(f.eval('S.last.situation.pitcher'),decision==='pen'&&bundle.pen?bundle.pen.situation.pitcher:bundle.ph.situation.pitcher);
+    for(const detail of Object.values(f.eval('S.last.details'))){
+     f.context.numericDetail=detail;
+     await f.eval('qaShowDetail(numericDetail.batter,numericDetail.pitcher,null,false)');
+     assert.doesNotMatch(f.node('#detail').innerHTML,/明細未提供|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
+     assert.doesNotMatch(f.node('#pitchArsenal').innerHTML,/NaN|Infinity|undefined/);
+     details++;
+    }
     views++;
    }
   }
  }
- assert.equal(views,452);assert.equal(changes,19);
+ assert.equal(views,452);assert.equal(changes,19);assert.equal(details,7953);
  f.eval('historyDisclosure.set("outcome",true)');
  await f.eval('switchTab("ph")');
  assert.match(f.node('#resultBody').innerHTML,/data-reveal-action open/);
