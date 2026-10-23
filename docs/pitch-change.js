@@ -44,7 +44,7 @@ window.PitchChange = (() => {
     const range = w => w.games.length ? `${w.games[0].date} 至 ${w.games.at(-1).date}` : "沒有符合日期的出賽";
     const window = (w, title, kind) => `<div class="pc-window ${kind}"><strong>${title}</strong><span>${range(w)}</span><b>${w.selected_games} 場 · ${w.valid_pitches} 球</b></div>`;
     const hasValues=d.rows.some(row=>Number.isFinite(row.delta_pp)||row.adjusted.some(ratio));
-    return `<div class="pc-status ${!raw&&d.status === 'ready' ? '' : 'pc-insufficient'}" role="status">${raw?(hasValues?'觀察配球：未調整球數，不作變化判定':'沒有可用配球紀錄'):d.status === "ready" ? "同條件配球比較" : "樣本不足，暫不判定"}</div>
+    return `<div class="pc-status ${!raw&&d.status === 'ready' ? '' : 'pc-insufficient'}" role="status">${raw?(hasValues?`${d.status==='ready'?'':'同條件樣本不足，先看'}觀察配球：未調整球數，不作變化判定`:'沒有可用配球紀錄'):d.status === "ready" ? "同條件配球比較" : "樣本不足，暫不判定"}</div>
       <div class="pc-windows">${window(b,"之前最多 10 場","baseline")}${window(r,"最近 5 場","recent")}</div>
       <div class="pc-legend"><span class="pc-key baseline">基準期</span><span class="pc-key recent">近期</span><span>差值：百分點</span></div>
       <div class="pc-rows">${(hasValues?d.rows:[]).map(row => `<article class="pc-row"><div class="pc-row-title"><strong>${escape(row.group)}</strong><b title="差值依未四捨五入比例計算">${pp(row.delta_pp)}</b><span>${escape(d.status==='ready'?row.interpretation:'')}</span></div>
@@ -58,7 +58,7 @@ window.PitchChange = (() => {
     const wasOpen = element.querySelector('.pc-toggle')?.getAttribute('aria-expanded') === 'true';
     let generation = 0;
     let opened = false;
-    element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>同條件近期配球變化</h2><p class="pc-subtitle">${escape(pitcher)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球變化</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;
+    element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>近期配球比較</h2><p class="pc-subtitle">${escape(pitcher)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球比較</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;
     const toggle = element.querySelector('.pc-toggle'), body = element.querySelector('.pc-body');
     element.querySelector('.pc-controls').insertAdjacentHTML('beforeend','<label>比較方式<select class="pc-view" aria-label="配球比較方式"><option value="adjusted">同條件比較</option><option value="raw">觀察配球（未調整）</option></select></label>');
     const viewSelect=element.querySelector('.pc-view');
@@ -85,7 +85,7 @@ window.PitchChange = (() => {
       const visible = body.hidden;
       body.hidden = !visible;
       toggle.setAttribute('aria-expanded',String(visible));
-      toggle.textContent = visible ? '收合配球變化' : '查看配球變化';
+      toggle.textContent = visible ? '收合配球比較' : '查看配球比較';
       if (visible && !opened) { opened = true; update(); }
     };
     select.onchange = update;

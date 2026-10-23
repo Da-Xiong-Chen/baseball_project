@@ -1,0 +1,12 @@
+{
+  "checked": "2026-10-23 Asia/Taipei",
+  "main": "aa7d8fb",
+  "pr26_merged": true,
+  "training_version": 4,
+  "model_matches_local": true,
+  "backtest_matches_local": true,
+  "published_manifest_sha256": "b997c28eeb2f98fc289aae40c1149cde42e16d61967dcff61db5330f8d4e7685",
+  "local_manifest_sha256": "2bc60dc089b3a05ac04116806e75b03f08549b5218b4487b32911fe2a4563e69",
+  "published_batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "current_ui_revision_published": false
+}

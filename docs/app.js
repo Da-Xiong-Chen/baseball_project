@@ -1275,17 +1275,18 @@ function assessmentNotes(R) {
     <li><b>使用限制：</b>${R.view==='replay'?'歷史名單與守位可能為推估；':'今日名單需人工確認；'}未追蹤完整登錄、退場與 DH 狀態，請核對正式攻守名單。</li>
     </ul></details>`;
 }
-async function mountFieldingPlans(R,pa){
+async function mountFieldingPlans(R,pa,tab=S.tab||'ph'){
   const box=$('#fieldingPlans');
+  if(box&&tab!=='ph'){box.innerHTML='';return;}
   if(!box||R.view!=='replay'||!pa||R.candidates.some(c=>c['角色']==='代打'&&['ok','warn'].includes(c['守備'])))return;
   try{
     const data=await json('data/fielding-plans-2025-09-20.json');
-    if(box!==$('#fieldingPlans')||S.last!==R||S.pa!==pa)return;
+    if(box!==$('#fieldingPlans')||S.last!==R||S.pa!==pa||(S.tab||'ph')!==tab)return;
     if(data.schema_version!==1||data.date!==HISTORY_DATE||data.status!=='conditional_only')throw Error('schema');
     const plans=Object.values(data.plans[pa]||{}).filter(p=>p.requires_confirmation===true&&R.candidates.some(c=>c['角色']==='代打'&&c['球員']===p.incoming));
     if(!plans.length)return;
     box.innerHTML=`<section class="card"><div class="card-h"><h2>條件式防守改位備案</h2></div><div class="card-b"><p>直接接守未確認，但有以下改位組合可人工核對。未加入推薦與回測提示分類。</p>${plans.map(p=>`<details><summary>${esc(p.incoming)} 代打後接守${esc(POS[p.incoming_position])}</summary><div class="tbl-wrap"><table class="t"><thead><tr><th>球員</th><th>推估目前守位</th><th>備案守位</th></tr></thead><tbody><tr><td>${esc(p.incoming)}</td><td>板凳</td><td>${esc(POS[p.incoming_position])}</td></tr>${p.moves.map(m=>`<tr><td>${esc(m.player)}</td><td>${esc(POS[m.from_position])}</td><td>${esc(POS[m.to_position])}</td></tr>`).join('')}</tbody></table></div><p>保留 DH：${esc(p.retained_dh)}。依 ${esc(p.cutoff)} 前守位紀錄；需確認實際守位、登錄與退場資格。</p></details>`).join('')}</div></section>`;
-  }catch{if(box=== $('#fieldingPlans')&&S.last===R&&S.pa===pa)box.innerHTML='<p class="mut">改位備案暫時無法載入；現有估計與未確認資格標記維持原樣。</p>';}
+  }catch{if(box=== $('#fieldingPlans')&&S.last===R&&S.pa===pa&&(S.tab||'ph')===tab)box.innerHTML='<p class="mut">改位備案暫時無法載入；現有估計與未確認資格標記維持原樣。</p>';}
 }
 function renderResult(preserveTabs = false) {
   const retainedTabs = preserveTabs ? $('#resultBody .tabs') : null;
@@ -1396,7 +1397,7 @@ function renderResult(preserveTabs = false) {
     focusedTab?.focus({preventScroll:true});
   }
   bindComparison(R,activeTab);
-  mountFieldingPlans(R,S.pa);
+  mountFieldingPlans(R,S.pa,activeTab);
   bindTableComparison(R,activeTab);
   bindMixSwitch();
   mountPitchChange(R.situation.pitcher);
