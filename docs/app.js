@@ -396,7 +396,11 @@ function syncEntryNavigation(){
     if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
   });
   $('.audience-control').hidden=false;
-  $('.feature-nav').hidden=review||audienceMode!=='team';
+  const functions=$('.feature-nav');
+  functions.hidden=review;
+  functions.setAttribute('aria-label',audienceMode==='team'?'球隊功能':'一般使用者功能');
+  const first=functions.querySelector(`[data-page="${audienceMode==='team'?'lineup':'evaluation'}"]`);
+  if(first&&functions.firstElementChild!==first)functions.prepend(first);
   if(review)$('#audienceStatus').textContent='2025/09/20 歷史分析；不受一般使用者、球隊名單或今日設定影響。';
 }
 async function selectAudienceEntry(entry){

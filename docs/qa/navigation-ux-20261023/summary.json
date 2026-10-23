@@ -1,5 +1,5 @@
 {
-  "node_tests": 178,
+  "node_tests": 179,
   "python_tests": 88,
   "http_decision_views": 452,
   "local_url": "http://127.0.0.1:8011/",
@@ -14,9 +14,19 @@
   "numerical_data_and_model_weights_unchanged": true,
   "browser_visual_testing": "blocked: Local browser use is disabled in Work settings",
   "responsive_changes": "implemented; mobile and desktop browser visual recheck pending",
-  "git_status": "PR #27 review branch release/competition-readiness-20261023; no merge or deployment",
+  "git_status": "PR #27 review branch; no merge or deployment",
   "ppt": "unchanged",
   "shared_result_layout": true,
   "shared_selection_summary_frame": true,
-  "real_model_layout_parity_views": 36
+  "real_model_layout_parity_views": 36,
+  "general_function_order": [
+    "evaluation",
+    "lineup"
+  ],
+  "team_function_order": [
+    "lineup",
+    "evaluation"
+  ],
+  "shared_function_navigation": true,
+  "keyboard_order_matches_visual": true
 }

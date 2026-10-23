@@ -37,9 +37,9 @@
 </header>
 
 <section class="audience-control" aria-label="選擇使用方式"><nav class="entry-nav" aria-label="主要入口"><div class="seg" id="audienceSeg"><button type="button" data-entry="general" class="on" aria-pressed="true" aria-current="page">一般使用者</button><button type="button" data-entry="team" aria-pressed="false">球隊</button><button type="button" data-entry="review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>單日分析</button></div></nav><p id="audienceStatus" class="mut" role="status">一般使用者：直接比較換打／換投人選。</p></section>
-<nav class="feature-nav" aria-label="球隊功能" hidden>
+<nav class="feature-nav" aria-label="一般使用者功能">
+  <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
   <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
-  <button type="button" data-page="evaluation"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
 </nav>
 <!-- 模型回測：用 2024–2025 資料檢驗模型，與當下（2026）的換打／換投評估分開 -->
 <div id="backtestBar" class="backtest-bar" hidden>
@@ -253,6 +253,6 @@
 <script src="motion.js?v=20261023-motion1"></script>
 <script src="lineup.js?v=20261021-v4-r1"></script>
 <script src="backtest.js?v=20261022-numeric1"></script>
-<script src="app.js?v=20261023-layout1"></script>
+<script src="app.js?v=20261023-entry-order1"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ function fixture() {
   const nodes = new Map();
   const node = key => {
     if (!nodes.has(key)) nodes.set(key, {value:'', innerHTML:'', insertAdjacentHTML(where,s){this.innerHTML+=s;}, disabled:false, options:[],
-      classList:{add(){},remove(){},toggle(){}}, querySelector:()=>({}), querySelectorAll:()=>[], focus(){}, setAttribute(){}, removeAttribute(){}, checkValidity:()=>true});
+      classList:{add(){},remove(){},toggle(){}}, querySelector:()=>({}), querySelectorAll:()=>[], prepend(){}, focus(){}, setAttribute(){}, removeAttribute(){}, checkValidity:()=>true});
     return nodes.get(key);
   };
   const context = {document:{querySelector:node,querySelectorAll:()=>[]}, location:{href:'http://localhost/'}, console, URL, URLSearchParams, AbortSignal,
@@ -618,13 +618,13 @@ function entryFixture(){
  return f;
 }
 
-test('general entry opens evaluation and hides team-only navigation even after leaving team lineup',async()=>{
+test('general entry opens evaluation and retains the shared function navigation after leaving team lineup',async()=>{
  const f=entryFixture();
  await f.eval("selectAudienceEntry('team')");assert.equal(f.eval('currentPage()'),'lineup');
  assert.equal(f.node('.feature-nav').hidden,false);assert.equal(f.eval('audienceMode'),'team');
  await f.eval("selectAudienceEntry('general')");
  assert.equal(f.eval('currentPage()'),'evaluation');assert.equal(f.eval('audienceMode'),'general');
- assert.equal(f.node('.feature-nav').hidden,true);assert.equal(f.node('.audience-control').hidden,false);
+ assert.equal(f.node('.feature-nav').hidden,false);assert.equal(f.node('.audience-control').hidden,false);
 });
 
 test('team entry always opens lineup even with an already confirmed saved team',async()=>{
@@ -632,6 +632,24 @@ test('team entry always opens lineup even with an already confirmed saved team',
  assert.equal(f.eval('currentPage()'),'lineup');assert.equal(f.eval('audienceMode'),'team');
  await f.eval("showFeaturePage('evaluation')");assert.equal(f.node('.feature-nav').hidden,false);
  await f.eval("selectAudienceEntry('team')");assert.equal(f.eval('currentPage()'),'lineup');
+});
+
+test('both audiences expose the same two function buttons in audience-specific DOM and keyboard order',async()=>{
+ const f=entryFixture(),nav=f.node('.feature-nav');
+ const buttons={evaluation:{dataset:{page:'evaluation'}},lineup:{dataset:{page:'lineup'}}};
+ let order=[buttons.lineup,buttons.evaluation];const attrs={};
+ nav.querySelector=s=>s.includes('"lineup"')?buttons.lineup:buttons.evaluation;
+ nav.prepend=b=>{order=[b,...order.filter(x=>x!==b)];nav.firstElementChild=b;};
+ nav.setAttribute=(k,v)=>attrs[k]=v;
+ await f.eval("selectAudienceEntry('general')");
+ assert.equal(nav.hidden,false);assert.deepEqual(order.map(b=>b.dataset.page),['evaluation','lineup']);
+ assert.equal(attrs['aria-label'],'一般使用者功能');
+ await f.eval("showFeaturePage('lineup')");assert.equal(f.eval('audienceMode'),'general');
+ assert.equal(nav.hidden,false);assert.equal(f.eval('currentPage()'),'lineup');
+ await f.eval("selectAudienceEntry('team')");
+ assert.equal(nav.hidden,false);assert.deepEqual(order.map(b=>b.dataset.page),['lineup','evaluation']);
+ assert.equal(attrs['aria-label'],'球隊功能');
+ await f.eval("selectAudienceEntry('review')");assert.equal(nav.hidden,true);
 });
 
 test('general and team share a selection-summary frame with only the player-selection action differing',()=>{
@@ -684,7 +702,7 @@ test('rapid entry clicks cannot let a pending team load override general or day-
   await f.eval(`selectAudienceEntry('${latest}')`);
   pending.resolve();await old;
   assert.equal(f.eval('currentPage()'),latest==='review'?'review':'evaluation');
-  assert.equal(f.eval('audienceMode'),latest==='review'?'team':'general');assert.equal(f.node('.feature-nav').hidden,true);
+  assert.equal(f.eval('audienceMode'),latest==='review'?'team':'general');assert.equal(f.node('.feature-nav').hidden,latest==='review');
  }
 });
 

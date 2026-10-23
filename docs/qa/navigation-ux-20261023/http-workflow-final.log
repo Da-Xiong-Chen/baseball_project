@@ -1,4 +1,4 @@
-✔ all 226 fixed-day PAs load and render both decision views through the static app workflow (913.0412ms)
+✔ all 226 fixed-day PAs load and render both decision views through the static app workflow (902.5853ms)
 ℹ tests 1
 ℹ suites 0
 ℹ pass 1
@@ -6,4 +6,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 972.8311
+ℹ duration_ms 956.9235
