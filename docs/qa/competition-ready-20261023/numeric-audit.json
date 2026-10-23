@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "counts": {
+    "json_files": 681,
+    "numeric_values": 1848007,
+    "pitch_rows": 39420,
+    "pitch_snapshots": 9855,
+    "replay_views": 452,
+    "candidate_rows": 3878,
+    "pitcher_rows": 4527,
+    "detail_cells": 63624,
+    "model_metrics": 50
+  },
+  "max_rounding_residual": {
+    "candidate_delta_pp": 5.000000000032756e-06,
+    "pitcher_delta_pp": 2.2232340000094553e-05,
+    "pitcher_runs_sum": 6.000000000033756e-07,
+    "pitch_delta_pp": 0.0,
+    "mse_difference": 7.546047120499111e-17
+  },
+  "errors": [],
+  "units": {
+    "candidate_benefit": "percentage points; candidate minus incumbent",
+    "pitcher_benefit": "percentage points; incumbent runs minus candidate runs, multiplied by leverage",
+    "wpa": "fraction in data, multiplied by 100 once for percentage points",
+    "pitch_mix": "fraction times 100 for percent; recent minus baseline times 100 for percentage points",
+    "mse": "absolute baseline minus model; relative percent divides by baseline MSE",
+    "value_score": "comparison-pool percentile 1..100; not probability"
+  }
+}

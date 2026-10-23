@@ -44,6 +44,9 @@ test('raw pitch view uses observed proportions and never reuses adjusted interva
  const html=api.render(d,'raw');assert.match(html,/\+15\.0 百分點/);assert.match(html,/20\.0%/);assert.match(html,/35\.0%/);
  assert.doesNotMatch(html,/\+30\.0 百分點|\+20\.0 百分點 至 \+40\.0/);
  assert.match(html,/未產生調整後區間或趨勢結論/);
+ assert.match(html,/觀察配球：未調整球數，不作變化判定/);
+ d.status='ready';
+ assert.doesNotMatch(api.render(d,'raw'),/同條件樣本不足/);
 });
 
 test('validation distinguishes absolute MSE difference from relative improvement',async()=>{

@@ -1,0 +1,290 @@
+[
+  {
+    "page": 1,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 9,
+      "ea:DFKai-SB": 8,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 2,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 23,
+      "ea:DFKai-SB": 18,
+      "ea:Times New Roman": 5
+    },
+    "unexpected": []
+  },
+  {
+    "page": 3,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 4,
+      "ea:Times New Roman": 2,
+      "ea:DFKai-SB": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 4,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 10,
+      "ea:DFKai-SB": 9,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 5,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 10,
+      "ea:DFKai-SB": 9,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 6,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 15,
+      "ea:DFKai-SB": 14,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 7,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 13,
+      "ea:DFKai-SB": 12,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 8,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 4,
+      "ea:Times New Roman": 2,
+      "ea:DFKai-SB": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 9,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 19,
+      "ea:DFKai-SB": 13,
+      "ea:Times New Roman": 6
+    },
+    "unexpected": []
+  },
+  {
+    "page": 10,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 16,
+      "ea:DFKai-SB": 14,
+      "ea:Times New Roman": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 11,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 16,
+      "ea:DFKai-SB": 12,
+      "ea:Times New Roman": 4
+    },
+    "unexpected": []
+  },
+  {
+    "page": 12,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 20,
+      "ea:DFKai-SB": 15,
+      "ea:Times New Roman": 5
+    },
+    "unexpected": []
+  },
+  {
+    "page": 13,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 20,
+      "ea:DFKai-SB": 14,
+      "ea:Times New Roman": 6
+    },
+    "unexpected": []
+  },
+  {
+    "page": 14,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 13,
+      "ea:DFKai-SB": 8,
+      "ea:Times New Roman": 5
+    },
+    "unexpected": []
+  },
+  {
+    "page": 15,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 4,
+      "ea:Times New Roman": 2,
+      "ea:DFKai-SB": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 16,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 10,
+      "ea:DFKai-SB": 8,
+      "ea:Times New Roman": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 17,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 9,
+      "ea:DFKai-SB": 7,
+      "ea:Times New Roman": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 18,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 8,
+      "ea:DFKai-SB": 7,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 19,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 11,
+      "ea:DFKai-SB": 10,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 20,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 20,
+      "ea:DFKai-SB": 13,
+      "ea:Times New Roman": 7
+    },
+    "unexpected": []
+  },
+  {
+    "page": 21,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 19,
+      "ea:DFKai-SB": 14,
+      "ea:Times New Roman": 5
+    },
+    "unexpected": []
+  },
+  {
+    "page": 22,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 10,
+      "ea:DFKai-SB": 9,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 23,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 14,
+      "ea:DFKai-SB": 13,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 24,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 14,
+      "ea:DFKai-SB": 13,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 25,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 14,
+      "ea:DFKai-SB": 13,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 26,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 3,
+      "ea:DFKai-SB": 2,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 27,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 4,
+      "ea:Times New Roman": 2,
+      "ea:DFKai-SB": 2
+    },
+    "unexpected": []
+  },
+  {
+    "page": 28,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 14,
+      "ea:DFKai-SB": 11,
+      "ea:Times New Roman": 3
+    },
+    "unexpected": []
+  },
+  {
+    "page": 29,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 12,
+      "ea:DFKai-SB": 11,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  },
+  {
+    "page": 30,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 18,
+      "ea:DFKai-SB": 11,
+      "ea:Times New Roman": 7
+    },
+    "unexpected": []
+  },
+  {
+    "page": 31,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 15,
+      "ea:DFKai-SB": 8,
+      "ea:Times New Roman": 7
+    },
+    "unexpected": []
+  },
+  {
+    "page": 32,
+    "explicit_run_fonts": {
+      "latin:Times New Roman": 7,
+      "ea:DFKai-SB": 6,
+      "ea:Times New Roman": 1
+    },
+    "unexpected": []
+  }
+]

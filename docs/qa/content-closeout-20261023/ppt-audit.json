@@ -1,0 +1,46 @@
+{
+  "pages": 32,
+  "pdf_pages": 32,
+  "notes": 0,
+  "motion": [],
+  "unexpected_font_pages": [],
+  "pdf_missing_text": [],
+  "video_bytes_match": true,
+  "zip_corrupt_member": null,
+  "hashes_match": true,
+  "hyperlinks": [
+    {
+      "page": 1,
+      "url": "https://da-xiong-chen.github.io/baseball_project/"
+    },
+    {
+      "page": 1,
+      "url": "https://github.com/Da-Xiong-Chen/baseball_project"
+    },
+    {
+      "page": 31,
+      "url": "https://doi.org/10.1080/01621459.1975.10479864"
+    },
+    {
+      "page": 31,
+      "url": "https://doi.org/10.1214/aos/1176344552"
+    },
+    {
+      "page": 31,
+      "url": "https://doi.org/10.1198/016214506000001437"
+    },
+    {
+      "page": 32,
+      "url": "https://da-xiong-chen.github.io/baseball_project/"
+    },
+    {
+      "page": 32,
+      "url": "https://github.com/Da-Xiong-Chen/baseball_project"
+    }
+  ],
+  "visual_review": "32 rendered pages inspected; no apparent clipping or overlap",
+  "followup": [
+    "Slide 5 and 7 navigation screenshots reflect older UI",
+    "Slide 26 demo uses earlier UI; native playback remains untested"
+  ]
+}

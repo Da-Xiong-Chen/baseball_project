@@ -1,0 +1,54 @@
+{
+  "authorization": "2026-10-23 user explicitly confirmed 依此更新 after 32-page edit plan",
+  "source": "presentations/competition-2026/audited-20261022/一球兩面_檢查修訂版_32頁_20261022.pptx",
+  "roster": 32,
+  "edited": {
+    "20": "Add insufficient-sample raw-view guidance without changing adjusted chart values.",
+    "25": "Replace workload example with actual conditional fielding UI and concise, explicitly manual-confirmation case."
+  },
+  "referenced": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    21,
+    22,
+    23,
+    24,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "mapping": {
+    "20": "docs/pitch-change.js and same batch pitch snapshots; retain original numerical example.",
+    "25": "docs/data/fielding-plans-2025-09-20.json 2025-341-h030 and actual light browser screenshot."
+  },
+  "modules": {
+    "notes": false,
+    "transitions": false,
+    "animations": false,
+    "narration": false,
+    "video": "unchanged native embedded video at slide26"
+  },
+  "style": "Original light layout, Chinese DFKai-SB and Latin Times New Roman; preserve cover, TOC, chapter dividers, ending and links.",
+  "avoid": "No reordering or duplicated slides; no source proxy or backing edits."
+}

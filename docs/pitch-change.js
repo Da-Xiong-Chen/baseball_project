@@ -50,15 +50,15 @@ window.PitchChange = (() => {
       <div class="pc-rows">${(hasValues?d.rows:[]).map(row => `<article class="pc-row"><div class="pc-row-title"><strong>${escape(row.group)}</strong><b title="差值依未四捨五入比例計算">${pp(row.delta_pp)}</b><span>${escape(d.status==='ready'?row.interpretation:'')}</span></div>
         <div class="pc-bars">${row.adjusted.map((v,i) => `<div class="pc-bar-line"><span>${i ? "近期" : "基準"}</span><div class="pc-track"><div class="pc-bar ${i ? "recent" : "baseline"}" style="width:${ratio(v)?v*100:0}%"></div></div><b>${pct(v)}</b></div>`).join("")}</div>
         </article>`).join("")}</div>
-      <details class="pc-method"><summary>樣本與比較依據</summary><p>${d.season} 球季 · ${escape(d.cutoff)} 之前；最後紀錄 ${escape(d.last_observed || '無')}。歷史資料，非即時配球。</p>${d.reasons.length ? `<ul>${d.reasons.map(v=>`<li>${escape(v)}</li>`).join('')}</ul>` : ''}<p>${raw?'原始比例以各期有效球數為分母；未調整球數，合計時也未調整左右打組成。':`依球數與左右打調整；共同條件涵蓋基準 ${pct(d.coverage[0])}／近期 ${pct(d.coverage[1])}。`}未控制捕手、對手、球場與比分；少量出賽的區間可能不穩定。</p><ul>${d.rows.map(row=>`<li>${escape(row.group)}：${raw?'此視角不計算調整後區間':'95% 重抽樣區間'} ${!raw&&row.interval ? `${pp(row.interval[0])} 至 ${pp(row.interval[1])}` : raw?'—':'無法可靠估計'}</li>`).join('')}</ul><p>「低落」為球種群名稱。來源：${escape(d.source)}。</p></details>
-      <p class="pc-caveat">${raw?'圖表為所列出賽的實際配球比例；差異可能來自球數，合計亦受左右打組成影響。未產生調整後區間或趨勢結論。':'配球改變不代表效果變好，也不是下一球預測。'}</p>`;
+      <details class="pc-method"><summary>資料與比較依據</summary><p>${d.season} 球季 · ${escape(d.cutoff)} 之前；最後紀錄 ${escape(d.last_observed || '無')}。</p>${d.reasons.length ? `<ul>${d.reasons.map(v=>`<li>${escape(v)}</li>`).join('')}</ul>` : ''}<p>${raw?'原始比例以各期有效球數為分母；未調整球數，合計時也未調整左右打組成。':`依球數與左右打調整；共同條件涵蓋基準 ${pct(d.coverage[0])}／近期 ${pct(d.coverage[1])}。`}</p>${raw?'':`<ul>${d.rows.map(row=>`<li>${escape(row.group)}：95% 重抽樣區間 ${row.interval ? `${pp(row.interval[0])} 至 ${pp(row.interval[1])}` : '未提供'}</li>`).join('')}</ul>`}<p>「低落」為球種群名稱。來源：${escape(d.source)}。</p></details>
+      <p class="pc-caveat">${raw?'未產生調整後區間或趨勢結論。':'配球改變不代表效果變好，也不是下一球預測。'}</p>`;
   }
   function mount({element, pitcher, cutoff, season=2025, hand="ALL", fetcher}) {
     if (!element || !pitcher) return;
     const wasOpen = element.querySelector('.pc-toggle')?.getAttribute('aria-expanded') === 'true';
     let generation = 0;
     let opened = false;
-    element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>同條件近期配球變化</h2><p class="pc-subtitle">${escape(pitcher)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球變化</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;
+    element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>近期配球比較</h2><p class="pc-subtitle">${escape(pitcher)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球比較</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;
     const toggle = element.querySelector('.pc-toggle'), body = element.querySelector('.pc-body');
     element.querySelector('.pc-controls').insertAdjacentHTML('beforeend','<label>比較方式<select class="pc-view" aria-label="配球比較方式"><option value="adjusted">同條件比較</option><option value="raw">觀察配球（未調整）</option></select></label>');
     const viewSelect=element.querySelector('.pc-view');
@@ -85,7 +85,7 @@ window.PitchChange = (() => {
       const visible = body.hidden;
       body.hidden = !visible;
       toggle.setAttribute('aria-expanded',String(visible));
-      toggle.textContent = visible ? '收合配球變化' : '查看配球變化';
+      toggle.textContent = visible ? '收合配球比較' : '查看配球比較';
       if (visible && !opened) { opened = true; update(); }
     };
     select.onchange = update;

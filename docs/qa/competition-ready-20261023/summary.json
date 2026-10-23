@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-23",
+  "node_tests": 170,
+  "python_tests": 88,
+  "fixed_day_pas": 226,
+  "http_decision_views": 452,
+  "http_detail_views": 7953,
+  "numeric_json_files": 681,
+  "numeric_values": 1848007,
+  "slides": 32,
+  "slide_xml_changed": [
+    1,
+    20,
+    25
+  ],
+  "ppt_notes": 0,
+  "ppt_animations": 0,
+  "ppt_transitions": 0,
+  "fonts": "Chinese:DFKai-SB/標楷體; Latin:Times New Roman",
+  "demo": "36-second real UI screenshot montage; embedded bytes unchanged; native PowerPoint playback not verified",
+  "browser_widths": [
+    1265,
+    390
+  ],
+  "browser_console_warnings_errors": 0,
+  "all_numeric_assets_and_weights_unchanged": true,
+  "initial_submission_content": "six required topics covered",
+  "pending": [
+    "登入後報名表單格式與大小限制",
+    "現場電腦PowerPoint影片點播"
+  ],
+  "revision_status": "review branch release/competition-readiness-20261023; merge and deployment pending",
+  "team_name": "一球兩面"
+}
