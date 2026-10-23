@@ -1275,6 +1275,18 @@ function assessmentNotes(R) {
     <li><b>使用限制：</b>${R.view==='replay'?'歷史名單與守位可能為推估；':'今日名單需人工確認；'}未追蹤完整登錄、退場與 DH 狀態，請核對正式攻守名單。</li>
     </ul></details>`;
 }
+async function mountFieldingPlans(R,pa){
+  const box=$('#fieldingPlans');
+  if(!box||R.view!=='replay'||!pa||R.candidates.some(c=>c['角色']==='代打'&&['ok','warn'].includes(c['守備'])))return;
+  try{
+    const data=await json('data/fielding-plans-2025-09-20.json');
+    if(box!==$('#fieldingPlans')||S.last!==R||S.pa!==pa)return;
+    if(data.schema_version!==1||data.date!==HISTORY_DATE||data.status!=='conditional_only')throw Error('schema');
+    const plans=Object.values(data.plans[pa]||{}).filter(p=>p.requires_confirmation===true&&R.candidates.some(c=>c['角色']==='代打'&&c['球員']===p.incoming));
+    if(!plans.length)return;
+    box.innerHTML=`<section class="card"><div class="card-h"><h2>條件式防守改位備案</h2></div><div class="card-b"><p>直接接守未確認，但有以下改位組合可人工核對。未加入推薦與回測提示分類。</p>${plans.map(p=>`<details><summary>${esc(p.incoming)} 代打後接守${esc(POS[p.incoming_position])}</summary><div class="tbl-wrap"><table class="t"><thead><tr><th>球員</th><th>推估目前守位</th><th>備案守位</th></tr></thead><tbody><tr><td>${esc(p.incoming)}</td><td>板凳</td><td>${esc(POS[p.incoming_position])}</td></tr>${p.moves.map(m=>`<tr><td>${esc(m.player)}</td><td>${esc(POS[m.from_position])}</td><td>${esc(POS[m.to_position])}</td></tr>`).join('')}</tbody></table></div><p>保留 DH：${esc(p.retained_dh)}。依 ${esc(p.cutoff)} 前守位紀錄；需確認實際守位、登錄與退場資格。</p></details>`).join('')}</div></section>`;
+  }catch{if(box=== $('#fieldingPlans')&&S.last===R&&S.pa===pa)box.innerHTML='<p class="mut">改位備案暫時無法載入；現有估計與未確認資格標記維持原樣。</p>';}
+}
 function renderResult(preserveTabs = false) {
   const retainedTabs = preserveTabs ? $('#resultBody .tabs') : null;
   const focusedTab = retainedTabs?.contains(document.activeElement) ? document.activeElement : null;
@@ -1367,7 +1379,7 @@ function renderResult(preserveTabs = false) {
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? "" : ""}</span></div>`;
   html += `<p class="eligibility-note">${R.view==='replay'?'名單與守位為歷史推估':'勾選名單尚需確認登錄與退場狀態'}；評估結果不代表換人資格已驗證。</p>`;
   html += `<nav class="evaluation-nav" aria-label="評估結果導航"><a class="link" href="#candidateCompare">${uiIcon("compare")}比較已選球員 ↓</a><span class="mut">最多 4 人</span></nav><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${(showTabs ? tab : view === "defense" ? "pen" : "ph") === "pen" ? penTable(R) : phTable(R)}</div></div>`;
-  html += `<div id="candidateCompare" tabindex="-1">${comparisonPanel(R,null,activeTab)}</div><div id="pitchArsenal">${mixCard(R)}</div>`;
+  html += `<div id="candidateCompare" tabindex="-1">${comparisonPanel(R,null,activeTab)}</div><div id="fieldingPlans" aria-live="polite"></div><div id="pitchArsenal">${mixCard(R)}</div>`;
   html += `<div class="detail-grid"><div id="pitchChange"></div><div id="detail"></div></div>`;
   html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>新任投手須符合最低投球義務（面對三位打者等規定）。</li><li>延長局最多 12 局，二壘跑者可依實際局面修改。</li></ul><p>本站未追蹤完整換人紀錄、DH 存續及登錄資格，不能取代裁判或正式攻守名單。</p><a href="https://www.cpbl.com.tw/files/file_pool/1/0p065549820043528193/2025%E6%A3%92%E7%90%83%E8%A6%8F%E5%89%87%28%E5%AE%98%E7%B6%B2%E7%94%A8%29.pdf" target="_blank" rel="noopener noreferrer">CPBL 官方棒球規則（2025）</a></details></div>`;
   $("#resultBody").innerHTML = html;
@@ -1384,6 +1396,7 @@ function renderResult(preserveTabs = false) {
     focusedTab?.focus({preventScroll:true});
   }
   bindComparison(R,activeTab);
+  mountFieldingPlans(R,S.pa);
   bindTableComparison(R,activeTab);
   bindMixSwitch();
   mountPitchChange(R.situation.pitcher);

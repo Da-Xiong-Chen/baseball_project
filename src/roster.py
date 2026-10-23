@@ -108,6 +108,30 @@ def defense_check(out_name, out_pos, in_name, bench_after, cutoff=None):
     return status, msg
 
 
+def fielding_rearrangement(positions, out_name, in_name, cutoff, max_moves=2):
+    """Conditional plan only: preserve DH, require dated evidence at every field slot.
+
+    Does not establish registration, actual current positions, or eligibility and
+    must never automatically change a candidate's defense_check status.
+    """
+    if not cutoff or len(positions)!=9 or set(positions.values())!=set(FIELD_POS+['DH']):
+        return None
+    if out_name not in positions or positions[out_name]=='DH' or in_name in positions:
+        return None
+    dh=next(name for name,pos in positions.items() if pos=='DH')
+    players=[name for name in positions if name not in (out_name,dh)]+[in_name]
+    cost=np.array([[1000 if not can_play(name,pos,cutoff) else (0 if positions.get(name)==pos else 1)
+                    for pos in FIELD_POS] for name in players])
+    ii,jj=linear_sum_assignment(cost)
+    if cost[ii,jj].max()>=1000:return None
+    assignment={players[i]:FIELD_POS[j] for i,j in zip(ii,jj)}
+    moves=[dict(player=name,from_position=positions[name],to_position=pos)
+           for name,pos in assignment.items() if name!=in_name and positions[name]!=pos]
+    if not moves or len(moves)>max_moves:return None
+    return dict(incoming=in_name,incoming_position=assignment[in_name],moves=moves,
+                retained_dh=dh,cutoff=cutoff,requires_confirmation=True)
+
+
 def pitcher_names(boxes):
     """以投手身分出賽次數多於野手的人才算投手（野手偶爾敗戰處理登板不算）。"""
     c = boxes.groupby(["name", "role"]).size().unstack(fill_value=0)

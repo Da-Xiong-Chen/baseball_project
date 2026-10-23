@@ -31,9 +31,19 @@ test('every released pitch snapshot renders without nonfinite numbers or signed 
    const html=api.render(data);
    assert.doesNotMatch(html,/NaN|Infinity|undefined|[−-]0\.0(?:\D|$)|\+0\.0(?:\D|$)/,name+' '+snapshot.effective_from);
    snapshots++;rows+=data.rows.length;
+   const raw=api.render(data,'raw');assert.doesNotMatch(raw,/NaN|Infinity|undefined/);
+   assert.match(raw,/未調整球數，不作變化判定|沒有可用配球紀錄/);
   }
  }
  assert.ok(snapshots>9000);assert.equal(rows,39420);
+});
+
+test('raw pitch view uses observed proportions and never reuses adjusted intervals or claims',()=>{
+ const api=pitchModule(),d=pitchPayload();d.status='insufficient';
+ d.rows[0].raw=[.2,.35];d.rows[0].adjusted=[.5,.8];d.rows[0].delta_pp=30;d.rows[0].interval=[20,40];
+ const html=api.render(d,'raw');assert.match(html,/\+15\.0 百分點/);assert.match(html,/20\.0%/);assert.match(html,/35\.0%/);
+ assert.doesNotMatch(html,/\+30\.0 百分點|\+20\.0 百分點 至 \+40\.0/);
+ assert.match(html,/未產生調整後區間或趨勢結論/);
 });
 
 test('validation distinguishes absolute MSE difference from relative improvement',async()=>{

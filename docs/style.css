@@ -1068,19 +1068,12 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 
 @media(max-width:360px){.feature-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.feature-nav button{min-width:0;white-space:normal;word-break:normal}}
 
-/* Short feedback only: data, bars and page geometry update immediately. */
+/* Selection feedback only: all content appears immediately. */
 @media (prefers-reduced-motion: no-preference) {
   #viewSeg::before, #audienceSeg::before, .tabs::before, .mix-switch::before {
     transition: transform 140ms var(--ease-ui) !important;
   }
-  .reco, .bt-verdict,
-  .replay-disclosure[open] > .actual, [data-reveal-outcome][open] > .actual,
-  [data-bt-action][open] > p, [data-bt-outcome][open] > p,
-  .pc-body:not([hidden]) {
-    animation: feedback-reveal 140ms ease-out !important;
-  }
 }
-@keyframes feedback-reveal { from { opacity: .65; } to { opacity: 1; } }
 /* This final rule also disables the otherwise continuous loading indicator. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }

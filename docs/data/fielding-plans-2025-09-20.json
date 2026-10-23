@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "training_version": 4,
+  "engine_contract": 4,
+  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "date": "2025-09-20",
+  "status": "conditional_only",
+  "source": "2023–2024 ldkrsi fielding history; cutoff-safe catcher pitch history",
+  "replay_index_sha256": "0b9ac4990e1c6b1de67a714108f0f6d30c48b65d541d9d56959c868c8e4ed01a",
+  "counts": {
+    "unknown_pas": 36,
+    "unknown_late_pas": 17,
+    "pas_with_plan": 6,
+    "late_pas_with_plan": 3,
+    "candidate_plans": 6
+  },
+  "plans": {
+    "2025-341-h030": {
+      "林澤彬": {
+        "incoming": "林澤彬",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "張育成",
+            "from_position": "SS",
+            "to_position": "1B"
+          }
+        ],
+        "retained_dh": "林岳谷",
+        "cutoff": "2025-09-20",
+        "requires_confirmation": true
+      }
+    },
+    "2025-341-h033": {
+      "林澤彬": {
+        "incoming": "林澤彬",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "葉子霆",
+            "from_position": "2B",
+            "to_position": "3B"
+          }
+        ],
+        "retained_dh": "林岳谷",
+        "cutoff": "2025-09-20",
+        "requires_confirmation": true
+      }
+    },
+    "2025-342-h001": {
+      "林書逸": {
+        "incoming": "林書逸",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "宋晟睿",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "黃韋盛",
+        "cutoff": "2025-09-20",
+        "requires_confirmation": true
+      }
+    },
+    "2025-342-h010": {
+      "林書逸": {
+        "incoming": "林書逸",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "宋晟睿",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "黃韋盛",
+        "cutoff": "2025-09-20",
+        "requires_confirmation": true
+      }
+    },
+    "2025-342-h019": {
+      "林書逸": {
+        "incoming": "林書逸",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "宋晟睿",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "黃韋盛",
+        "cutoff": "2025-09-20",
+        "requires_confirmation": true
+      }
+    },
+    "2025-342-h028": {
+      "林書逸": {
+        "incoming": "林書逸",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "宋晟睿",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "黃韋盛",
+        "cutoff": "2025-09-20",
+        "requires_confirmation": true
+      }
+    }
+  }
+}

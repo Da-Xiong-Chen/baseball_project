@@ -28,14 +28,12 @@ test('no slide-in or drawer animation is exposed',()=>{
   const {M}=load();assert.equal(M.slideIn,undefined);assert.equal(M.openDrawer,undefined);
 });
 
-test('optional feedback stays short, does not animate data bars, and has a final reduced-motion override',()=>{
+test('only selection markers animate; all content is immediate and reduced-motion overrides loading',()=>{
   const css=fs.readFileSync(path.join(__dirname,'../docs/style.css'),'utf8');
-  const optional=css.slice(css.lastIndexOf('@media (prefers-reduced-motion: no-preference)'),css.lastIndexOf('@keyframes feedback-reveal'));
+  const optional=css.slice(css.lastIndexOf('@media (prefers-reduced-motion: no-preference)'),css.lastIndexOf('@media (prefers-reduced-motion: reduce)'));
   assert.match(optional,/transition: transform 140ms/);
-  assert.match(optional,/animation: feedback-reveal 140ms ease-out/);
+  assert.doesNotMatch(optional,/animation:|feedback-reveal|opacity/);
   assert.doesNotMatch(optional,/\.pc-bar\b|\.candidate-chart-track|\.lineup-page|#resultBody|infinite|height|width/);
-  const keyframes=css.slice(css.lastIndexOf('@keyframes feedback-reveal'),css.lastIndexOf('@media (prefers-reduced-motion: reduce)'));
-  assert.match(keyframes,/opacity/);assert.doesNotMatch(keyframes,/transform|height|width/);
   const reduce=css.slice(css.lastIndexOf('@media (prefers-reduced-motion: reduce)'));
   assert.match(reduce,/\*, \*::before, \*::after/);
   assert.match(reduce,/animation: none !important/);assert.match(reduce,/transition: none !important/);

@@ -668,6 +668,20 @@ test('API mode obtains the batch identity from meta without loading static Engin
  assert.equal(f.eval('activeBatchId()'),'api-batch');
 });
 
+test('conditional fielding plan appears separately and never changes the original candidate or suggestion',async()=>{
+ const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/fielding-plans-2025-09-20.json'),'utf8'));
+ const pa=Object.keys(data.plans)[0],incoming=Object.keys(data.plans[pa])[0];
+ const r={view:'replay',candidates:[{角色:'現任',球員:'Current'},{角色:'代打',球員:incoming,守備:'unknown'}]};
+ f.context.r=r;f.context.planData=data;f.context.pa=pa;
+ f.eval('S.last=r;S.pa=pa;json=async()=>planData');await f.eval('mountFieldingPlans(r,pa)');
+ assert.match(f.node('#fieldingPlans').innerHTML,/條件式防守改位備案|未加入推薦與回測提示分類/);
+ assert.match(f.node('#fieldingPlans').innerHTML,new RegExp(incoming));assert.equal(r.candidates[1]['守備'],'unknown');
+ const pending=deferred();f.context.pendingPlan=pending.promise;
+ f.eval('json=()=>pendingPlan');const job=f.eval('mountFieldingPlans(r,pa)');
+ f.node('#fieldingPlans').innerHTML='new selection';f.eval('S.pa="another"');pending.resolve(data);await job;
+ assert.equal(f.node('#fieldingPlans').innerHTML,'new selection');
+});
+
 test('numeric cards preserve missing samples, valid score bounds and safe chart scales',()=>{
  const f=fixture();f.context.row={樣本球數:null,預估失分:null,疲勞調整:0};
  const html=f.eval('mobileRowDetails(row,true)');
