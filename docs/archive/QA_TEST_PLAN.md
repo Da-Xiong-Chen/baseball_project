@@ -3,7 +3,7 @@
 適用專案：`Da-Xiong-Chen/baseball_project` 本地修改版。  
 規劃日期：2026-10-02。  
 核心新增功能：**同條件近期配球變化**。  
-搭配閱讀：[實作說明](IMPLEMENTATION.md)、[使用方式](README.md)。
+搭配閱讀：[實作說明](IMPLEMENTATION.md)、[使用方式](../../README.md)。
 
 ## 1. 工作目標與交付界線
 
