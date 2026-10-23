@@ -1,8 +1,11 @@
 """Independently check published aliases against every 2025 box-score row."""
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'src'))
+from identity import normalize_game
 
 
 def audit(root=ROOT):
@@ -15,7 +18,7 @@ def audit(root=ROOT):
     records = 0
     errors = []
     for path in files:
-        game = json.loads(path.read_text(encoding="utf-8"))
+        game = normalize_game(json.loads(path.read_text(encoding="utf-8")))
         assert str(game["date"]).startswith("2025-"), "Wrong game season"
         for side in ("home", "away"):
             team = game[side + "Team"]

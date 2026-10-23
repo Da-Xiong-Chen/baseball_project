@@ -38,6 +38,23 @@ test('unapplied edits are labelled, and reset applies and saves the defaults',as
 test('release returns to free selection, keeps the draft, and survives reload',async()=>{const f=uiFixture();f.api.setDefaults(defaults());await f.api.selectTeam('A');await f.node('#lineupApply').onclick();assert.ok(f.api.current('A'));f.api.release('A');assert.equal(f.api.current('A'),null);const stored=JSON.parse(f.values.get('cpbl-lineup-2025-v1:A'));assert.equal(stored.confirmed,null);assert.equal(stored.draft.pitcher,config().pitcher);});
 
 test('duplicate saved positions are rejected before a missing field slot can be opened',()=>{const c=config();c.slots[1].pos=c.slots[0].pos;assert.equal(L.validState({version:1,season:2025,draft:c,confirmed:null}),false);});
+
+test('manually withdrawn players cannot remain active and corrupted exclusion data is rejected',()=>{
+ const c=config();c.unavailable=[c.pitcher];
+ assert.ok(L.validate(c,roster).some(s=>s.includes('已退場')));
+ c.unavailable=['Bench'];assert.equal(L.validate(c,roster).length,0);
+ assert.equal(L.validState({version:1,season:2025,draft:c,confirmed:c}),true);
+ c.unavailable='broken';assert.equal(L.validState({version:1,season:2025,draft:c,confirmed:c}),false);
+});
+test('same-name pitcher migration keeps lineup order and uses saved team identity',()=>{
+ for(const [team,name] of [['樂天桃猿','林子崴〔樂天〕'],['統一7-ELEVEn獅','林子崴〔統一〕']]){
+  const c=config(),slots=JSON.stringify(c.slots);c.pitcher='林子崴';c.unavailable=['Other'];
+  assert.equal(L.migrateIdentity(c,team),true);assert.equal(c.pitcher,name);
+  assert.equal(JSON.stringify(c.slots),slots);assert.deepEqual(c.unavailable,['Other']);
+  assert.equal(L.migrateIdentity(c,team),false);
+ }
+ const c=config();c.pitcher='林子崴';assert.equal(L.migrateIdentity(c,'unknown'),false);assert.equal(c.pitcher,'林子崴');
+});
 test('restore defaults never claims browser persistence when storage refuses writes',async()=>{for(const mode of ['throw','silent']){const f=uiFixture(mode);f.api.setDefaults({A:config()});await f.api.selectTeam('A');await f.node('#lineupReset').onclick();assert.ok(f.api.current('A'));assert.match(f.node('#lineupMessage').textContent,/無法保存/);}});
 
 test('moving to the first batting slot focuses the player instead of a disabled arrow',async()=>{const f=uiFixture();await fillUI(f);let focused=false;f.node('[data-move="0"][data-step="-1"]').disabled=true;f.node('[data-pick="0"]').focus=()=>{focused=true};f.listeners.click({target:{closest:sel=>sel==='[data-move]'?{dataset:{move:'1',step:'-1'}}:null}});assert.equal(focused,true);const saved=JSON.parse(f.values.get('cpbl-lineup-2025-v1:A'));assert.equal(saved.draft.slots[0].name,'H1');});

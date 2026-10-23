@@ -981,8 +981,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
   .feature-nav button { font-size: 13px; padding: 10px 4px; word-break: keep-all; white-space: nowrap; }
 }
 
-/* ---------- 不使用動畫（使用者回饋滑入、淡入與平滑捲動卡頓） ----------
-   所有畫面直接切換到位；只保留不會移動版面的顏色變化，以及表示計算中的轉圈。 */
+/* 預設保持資料與版面穩定；只在檔案末尾開放少量操作回饋。 */
 *, *::before, *::after { animation: none !important; transition-property: background-color, color, border-color, box-shadow !important; }
 .loading { animation: spin .8s linear infinite !important; }
 .lineup-summary-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
@@ -1019,6 +1018,63 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 
 /* 單日分析為獨立工具；使用者模式只影響評估與場上名單。 */
 .audience-control[hidden], #customPanel select.streak[hidden] { display:none; }
+
+/* Historical comparisons: units and disclosure are part of the interaction. */
+.history-background { margin:20px 0; }
+.history-background>summary { cursor:pointer;padding:12px 0; }
+.bt-kind,.bt-groups { display:flex;gap:8px;flex-wrap:wrap;margin:12px 0; }
+.bt-kind button,.bt-groups button,.bt-decision button,#modelValidation button { padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);cursor:pointer;min-height:44px; }
+.bt-kind button[aria-pressed="true"],.bt-groups button[aria-pressed="true"] { background:var(--accent);color:var(--on-accent); }
+.bt-groups button strong { display:block;font-size:20px; }
+.bt-timeline { display:grid;gap:6px;max-height:420px;overflow:auto; }
+.bt-event { display:grid;grid-template-columns:100px 1fr 1.5fr 1fr;gap:10px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer; }
+.bt-event[aria-pressed="true"] { border-color:var(--accent);background:var(--panel-2); }
+.bt-prompt { font-variant-numeric:tabular-nums; }
+.bt-decision { margin-top:16px; }
+.bt-decision details { margin:12px 0;padding:12px;border-left:3px solid var(--line); }
+.bt-models { display:grid;gap:12px;margin:20px 0; }
+.bt-models>div { display:grid;grid-template-columns:minmax(130px,1fr) 2fr;gap:8px;padding:14px 0;border-bottom:1px solid var(--line); }
+.bt-models>div>span:last-child { grid-column:1/-1; }
+.bt-months>div { display:flex;flex-wrap:wrap;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums; }
+@media(max-width:600px){.bt-event{grid-template-columns:1fr 1fr}.bt-models>div{grid-template-columns:1fr}.bt-groups button{flex:1 1 40%}}
+.bt-interval { position:relative;height:28px;grid-column:1/-1;background:var(--panel-2);margin:8px 0; }
+.bt-zero { position:absolute;left:50%;height:100%;border-left:1px solid var(--muted); }
+.bt-ci { position:absolute;top:12px;height:4px;background:var(--accent); }
+.bt-dot { position:absolute;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);transform:translateX(-50%); }
+.bt-models>.bt-axis { display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted); }
+.bt-prompt-run { padding:10px 0;border-bottom:1px solid var(--line); }
+.bt-prompt-run>summary { cursor:pointer;padding:8px; }
+.bt-lanes{display:grid;grid-template-columns:100px 1fr 1.5fr 1fr;gap:10px;padding:10px 12px;color:var(--muted);font-size:12px;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.bt-lanes{display:none}}
 .history-method { margin:18px 0; padding:16px 20px; border:1px solid var(--line); border-radius:var(--radius-card); background:var(--panel); }
 .history-method summary { font-size:16px; font-weight:600; cursor:pointer; color:var(--accent); }
 .history-method p { font-size:14px; line-height:1.65; margin:10px 0 0; color:var(--muted); }
+
+#lineupUnavailable{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;max-height:280px;overflow:auto;margin:12px 0}.lineup-unavailable{margin:16px 0}.lineup-unavailable>summary{padding:12px 0;cursor:pointer}
+
+.d.unknown{background:var(--warn-soft);color:var(--warn)}
+.bt-adoption{padding:16px 20px;border-left:4px solid var(--accent);background:var(--panel-2);border-radius:8px;margin:16px 0}.bt-adoption p{margin:8px 0 0;line-height:1.6}
+
+/* Three backtest destinations have equal, independently highlighted targets. */
+#backtestSeg{grid-template-columns:repeat(3,minmax(0,1fr))}
+#backtestSeg::before{display:none}
+#backtestSeg button{min-width:0;min-height:44px;white-space:normal}
+#backtestSeg button.on{background:var(--panel);box-shadow:0 1px 4px #0001;border-radius:8px}
+
+.bt-verdict{padding:20px;margin:16px 0;border:1px solid var(--line);border-left:4px solid var(--accent,#16766b);border-radius:12px;background:var(--panel)}
+.bt-verdict>strong{font-size:1.2rem}
+.replay-disclosure{margin:16px;padding:12px;border:1px solid var(--line);border-radius:10px}
+.replay-disclosure summary{cursor:pointer;min-height:32px}
+
+@media(max-width:360px){.feature-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.feature-nav button{min-width:0;white-space:normal;word-break:normal}}
+
+/* Selection feedback only: all content appears immediately. */
+@media (prefers-reduced-motion: no-preference) {
+  #viewSeg::before, #audienceSeg::before, .tabs::before, .mix-switch::before {
+    transition: transform 140ms var(--ease-ui) !important;
+  }
+}
+/* This final rule also disables the otherwise continuous loading indicator. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

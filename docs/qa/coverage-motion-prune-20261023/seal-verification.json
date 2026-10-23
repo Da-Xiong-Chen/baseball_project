@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "changed_assets": [
+    "app.js",
+    "data/fielding-plans-2025-09-20.json",
+    "index.html",
+    "pitch-change.js",
+    "style.css"
+  ],
+  "existing_numerical_data_changed": false,
+  "model_weights_changed": false,
+  "new_data": "conditional fielding plans only; not recommendation eligibility",
+  "files": 693
+}

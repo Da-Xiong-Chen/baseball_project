@@ -1,0 +1,317 @@
+{
+  "pages": 32,
+  "notes": 0,
+  "transitions": 0,
+  "timing_carriers": 0,
+  "embedded_video_matches": true,
+  "video_relationships": [
+    "http://schemas.microsoft.com/office/2007/relationships/media",
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/video"
+  ],
+  "media_click_carriers": [
+    {
+      "tag": "hlinkClick",
+      "attrs": {
+        "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "",
+        "action": "ppaction://media"
+      }
+    },
+    {
+      "tag": "videoFile",
+      "attrs": {
+        "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}link": "rId4"
+      }
+    },
+    {
+      "tag": "media",
+      "attrs": {
+        "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed": "rId3"
+      }
+    }
+  ],
+  "links": [
+    {
+      "page": 1,
+      "url": "https://da-xiong-chen.github.io/baseball_project/",
+      "rect": [
+        236.19748031496064,
+        76.7174803149606,
+        723.8025196850393,
+        106.74748031496063
+      ]
+    },
+    {
+      "page": 1,
+      "url": "https://github.com/Da-Xiong-Chen/baseball_project",
+      "rect": [
+        210.51000000000002,
+        41.467480314960596,
+        749.49,
+        71.49748031496063
+      ]
+    },
+    {
+      "page": 31,
+      "url": "https://doi.org/10.1080/01621459.1975.10479864",
+      "rect": [
+        47.43,
+        307.0574803149606,
+        390.5249606299213,
+        329.0025196850394
+      ]
+    },
+    {
+      "page": 31,
+      "url": "https://doi.org/10.1214/aos/1176344552",
+      "rect": [
+        47.43,
+        191.55748031496063,
+        302.85748031496064,
+        213.50251968503937
+      ]
+    },
+    {
+      "page": 31,
+      "url": "https://doi.org/10.1198/016214506000001437",
+      "rect": [
+        47.43,
+        76.05748031496063,
+        358.69503937007875,
+        98.00251968503937
+      ]
+    },
+    {
+      "page": 32,
+      "url": "https://da-xiong-chen.github.io/baseball_project/",
+      "rect": [
+        236.19748031496064,
+        76.7174803149606,
+        723.8025196850393,
+        106.74748031496063
+      ]
+    },
+    {
+      "page": 32,
+      "url": "https://github.com/Da-Xiong-Chen/baseball_project",
+      "rect": [
+        210.51000000000002,
+        41.467480314960596,
+        749.49,
+        71.49748031496063
+      ]
+    }
+  ],
+  "pdf_text": [
+    {
+      "page": 1,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 185
+    },
+    {
+      "page": 2,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 199
+    },
+    {
+      "page": 3,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 30
+    },
+    {
+      "page": 4,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 78
+    },
+    {
+      "page": 5,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 92
+    },
+    {
+      "page": 6,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 155
+    },
+    {
+      "page": 7,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 131
+    },
+    {
+      "page": 8,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 30
+    },
+    {
+      "page": 9,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 207
+    },
+    {
+      "page": 10,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 126
+    },
+    {
+      "page": 11,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 146
+    },
+    {
+      "page": 12,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 207
+    },
+    {
+      "page": 13,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 217
+    },
+    {
+      "page": 14,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 204
+    },
+    {
+      "page": 15,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 30
+    },
+    {
+      "page": 16,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 122
+    },
+    {
+      "page": 17,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 117
+    },
+    {
+      "page": 18,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 78
+    },
+    {
+      "page": 19,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 105
+    },
+    {
+      "page": 20,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 185
+    },
+    {
+      "page": 21,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 176
+    },
+    {
+      "page": 22,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 113
+    },
+    {
+      "page": 23,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 162
+    },
+    {
+      "page": 24,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 146
+    },
+    {
+      "page": 25,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 104
+    },
+    {
+      "page": 26,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 36
+    },
+    {
+      "page": 27,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 30
+    },
+    {
+      "page": 28,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 196
+    },
+    {
+      "page": 29,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 162
+    },
+    {
+      "page": 30,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 155
+    },
+    {
+      "page": 31,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 515
+    },
+    {
+      "page": 32,
+      "missing_text": [],
+      "nulls": 0,
+      "pdf_chars": 137
+    }
+  ],
+  "pdf_has_all_ppt_paragraphs": true,
+  "native_powerpoint_playback": "interrupted by physical Escape during PowerPoint window selection; no play/pause/reopen pass claimed",
+  "files": [
+    {
+      "name": "一球兩面_操作展示_20261022.mp4",
+      "bytes": 1244523,
+      "sha256": "da9bde7cf26c4e16f258ee8920f34acb9a1e0b76231fb2f9a608b67b749f38e0"
+    },
+    {
+      "name": "一球兩面_檢查修訂版_32頁_20261022.pdf",
+      "bytes": 2357700,
+      "sha256": "66f32e392cb00298e27094adb160141e31ceca549a5154a7982ed6ff218fb9a6"
+    },
+    {
+      "name": "一球兩面_檢查修訂版_32頁_20261022.pptx",
+      "bytes": 3461916,
+      "sha256": "0edc2dac0fa5bd1df514df931ee668192467754a695d7ce2b07dc7edff3a386a"
+    }
+  ]
+}

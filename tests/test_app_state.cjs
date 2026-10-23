@@ -133,6 +133,12 @@ test('tiny positive differences never become a strong recommendation from SE',()
   assert.equal(rec.kind,'neutral');assert.match(rec.text,/不必只依排序換人/);
   assert.match(rec.title,/差距極小/);
 });
+test('empty bench differs from candidates whose fielding is unconfirmed',()=>{
+ const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0}];
+ assert.match(f.eval('recommendation(cands)').title,/只評估現任/);
+ f.context.cands.push({角色:'代打',球員:'Unknown',守備:'unknown',預估勝率:9});
+ const rec=f.eval('recommendation(cands)');assert.match(rec.title,/接守資格尚未確認/);assert.equal(rec.best,undefined);
+});
 
 test('API and static reads work without the newer timeout API',async()=>{
   const f=fixture();f.context.AbortSignal={};
@@ -401,7 +407,7 @@ test('fielding guidance retains cover cost, catcher reserve warning and uncertai
  const f=fixture();f.context.row={守備:'warn',守備說明:'需由 A 接守捕手（再消耗 1 名板凳）；之後板凳已無備用捕手'};
  const html=f.eval('fieldingMessage(row)');assert.match(html,/另需接守人選/);assert.match(html,/A · 捕手（另需 1 人）/);assert.match(html,/無備用捕手/);
  assert.match(f.eval('fieldingMessage({守備:"ok",守備說明:"B 接任指定打擊"})'),/承接原 DH 棒次/);
- assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/守位待確認/);
+ assert.match(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/接守未確認/);
  assert.doesNotMatch(f.eval('fieldingMessage({守備:"unknown",守備說明:"資格待確認"})'),/推估可接守/);
 });
 
@@ -602,7 +608,23 @@ test('history player selection survives revisits and stays isolated by team and 
 
 test('single-day analysis ignores audience changes without clearing its result or opening lineup',async()=>{
  const f=fixture();f.eval("currentPage=()=> 'review';S.last={id:'historical'};applyOwnLineup=()=>{throw Error('must not apply current roster')}");
- await f.eval("setAudienceMode('team')");assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.eval('audienceMode'),'team');
+ await f.eval("setAudienceMode('team')");assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.eval('audienceMode'),'general');
+});
+
+test('historical analysis refuses custom roster application, refresh and evaluation',async()=>{
+ const f=fixture();f.node('#myTeam').value='Original';f.node('#oppTeam').value='Opponent';
+ f.eval("currentPage=()=> 'review';audienceMode='team';S.last={id:'historical'};S.ready=true;confirmedOwnLineup=()=>{throw Error('must not consult current lineup')};");
+ assert.equal(f.eval('ownLineup()'),null);
+ await f.eval("applyOwnLineup('Other',{pitcherSelected:true,resetPitchCount:true})");
+ await f.eval('refreshCustom()');await f.eval('evaluateCustom()');
+ assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.node('#myTeam').value,'Original');
+ assert.equal(f.node('#oppTeam').value,'Opponent');
+});
+
+test('manual unavailable list filters team candidates but never historical candidates',()=>{
+ const f=fixture();f.eval("currentPage=()=> 'evaluation';audienceMode='team';confirmedOwnLineup=()=>({pitcher:'P',slots:[{name:'Active'}],unavailable:['Out']})");
+ assert.equal(f.eval("benchEligible('Out')"),false);assert.equal(f.eval("benchEligible('Bench')"),true);
+ f.eval("currentPage=()=> 'review'");assert.equal(f.eval("benchEligible('Out')"),true);
 });
 test('history subpage team is synchronized without changing the evaluation teams',()=>{
  const f=fixture();f.node('#customPanel').addEventListener=()=>{};f.node('#myTeam').value='樂天桃猿';f.node('#oppTeam').value='味全龍';
@@ -619,4 +641,165 @@ test('static pitching replay uses the incumbent snapshot and retains actual inco
  const f=fixture();f.context.files={'data/replay/day-2025-09-20/index.json':{schema_version:1,date:'2025-09-20',games:{},files:{'2025-340-h018':'2025-340-h018.json'}},'data/replay/day-2025-09-20/2025-340-h018.json':{date:'2025-09-20',pa_id:'2025-340-h018',ph:{situation:{pitcher:'New'},replay_context:{}},pen:{situation:{pitcher:'Old'},actual:{pitcher:'New'},replay_context:{}}}};
  f.eval('json=async u=>files[u]');const r=await f.eval("staticApi('api/replay?pa=2025-340-h018&decision=pen')");
  assert.equal(r.situation.pitcher,'Old');assert.equal(r.actual.pitcher,'New');assert.equal(r.replay_context.decision,'pen');
+});
+
+
+test('reveal follows the same PA across views, resets on another PA and team reset',()=>{
+ const f=fixture();
+ f.eval("historyDisclosure.select('A');historyDisclosure.set('outcome',true)");
+ assert.equal(f.eval("historyDisclosure.select('A').outcome"),true);
+ assert.equal(f.eval("historyDisclosure.action"),true);
+ assert.equal(f.eval("historyDisclosure.select('B').outcome"),false);
+ f.eval("historyDisclosure.scores.add('game');historyDisclosure.set('outcome',true);historyDisclosure.reset()");
+ assert.equal(f.eval('historyDisclosure.scores.size'),0);
+ assert.equal(f.eval('historyDisclosure.outcome'),false);
+});
+
+
+test('late disclosure events from the previous PA cannot reveal the next PA',()=>{
+ const f=fixture();f.eval("historyDisclosure.select('B');historyDisclosure.setFor('A','outcome',true)");
+ assert.equal(f.eval('historyDisclosure.outcome'),false);
+ f.eval("historyDisclosure.setFor('B','outcome',true)");assert.equal(f.eval('historyDisclosure.outcome'),true);
+});
+
+
+test('API mode obtains the batch identity from meta without loading static Engine',()=>{
+ const f=fixture();f.context.Engine.model=()=>null;f.eval("S.batch_id='api-batch'");
+ assert.equal(f.eval('activeBatchId()'),'api-batch');
+});
+
+test('conditional fielding plan appears separately and never changes the original candidate or suggestion',async()=>{
+ const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/fielding-plans-2025-09-20.json'),'utf8'));
+ const pa=Object.keys(data.plans)[0],incoming=Object.keys(data.plans[pa])[0];
+ const r={view:'replay',candidates:[{角色:'現任',球員:'Current'},{角色:'代打',球員:incoming,守備:'unknown'}]};
+ f.context.r=r;f.context.planData=data;f.context.pa=pa;
+ f.eval('S.last=r;S.pa=pa;json=async()=>planData');await f.eval('mountFieldingPlans(r,pa)');
+ assert.match(f.node('#fieldingPlans').innerHTML,/條件式防守改位備案|未加入推薦與回測提示分類/);
+ assert.match(f.node('#fieldingPlans').innerHTML,new RegExp(incoming));assert.equal(r.candidates[1]['守備'],'unknown');
+ const pending=deferred();f.context.pendingPlan=pending.promise;
+ f.eval('json=()=>pendingPlan');const job=f.eval('mountFieldingPlans(r,pa)');
+ f.node('#fieldingPlans').innerHTML='new selection';f.eval('S.pa="another"');pending.resolve(data);await job;
+ assert.equal(f.node('#fieldingPlans').innerHTML,'new selection');
+});
+
+test('numeric cards preserve missing samples, valid score bounds and safe chart scales',()=>{
+ const f=fixture();f.context.row={樣本球數:null,預估失分:null,疲勞調整:0};
+ const html=f.eval('mobileRowDetails(row,true)');
+ assert.match(html,/— 球/);assert.match(html,/失分價值 — 分/);assert.doesNotMatch(html,/NaN|undefined/);
+ for(const score of [NaN,Infinity,-1,0,101,null]){
+  f.context.score=score;assert.match(f.eval('scoreBadge(score,"test")'),/基準不足/);
+ }
+ const current={角色:'場上',投手:'P',守方勝率增減:0,預估失分:.1,疲勞調整:0,樣本球數:10};
+ f.context.r={situation:{pitcher:'P'},bullpen:{next:[],rows:[current,{...current,角色:'牛棚',投手:'Q',守方勝率增減:undefined}]}};
+ const table=f.eval('penTable(r)');assert.doesNotMatch(table,/NaN|Infinity|undefined/);assert.match(table,/資料不足/);
+});
+
+test('all 18 real-model custom scenarios render both assessment views with finite numbers',async()=>{
+ const f=fixture(),dataRoot=path.join(__dirname,'../docs');
+ const model=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/model.json'),'utf8'));
+ const engineContext={fetch:async()=>({json:async()=>model})};vm.createContext(engineContext);
+ vm.runInContext(fs.readFileSync(path.join(dataRoot,'engine.js'),'utf8')+'\nthis.numericEngine=Engine;',engineContext);
+ await engineContext.numericEngine.load();f.context.Engine=engineContext.numericEngine;
+ f.eval('STATIC=true;S.mode="custom";S.ready=true;showDetail=()=>{};');
+ f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
+ const scenarios=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/qa_scenarios.json'),'utf8'));
+ assert.equal(scenarios.length,18);
+ for(const request of scenarios)for(const [view,tab] of [['offense','ph'],['defense','pen']]){
+  f.context.numericRequest=request;f.context.numericView=view;f.context.numericTab=tab;
+  await f.eval('S.tab=numericTab;run(()=>api("api/evaluate",numericRequest),numericView)');
+  const html=f.node('#resultBody').innerHTML;
+  assert.match(html,/id="candidateCompare"/);assert.doesNotMatch(html,/評估未完成|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
+ }
+});
+
+test('model validation retry refetches a schema-invalid JSON response instead of reusing it forever',async()=>{
+ const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model-evaluation.json'),'utf8'));
+ let requests=0;f.context.Engine.model=()=>({batch_id:good.batch_id});
+ f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{batch_id:good.batch_id}:good});
+ const control={insertAdjacentHTML(){}};
+ const el={innerHTML:'',querySelector:()=>control,querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
+ const view=require('../docs/backtest.js'),fetcher=f.eval('json');
+ await view.validation(el,fetcher,good.batch_id);assert.match(el.innerHTML,/role="alert"/);
+ await control.onclick();
+ assert.equal(requests,2);assert.match(el.innerHTML,/bt-verdict/);assert.doesNotMatch(el.innerHTML,/role="alert"/);
+});
+
+test('retrying unavailable timing markers replaces a cached invalid response',async()=>{
+ const f=fixture();let requests=0;f.context.Engine.model=()=>({batch_id:'expected'});
+ f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{}:{schema_version:2,training_version:4,engine_contract:4,batch_id:'expected',season:2025,games:{}}});
+ assert.equal(await f.eval('loadTiming()'),false);
+ assert.ok(await f.eval('timingData=null;loadTiming()'));
+ assert.equal(requests,2);
+});
+
+test('an older failed JSON request cannot evict a newer successful reload',async()=>{
+ const f=fixture(),old=deferred();f.context.old=old.promise;let requests=0;
+ f.context.fetch=()=>++requests===1?old.promise:Promise.resolve({ok:true,json:async()=>({fresh:true})});
+ const first=f.eval("json('data/test.json')");
+ assert.equal((await f.eval("json('data/test.json',{reload:true})")).fresh,true);
+ old.reject(Error('older request failed'));await assert.rejects(first,/older request failed/);
+ assert.equal((await f.eval("json('data/test.json')")).fresh,true);assert.equal(requests,2);
+});
+
+test('all 226 fixed-day PAs load and render both decision views through the static app workflow',async()=>{
+ const f=fixture(),dataRoot=path.join(__dirname,'../docs'),model=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/model.json'),'utf8'));
+ const index=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/replay/day-2025-09-20/index.json'),'utf8'));
+ f.context.Engine.model=()=>model;
+ f.context.fetch=async url=>process.env.BASEBALL_QA_BASE_URL?fetch(new URL(url,process.env.BASEBALL_QA_BASE_URL)):
+  {ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(dataRoot,url),'utf8'))};
+ f.eval('const qaShowDetail=showDetail;STATIC=true;S.mode="replay";S.ready=true;showDetail=()=>{};');
+ f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
+ await f.eval('loadTiming()');
+ for(const name of model.teams){
+  f.node('#rpTeam').value=name;
+  await f.eval('loadGames()');
+  assert.equal(f.eval('S.games.length'),1);
+  assert.equal(f.eval('S.games[0].date'),'2025-09-20');
+  assert.ok(f.eval('S.games[0].away')===name||f.eval('S.games[0].home')===name);
+  const before=f.node('#gameList').innerHTML;
+  f.eval("audienceMode='team'");await f.eval('loadGames()');
+  assert.equal(f.node('#gameList').innerHTML,before);
+  f.eval("audienceMode='general'");
+ }
+ let views=0,changes=0,details=0;
+ for(const [game,ids] of Object.entries(index.games)){
+  await f.eval(`loadGame(${JSON.stringify(game)})`);
+  assert.equal(f.eval('S.pas.length'),ids.length);
+  assert.doesNotMatch(f.node('#paList').innerHTML,/尚未匯出/);
+  f.node('#lateOnly').checked=true;f.eval('renderPAs()');
+  assert.equal((f.node('#paList').innerHTML.match(/data-p="/g)||[]).length,f.eval('S.pas.filter(p=>p.inning>=6).length'));
+  f.node('#lateOnly').checked=false;f.eval('renderPAs()');
+  assert.equal((f.node('#paList').innerHTML.match(/data-p="/g)||[]).length,ids.length);
+  for(const pa of ids){
+   const bundle=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/replay/day-2025-09-20',index.files[pa]),'utf8'));
+   if(bundle.pen)changes++;
+   for(const decision of ['ph','pen']){
+    f.eval(`S.pa=${JSON.stringify(pa)};S.tab=${JSON.stringify(decision)};historyDisclosure.select(S.pa);`);
+    await f.eval(`run(()=>api('api/replay?pa='+S.pa+'&decision='+S.tab),'replay')`);
+    const html=f.node('#resultBody').innerHTML;
+    assert.match(html,/data-reveal-action/,[pa,decision].join(' '));assert.match(html,/id="candidateCompare"/);
+    assert.doesNotMatch(html,/評估未完成|NaN|undefined|data-reveal-action open|data-reveal-outcome open/);
+    assert.doesNotMatch(html,/[−-]0\.0+(?!\d)/,[pa,decision,'signed zero'].join(' '));
+    assert.equal(f.eval('S.last.replay_context.decision'),decision);
+    assert.equal(f.eval('S.last.situation.pitcher'),decision==='pen'&&bundle.pen?bundle.pen.situation.pitcher:bundle.ph.situation.pitcher);
+    for(const detail of Object.values(f.eval('S.last.details'))){
+     f.context.numericDetail=detail;
+     await f.eval('qaShowDetail(numericDetail.batter,numericDetail.pitcher,null,false)');
+     assert.doesNotMatch(f.node('#detail').innerHTML,/明細未提供|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
+     assert.doesNotMatch(f.node('#pitchArsenal').innerHTML,/NaN|Infinity|undefined/);
+     details++;
+    }
+    views++;
+   }
+  }
+ }
+ assert.equal(views,452);assert.equal(changes,19);assert.equal(details,7953);
+ f.eval('historyDisclosure.set("outcome",true)');
+ await f.eval('switchTab("ph")');
+ assert.match(f.node('#resultBody').innerHTML,/data-reveal-action open/);
+ assert.match(f.node('#resultBody').innerHTML,/data-reveal-outcome open/);
+ const next=Object.values(index.games)[0][0];
+ f.eval(`S.pa=${JSON.stringify(next)};historyDisclosure.select(S.pa)`);
+ await f.eval("run(()=>api('api/replay?pa='+S.pa+'&decision=ph'),'replay')");
+ assert.doesNotMatch(f.node('#resultBody').innerHTML,/data-reveal-action open|data-reveal-outcome open/);
 });

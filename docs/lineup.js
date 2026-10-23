@@ -3,6 +3,16 @@
   'use strict';
   const POS={C:'捕手','1B':'一壘','2B':'二壘','3B':'三壘',SS:'游擊',LF:'左外野',CF:'中外野',RF:'右外野',DH:'指定打擊'};
   const clone=x=>JSON.parse(JSON.stringify(x));
+  function migrateIdentity(config,team){
+    if(!config)return false;
+    const canonical={'樂天桃猿':'林子崴〔樂天〕','統一7-ELEVEn獅':'林子崴〔統一〕'}[team];
+    if(!canonical)return false;
+    let changed=false;
+    const name=n=>{if(n==='林子崴'){changed=true;return canonical;}return n;};
+    config.pitcher=name(config.pitcher);config.slots.forEach(s=>{s.name=name(s.name);});
+    if(config.unavailable)config.unavailable=[...new Set(config.unavailable.map(name))];
+    return changed;
+  }
   const empty=()=>({slots:Object.keys(POS).map(pos=>({name:'',pos})),pitcher:''});
   function assignPlayer(config,index,name,fromField=false){
     if(index==='P'){config.pitcher=name;return;}
@@ -27,10 +37,12 @@
     if(names.some(n=>n&&!roster.hitters.some(h=>h.name===n)))errors.push('有球員不在此隊資料中，請重新選擇。');
     if(!roster.pitchers.some(p=>p.name===config.pitcher))errors.push('請選擇場上投手。');
     if(config.pitcher&&names.includes(config.pitcher))errors.push('投打雙向或特殊 DH 配置尚未支援，請改用手動評估。');
+    const unavailable=config.unavailable||[];
+    if(unavailable.some(n=>names.includes(n)||n===config.pitcher))errors.push('已退場／不可用球員不能仍配置在場上。');
     return errors;
   }
   function validState(s){
-    const shape=c=>c&&Array.isArray(c.slots)&&c.slots.length===9&&c.slots.every(x=>x&&typeof x.name==='string'&&POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9&&typeof c.pitcher==='string';
+    const shape=c=>c&&Array.isArray(c.slots)&&c.slots.length===9&&c.slots.every(x=>x&&typeof x.name==='string'&&POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9&&typeof c.pitcher==='string'&&(!c.unavailable||(Array.isArray(c.unavailable)&&c.unavailable.every(n=>typeof n==='string')&&new Set(c.unavailable).size===c.unavailable.length));
     return s&&s.version===1&&s.season===2025&&shape(s.draft)&&(!s.confirmed||shape(s.confirmed));
   }
   const states=new Map();let defaults={},defaultsMeta={},options,teamName='',roster,pickerIndex=null,pickerField=false,returnFocus=null;
@@ -44,6 +56,8 @@
       let raw=null;
       try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:1,season:2025,draft:parsed.draft,confirmed:parsed.confirmed||null};}}
       catch{s.storageError=true;}
+      const draftMigrated=migrateIdentity(s.draft,t),confirmedMigrated=migrateIdentity(s.confirmed,t);
+      s.identityMigrated=draftMigrated||confirmedMigrated;
       // 預設名單只當作草稿；要按「套用配置」或「恢復預設名單」才進入依場上名單評估的球隊模式
       if(!raw&&!s.storageError&&defaults[t]){s.draft=clone(defaults[t]);s.isDefault=true;}
       states.set(t,s);
@@ -94,6 +108,12 @@
     renderSwap();
     const warnings=c.slots.filter(s=>s.name&&s.pos!=='DH'&&!roster.hitters.find(h=>h.name===s.name)?.positions?.[s.pos]);
     q('#lineupWarnings').textContent=warnings.length?'守位經驗未收錄：'+warnings.map(s=>s.name+'（'+POS[s.pos]+'）').join('、')+'。請依現場確認。':'';
+    q('#lineupUnavailable').innerHTML=[...roster.hitters,...roster.pitchers].map(p=>`<label class="toggle"><input type="checkbox" data-lineup-unavailable="${esc(p.name)}" ${(c.unavailable||[]).includes(p.name)?'checked':''}>${esc(p.name)}</label>`).join('');
+    q('#lineupUnavailable').onchange=e=>{
+      const name=e.target.dataset.lineupUnavailable;if(!name)return;
+      const excluded=new Set(c.unavailable||[]);if(e.target.checked)excluded.add(name);else excluded.delete(name);
+      c.unavailable=[...excluded];draftChanged();
+    };
   }
   function pickerRender(){
     const c=get(teamName).draft,list=pickerIndex==='P'?roster.pitchers:roster.hitters;
@@ -110,7 +130,7 @@
     resetSwap();const token=++selectTeam.generation;
     options.element.setAttribute('aria-busy','true');
     q('#lineupApply').disabled=true;
-    try{const next=await options.team(name);if(token!==selectTeam.generation)return;teamName=name;roster=next;render();message(get(name).storageError?'保存記錄無法讀取；本次仍可設定。':'請依實際出賽名單設定。');}
+    try{const next=await options.team(name);if(token!==selectTeam.generation)return;teamName=name;roster=next;render();message(get(name).storageError?'保存記錄無法讀取；本次仍可設定。':get(name).identityMigrated?'已依保存的隊別區分同名林子崴；原名單與棒次保留，請核對後套用。':'請依實際出賽名單設定。');}
     catch{if(token!==selectTeam.generation)return;if(roster)render();message('球員名單載入失敗，請重新選隊。',true);}
     finally{if(token===selectTeam.generation){options.element.removeAttribute('aria-busy');q('#lineupApply').disabled=!roster;}}
   }
@@ -156,6 +176,6 @@
   function setDefaults(map){defaults={};defaultsMeta={};Object.entries(map||{}).forEach(([t,v])=>{const c={slots:v.slots.map(x=>({name:x.name,pos:x.pos})),pitcher:v.pitcher};if(c.slots.length===9&&c.slots.every(x=>POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9){defaults[t]=c;defaultsMeta[t]={games:v.games,through:v.through};}});states.forEach((s,t)=>{if(!s.confirmed&&defaults[t]&&!s.storageError&&(s.isDefault||!s.draft.pitcher)){s.draft=clone(defaults[t]);s.isDefault=true;}});}
   function defaultFor(t){return defaults[t]?clone(defaults[t]):null;}
   function cancelSwap(){swapMode=null;swapFirst=null;if(options&&roster)render();}
-  const api={release,setDefaults,defaultFor,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers};
+  const api={release,setDefaults,defaultFor,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LineupBoard=api;
 })(typeof window!=='undefined'?window:globalThis);

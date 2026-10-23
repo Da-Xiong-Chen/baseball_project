@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "node_tests": 166,
+  "python_tests": 84,
+  "fixed_day_views_rendered": 452,
+  "detail_panels_rendered": 7953,
+  "custom_scenarios": 18,
+  "custom_views_rendered": 36,
+  "pitch_snapshots_rendered": 9855,
+  "pitch_rows": 39420,
+  "model_and_data_unchanged": true,
+  "fresh_browser_visual_check": false,
+  "scope": "sealed local/PR version; public site requires deployment and browser verification"
+}

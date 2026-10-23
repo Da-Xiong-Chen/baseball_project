@@ -1,0 +1,203 @@
+{
+  "date": "2025-09-20",
+  "bootstrap": 0,
+  "purpose": "coverage experiment only; not stability or uncertainty evidence",
+  "results": {
+    "5/10": {
+      "counts": {
+        "ALL_total": 159,
+        "ALL_ready": 28,
+        "ALL_raw_both_periods": 119,
+        "L_total": 159,
+        "L_ready": 26,
+        "L_raw_both_periods": 115,
+        "R_total": 159,
+        "R_ready": 23,
+        "R_raw_both_periods": 119,
+        "ALL_insufficient": 131,
+        "L_insufficient": 133,
+        "R_insufficient": 136
+      },
+      "example": {
+        "ALL": {
+          "status": "insufficient",
+          "coverage": [
+            0.0,
+            0.0
+          ],
+          "counts": [
+            158,
+            52
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期有效球數不足 100 球",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        },
+        "L": {
+          "status": "insufficient",
+          "coverage": [
+            0.0,
+            0.0
+          ],
+          "counts": [
+            100,
+            31
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期有效球數不足 100 球",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        },
+        "R": {
+          "status": "insufficient",
+          "coverage": [
+            0.0,
+            0.0
+          ],
+          "counts": [
+            58,
+            21
+          ],
+          "reasons": [
+            "基準期有效球數不足 100 球",
+            "基準期共同條件涵蓋率不足 80%",
+            "近期有效球數不足 100 球",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        }
+      }
+    },
+    "10/20": {
+      "counts": {
+        "ALL_total": 159,
+        "ALL_ready": 23,
+        "ALL_raw_both_periods": 96,
+        "L_total": 159,
+        "L_ready": 23,
+        "L_raw_both_periods": 96,
+        "R_total": 159,
+        "R_ready": 23,
+        "R_raw_both_periods": 96,
+        "ALL_insufficient": 136,
+        "L_insufficient": 136,
+        "R_insufficient": 136
+      },
+      "example": {
+        "ALL": {
+          "status": "insufficient",
+          "coverage": [
+            0.37388724035608306,
+            0.5390625
+          ],
+          "counts": [
+            337,
+            128
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        },
+        "L": {
+          "status": "insufficient",
+          "coverage": [
+            0.5324675324675324,
+            0.6829268292682927
+          ],
+          "counts": [
+            154,
+            82
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期有效球數不足 100 球",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        },
+        "R": {
+          "status": "insufficient",
+          "coverage": [
+            0.24043715846994534,
+            0.2826086956521739
+          ],
+          "counts": [
+            183,
+            46
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期有效球數不足 100 球",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        }
+      }
+    },
+    "15/30": {
+      "counts": {
+        "ALL_total": 159,
+        "ALL_ready": 14,
+        "ALL_raw_both_periods": 79,
+        "L_total": 159,
+        "L_ready": 19,
+        "L_raw_both_periods": 78,
+        "R_total": 159,
+        "R_ready": 14,
+        "R_raw_both_periods": 78,
+        "ALL_insufficient": 145,
+        "L_insufficient": 140,
+        "R_insufficient": 145
+      },
+      "example": {
+        "ALL": {
+          "status": "insufficient",
+          "coverage": [
+            0.5009596928982726,
+            0.6
+          ],
+          "counts": [
+            521,
+            210
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        },
+        "L": {
+          "status": "insufficient",
+          "coverage": [
+            0.6489795918367347,
+            0.7251908396946565
+          ],
+          "counts": [
+            245,
+            131
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        },
+        "R": {
+          "status": "insufficient",
+          "coverage": [
+            0.3695652173913043,
+            0.3924050632911392
+          ],
+          "counts": [
+            276,
+            79
+          ],
+          "reasons": [
+            "基準期共同條件涵蓋率不足 80%",
+            "近期有效球數不足 100 球",
+            "近期共同條件涵蓋率不足 80%"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "audienceHidden": true,
+  "motionRules": [
+    "@media (prefers-reduced-motion: no-preference) {\n  #viewSeg::before, #audienceSeg::before, .tabs::before, .mix-switch::before { transition: transform 140ms var(--ease-ui) !important; }\n  .reco, .bt-verdict, .replay-disclosure[open] > .actual, [data-reveal-outcome][open] > .actual, [data-bt-action][open] > p, [data-bt-outcome][open] > p, .pc-body:not([hidden]) { animation: 140ms ease-out 0s 1 normal none running feedback-reveal !important; }\n}",
+    "@keyframes feedback-reveal { \n  0% { opacity: 0.65; }\n  100% { opacity: 1; }\n}",
+    "@media (prefers-reduced-motion: reduce) {\n  *, ::before, ::after { animation: auto ease 0s 1 normal none running none !important; transition: none !important; scroll-behavior: auto !important; }\n}"
+  ],
+  "overflow": 0,
+  "reducedMotion": true,
+  "team": "台鋼雄鷹",
+  "viewport": {
+    "height": 720,
+    "width": 1265
+  },
+  "visibleSummary": "台鋼雄鷹 vs 富邦悍將\n\n依打席順序比較系統提示與實際代打／換投。\n\n換投回顧\n換打回顧\n有提示、有換人\n1\n只有系統提示\n0\n只有實際換人\n2\n無提示、未換人\n10\n資料不足／不可評估\n0\n六局前：示範範圍\n22\n所有提示／調度\n\n數量單位：打席。同時換人不表示雙方選了同一位；首次提示限目前觀測窗。\n\n決策時點\n原人選\n系統提示軌\n實際調度軌\n6局下 · 0出局\n江承諺\n◇ 本段首次提示 +1.111 百分點\n● 實際換人\n7局下 · 0出局\n王躍霖\n— 未達門檻\n● 實際換人\n8局下 · 0出局\n韋宏亮\n— 未達門檻\n● 實際換人\n\n全場 74 打席可回放；時機研究只計 6 局起的打席，單日結果不代表模型準確度。\n\n揭示賽後比分\n查看當日打席\n官方紀錄 ↗"
+}

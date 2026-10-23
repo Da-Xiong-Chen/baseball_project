@@ -1,0 +1,856 @@
+{
+  "schema": "ppt-master.svg-quality-report.v1",
+  "stage": "final",
+  "target": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native",
+  "source_fingerprint": {
+    "algorithm": "sha256",
+    "digest": "5e5bf84318172331cad0fe9b9c0fa1dac5790757ac7d6648e815721491e23606",
+    "file_count": 32,
+    "files": [
+      {
+        "file": "authoring-svg-flat/slide_01.svg",
+        "sha256": "dcbf06fd88a421bf76610fd808c765e2601567863c9886e675d5b85e8529ac25"
+      },
+      {
+        "file": "authoring-svg-flat/slide_02.svg",
+        "sha256": "3a3dcf7ddc44376fb9e7d144eac788374bd92b0ef70a2de0c90f00cfd62ea397"
+      },
+      {
+        "file": "authoring-svg-flat/slide_03.svg",
+        "sha256": "501208b69efb87372282540ce0aca23e3c1a1adea3c6481a6cd582ebc8e1d31d"
+      },
+      {
+        "file": "authoring-svg-flat/slide_04.svg",
+        "sha256": "0ed2a4ba12e19de13616716d03f4e1fe95d61533f4a2c86e81854625b624a879"
+      },
+      {
+        "file": "authoring-svg-flat/slide_05.svg",
+        "sha256": "2562614b868fc6c312c47aed94063bd599bdd369ca21c7cd9700654652013c19"
+      },
+      {
+        "file": "authoring-svg-flat/slide_06.svg",
+        "sha256": "ce6224b8827202d3c983790a1af4a7af384b7affc9afdaab22ccdbcf31b69528"
+      },
+      {
+        "file": "authoring-svg-flat/slide_07.svg",
+        "sha256": "9d1eb27b0de47e5919f6abefb895d658f006995dc16716d9620161b1e7aae9cb"
+      },
+      {
+        "file": "authoring-svg-flat/slide_08.svg",
+        "sha256": "95229d47c9a7e36d1e98eea190c0846b88fa0bbe1eb910de3a88d0e0430daaf5"
+      },
+      {
+        "file": "authoring-svg-flat/slide_09.svg",
+        "sha256": "0a039efe38841ba82a68395edf69709cc7946dd1bc07811deafb2df8b715010d"
+      },
+      {
+        "file": "authoring-svg-flat/slide_10.svg",
+        "sha256": "f077ace590ca2f338d81172361bfcb649879c065c14bc4b560c41f2cbb104f77"
+      },
+      {
+        "file": "authoring-svg-flat/slide_11.svg",
+        "sha256": "9a7e7a9f1c86001a2c6a67868e2d8c7af9c33746656819ca33642db4a2b03992"
+      },
+      {
+        "file": "authoring-svg-flat/slide_12.svg",
+        "sha256": "7b0169c98b247004d425aad9babaace3839e73efe409c4e2407c0fb37467abe1"
+      },
+      {
+        "file": "authoring-svg-flat/slide_13.svg",
+        "sha256": "7f1771b1fef3d97eba712b25846f7dee3ceb7338c510f4bc7929623501fc5c58"
+      },
+      {
+        "file": "authoring-svg-flat/slide_14.svg",
+        "sha256": "990a1da7b9b98d4c1cc73177414f758289bb079fe2b7d505530af733d501af84"
+      },
+      {
+        "file": "authoring-svg-flat/slide_15.svg",
+        "sha256": "d5a885162061116536526388178d6dc21ab511aa3c2fcf09d564d2666da65441"
+      },
+      {
+        "file": "authoring-svg-flat/slide_16.svg",
+        "sha256": "5bf04c3cce6fbe210eceabe2f2eb1952358ca5590c21cf01848bcfbc2b851a62"
+      },
+      {
+        "file": "authoring-svg-flat/slide_17.svg",
+        "sha256": "a71601e953c8d7e03e556a444ef7090b5f7cc58d2c9aa7a5fc1a2d3be5ceb95c"
+      },
+      {
+        "file": "authoring-svg-flat/slide_18.svg",
+        "sha256": "9525bc2f5711044055f06389543881cd16ea5353b3f3acc7d6bb3f3b8401635f"
+      },
+      {
+        "file": "authoring-svg-flat/slide_19.svg",
+        "sha256": "2d0dd188cf7487fa5fa2c184d34c088f175f030a1a3b1386a08a796910fdcdf2"
+      },
+      {
+        "file": "authoring-svg-flat/slide_20.svg",
+        "sha256": "d41f4855c542e23f8474832f238b189ab076e4646ab3d2b8e614df43e8e9dee9"
+      },
+      {
+        "file": "authoring-svg-flat/slide_21.svg",
+        "sha256": "e4c54eec0947b631aeea130938f283a28978bff33af3cc43e4d4a409f2cb0e51"
+      },
+      {
+        "file": "authoring-svg-flat/slide_22.svg",
+        "sha256": "5278ea942a5bc1e2a40c7c555e0e38f557476bb39694baaabc54aa2812d4fa50"
+      },
+      {
+        "file": "authoring-svg-flat/slide_23.svg",
+        "sha256": "787e29e5c3d8c1bdb4d12da6e39246e6bafef20df20dce0a737ceb3758c67728"
+      },
+      {
+        "file": "authoring-svg-flat/slide_24.svg",
+        "sha256": "0dd6e97b776052557a5e1acbbdbda8bc4063e3d953ac9562fe91de8b7e8e57e7"
+      },
+      {
+        "file": "authoring-svg-flat/slide_25.svg",
+        "sha256": "fe0da3e2e37c25bd2579099cb054686048b5e3da66a14b6ce68304810f3ac152"
+      },
+      {
+        "file": "authoring-svg-flat/slide_26.svg",
+        "sha256": "a6074cf622a729630f5e7aafacee6e97b8deadc03f5e982c0831769c5c21950a"
+      },
+      {
+        "file": "authoring-svg-flat/slide_27.svg",
+        "sha256": "ef818f04c2ea78f15be0e017adc292cecda674f1c73ff684b2373ebd72d64135"
+      },
+      {
+        "file": "authoring-svg-flat/slide_28.svg",
+        "sha256": "33532db9a47458bd21da0f226e4b84d7531ad3c9b5804d155d892474f3dc7f8b"
+      },
+      {
+        "file": "authoring-svg-flat/slide_29.svg",
+        "sha256": "125b591c76f7c33f215e4e6ed22d0b37415d9b48d7d34905afbec53c9798844b"
+      },
+      {
+        "file": "authoring-svg-flat/slide_30.svg",
+        "sha256": "590a65e81edc07a4e452892a4ba70b099e5fdc5efdd3fe559718d5a382b67be0"
+      },
+      {
+        "file": "authoring-svg-flat/slide_31.svg",
+        "sha256": "a3aa9a8e7b12ca679047add1ac142d8c80d3a29837cfaa029eb13ae3b30dc711"
+      },
+      {
+        "file": "authoring-svg-flat/slide_32.svg",
+        "sha256": "2505840b4c4defd6274ef2f06aedc58afa683639d0d864342a1ad3465a4378fc"
+      }
+    ]
+  },
+  "summary": {
+    "total": 32,
+    "passed": 32,
+    "warnings": 0,
+    "errors": 0
+  },
+  "issue_types": {},
+  "categories": {
+    "blocking": {
+      "count": 0,
+      "issues": []
+    },
+    "introduced": {
+      "count": 0,
+      "issues": []
+    },
+    "inherited": {
+      "count": 0,
+      "issues": []
+    },
+    "source-import": {
+      "count": 0,
+      "summary": {
+        "warning_count": 0,
+        "by_code": {}
+      }
+    }
+  },
+  "drift": {
+    "colors": {},
+    "fonts": {},
+    "sizes": {}
+  },
+  "carrier_receipt": {
+    "scope": "informational-not-a-quota",
+    "pages": 0,
+    "totals": {
+      "text_elements": 0,
+      "image_placements": 0,
+      "icons": 0,
+      "svg_geometry_elements": 0,
+      "preset_shapes": 0,
+      "page_frame_elements": 0,
+      "marker_uses": 0,
+      "inline_emphasis_runs": 0,
+      "gradient_uses": 0,
+      "filter_uses": 0,
+      "text_effects": 0
+    },
+    "pages_with": {
+      "images": 0,
+      "icons": 0,
+      "presets": 0,
+      "charts": 0,
+      "tables": 0,
+      "formulas": 0,
+      "inline_emphasis_runs": 0,
+      "gradient_uses": 0,
+      "filter_uses": 0,
+      "text_effects": 0
+    },
+    "relationship_pages": null,
+    "geometry_elements": {},
+    "preset_names": {},
+    "native_objects": {},
+    "image_page_max_frame_share_range": []
+  },
+  "project_issues": {
+    "template": [],
+    "animation": [],
+    "illustration": [],
+    "communication_trace": [],
+    "pptx_structure": []
+  },
+  "files": [
+    {
+      "file": "slide_01.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_01.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 1,
+        "source_slide": 1,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 9,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "dcbf06fd88a421bf76610fd808c765e2601567863c9886e675d5b85e8529ac25"
+    },
+    {
+      "file": "slide_02.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_02.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 2,
+        "source_slide": 2,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 19,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "3a3dcf7ddc44376fb9e7d144eac788374bd92b0ef70a2de0c90f00cfd62ea397"
+    },
+    {
+      "file": "slide_03.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_03.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 3,
+        "source_slide": 3,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 4,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "501208b69efb87372282540ce0aca23e3c1a1adea3c6481a6cd582ebc8e1d31d"
+    },
+    {
+      "file": "slide_04.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_04.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 4,
+        "source_slide": 4,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 10,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "0ed2a4ba12e19de13616716d03f4e1fe95d61533f4a2c86e81854625b624a879"
+    },
+    {
+      "file": "slide_05.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_05.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 5,
+        "source_slide": 5,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 7,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "2562614b868fc6c312c47aed94063bd599bdd369ca21c7cd9700654652013c19"
+    },
+    {
+      "file": "slide_06.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_06.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 6,
+        "source_slide": 6,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 15,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "ce6224b8827202d3c983790a1af4a7af384b7affc9afdaab22ccdbcf31b69528"
+    },
+    {
+      "file": "slide_07.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_07.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 7,
+        "source_slide": 7,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.05296287189574616,
+          "measured_unchanged": 10,
+          "positive_unchanged": 2
+        }
+      },
+      "passed": true,
+      "source_sha256": "9d1eb27b0de47e5919f6abefb895d658f006995dc16716d9620161b1e7aae9cb"
+    },
+    {
+      "file": "slide_08.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_08.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 8,
+        "source_slide": 8,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 4,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "95229d47c9a7e36d1e98eea190c0846b88fa0bbe1eb910de3a88d0e0430daaf5"
+    },
+    {
+      "file": "slide_09.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_09.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 9,
+        "source_slide": 9,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 19,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "0a039efe38841ba82a68395edf69709cc7946dd1bc07811deafb2df8b715010d"
+    },
+    {
+      "file": "slide_10.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_10.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 10,
+        "source_slide": 10,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 16,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "f077ace590ca2f338d81172361bfcb649879c065c14bc4b560c41f2cbb104f77"
+    },
+    {
+      "file": "slide_11.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_11.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 11,
+        "source_slide": 11,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 13,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "9a7e7a9f1c86001a2c6a67868e2d8c7af9c33746656819ca33642db4a2b03992"
+    },
+    {
+      "file": "slide_12.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_12.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 12,
+        "source_slide": 12,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 1,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 19,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "7b0169c98b247004d425aad9babaace3839e73efe409c4e2407c0fb37467abe1"
+    },
+    {
+      "file": "slide_13.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_13.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 13,
+        "source_slide": 13,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 20,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "7f1771b1fef3d97eba712b25846f7dee3ceb7338c510f4bc7929623501fc5c58"
+    },
+    {
+      "file": "slide_14.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_14.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 14,
+        "source_slide": 14,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 2,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 11,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "990a1da7b9b98d4c1cc73177414f758289bb079fe2b7d505530af733d501af84"
+    },
+    {
+      "file": "slide_15.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_15.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 15,
+        "source_slide": 15,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 4,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "d5a885162061116536526388178d6dc21ab511aa3c2fcf09d564d2666da65441"
+    },
+    {
+      "file": "slide_16.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_16.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 16,
+        "source_slide": 16,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 8,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "5bf04c3cce6fbe210eceabe2f2eb1952358ca5590c21cf01848bcfbc2b851a62"
+    },
+    {
+      "file": "slide_17.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_17.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 17,
+        "source_slide": 17,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 8,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "a71601e953c8d7e03e556a444ef7090b5f7cc58d2c9aa7a5fc1a2d3be5ceb95c"
+    },
+    {
+      "file": "slide_18.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_18.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 18,
+        "source_slide": 18,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 8,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "9525bc2f5711044055f06389543881cd16ea5353b3f3acc7d6bb3f3b8401635f"
+    },
+    {
+      "file": "slide_19.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_19.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 19,
+        "source_slide": 19,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 9,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "2d0dd188cf7487fa5fa2c184d34c088f175f030a1a3b1386a08a796910fdcdf2"
+    },
+    {
+      "file": "slide_20.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_20.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 20,
+        "source_slide": 20,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 2,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 16,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "d41f4855c542e23f8474832f238b189ab076e4646ab3d2b8e614df43e8e9dee9"
+    },
+    {
+      "file": "slide_21.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_21.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 21,
+        "source_slide": 21,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 19,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "e4c54eec0947b631aeea130938f283a28978bff33af3cc43e4d4a409f2cb0e51"
+    },
+    {
+      "file": "slide_22.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_22.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 22,
+        "source_slide": 22,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 10,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "5278ea942a5bc1e2a40c7c555e0e38f557476bb39694baaabc54aa2812d4fa50"
+    },
+    {
+      "file": "slide_23.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_23.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 23,
+        "source_slide": 23,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 14,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "787e29e5c3d8c1bdb4d12da6e39246e6bafef20df20dce0a737ceb3758c67728"
+    },
+    {
+      "file": "slide_24.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_24.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 24,
+        "source_slide": 24,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 14,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "0dd6e97b776052557a5e1acbbdbda8bc4063e3d953ac9562fe91de8b7e8e57e7"
+    },
+    {
+      "file": "slide_25.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_25.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 25,
+        "source_slide": 25,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 11,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "fe0da3e2e37c25bd2579099cb054686048b5e3da66a14b6ce68304810f3ac152"
+    },
+    {
+      "file": "slide_26.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_26.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 26,
+        "source_slide": 26,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 3,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "a6074cf622a729630f5e7aafacee6e97b8deadc03f5e982c0831769c5c21950a"
+    },
+    {
+      "file": "slide_27.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_27.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 27,
+        "source_slide": 27,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 4,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "ef818f04c2ea78f15be0e017adc292cecda674f1c73ff684b2373ebd72d64135"
+    },
+    {
+      "file": "slide_28.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_28.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 28,
+        "source_slide": 28,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 14,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "33532db9a47458bd21da0f226e4b84d7531ad3c9b5804d155d892474f3dc7f8b"
+    },
+    {
+      "file": "slide_29.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_29.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 29,
+        "source_slide": 29,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 12,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "125b591c76f7c33f215e4e6ed22d0b37415d9b48d7d34905afbec53c9798844b"
+    },
+    {
+      "file": "slide_30.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_30.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 30,
+        "source_slide": 30,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 18,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "590a65e81edc07a4e452892a4ba70b099e5fdc5efdd3fe559718d5a382b67be0"
+    },
+    {
+      "file": "slide_31.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_31.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 31,
+        "source_slide": 31,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.0,
+          "measured_unchanged": 15,
+          "positive_unchanged": 0
+        }
+      },
+      "passed": true,
+      "source_sha256": "a3aa9a8e7b12ca679047add1ac142d8c80d3a29837cfaa029eb13ae3b30dc711"
+    },
+    {
+      "file": "slide_32.svg",
+      "path": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\ppt-final-audit-20261022\\native\\authoring-svg-flat\\slide_32.svg",
+      "exists": true,
+      "errors": [],
+      "warnings": [],
+      "info": {
+        "output_page": 32,
+        "source_slide": 32,
+        "viewbox": "0 0 1280 720",
+        "edited_text_elements": 0,
+        "roundtrip_text_calibration": {
+          "factor": 0.053837209302325696,
+          "measured_unchanged": 6,
+          "positive_unchanged": 1
+        }
+      },
+      "passed": true,
+      "source_sha256": "2505840b4c4defd6274ef2f06aedc58afa683639d0d864342a1ad3465a4378fc"
+    }
+  ]
+}

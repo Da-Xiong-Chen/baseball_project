@@ -1,0 +1,24 @@
+{
+  "status": "diagnostics_computed_requires_scientific_review_not_adopted",
+  "computed_at": 1792658484.941927,
+  "valid_primary_checkpoints": 1600,
+  "valid_independent_checkpoints": 1600,
+  "cases": 176,
+  "independent_seed_ranges_disjoint": true,
+  "paired_draws_distinct_across_streams": true,
+  "seed_endpoint_change_pp": {
+    "median": 0.3019916308504811,
+    "p90": 1.0274675645553724,
+    "maximum": 1.837521232993132
+  },
+  "cases_zero_crossing_classification_changed": 36,
+  "cases_one_pp_crossing_classification_changed": 48,
+  "full_conditional_interval_adopted": false,
+  "production_weights_changed": false,
+  "limitations": [
+    "No numeric stability pass threshold was preregistered; report actual drifts rather than retrofitting a passing threshold.",
+    "Intervals describe refitting variation conditional on observed labels and frozen candidates, not counterfactual benefit or verified coverage.",
+    "Roster, eligibility and health uncertainty are not assigned probabilities.",
+    "Rank frequencies are bootstrap stability, not real-world winning probabilities."
+  ]
+}

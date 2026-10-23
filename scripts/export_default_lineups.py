@@ -1,3 +1,4 @@
+import os
 """產生各隊 2025 預設場上名單（場上名單頁的初始值）。
 
 做法：取各隊 2025 最後 RECENT 場的先發打者（每個棒次第一位出場者），
@@ -75,6 +76,6 @@ if __name__ == "__main__":
     pa, _, boxes = load()
     teams = build(server.rosters(), pa, boxes, position_games, can_play)
     result = {"season": 2025, "method": f"各隊最後 {RECENT} 場先發打者與先發投手（Rebas 2025 例行賽，ODC-By v1.0）", "teams": teams}
-    (ROOT / "docs/data/default-lineups-2025.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (Path(os.environ.get("BASEBALL_STATIC_OUT", ROOT/"docs/data")) / "default-lineups-2025.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     for t, v in teams.items():
         print(t, v["pitcher"], " ".join(f"{s['name']}({s['pos']})" for s in v["slots"]))

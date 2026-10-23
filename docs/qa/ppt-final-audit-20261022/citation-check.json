@@ -1,0 +1,46 @@
+[
+  {
+    "doi": "10.1080/01621459.1975.10479864",
+    "title": [
+      "Data Analysis Using Stein's Estimator and its Generalizations"
+    ],
+    "published_year": 1975,
+    "pages": "311-319",
+    "volume": "70",
+    "issue": "350",
+    "author": [
+      "Efron",
+      "Morris"
+    ],
+    "matched": true
+  },
+  {
+    "doi": "10.1214/aos/1176344552",
+    "title": [
+      "Bootstrap Methods: Another Look at the Jackknife"
+    ],
+    "published_year": 1979,
+    "pages": "1-26",
+    "volume": "7",
+    "issue": "1",
+    "author": [
+      "Efron"
+    ],
+    "matched": true
+  },
+  {
+    "doi": "10.1198/016214506000001437",
+    "title": [
+      "Strictly Proper Scoring Rules, Prediction, and Estimation"
+    ],
+    "published_year": 2007,
+    "pages": "359-378",
+    "volume": "102",
+    "issue": "477",
+    "author": [
+      "Gneiting",
+      "Raftery"
+    ],
+    "matched": true
+  }
+]

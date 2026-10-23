@@ -1,0 +1,22 @@
+{
+  "status": "promoted_local_only",
+  "changed_files": [
+    "backtest.js"
+  ],
+  "numerical_files_changed": [],
+  "model_batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "prior_manifest_sha256": "28e7b47ef4ff4c440f9067f13da6b4748ec7b5090a07bab79d13bf44f9fd3b85",
+  "new_manifest_sha256": "56bcff3e6f01d2da3e38a0f0de3949b57617c561bbedb9115dc0e634f4fc0ee0",
+  "source_change": {
+    "file": "docs/backtest.js",
+    "before_sha256": "b3d3131fbeec81417c826438d37adcdc6389c7611aaf75a8d2e555ec7e76c98d",
+    "after_sha256": "52bca4227f7d289b2917955b372a1f235fa472699a662fdf5222286b6b796c42",
+    "changes": [
+      "Reject incomplete or non-finite comparison payloads before rendering",
+      "Alert plus retry instead of falsely reporting unfinished training",
+      "Audience-facing adoption wording; unchanged metrics"
+    ]
+  },
+  "backup": "D:\\資料集_CIC_IDS\\資訊服務競賽\\baseball_latest_clone_20261020\\output\\final-closeout-20261022\\promotion-backup",
+  "remote_changes": false
+}

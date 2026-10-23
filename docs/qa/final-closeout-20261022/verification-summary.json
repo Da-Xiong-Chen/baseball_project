@@ -1,0 +1,58 @@
+{
+  "updated": "2026-10-22T17:37:37.279672+08:00",
+  "scope": "Local competition release closeout; no new models or data sources",
+  "model_training_version": 4,
+  "engine_contract": 4,
+  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "numerical_data_changed": false,
+  "weights_changed": false,
+  "new_uncertainty_intervals_adopted": false,
+  "changed_site_files": [
+    "backtest.js",
+    "index.html",
+    "data/batch-manifest.json"
+  ],
+  "python_tests": {
+    "passed": 84,
+    "failed": 0
+  },
+  "node_tests": {
+    "passed": 153,
+    "failed": 0
+  },
+  "live_targeted_tests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "browser_tasks": {
+    "pinch_hit_evaluation": true,
+    "empty_bench_explained": true,
+    "bullpen_team_mode_evaluation": true,
+    "lineup_reorder_survives_reload": true,
+    "daily_team_selection": true,
+    "action_then_outcome_reveal": true,
+    "same_PA_full_comparison_disclosure_retained": true,
+    "daily_analysis_has_no_audience_mode_controls": true,
+    "model_validation_new_script_loaded": true,
+    "adoption_details_expand": true,
+    "mobile_390_model_no_horizontal_overflow": true,
+    "mobile_320_dark_model_no_horizontal_overflow": true,
+    "console_errors_observed": []
+  },
+  "static_release": {
+    "path": "output/site-release-v4-final-20261022",
+    "files": 692,
+    "json_files": 680,
+    "bytes": 60013414
+  },
+  "evidence": "docs/qa/final-closeout-20261022",
+  "slides": "presentations/competition-2026/release-20261022",
+  "remaining_external": [
+    "3–5 new human users task testing; not substituted by automation",
+    "Public deployment and post-deployment network/device verification; not authorized this round",
+    "Real PowerPoint video play/pause/reopen on presentation PC",
+    "Final team name and registration information"
+  ],
+  "performance_scope": "No cold-load/transfer-byte/mobile-CPU benchmark claimed; static package bytes are not first-load network traffic",
+  "remote_changes": false
+}

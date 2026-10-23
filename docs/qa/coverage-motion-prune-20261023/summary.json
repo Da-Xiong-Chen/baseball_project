@@ -1,0 +1,28 @@
+{
+  "node_tests": 169,
+  "python_tests": 88,
+  "motion_removed": [
+    "result/conclusion fade",
+    "actual-action/outcome fade",
+    "pitch panel fade"
+  ],
+  "retained": [
+    "140ms selection marker",
+    "button color feedback",
+    "loading indicator"
+  ],
+  "fielding_plans": {
+    "unknown_pas": 36,
+    "unknown_late_pas": 17,
+    "pas_with_plan": 6,
+    "late_pas_with_plan": 3,
+    "candidate_plans": 6
+  },
+  "original_eligibility_and_rankings_unchanged": true,
+  "plan_example": "2025-341-h030: 林澤彬入游擊、張育成游擊移一壘、DH林岳谷不動",
+  "pitch_example": "林詩翔原始比例：基準10場158球／近期5場52球；嚴格比較仍樣本不足",
+  "browser_errors_and_warnings": 0,
+  "browser_viewport": "1265x720",
+  "full_model_uncertainty_adopted": false,
+  "ppt_changed": false
+}

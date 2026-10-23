@@ -83,7 +83,8 @@ def observations():
     out, seen = {}, set()
     for path in sorted((ROOT / 'data/rebas').glob('*/*.json')):
         with path.open(encoding='utf8') as f:
-            g = json.load(f)
+            from identity import normalize_game
+            g = normalize_game(json.load(f))
         if not isinstance(g, dict) or 'seq' not in g:
             continue  # never read a combined season export as game data
         day = g['date'][:10]

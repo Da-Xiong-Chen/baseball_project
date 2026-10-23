@@ -1,11 +1,12 @@
 """機器學習部分：梯度提升樹逐球結果模型 + 投手歷史球模擬。
 
-實驗（src/experiment.py）結果：「階層式模型 + 梯度提升樹模擬」各半的集成在打席預測與代打一致率都最佳，
-因此系統採用集成。本檔負責訓練、存檔與載入梯度提升樹模型。
+系統採用階層式模型與梯度提升樹模擬各半的集成。2026-10-20 有限滾動比較中，
+候選對現行改善的比賽重抽樣區間跨零，依預定規則維持原權重；不以教練一致率選模型。
+本檔負責訓練、存檔與載入梯度提升樹模型。
 
 模型檔存在 models/：
-  gbt_full.pkl        全部資料（自訂情境、線上版）
-  gbt_YYYY-MM.pkl     月初截止（歷史回放用，只用該月以前的資料）
+  gbt_full_v4.pkl        全部資料（自訂情境、線上版）
+  gbt_YYYY-MM_v4.pkl     月初截止（歷史回放用，只用該月以前的資料）
 用法：python mlmodel.py            # 訓練全部模型
 """
 import os
@@ -22,19 +23,46 @@ from load import ROOT, load, pitches_before
 from ml_compare import add_velocity, apply_tendencies, features, fit_tendencies, prepare
 from model import PITCHES_PER_PA
 
-MODEL_DIR = os.path.join(ROOT, "models")
+MODEL_DIR = os.environ.get('BASEBALL_MODEL_DIR', os.path.join(ROOT, "models"))
 FULL = "2026-01-01"
 REPLAY_MONTHS = [f"2025-{m:02d}-01" for m in range(3, 11)]
 SAMPLE = 150          # 每位投手（對該手打者）抽樣的歷史球數
 MIN_OWN = 40          # 少於此數改用聯盟同投打組合的球
 ENSEMBLE_W = 0.5      # 集成中梯度提升樹的權重
 AVG = "__聯盟平均打者__"
-TRAINING_VERSION = 2  # 截止日內重建逐球得分標籤；舊模型不得用於新回放
+TRAINING_VERSION = 4  # chronological, cutoff-safe calibration reference
 
 
-def make_gbt():
-    return HistGradientBoostingClassifier(max_iter=600, learning_rate=0.05, max_leaf_nodes=31, l2_regularization=1.0,
-                                          early_stopping=True, validation_fraction=0.1, random_state=0)
+def calibration_reference(pa, cutoff, size=2000):
+    """Latest PA in event time, independent of file order; never include cutoff."""
+    prior = pa[pa['date'] < pd.Timestamp(cutoff)].copy()
+    prior['_half_order'] = prior['half'].map({'away':0,'home':1})
+    return prior.sort_values(['date','game','inning','_half_order','seq','pa_id'],
+                             kind='stable').tail(size).drop(columns='_half_order')
+
+
+def recalibrate(previous, pa=None):
+    """Reuse unchanged trees/simulator; rebuild both calibration offsets only."""
+    from model import fit
+    ref = calibration_reference(load()[0] if pa is None else pa, previous.cutoff)
+    rows = list(ref[['batter','bhand','pitcher']].itertuples(index=False,name=None))
+    raw = previous.sim.values(pd.DataFrame(rows,columns=['batter','bhand','pitcher']))['gbt']
+    hm = fit(previous.cutoff,season=2025 if previous.cutoff==FULL else None)
+    target = [hm.matchup(*r)['per_pa'] for r in rows]
+    result = MLModel(previous.cutoff, previous.sim, float(np.mean(raw)-np.mean(target)))
+    result.training_version = TRAINING_VERSION
+    result.calibrate(rows)
+    result.calibration_reference = {'policy':'chronological_latest_2000_before_cutoff',
+        'pa_ids':list(ref.pa_id),'first_date':str(ref.date.min().date()),
+        'last_date':str(ref.date.max().date())}
+    return result
+
+
+def make_gbt(**overrides):
+    settings = dict(max_iter=600, learning_rate=0.05, max_leaf_nodes=31, l2_regularization=1.0,
+                    early_stopping=True, validation_fraction=0.1, random_state=0)
+    settings.update(overrides)
+    return HistGradientBoostingClassifier(**settings)
 
 
 def oof_tendencies(train, k=5):
@@ -45,16 +73,16 @@ def oof_tendencies(train, k=5):
 class Simulator:
     """用投手實際投過的歷史球，評估任一打者的預期每打席得分值。"""
 
-    def __init__(self, train, models, tb, velo_tbl, velo_type):
+    def __init__(self, train, models, tb, velo_tbl, velo_type, sample=SAMPLE, random_state=0):
         self.models, self.tb, self.velo_tbl, self.velo_type = models, tb, velo_tbl, velo_type
         rv = train.groupby(["cls", "balls", "strikes"])["rv"].mean()
         self.rv = np.zeros((6, 4, 3))
         for (c, b, s), v in rv.items():
             self.rv[c, b, s] = v
         cols = ["x", "y", "velo", "ptype", "cell", "balls", "strikes", "outs", "bases", "phand", "pitcher", "bhand"]
-        self.own = {k: g[cols].sample(min(SAMPLE, len(g)), random_state=0)
+        self.own = {k: g[cols].sample(min(sample, len(g)), random_state=random_state)
                     for k, g in train.groupby(["pitcher", "bhand"]) if len(g) >= MIN_OWN}
-        self.lg = {k: g[cols].sample(min(SAMPLE * 2, len(g)), random_state=0) for k, g in train.groupby(["phand", "bhand"])}
+        self.lg = {k: g[cols].sample(min(sample * 2, len(g)), random_state=random_state) for k, g in train.groupby(["phand", "bhand"])}
         self.phand = train.groupby("pitcher")["phand"].agg(lambda s: s.mode().iat[0])
 
     def values(self, queries):
@@ -90,8 +118,15 @@ class MLModel:
 
     def abs_many(self, rows):
         """rows: [(batter, bhand, pitcher)] → 每打席預期得分值（已平移到與階層式模型同一水準）。"""
-        q = pd.DataFrame(rows, columns=["batter", "bhand", "pitcher"])
-        return self.sim.values(q)["gbt"] - self.offset
+        keys=[tuple(row) for row in rows]
+        if not hasattr(self,'_abs_cache') or len(self._abs_cache)>50000:
+            self._abs_cache={}
+        missing=list(dict.fromkeys(k for k in keys if k not in self._abs_cache))
+        if missing:
+            q=pd.DataFrame(missing,columns=['batter','bhand','pitcher'])
+            values=self.sim.values(q)['gbt']-self.offset
+            self._abs_cache.update(zip(missing,map(float,values)))
+        return np.asarray([self._abs_cache[k] for k in keys],dtype=float)
 
     def ref(self, pitcher):
         """聯盟平均打者（左右打各半）面對此投手的值；加上校正量，使實際打席的相對值平均為 0。"""
@@ -110,19 +145,18 @@ class MLModel:
         return np.array([v - self.ref(p) for v, (_, _, p) in zip(vals, rows)])
 
 
-def train(cutoff):
+def train(cutoff, gbt_options=None):
     from model import fit
     t = time.time()
     P = _pitches()
-    tr = P[P["date"] < cutoff].drop(columns="rv").merge(
-        pitches_before(cutoff)[["pa_id", "j", "rv"]], on=["pa_id", "j"], how="left").dropna(subset=["rv"])
+    tr = training_pitches(P, cutoff)
     velo_tbl = tr.groupby(["pitcher", "ptype"])["velo"].mean()
     velo_type = tr.groupby("ptype")["velo"].mean()
-    gbt = make_gbt().fit(features(tr, oof_tendencies(tr), velo_tbl, velo_type), tr["cls"].to_numpy())
+    gbt = make_gbt(**(gbt_options or {})).fit(features(tr, oof_tendencies(tr), velo_tbl, velo_type), tr["cls"].to_numpy())
     sim = Simulator(tr, {"gbt": gbt}, fit_tendencies(tr), velo_tbl, velo_type)
     # 平移量：讓梯度提升樹的整體水準與階層式模型一致（用截止日前最近 2000 個打席估計）
     pa, _, _ = load()
-    ref = pa[pa["date"] < cutoff].tail(2000)
+    ref = calibration_reference(pa, cutoff)
     rows = list(ref[["batter", "bhand", "pitcher"]].itertuples(index=False, name=None))
     g = sim.values(pd.DataFrame(rows, columns=["batter", "bhand", "pitcher"]))["gbt"]
     hm = fit(cutoff, season=2025 if cutoff == FULL else None)
@@ -130,8 +164,18 @@ def train(cutoff):
     model = MLModel(cutoff, sim, float(g.mean() - h.mean()))
     model.training_version = TRAINING_VERSION
     model.calibrate(rows)
+    model.calibration_reference = {'policy':'chronological_latest_2000_before_cutoff',
+        'pa_ids':list(ref.pa_id),'first_date':str(ref.date.min().date()),
+        'last_date':str(ref.date.max().date())}
     print(f"訓練 {cutoff}：{len(tr):,} 球，{time.time() - t:.0f} 秒")
     return model
+
+
+def training_pitches(prepared, cutoff):
+    """Shared formal/experimental training contract; never keep full-data rv."""
+    prior = prepared[prepared["date"] < pd.Timestamp(cutoff)].drop(columns="rv", errors="ignore")
+    labels = pitches_before(cutoff)[["pa_id", "j", "rv"]]
+    return prior.merge(labels, on=["pa_id", "j"], how="left", validate="one_to_one").dropna(subset=["rv"])
 
 
 @lru_cache(maxsize=1)
@@ -140,7 +184,7 @@ def _pitches():
 
 
 def path_for(cutoff):
-    name = "full_v2" if cutoff == FULL else cutoff[:7] + "_v2"
+    name = f"full_v{TRAINING_VERSION}" if cutoff == FULL else cutoff[:7] + f"_v{TRAINING_VERSION}"
     return os.path.join(MODEL_DIR, f"gbt_{name}.pkl")
 
 
@@ -151,27 +195,36 @@ class _Unpickler(pickle.Unpickler):
         return super().find_class("mlmodel" if module == "__main__" else module, name)
 
 
-@lru_cache(maxsize=16)
-def get(cutoff):
-    """載入（不存在則訓練並存檔）指定截止日的模型。"""
+def get(cutoff, train_missing=False):
+    """Load a compatible model; training must be requested explicitly."""
     p = path_for(cutoff)
     if os.path.exists(p):
-        with open(p, "rb") as f:
-            m = _Unpickler(f).load()
-        if getattr(m, "training_version", None) != TRAINING_VERSION or m.cutoff != cutoff:
-            raise ValueError("模型版本或截止日不一致，請重新訓練")
-        if not hasattr(m, "rel_bias"):  # 舊版存檔：補做校正並重新存檔
-            pa, _, _ = load()
-            ref = pa[pa["date"] < m.cutoff].tail(2000)
-            m.calibrate(list(ref[["batter", "bhand", "pitcher"]].itertuples(index=False, name=None)))
-            with open(p, "wb") as f:
-                pickle.dump(m, f)
-        return m
+        if train_missing:return _load_weight(p,cutoff)
+        from batch_contract import weight_identity
+        identity,stamp=weight_identity(p,cutoff)
+        return _get_cached(p,cutoff,identity,stamp)
+    if not train_missing:
+        raise FileNotFoundError(f'缺少模型 {p}；請先執行 python src/mlmodel.py {cutoff}，不會自動訓練')
     m = train(cutoff)
     os.makedirs(MODEL_DIR, exist_ok=True)
     with open(p, "wb") as f:
         pickle.dump(m, f)
     return m
+
+
+def _load_weight(path,cutoff):
+    with open(path,'rb') as f:m=_Unpickler(f).load()
+    if getattr(m,'training_version',None)!=TRAINING_VERSION or m.cutoff!=cutoff:
+        raise ValueError('模型版本或截止日不一致，請重新訓練')
+    if not hasattr(m,'rel_bias'):raise ValueError('模型校正資料缺漏，請明確執行訓練後重新匯出')
+    return m
+
+
+@lru_cache(maxsize=16)
+def _get_cached(path,cutoff,identity,stamp):return _load_weight(path,cutoff)
+
+
+get.cache_clear=_get_cached.cache_clear
 
 
 def for_date(date_str):
@@ -188,4 +241,4 @@ if __name__ == "__main__":
     import mlmodel  # 以模組身分執行，存檔時類別才會記成 mlmodel.MLModel
     targets = sys.argv[1:] or [FULL] + REPLAY_MONTHS
     for c in targets:
-        mlmodel.get(c)
+        mlmodel.get(c, train_missing=True)

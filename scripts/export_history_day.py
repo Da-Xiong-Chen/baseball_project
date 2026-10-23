@@ -5,6 +5,7 @@ Run: python scripts/export_history_day.py
 """
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -12,12 +13,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 import server
 import mlmodel
+from batch_contract import metadata as batch_metadata
 from engine import matchup_detail
 from export_static import rnd
 from load import load
 
 DATE = "2025-09-20"
-OUT = ROOT / "docs" / "data" / "replay" / ("day-" + DATE)
+OUT = Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data')) / 'replay' / ('day-'+DATE)
 
 
 def details(result, model):
@@ -41,7 +43,7 @@ def export():
         raise ValueError("固定日必須包含六隊三場")
     OUT.mkdir(parents=True, exist_ok=True)
     model = server.model_for(DATE)
-    index = dict(schema_version=1, date=DATE, model_cutoff=DATE, ml_cutoff=month,
+    index = dict(schema_version=1, **batch_metadata(), date=DATE, model_cutoff=DATE, ml_cutoff=month,
                  games={g: [] for g in games}, files={}, sha256={}, pitcher_changes=0)
     total = 0
     for number, pid in enumerate(day["pa_id"], 1):
@@ -51,7 +53,7 @@ def export():
         for result in [ph, pen]:
             if result is not None and not (result["ml_cutoff"] <= result["model_cutoff"] <= DATE):
                 raise ValueError(f"時間界線無效：{pid}")
-        payload = dict(schema_version=1, date=DATE, pa_id=pid, ph=ph, pen=pen)
+        payload = dict(schema_version=1, **batch_metadata(), date=DATE, pa_id=pid, ph=ph, pen=pen)
         raw = json.dumps(rnd(server.clean(payload)), ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf8")
         filename = pid + ".json"
         (OUT / filename).write_bytes(raw)

@@ -1,0 +1,7 @@
+{
+  "index.html": "HTTP 200 and bytes match sealed release",
+  "app.js": "HTTP 200 and bytes match sealed release",
+  "backtest.js": "HTTP 200 and bytes match sealed release",
+  "data/model-evaluation.json": "HTTP 200 and bytes match sealed release",
+  "data/replay/day-2025-09-20/index.json": "HTTP 200 and bytes match sealed release"
+}

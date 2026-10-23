@@ -8,11 +8,12 @@ import urllib.parse
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8011').rstrip('/')+'/'
+OPENER=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
 def request(path,body=None):
     req=urllib.request.Request(BASE+path,data=json.dumps(body).encode() if body is not None else None,
                               headers={'Content-Type':'application/json'})
-    with urllib.request.urlopen(req,timeout=120) as r:return json.load(r)
+    with OPENER.open(req,timeout=120) as r:return json.load(r)
 
 
 def main():
@@ -66,7 +67,7 @@ def main():
     for q in [dict(pitcher='unknown',cutoff='2025-09-27'),dict(pitcher='鋼龍',cutoff='2025-02-30'),dict(pitcher='鋼龍',cutoff='2025-09-27',hand='S')]:
         try:request('api/pitch-change?'+urllib.parse.urlencode(q));raise AssertionError('invalid accepted')
         except urllib.error.HTTPError as e:assert e.code==400;report['invalid_requests']+=1
-    (ROOT/'output/qa/http_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
+    (ROOT/'output/closeout/http_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps(report,ensure_ascii=False,indent=2))
 
 if __name__=='__main__':main()

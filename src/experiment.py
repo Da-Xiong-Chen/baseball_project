@@ -27,7 +27,7 @@ from sklearn.preprocessing import StandardScaler
 from engine import bat_hand, situation
 from load import ROOT, load
 from ml_compare import EarlyStopped, add_velocity, features, fit_tendencies, prepare
-from mlmodel import Simulator, oof_tendencies as oof
+from mlmodel import Simulator, oof_tendencies as oof, training_pitches
 from model import fit
 
 MONTHS = ["2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01"]
@@ -75,7 +75,7 @@ def main():
     A, B = [], []
     for start, end in zip(MONTHS[:-1], MONTHS[1:]):
         tm = time.time()
-        train = P[P["date"] < start]
+        train = training_pitches(P, start)
         velo_tbl = train.groupby(["pitcher", "ptype"])["velo"].mean()
         velo_type = train.groupby("ptype")["velo"].mean()
         Xtr = features(train, oof(train), velo_tbl, velo_type)
@@ -98,7 +98,7 @@ def main():
         qs, owner = [], []
         for j, x in enumerate(phs):
             for c in [x["due"]] + x["bench"]:
-                qs.append(dict(batter=c, bhand=bat_hand(c, x["phand"]), pitcher=x["pitcher"]))
+                qs.append(dict(batter=c, bhand=bat_hand(c, x["phand"], start), pitcher=x["pitcher"]))
                 owner.append((j, c))
         if qs:
             qdf = pd.DataFrame(qs)

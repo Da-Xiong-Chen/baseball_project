@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-23",
+  "kind": "agent-performed browser task testing; not external human usability research",
+  "browser": "in-app Chromium",
+  "viewport": {
+    "width": 1265,
+    "height": 720
+  },
+  "tasks": [
+    {
+      "task": "代打直接評估",
+      "observed": "結果及現任／候選比較可產生",
+      "passed": true
+    },
+    {
+      "task": "第5位比較候選",
+      "observed": "點選候選後比較面板仍存在；上限細節由回歸測試確認",
+      "passed": true
+    },
+    {
+      "task": "六隊總覽切換",
+      "observed": "六隊全部切換，所屬比賽與時間軸更新、無整頁橫向溢出",
+      "passed": true
+    },
+    {
+      "task": "時間軸下鑽",
+      "observed": "台鋼江承諺事件，+1.111百分點",
+      "passed": true
+    },
+    {
+      "task": "分次揭示",
+      "observed": "先顯示王躍霖，再顯示陳真二壘安打及攻方WPA +2.200百分點",
+      "passed": true
+    },
+    {
+      "task": "完整比較銜接",
+      "observed": "2025-341-h022，換投基準江承諺89球、實際王躍霖",
+      "passed": true
+    },
+    {
+      "task": "同打席切視角",
+      "observed": "代打視角改用王躍霖，保持已揭示狀態",
+      "passed": true
+    },
+    {
+      "task": "切換新打席",
+      "observed": "2025-341-a020，調度與結果重新關閉",
+      "passed": true
+    },
+    {
+      "task": "模型期間",
+      "observed": "時間檢查0.18%跨零，開發比較0.40%區間高於零",
+      "passed": true
+    },
+    {
+      "task": "主題",
+      "observed": "深色與淺色切換正常",
+      "passed": true
+    },
+    {
+      "task": "名單套用與重整",
+      "observed": "首棒下移後陳晨威變第一棒，球隊模式鎖定投手；重整保持",
+      "passed": true
+    },
+    {
+      "task": "無候選",
+      "observed": "清空板凳顯示沒有其他已確認可用人選",
+      "passed": true
+    },
+    {
+      "task": "非法分數",
+      "observed": "-1 顯示非負整數錯誤，舊結果隱藏",
+      "passed": true
+    },
+    {
+      "task": "換投評估",
+      "observed": "魔神龍／朱承洋+0.69百分點，未達門檻，正常結果",
+      "passed": true
+    },
+    {
+      "task": "近期配球",
+      "observed": "面對左打切換、重新載入完成；樣本不足不硬判定",
+      "passed": true
+    },
+    {
+      "task": "減少動態效果",
+      "observed": "OS reduce=true，reco、bt-verdict、pc-body動畫為none；資料長條無動畫",
+      "passed": true
+    }
+  ],
+  "console_errors_and_warnings": 0,
+  "node_tests": 167,
+  "python_tests": 84,
+  "normal_motion_visual_tested": false,
+  "normal_motion_reason": "Browser inherits reduced-motion preference; no emulation capability exposed",
+  "reduced_motion_browser_verified": true,
+  "mobile_browser_tested": false,
+  "new_website_motion": "140ms opacity feedback and segmented-control marker transition; no page/data-bar animation",
+  "ppt_changed": false,
+  "models_or_data_changed": false,
+  "code_sha256": {
+    "docs/style.css": "10b91e8e6421645d7fab333199ebd68837c2a84a4bf885af2c857f38d15da8f2",
+    "docs/motion.js": "7578e14f0b57969168b398662c6db244ea133413f47d4f227274fec4a439f180",
+    "docs/app.js": "2f2196b399594458db2a8c40bcee743bd1937f90dcd9cc49fc1f0c3065b82add",
+    "docs/index.html": "5222e4b80943fda35b6ac33aece4c706948a9b6a3bdc28e054c40a3dde946088"
+  }
+}

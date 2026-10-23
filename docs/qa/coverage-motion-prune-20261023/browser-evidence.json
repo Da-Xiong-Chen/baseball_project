@@ -1,0 +1,9 @@
+{
+  "animation": "none",
+  "finalMotionRules": [
+    "@media (prefers-reduced-motion: no-preference) {\n  #viewSeg::before, #audienceSeg::before, .tabs::before, .mix-switch::before { transition: transform 140ms var(--ease-ui) !important; }\n}",
+    "@media (prefers-reduced-motion: reduce) {\n  *, ::before, ::after { animation: auto ease 0s 1 normal none running none !important; transition: none !important; scroll-behavior: auto !important; }\n}"
+  ],
+  "overflow": 0,
+  "verdict": "改善尚不明確\n\n現行集成相較聯盟基準，誤差減少 0.18%。\n\n95% 區間：-0.19% 至 0.54%（正值為改善）。區間跨過 0，還不能確認比基準更好。\n\n較基準退步的月份：10月。"
+}

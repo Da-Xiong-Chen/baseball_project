@@ -1,3 +1,4 @@
+import os
 """Independent real-data parity and replay invariants; run after exporting v2 snapshots."""
 import json
 import math
@@ -7,12 +8,13 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 import server
+from batch_contract import metadata as batch_metadata
 import mlmodel
 from engine import custom_situation
 from load import load
 
 def main():
-    out=ROOT/'output'/'decision_v2';out.mkdir(parents=True,exist_ok=True)
+    out=Path(os.environ.get('BASEBALL_REPORT_OUT',ROOT/'output/closeout'))/'decisions';out.mkdir(parents=True,exist_ok=True)
     roster=server.rosters();teams=sorted(roster)
     cases=[]
     for i,bat in enumerate(teams):
@@ -24,7 +26,7 @@ def main():
                               bat_team=bat,fld_team=fld,next_batters=[h['name'] for h in b['hitters'][:3]],
                               pen=[] if empty else [h['name'] for h in p['pitchers'][1:3]],pitch_count=pc,starter=starter))
     (out/'cases.json').write_text(json.dumps(cases,ensure_ascii=False),encoding='utf8')
-    subprocess.run(['node','tests/compute_static.js',str(out/'cases.json'),str(out/'static.json')],cwd=ROOT,check=True)
+    subprocess.run([os.environ.get('NODE_BINARY','node'),'tests/compute_static.js',str(out/'cases.json'),str(out/'static.json')],cwd=ROOT,check=True)
     static=json.loads((out/'static.json').read_text(encoding='utf8'))
     m=server.model_for(server.FULL);ml=mlmodel.get(server.FULL);max_error=0.0
     for body,result in zip(cases,static):
@@ -43,11 +45,12 @@ def main():
         assert local['schema_version']==result['schema_version']==2
     pa=load()[0];expected=set(pa.loc[(pa.season==2025)&pa.is_ph,'pa_id'])
     seen=set();games=0
-    for file in (ROOT/'docs/data/replay').glob('*.json'):
+    for file in (Path(os.environ.get('BASEBALL_STATIC_OUT',ROOT/'docs/data'))/'replay').glob('*.json'):
         if file.name=='games.json':continue
         payload=json.loads(file.read_text(encoding='utf8'));games+=1
         for pid,r in payload['results'].items():
             assert r['schema_version']==2,(pid,'stale schema')
+            assert r.get('training_version')==mlmodel.TRAINING_VERSION,(pid,'stale training version')
             assert r['ml_cutoff']<=r['model_cutoff']<=r['situation']['date'],pid
             assert all(math.isfinite(c['預估勝率']) for c in r['candidates']),pid
             for p in r['bullpen']['rows']:
@@ -55,8 +58,12 @@ def main():
             seen.add(pid)
     assert seen==expected,{'missing':sorted(expected-seen),'extra':sorted(seen-expected)}
     report=dict(custom_scenarios=len(cases),max_numeric_error=max_error,replay_games=games,
-                replay_cases=len(seen),missing_cases=0,stale_snapshots=0,version=2)
+                replay_cases=len(seen),missing_cases=0,stale_snapshots=0,
+                schema_version=2,**batch_metadata())
     (out/'parity.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps(report,ensure_ascii=False,indent=2))
+    receipt=Path(os.environ.get('BASEBALL_REPORT_OUT',ROOT/'output/closeout'))/'decisions-receipt.json'
+    receipt.parent.mkdir(parents=True,exist_ok=True)
+    receipt.write_text(json.dumps(dict(report,passed=True,**batch_metadata()),ensure_ascii=False,indent=2),encoding='utf8')
 
 if __name__=='__main__':main()

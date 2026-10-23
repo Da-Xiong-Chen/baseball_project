@@ -1,0 +1,34 @@
+{
+  "python_tests": 84,
+  "node_tests": 160,
+  "fixed_day": "2025-09-20",
+  "teams": 6,
+  "games": 3,
+  "pas": 226,
+  "core_decision_views": 452,
+  "pitching_changes": 19,
+  "all_views_render_over_real_http": true,
+  "reveals_preserved_across_decision_views": true,
+  "reveals_reset_on_different_pa": true,
+  "history_independent_of_audience_mode": true,
+  "full_day_and_sixth_inning_filter": true,
+  "retry_invalid_payload_refetches": true,
+  "older_validation_response_cannot_replace_newer": true,
+  "assets": 692,
+  "json_assets": 680,
+  "data_or_weights_changed": false,
+  "fresh_browser_click_testing": false,
+  "browser_reason": "Local browser use is disabled in Work settings",
+  "public_deployment_ready": false,
+  "public_reason": "2026-10-22T14:01:24Z read-only check: model training_version 2; backtest.js and model-evaluation.json HTTP 404",
+  "remaining_core_function_gap_found": false,
+  "remaining_required_work": [
+    "Owner review/merge and deployment",
+    "Public-site version and browser interaction verification after deployment"
+  ],
+  "code_sha256": {
+    "docs/app.js": "851531b836f8b901c092ac645e8d5016e376dd673c9cfba3db8fa9191fcdaa4a",
+    "docs/backtest.js": "972792615e7bf68646fab789c04c23caf25a523f0117d24df0a196f41c8f6323",
+    "docs/index.html": "c25a8aaa2925a034f8b64a21b0d49ac7abb01dee53dc1ff21395ade53faa3f47"
+  }
+}

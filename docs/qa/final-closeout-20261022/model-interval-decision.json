@@ -1,0 +1,12 @@
+{
+  "decided_at": "2026-10-22T17:26:54.957011+08:00",
+  "decision": "do_not_adopt",
+  "authorization": "User: 如果不適合就不要用",
+  "scope": "New joint-bootstrap uncertainty intervals only",
+  "evidence": "cross-seed-diagnostics.json",
+  "production_model_policy": "Keep existing v4 0.5/0.5 ensemble, scores and honestly labeled hierarchy-only approximate errors",
+  "further_training": false,
+  "delete_research_outputs": false,
+  "reason": "Across-seed endpoint drift and threshold classification changes; do not put research quantiles into production confidence bars",
+  "production_source_modified": false
+}

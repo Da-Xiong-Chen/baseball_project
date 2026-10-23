@@ -7,7 +7,11 @@ const Engine = (() => {
   const POS_ZH = { C: "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", SS: "游擊", LF: "左外野", CF: "中外野", RF: "右外野", DH: "指定打擊" };
 
   async function load(base = "data/") {
-    if (!M) M = await (await fetch(base + "model.json", {cache:"no-cache"})).json();
+    if (!M) {
+      const model=await (await fetch(base + "model.json", {cache:"no-cache"})).json();
+      if(model.training_version!==4||model.engine_contract!==4||!model.batch_id)throw new Error('模型資料版本不相容，請重新載入完整版本');
+      M=model;
+    }
     return M;
   }
 
@@ -19,10 +23,11 @@ const Engine = (() => {
   }
   function runToWin(inning, half, batScore, fldScore, bases, outs) {
     const k = stateKey(inning, half, batScore - fldScore, bases, outs);
-    const fine = M.slope_fine[k.join("|")];
-    if (fine != null) return fine;
-    const coarse = M.slope_coarse[k.slice(0, 3).join("|")];
-    return coarse != null ? coarse : M.slope_all;
+    const values = [M.slope_fine[k.join("|")], M.slope_coarse[k.slice(0, 3).join("|")], M.slope_all];
+    for (const value of values) {
+      if (typeof value === 'number' && Number.isFinite(value) && value >= 0) return value;
+    }
+    throw new Error('局勢勝率換算缺少有效的非負校準，請重建模型');
   }
 
   // ---------- 對戰 ----------
@@ -87,7 +92,7 @@ const Engine = (() => {
       msg = `${inName} 可直接接守${POS_ZH[outPos]}`; status = "ok";
     } else {
       const cover = benchAfter.filter((b) => canPlay(b, outPos));
-      if (!cover.length) return ["bad", `換下後板凳無人可守${POS_ZH[outPos]}`];
+      if (!cover.length) return ["unknown", `沒有已確認可接守${POS_ZH[outPos]}的紀錄；需人工確認`];
       msg = `需由 ${cover[0]} 接守${POS_ZH[outPos]}（再消耗 1 名板凳）`; status = "warn";
     }
     if (outPos === "C" && !benchAfter.filter((b) => canPlay(b, "C") && b !== inName).length) {
@@ -132,7 +137,10 @@ const Engine = (() => {
     if (!pool.length) return null;
     let beat = 0, eq = 0;
     for (const x of pool) { if (x === v) eq++; else if (higherBetter ? x < v : x > v) beat++; }
-    return Math.max(1, Math.min(100, Math.round(1 + 99 * (beat + 0.5 * eq) / pool.length)));
+    // Match Python round(): exact half ties go to the even integer.
+    const raw=1+99*(beat+.5*eq)/pool.length, floor=Math.floor(raw);
+    const rounded=raw-floor===.5?(floor%2===0?floor:floor+1):Math.round(raw);
+    return Math.max(1,Math.min(100,rounded));
   }
   // 近況偏離（每打席得分值；打者正值＝近期較好，投手正值＝近期較差），權重由使用者設定（預設 0）
   function recentForm(name, who) {
@@ -254,7 +262,7 @@ const Engine = (() => {
       bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter,
         { streaks: b.streaks || {}, fatigue_d2: b.fatigue_d2, fatigue_d3: b.fatigue_d3, recent_weight: rw }) }, model_cutoff: M.cutoff,
       method: M.ml ? "集成（階層式＋梯度提升樹）" : "階層式",
-      ml_cutoff:M.ml ? M.cutoff : null, schema_version:2,
+      ml_cutoff:M.ml ? M.cutoff : null, schema_version:2, training_version:M.training_version, engine_contract:4, batch_id:M.batch_id,
       availability:'人工勾選可用名單；請確認當日登錄、健康與已用人選',
       fielding_source:'截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位',
     };

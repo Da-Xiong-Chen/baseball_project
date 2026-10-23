@@ -3,6 +3,10 @@
   const names=['勝投組','敗投組','自訂義群組'], prefix='cpbl-pitcher-groups-v3:';
   const sessions=new Map();
   const copy=g=>({name:g.name,members:[...g.members]});
+  function migrateGroup(g,team){
+    const canonical={'樂天桃猿':'林子崴〔樂天〕','統一7-ELEVEn獅':'林子崴〔統一〕'}[team];
+    return {name:g.name,members:[...new Set(g.members.map(n=>canonical&&n==='林子崴'?canonical:n))]};
+  }
   function sanitize(rows) {
     if(!Array.isArray(rows)) throw Error('格式不完整');
     const seen=new Set();
@@ -16,7 +20,7 @@
     if(data.version!==3||!Array.isArray(data.groups))throw Error('群組格式無效');
     const groups=sanitize(data.groups);
     if(groups.length!==3||!names.every(n=>groups.some(g=>g.name===n)))throw Error('群組格式無效');
-    return names.map(n=>groups.find(g=>g.name===n));
+    return names.map(n=>migrateGroup(groups.find(g=>g.name===n),team));
   }
   function write(storage,team,groups,selected=names[0]) {
     try {
@@ -44,7 +48,7 @@
         return {groups:existing,legacy:preserved,selected:names.includes(saved.selected)?saved.selected:names[0],error:''};
       }
       const raw=storage.getItem('cpbl-pitcher-groups-v2:'+team), old=raw==null?null:JSON.parse(raw);
-      const legacy=sanitize(old?old.groups:JSON.parse(storage.getItem('cpbl-pitcher-groups-v1:'+team)||'[]'));
+      const legacy=sanitize(old?old.groups:JSON.parse(storage.getItem('cpbl-pitcher-groups-v1:'+team)||'[]')).map(g=>migrateGroup(g,team));
       const custom=legacy.filter(g=>!names.includes(g.name));
       const chosen=legacy.find(g=>g.name===names[2])||custom.find(g=>g.name===old?.selected)||(custom.length===1?custom[0]:null);
       const groups=fallback.map(g=>copy(legacy.find(o=>o.name===g.name)||(g.name===names[2]&&chosen?{...chosen,name:names[2]}:g)));

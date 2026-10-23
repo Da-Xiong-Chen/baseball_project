@@ -1,0 +1,33 @@
+{
+  "url": "https://da-xiong-chen.github.io/baseball_project/data/model-evaluation.json",
+  "status": "unverifiable",
+  "error": "HTTP Error 404: Not Found",
+  "read_only": true,
+  "public_model": {
+    "url": "https://da-xiong-chen.github.io/baseball_project/data/model.json",
+    "status": 200,
+    "metadata_in_first_4096_bytes": {
+      "batch_id": null,
+      "training_version": 2,
+      "engine_contract": null,
+      "cutoff": "2026-01-01"
+    },
+    "same_batch": null,
+    "local_training_version": 4,
+    "same_training_version": false
+  },
+  "index_scripts": [
+    "theme.js?v=20261019-day-replay",
+    "engine.js?v=20261019-day-replay",
+    "pitch-change.js?v=20261019-day-replay",
+    "pitcher-groups.js?v=20261019-day-replay",
+    "motion.js?v=20261019-day-replay",
+    "lineup.js?v=20261019-day-replay",
+    "app.js?v=20261019-day-replay"
+  ],
+  "contains_history_date": false,
+  "remote_writes": false,
+  "evaluation_asset_http_status": 404,
+  "evaluation_asset_present": false,
+  "conclusion": "Public site serves training_version=2; current local model and deck use v4. Public synchronization remains pending under user instruction not to publish."
+}
