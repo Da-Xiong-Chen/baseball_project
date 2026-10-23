@@ -44,14 +44,14 @@ window.PitchChange = (() => {
     const range = w => w.games.length ? `${w.games[0].date} 至 ${w.games.at(-1).date}` : "沒有符合日期的出賽";
     const window = (w, title, kind) => `<div class="pc-window ${kind}"><strong>${title}</strong><span>${range(w)}</span><b>${w.selected_games} 場 · ${w.valid_pitches} 球</b></div>`;
     const hasValues=d.rows.some(row=>Number.isFinite(row.delta_pp)||row.adjusted.some(ratio));
-    return `<div class="pc-status ${!raw&&d.status === 'ready' ? '' : 'pc-insufficient'}" role="status">${raw?(hasValues?`${d.status==='ready'?'':'同條件樣本不足，先看'}觀察配球：未調整球數，不作變化判定`:'沒有可用配球紀錄'):d.status === "ready" ? "同條件配球比較" : "樣本不足，暫不判定"}</div>
+    return `<div class="pc-status ${!raw&&d.status === 'ready' ? '' : 'pc-insufficient'}" role="status">${raw?(hasValues?'觀察配球：未調整球數，不作變化判定':'沒有可用配球紀錄'):d.status === "ready" ? "同條件配球比較" : "樣本不足，暫不判定"}</div>
       <div class="pc-windows">${window(b,"之前最多 10 場","baseline")}${window(r,"最近 5 場","recent")}</div>
       <div class="pc-legend"><span class="pc-key baseline">基準期</span><span class="pc-key recent">近期</span><span>差值：百分點</span></div>
       <div class="pc-rows">${(hasValues?d.rows:[]).map(row => `<article class="pc-row"><div class="pc-row-title"><strong>${escape(row.group)}</strong><b title="差值依未四捨五入比例計算">${pp(row.delta_pp)}</b><span>${escape(d.status==='ready'?row.interpretation:'')}</span></div>
         <div class="pc-bars">${row.adjusted.map((v,i) => `<div class="pc-bar-line"><span>${i ? "近期" : "基準"}</span><div class="pc-track"><div class="pc-bar ${i ? "recent" : "baseline"}" style="width:${ratio(v)?v*100:0}%"></div></div><b>${pct(v)}</b></div>`).join("")}</div>
         </article>`).join("")}</div>
-      <details class="pc-method"><summary>樣本與比較依據</summary><p>${d.season} 球季 · ${escape(d.cutoff)} 之前；最後紀錄 ${escape(d.last_observed || '無')}。歷史資料，非即時配球。</p>${d.reasons.length ? `<ul>${d.reasons.map(v=>`<li>${escape(v)}</li>`).join('')}</ul>` : ''}<p>${raw?'原始比例以各期有效球數為分母；未調整球數，合計時也未調整左右打組成。':`依球數與左右打調整；共同條件涵蓋基準 ${pct(d.coverage[0])}／近期 ${pct(d.coverage[1])}。`}未控制捕手、對手、球場與比分；少量出賽的區間可能不穩定。</p><ul>${d.rows.map(row=>`<li>${escape(row.group)}：${raw?'此視角不計算調整後區間':'95% 重抽樣區間'} ${!raw&&row.interval ? `${pp(row.interval[0])} 至 ${pp(row.interval[1])}` : raw?'—':'無法可靠估計'}</li>`).join('')}</ul><p>「低落」為球種群名稱。來源：${escape(d.source)}。</p></details>
-      <p class="pc-caveat">${raw?'圖表為所列出賽的實際配球比例；差異可能來自球數，合計亦受左右打組成影響。未產生調整後區間或趨勢結論。':'配球改變不代表效果變好，也不是下一球預測。'}</p>`;
+      <details class="pc-method"><summary>資料與比較依據</summary><p>${d.season} 球季 · ${escape(d.cutoff)} 之前；最後紀錄 ${escape(d.last_observed || '無')}。</p>${d.reasons.length ? `<ul>${d.reasons.map(v=>`<li>${escape(v)}</li>`).join('')}</ul>` : ''}<p>${raw?'原始比例以各期有效球數為分母；未調整球數，合計時也未調整左右打組成。':`依球數與左右打調整；共同條件涵蓋基準 ${pct(d.coverage[0])}／近期 ${pct(d.coverage[1])}。`}</p>${raw?'':`<ul>${d.rows.map(row=>`<li>${escape(row.group)}：95% 重抽樣區間 ${row.interval ? `${pp(row.interval[0])} 至 ${pp(row.interval[1])}` : '未提供'}</li>`).join('')}</ul>`}<p>「低落」為球種群名稱。來源：${escape(d.source)}。</p></details>
+      <p class="pc-caveat">${raw?'未產生調整後區間或趨勢結論。':'配球改變不代表效果變好，也不是下一球預測。'}</p>`;
   }
   function mount({element, pitcher, cutoff, season=2025, hand="ALL", fetcher}) {
     if (!element || !pitcher) return;

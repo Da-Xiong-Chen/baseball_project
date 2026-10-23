@@ -1,0 +1,1096 @@
+TAP version 13
+# Subtest: both modes keep the latest four candidates, evict oldest at five and isolate results
+ok 1 - both modes keep the latest four candidates, evict oldest at five and isolate results
+  ---
+  duration_ms: 5.4254
+  type: 'test'
+  ...
+# Subtest: manual detail browsing never replaces the independent comparison panel
+ok 2 - manual detail browsing never replaces the independent comparison panel
+  ---
+  duration_ms: 1.5235
+  type: 'test'
+  ...
+# Subtest: position-group selection clears evaluation even when rendering removes its button
+ok 3 - position-group selection clears evaluation even when rendering removes its button
+  ---
+  duration_ms: 1.2443
+  type: 'test'
+  ...
+# Subtest: pitch arsenal preserves exported ratios, sorts groups, and never presents missing personal mix
+ok 4 - pitch arsenal preserves exported ratios, sorts groups, and never presents missing personal mix
+  ---
+  duration_ms: 1.1548
+  type: 'test'
+  ...
+# Subtest: official profile uses unique validated ID and searches when name is ambiguous
+ok 5 - official profile uses unique validated ID and searches when name is ambiguous
+  ---
+  duration_ms: 0.9867
+  type: 'test'
+  ...
+# Subtest: automatic detail does not collapse the initial two-candidate comparison
+ok 6 - automatic detail does not collapse the initial two-candidate comparison
+  ---
+  duration_ms: 0.931
+  type: 'test'
+  ...
+# Subtest: editing the situation invalidates a pending request while bench search preserves it
+ok 7 - editing the situation invalidates a pending request while bench search preserves it
+  ---
+  duration_ms: 1.1035
+  type: 'test'
+  ...
+# Subtest: invalid submit clears the old result without evaluating
+ok 8 - invalid submit clears the old result without evaluating
+  ---
+  duration_ms: 1.6143
+  type: 'test'
+  ...
+# Subtest: score steppers support typing, zero floor and stale-result invalidation
+ok 9 - score steppers support typing, zero floor and stale-result invalidation
+  ---
+  duration_ms: 1.6749
+  type: 'test'
+  ...
+# Subtest: comparison keeps both candidates initially and explains model disagreement
+ok 10 - comparison keeps both candidates initially and explains model disagreement
+  ---
+  duration_ms: 15.9379
+  type: 'test'
+  ...
+# Subtest: candidate chart preserves direction and a common scale when selection changes
+ok 11 - candidate chart preserves direction and a common scale when selection changes
+  ---
+  duration_ms: 2.4773
+  type: 'test'
+  ...
+# Subtest: tiny positive differences never become a strong recommendation from SE
+ok 12 - tiny positive differences never become a strong recommendation from SE
+  ---
+  duration_ms: 1.3881
+  type: 'test'
+  ...
+# Subtest: empty bench differs from candidates whose fielding is unconfirmed
+ok 13 - empty bench differs from candidates whose fielding is unconfirmed
+  ---
+  duration_ms: 0.8337
+  type: 'test'
+  ...
+# Subtest: API and static reads work without the newer timeout API
+ok 14 - API and static reads work without the newer timeout API
+  ---
+  duration_ms: 1.0021
+  type: 'test'
+  ...
+# Subtest: mobile result appears below the form and jumps there without smooth scrolling
+ok 15 - mobile result appears below the form and jumps there without smooth scrolling
+  ---
+  duration_ms: 0.9487
+  type: 'test'
+  ...
+# Subtest: search preserves hidden selections and never treats InputEvent as reset
+ok 16 - search preserves hidden selections and never treats InputEvent as reset
+  ---
+  duration_ms: 1.5087
+  type: 'test'
+  ...
+# Subtest: missing historical detail never falls back to full-season Engine
+ok 17 - missing historical detail never falls back to full-season Engine
+  ---
+  duration_ms: 1.3184
+  type: 'test'
+  ...
+# Subtest: result context controls season after a mode switch
+ok 18 - result context controls season after a mode switch
+  ---
+  duration_ms: 1.1597
+  type: 'test'
+  ...
+# Subtest: pitcher identity switches even when detail fails
+ok 19 - pitcher identity switches even when detail fails
+  ---
+  duration_ms: 1.5682
+  type: 'test'
+  ...
+# Subtest: slow evaluation cannot replace the latest result
+ok 20 - slow evaluation cannot replace the latest result
+  ---
+  duration_ms: 1.7965
+  type: 'test'
+  ...
+# Subtest: mode switch invalidates a pending evaluation
+ok 21 - mode switch invalidates a pending evaluation
+  ---
+  duration_ms: 0.9172
+  type: 'test'
+  ...
+# Subtest: slow game cannot replace the latest plate appearance list
+ok 22 - slow game cannot replace the latest plate appearance list
+  ---
+  duration_ms: 1.0211
+  type: 'test'
+  ...
+# Subtest: game request failure exposes a retry path
+ok 23 - game request failure exposes a retry path
+  ---
+  duration_ms: 0.9786
+  type: 'test'
+  ...
+# Subtest: older team list response cannot replace the latest team
+ok 24 - older team list response cannot replace the latest team
+  ---
+  duration_ms: 0.9694
+  type: 'test'
+  ...
+# Subtest: team choices disable the opposing team and recover duplicate selections
+ok 25 - team choices disable the opposing team and recover duplicate selections
+  ---
+  duration_ms: 0.9236
+  type: 'test'
+  ...
+# Subtest: slow roster response cannot reset the latest names
+ok 26 - slow roster response cannot reset the latest names
+  ---
+  duration_ms: 1.3011
+  type: 'test'
+  ...
+# Subtest: extra inning selection presets only second base and never changes outs
+ok 27 - extra inning selection presets only second base and never changes outs
+  ---
+  duration_ms: 0.9857
+  type: 'test'
+  ...
+# Subtest: same effective input and group editing retain the result; changed input invalidates it
+ok 28 - same effective input and group editing retain the result; changed input invalidates it
+  ---
+  duration_ms: 0.9192
+  type: 'test'
+  ...
+# Subtest: unknown fielding stays visible in a collapsed DH group without inventing eligibility
+ok 29 - unknown fielding stays visible in a collapsed DH group without inventing eligibility
+  ---
+  duration_ms: 1.5178
+  type: 'test'
+  ...
+# Subtest: ended home and extra-inning away situations do not request an evaluation
+ok 30 - ended home and extra-inning away situations do not request an evaluation
+  ---
+  duration_ms: 2.4937
+  type: 'test'
+  ...
+# Subtest: per-batter chart preserves signed values and ignores missing values
+ok 31 - per-batter chart preserves signed values and ignores missing values
+  ---
+  duration_ms: 0.9218
+  type: 'test'
+  ...
+# Subtest: per-batter chart retains a shared candidate scale
+ok 32 - per-batter chart retains a shared candidate scale
+  ---
+  duration_ms: 0.9118
+  type: 'test'
+  ...
+# Subtest: per-batter baseline matches batter identity, includes fatigue and does not invent missing data
+ok 33 - per-batter baseline matches batter identity, includes fatigue and does not invent missing data
+  ---
+  duration_ms: 0.8825
+  type: 'test'
+  ...
+# Subtest: hitter decomposition is collapsed while the fielding warning remains visible
+ok 34 - hitter decomposition is collapsed while the fielding warning remains visible
+  ---
+  duration_ms: 0.9159
+  type: 'test'
+  ...
+# Subtest: bench summary counts all selected names regardless of search and excludes current batter
+ok 35 - bench summary counts all selected names regardless of search and excludes current batter
+  ---
+  duration_ms: 0.8785
+  type: 'test'
+  ...
+# Subtest: pitching colors compare with current pitcher rather than the sign of run value
+ok 36 - pitching colors compare with current pitcher rather than the sign of run value
+  ---
+  duration_ms: 0.8926
+  type: 'test'
+  ...
+# Subtest: availability preview keeps all names in an optional disclosure and escapes them
+ok 37 - availability preview keeps all names in an optional disclosure and escapes them
+  ---
+  duration_ms: 0.9011
+  type: 'test'
+  ...
+# Subtest: pitcher comparison keeps fatigue warning visible and collapses per-batter charts
+ok 38 - pitcher comparison keeps fatigue warning visible and collapses per-batter charts
+  ---
+  duration_ms: 0.9394
+  type: 'test'
+  ...
+# Subtest: mobile row details preserve sample and fatigue-adjusted value without inventing another score
+ok 39 - mobile row details preserve sample and fatigue-adjusted value without inventing another score
+  ---
+  duration_ms: 0.9407
+  type: 'test'
+  ...
+# Subtest: hitter source chart compares actual values to current with a shared scale and missing components
+ok 40 - hitter source chart compares actual values to current with a shared scale and missing components
+  ---
+  duration_ms: 0.9626
+  type: 'test'
+  ...
+# Subtest: compact fielding message retains replacement person, position and extra bench cost
+ok 41 - compact fielding message retains replacement person, position and extra bench cost
+  ---
+  duration_ms: 0.9273
+  type: 'test'
+  ...
+# Subtest: short assessment notes keep distinct cutoffs, missing metadata and historical roster uncertainty
+ok 42 - short assessment notes keep distinct cutoffs, missing metadata and historical roster uncertainty
+  ---
+  duration_ms: 0.9636
+  type: 'test'
+  ...
+# Subtest: shared comparison uses opposite benefit directions but identical baseline markup
+ok 43 - shared comparison uses opposite benefit directions but identical baseline markup
+  ---
+  duration_ms: 0.9109
+  type: 'test'
+  ...
+# Subtest: difference chart distinguishes equal, tiny and missing comparisons and never plots a missing baseline
+ok 44 - difference chart distinguishes equal, tiny and missing comparisons and never plots a missing baseline
+  ---
+  duration_ms: 0.875
+  type: 'test'
+  ...
+# Subtest: fifth selection reports the actual evicted candidate and isolates feedback between offense and defense
+ok 45 - fifth selection reports the actual evicted candidate and isolates feedback between offense and defense
+  ---
+  duration_ms: 1.6379
+  type: 'test'
+  ...
+# Subtest: bullpen search filters visible names without modifying checked selection
+ok 46 - bullpen search filters visible names without modifying checked selection
+  ---
+  duration_ms: 1.3374
+  type: 'test'
+  ...
+# Subtest: both roster searches retain completed and pending evaluation state
+ok 47 - both roster searches retain completed and pending evaluation state
+  ---
+  duration_ms: 0.8888
+  type: 'test'
+  ...
+# Subtest: hitter primary assessment uses incumbent difference and preserves league value in disclosure
+ok 48 - hitter primary assessment uses incumbent difference and preserves league value in disclosure
+  ---
+  duration_ms: 1.3224
+  type: 'test'
+  ...
+# Subtest: fielding guidance retains cover cost, catcher reserve warning and uncertain status
+ok 49 - fielding guidance retains cover cost, catcher reserve warning and uncertain status
+  ---
+  duration_ms: 0.8898
+  type: 'test'
+  ...
+# Subtest: 2025 number aliases use team-specific exact strings, preserve 00, and keep names searchable
+ok 50 - 2025 number aliases use team-specific exact strings, preserve 00, and keep names searchable
+  ---
+  duration_ms: 1.0436
+  type: 'test'
+  ...
+# Subtest: every exported roster number searches exactly all matching 2025 team members
+ok 51 - every exported roster number searches exactly all matching 2025 team members
+  ---
+  duration_ms: 13.6796
+  type: 'test'
+  ...
+# Subtest: confirmed own lineup excludes field players and pitcher from bench without affecting reserves
+ok 52 - confirmed own lineup excludes field players and pitcher from bench without affecting reserves
+  ---
+  duration_ms: 1.0201
+  type: 'test'
+  ...
+# Subtest: invalid saved lineup cannot restrict manual evaluation
+ok 53 - invalid saved lineup cannot restrict manual evaluation
+  ---
+  duration_ms: 0.8217
+  type: 'test'
+  ...
+# Subtest: season review verdict is plain language and divergent list links each plate appearance
+ok 54 - season review verdict is plain language and divergent list links each plate appearance
+  ---
+  duration_ms: 1.0444
+  type: 'test'
+  ...
+# Subtest: default pitch count follows the inning for starters and stays 15 for relievers
+ok 55 - default pitch count follows the inning for starters and stays 15 for relievers
+  ---
+  duration_ms: 0.8892
+  type: 'test'
+  ...
+# Subtest: general audience ignores saved lineup without deleting team configuration
+ok 56 - general audience ignores saved lineup without deleting team configuration
+  ---
+  duration_ms: 0.8591
+  type: 'test'
+  ...
+# Subtest: team audience blocks evaluation without confirmed lineup before requesting scores
+ok 57 - team audience blocks evaluation without confirmed lineup before requesting scores
+  ---
+  duration_ms: 0.8066
+  type: 'test'
+  ...
+# Subtest: historical fatigue preferences leave the current evaluation identity unchanged
+ok 58 - historical fatigue preferences leave the current evaluation identity unchanged
+  ---
+  duration_ms: 0.7728
+  type: 'test'
+  ...
+# Subtest: historical pitcher selector recovers failures through retry and ignores older team response
+ok 59 - historical pitcher selector recovers failures through retry and ignores older team response
+  ---
+  duration_ms: 1.1034
+  type: 'test'
+  ...
+# Subtest: single-day summary never substitutes whole-season significance and retries missing data
+ok 60 - single-day summary never substitutes whole-season significance and retries missing data
+  ---
+  duration_ms: 1.1328
+  type: 'test'
+  ...
+# Subtest: rapid audience switches do not let an older team-mode action reopen lineup
+ok 61 - rapid audience switches do not let an older team-mode action reopen lineup
+  ---
+  duration_ms: 0.9729
+  type: 'test'
+  ...
+# Subtest: general batting options put configured nine first and retain every reserve exactly once
+ok 62 - general batting options put configured nine first and retain every reserve exactly once
+  ---
+  duration_ms: 0.9106
+  type: 'test'
+  ...
+# Subtest: historical fatigue curve has onset, interpolation, capped extrapolation and reliever exclusion
+ok 63 - historical fatigue curve has onset, interpolation, capped extrapolation and reliever exclusion
+  ---
+  duration_ms: 0.8581
+  type: 'test'
+  ...
+# Subtest: current evaluation never inherits historical recency or streak fatigue preferences
+ok 64 - current evaluation never inherits historical recency or streak fatigue preferences
+  ---
+  duration_ms: 0.7801
+  type: 'test'
+  ...
+# Subtest: advanced preset controls belong to the historical page instead of current evaluation
+ok 65 - advanced preset controls belong to the historical page instead of current evaluation
+  ---
+  duration_ms: 0.2556
+  type: 'test'
+  ...
+# Subtest: historical fatigue settings never clear an unchanged current evaluation
+ok 66 - historical fatigue settings never clear an unchanged current evaluation
+  ---
+  duration_ms: 0.7733
+  type: 'test'
+  ...
+# Subtest: season review missing static game is explained without a doomed request and retry
+ok 67 - season review missing static game is explained without a doomed request and retry
+  ---
+  duration_ms: 0.895
+  type: 'test'
+  ...
+# Subtest: difference labels preserve tiny directions without rounding to signed zero or inventing missing values
+ok 68 - difference labels preserve tiny directions without rounding to signed zero or inventing missing values
+  ---
+  duration_ms: 0.8638
+  type: 'test'
+  ...
+# Subtest: both comparison panels and evaluation tables use identical tiny difference wording
+ok 69 - both comparison panels and evaluation tables use identical tiny difference wording
+  ---
+  duration_ms: 1.7848
+  type: 'test'
+  ...
+# Subtest: fielding copy removes direct coverage repetition but retains extra player and backup catcher warnings
+ok 70 - fielding copy removes direct coverage repetition but retains extra player and backup catcher warnings
+  ---
+  duration_ms: 2.3054
+  type: 'test'
+  ...
+# Subtest: preset persistence verifies writes and reports blocked storage without losing the session setting
+ok 71 - preset persistence verifies writes and reports blocked storage without losing the session setting
+  ---
+  duration_ms: 1.0429
+  type: 'test'
+  ...
+# Subtest: malformed preset records cannot crash saving or overwrite the damaged record
+ok 72 - malformed preset records cannot crash saving or overwrite the damaged record
+  ---
+  duration_ms: 3.5958
+  type: 'test'
+  ...
+# Subtest: saving a preset rejects invalid scores while preserving an existing valid preset
+ok 73 - saving a preset rejects invalid scores while preserving an existing valid preset
+  ---
+  duration_ms: 0.7774
+  type: 'test'
+  ...
+# Subtest: single-day review preserves the current date scope without reviving the seasonal dashboard
+ok 74 - single-day review preserves the current date scope without reviving the seasonal dashboard
+  ---
+  duration_ms: 1.5545
+  type: 'test'
+  ...
+# Subtest: matchup detail rounds tiny whiff differences without negative zero
+ok 75 - matchup detail rounds tiny whiff differences without negative zero
+  ---
+  duration_ms: 1.0017
+  type: 'test'
+  ...
+# Subtest: invalid historical pitcher counts never overwrite a valid saved preset
+ok 76 - invalid historical pitcher counts never overwrite a valid saved preset
+  ---
+  duration_ms: 0.8656
+  type: 'test'
+  ...
+# Subtest: hitter preset ignores a hidden invalid pitcher count
+ok 77 - hitter preset ignores a hidden invalid pitcher count
+  ---
+  duration_ms: 0.7705
+  type: 'test'
+  ...
+# Subtest: history player selection survives revisits and stays isolated by team and role
+ok 78 - history player selection survives revisits and stays isolated by team and role
+  ---
+  duration_ms: 0.9426
+  type: 'test'
+  ...
+# Subtest: single-day analysis ignores audience changes without clearing its result or opening lineup
+ok 79 - single-day analysis ignores audience changes without clearing its result or opening lineup
+  ---
+  duration_ms: 0.7575
+  type: 'test'
+  ...
+# Subtest: general entry opens evaluation and retains the shared function navigation after leaving team lineup
+ok 80 - general entry opens evaluation and retains the shared function navigation after leaving team lineup
+  ---
+  duration_ms: 1.0098
+  type: 'test'
+  ...
+# Subtest: team entry always opens lineup even with an already confirmed saved team
+ok 81 - team entry always opens lineup even with an already confirmed saved team
+  ---
+  duration_ms: 0.8219
+  type: 'test'
+  ...
+# Subtest: both audiences expose the same two function buttons in audience-specific DOM and keyboard order
+ok 82 - both audiences expose the same two function buttons in audience-specific DOM and keyboard order
+  ---
+  duration_ms: 0.9717
+  type: 'test'
+  ...
+# Subtest: general and team share a selection-summary frame with only the player-selection action differing
+ok 83 - general and team share a selection-summary frame with only the player-selection action differing
+  ---
+  duration_ms: 0.934
+  type: 'test'
+  ...
+# Subtest: reselecting the current entry preserves visible results and unsaved lineup work
+ok 84 - reselecting the current entry preserves visible results and unsaved lineup work
+  ---
+  duration_ms: 0.9087
+  type: 'test'
+  ...
+# Subtest: day-analysis entry keeps primary navigation available without applying the current team roster
+ok 85 - day-analysis entry keeps primary navigation available without applying the current team roster
+  ---
+  duration_ms: 1.4986
+  type: 'test'
+  ...
+# Subtest: leaving historical replay through either user entry restores custom mode before applying roster
+ok 86 - leaving historical replay through either user entry restores custom mode before applying roster
+  ---
+  duration_ms: 1.5716
+  type: 'test'
+  ...
+# Subtest: rapid entry clicks cannot let a pending team load override general or day-analysis selection
+ok 87 - rapid entry clicks cannot let a pending team load override general or day-analysis selection
+  ---
+  duration_ms: 1.5532
+  type: 'test'
+  ...
+# Subtest: late team roster application cannot redirect away from independent day analysis
+ok 88 - late team roster application cannot redirect away from independent day analysis
+  ---
+  duration_ms: 0.8567
+  type: 'test'
+  ...
+# Subtest: historical analysis refuses custom roster application, refresh and evaluation
+ok 89 - historical analysis refuses custom roster application, refresh and evaluation
+  ---
+  duration_ms: 0.8398
+  type: 'test'
+  ...
+# Subtest: manual unavailable list filters team candidates but never historical candidates
+ok 90 - manual unavailable list filters team candidates but never historical candidates
+  ---
+  duration_ms: 0.785
+  type: 'test'
+  ...
+# Subtest: history subpage team is synchronized without changing the evaluation teams
+ok 91 - history subpage team is synchronized without changing the evaluation teams
+  ---
+  duration_ms: 0.794
+  type: 'test'
+  ...
+# Subtest: pitch mix selection survives a review reload and excludes pitchers with no prior appearance
+ok 92 - pitch mix selection survives a review reload and excludes pitchers with no prior appearance
+  ---
+  duration_ms: 0.8121
+  type: 'test'
+  ...
+# Subtest: static pitching replay uses the incumbent snapshot and retains actual incoming pitcher
+ok 93 - static pitching replay uses the incumbent snapshot and retains actual incoming pitcher
+  ---
+  duration_ms: 0.8779
+  type: 'test'
+  ...
+# Subtest: reveal follows the same PA across views, resets on another PA and team reset
+ok 94 - reveal follows the same PA across views, resets on another PA and team reset
+  ---
+  duration_ms: 0.7907
+  type: 'test'
+  ...
+# Subtest: late disclosure events from the previous PA cannot reveal the next PA
+ok 95 - late disclosure events from the previous PA cannot reveal the next PA
+  ---
+  duration_ms: 0.7922
+  type: 'test'
+  ...
+# Subtest: API mode obtains the batch identity from meta without loading static Engine
+ok 96 - API mode obtains the batch identity from meta without loading static Engine
+  ---
+  duration_ms: 0.7456
+  type: 'test'
+  ...
+# Subtest: conditional fielding plan appears separately and never changes the original candidate or suggestion
+ok 97 - conditional fielding plan appears separately and never changes the original candidate or suggestion
+  ---
+  duration_ms: 1.1866
+  type: 'test'
+  ...
+# Subtest: numeric cards preserve missing samples, valid score bounds and safe chart scales
+ok 98 - numeric cards preserve missing samples, valid score bounds and safe chart scales
+  ---
+  duration_ms: 0.9591
+  type: 'test'
+  ...
+# Subtest: switching to pitching hides fielding plans and rejects late pinch-hit plan success or failure
+ok 99 - switching to pitching hides fielding plans and rejects late pinch-hit plan success or failure
+  ---
+  duration_ms: 1.0067
+  type: 'test'
+  ...
+# Subtest: all 18 real-model custom scenarios render both assessment views with finite numbers
+ok 100 - all 18 real-model custom scenarios render both assessment views with finite numbers
+  ---
+  duration_ms: 42.4954
+  type: 'test'
+  ...
+# Subtest: model validation retry refetches a schema-invalid JSON response instead of reusing it forever
+ok 101 - model validation retry refetches a schema-invalid JSON response instead of reusing it forever
+  ---
+  duration_ms: 3.0857
+  type: 'test'
+  ...
+# Subtest: retrying unavailable timing markers replaces a cached invalid response
+ok 102 - retrying unavailable timing markers replaces a cached invalid response
+  ---
+  duration_ms: 1.0561
+  type: 'test'
+  ...
+# Subtest: an older failed JSON request cannot evict a newer successful reload
+ok 103 - an older failed JSON request cannot evict a newer successful reload
+  ---
+  duration_ms: 0.9486
+  type: 'test'
+  ...
+# Subtest: all 226 fixed-day PAs load and render both decision views through the static app workflow
+ok 104 - all 226 fixed-day PAs load and render both decision views through the static app workflow
+  ---
+  duration_ms: 609.1906
+  type: 'test'
+  ...
+# Subtest: single-day navigation contains only overview and replay, with no validation mount
+ok 105 - single-day navigation contains only overview and replay, with no validation mount
+  ---
+  duration_ms: 1.729
+  type: 'test'
+  ...
+# Subtest: concise recommendation keeps sample and model-disagreement states without asserting certainty
+ok 106 - concise recommendation keeps sample and model-disagreement states without asserting certainty
+  ---
+  duration_ms: 0.8103
+  type: 'test'
+  ...
+# Subtest: four groups partition evaluated PA and keep unknown estimates separate
+ok 107 - four groups partition evaluated PA and keep unknown estimates separate
+  ---
+  duration_ms: 1.6949
+  type: 'test'
+  ...
+# Subtest: consecutive prompt PA stay separate observations, not claimed as multiple substitutions
+ok 108 - consecutive prompt PA stay separate observations, not claimed as multiple substitutions
+  ---
+  duration_ms: 0.168
+  type: 'test'
+  ...
+# Subtest: pinch hitting uses the batting observation team and leaves original hitter unknown when absent
+ok 109 - pinch hitting uses the batting observation team and leaves original hitter unknown when absent
+  ---
+  duration_ms: 0.0915
+  type: 'test'
+  ...
+# Subtest: model validation keeps small improvements visible and distinguishes candidate from adoption
+ok 110 - model validation keeps small improvements visible and distinguishes candidate from adoption
+  ---
+  duration_ms: 9.6661
+  type: 'test'
+  ...
+# Subtest: same version from another model batch is rejected
+ok 111 - same version from another model batch is rejected
+  ---
+  duration_ms: 0.1561
+  type: 'test'
+  ...
+# Subtest: validation failure offers a working retry without claiming training is unfinished
+ok 112 - validation failure offers a working retry without claiming training is unfinished
+  ---
+  duration_ms: 0.1909
+  type: 'test'
+  ...
+# Subtest: truncated or invalid metrics never produce a partial validation conclusion
+ok 113 - truncated or invalid metrics never produce a partial validation conclusion
+  ---
+  duration_ms: 0.275
+  type: 'test'
+  ...
+# Subtest: relative error change uses baseline MSE and rejects zero or missing baselines
+ok 114 - relative error change uses baseline MSE and rejects zero or missing baselines
+  ---
+  duration_ms: 0.1227
+  type: 'test'
+  ...
+# Subtest: incomplete optional diagnostics fail before any model conclusion is displayed
+ok 115 - incomplete optional diagnostics fail before any model conclusion is displayed
+  ---
+  duration_ms: 0.5229
+  type: 'test'
+  ...
+# Subtest: complete release diagnostics render with finite values
+ok 116 - complete release diagnostics render with finite values
+  ---
+  duration_ms: 2.2793
+  type: 'test'
+  ...
+# Subtest: an older validation response cannot replace the latest success or error
+ok 117 - an older validation response cannot replace the latest success or error
+  ---
+  duration_ms: 0.4425
+  type: 'test'
+  ...
+# Subtest: timeline PA opens details, formats outcome and forwards disclosure to full comparison
+ok 118 - timeline PA opens details, formats outcome and forwards disclosure to full comparison
+  ---
+  duration_ms: 0.8896
+  type: 'test'
+  ...
+# Subtest: negative local conversion uses parent rather than reversing scoring benefit
+ok 119 - negative local conversion uses parent rather than reversing scoring benefit
+  ---
+  duration_ms: 1.446
+  type: 'test'
+  ...
+# Subtest: missing valid calibration fails explicitly and mixed training versions cannot load
+ok 120 - missing valid calibration fails explicitly and mixed training versions cannot load
+  ---
+  duration_ms: 1.9114
+  type: 'test'
+  ...
+# Subtest: percentile half-score ties match Python rather than always rounding up
+ok 121 - percentile half-score ties match Python rather than always rounding up
+  ---
+  duration_ms: 0.7302
+  type: 'test'
+  ...
+# Subtest: same exported parameters preserve original calculation formulas across 18 scenarios
+ok 122 - same exported parameters preserve original calculation formulas across 18 scenarios
+  ---
+  duration_ms: 32.4608
+  type: 'test'
+  ...
+# Subtest: chosen historical day is a Saturday with three recorded games and all six teams
+ok 123 - chosen historical day is a Saturday with three recorded games and all six teams
+  ---
+  duration_ms: 2.7295
+  type: 'test'
+  ...
+# Subtest: single day replaces whole-season dashboard without introducing new model inputs
+ok 124 - single day replaces whole-season dashboard without introducing new model inputs
+  ---
+  duration_ms: 1.2614
+  type: 'test'
+  ...
+# Subtest: fixed day exports every PA once and hashes every lazy-loaded file
+ok 125 - fixed day exports every PA once and hashes every lazy-loaded file
+  ---
+  duration_ms: 65.6807
+  type: 'test'
+  ...
+# Subtest: a fixed day file is fetched on demand rather than preloading all decisions
+ok 126 - a fixed day file is fetched on demand rather than preloading all decisions
+  ---
+  duration_ms: 0.5431
+  type: 'test'
+  ...
+# Subtest: complete DH configuration validates nine unique hitters and separate pitcher
+ok 127 - complete DH configuration validates nine unique hitters and separate pitcher
+  ---
+  duration_ms: 1.0879
+  type: 'test'
+  ...
+# Subtest: incomplete, cross-team and unsupported two-way configurations cannot be applied
+ok 128 - incomplete, cross-team and unsupported two-way configurations cannot be applied
+  ---
+  duration_ms: 0.1487
+  type: 'test'
+  ...
+# Subtest: malformed draft and confirmed state are rejected
+ok 129 - malformed draft and confirmed state are rejected
+  ---
+  duration_ms: 0.1092
+  type: 'test'
+  ...
+# Subtest: UI draft is isolated until apply, and confirmed configuration persists by team
+ok 130 - UI draft is isolated until apply, and confirmed configuration persists by team
+  ---
+  duration_ms: 3.5331
+  type: 'test'
+  ...
+# Subtest: storage refusal still permits session configuration and never reports saved
+ok 131 - storage refusal still permits session configuration and never reports saved
+  ---
+  duration_ms: 3.1606
+  type: 'test'
+  ...
+# Subtest: malformed saved data remains preserved during editing and applying
+ok 132 - malformed saved data remains preserved during editing and applying
+  ---
+  duration_ms: 1.9867
+  type: 'test'
+  ...
+# Subtest: field selection exchanges positions for on-field players while retaining their batting order
+ok 133 - field selection exchanges positions for on-field players while retaining their batting order
+  ---
+  duration_ms: 0.2235
+  type: 'test'
+  ...
+# Subtest: batting-row selection swaps duplicate names instead of producing duplicate lineup entries
+ok 134 - batting-row selection swaps duplicate names instead of producing duplicate lineup entries
+  ---
+  duration_ms: 0.097
+  type: 'test'
+  ...
+# Subtest: reapply directly updates configuration without retirement or confirmation flow
+ok 135 - reapply directly updates configuration without retirement or confirmation flow
+  ---
+  duration_ms: 1.4875
+  type: 'test'
+  ...
+# Subtest: legacy retirement records do not constrain the simplified configuration
+ok 136 - legacy retirement records do not constrain the simplified configuration
+  ---
+  duration_ms: 1.5285
+  type: 'test'
+  ...
+# Subtest: explicit order swap retains player positions and pitcher while exchanging distant batting slots
+ok 137 - explicit order swap retains player positions and pitcher while exchanging distant batting slots
+  ---
+  duration_ms: 0.2063
+  type: 'test'
+  ...
+# Subtest: explicit field swap retains batting order and rejects empty or invalid targets
+ok 138 - explicit field swap retains batting order and rejects empty or invalid targets
+  ---
+  duration_ms: 0.1141
+  type: 'test'
+  ...
+# Subtest: two-click batting exchange supports cancellation and one-step undo without applying
+ok 139 - two-click batting exchange supports cancellation and one-step undo without applying
+  ---
+  duration_ms: 1.6595
+  type: 'test'
+  ...
+# Subtest: opening and cancelling player picker preserves exchange undo; applying clears it
+ok 140 - opening and cancelling player picker preserves exchange undo; applying clears it
+  ---
+  duration_ms: 1.8475
+  type: 'test'
+  ...
+# Subtest: default lineup is only a draft until applied, and saved records take priority
+ok 141 - default lineup is only a draft until applied, and saved records take priority
+  ---
+  duration_ms: 2.0525
+  type: 'test'
+  ...
+# Subtest: invalid default lineups are ignored and defaultFor returns an independent copy
+ok 142 - invalid default lineups are ignored and defaultFor returns an independent copy
+  ---
+  duration_ms: 0.2593
+  type: 'test'
+  ...
+# Subtest: unapplied edits are labelled, and reset applies and saves the defaults
+ok 143 - unapplied edits are labelled, and reset applies and saves the defaults
+  ---
+  duration_ms: 1.0501
+  type: 'test'
+  ...
+# Subtest: release returns to free selection, keeps the draft, and survives reload
+ok 144 - release returns to free selection, keeps the draft, and survives reload
+  ---
+  duration_ms: 0.8763
+  type: 'test'
+  ...
+# Subtest: duplicate saved positions are rejected before a missing field slot can be opened
+ok 145 - duplicate saved positions are rejected before a missing field slot can be opened
+  ---
+  duration_ms: 0.0716
+  type: 'test'
+  ...
+# Subtest: manually withdrawn players cannot remain active and corrupted exclusion data is rejected
+ok 146 - manually withdrawn players cannot remain active and corrupted exclusion data is rejected
+  ---
+  duration_ms: 0.0923
+  type: 'test'
+  ...
+# Subtest: same-name pitcher migration keeps lineup order and uses saved team identity
+ok 147 - same-name pitcher migration keeps lineup order and uses saved team identity
+  ---
+  duration_ms: 0.1271
+  type: 'test'
+  ...
+# Subtest: restore defaults never claims browser persistence when storage refuses writes
+ok 148 - restore defaults never claims browser persistence when storage refuses writes
+  ---
+  duration_ms: 1.6199
+  type: 'test'
+  ...
+# Subtest: moving to the first batting slot focuses the player instead of a disabled arrow
+ok 149 - moving to the first batting slot focuses the player instead of a disabled arrow
+  ---
+  duration_ms: 1.5878
+  type: 'test'
+  ...
+# Subtest: keyboard position changes preserve focus and swap the other position
+ok 150 - keyboard position changes preserve focus and swap the other position
+  ---
+  duration_ms: 1.2776
+  type: 'test'
+  ...
+# Subtest: late failed team request cannot overwrite the latest successful team status
+ok 151 - late failed team request cannot overwrite the latest successful team status
+  ---
+  duration_ms: 1.293
+  type: 'test'
+  ...
+# Subtest: failed team switch returns selector and apply action to the last loaded team
+ok 152 - failed team switch returns selector and apply action to the last loaded team
+  ---
+  duration_ms: 1.5712
+  type: 'test'
+  ...
+# Subtest: first team load failure keeps apply disabled and picker safe until retry succeeds
+ok 153 - first team load failure keeps apply disabled and picker safe until retry succeeds
+  ---
+  duration_ms: 1.5366
+  type: 'test'
+  ...
+# Subtest: swipe needs a clear, quick horizontal movement
+ok 154 - swipe needs a clear, quick horizontal movement
+  ---
+  duration_ms: 1.182
+  type: 'test'
+  ...
+# Subtest: no slide-in or drawer animation is exposed
+ok 155 - no slide-in or drawer animation is exposed
+  ---
+  duration_ms: 0.5852
+  type: 'test'
+  ...
+# Subtest: only selection markers animate; all content is immediate and reduced-motion overrides loading
+ok 156 - only selection markers animate; all content is immediate and reduced-motion overrides loading
+  ---
+  duration_ms: 0.5018
+  type: 'test'
+  ...
+# Subtest: pitch percentages retain small changes without signed zero or nonfinite text
+ok 157 - pitch percentages retain small changes without signed zero or nonfinite text
+  ---
+  duration_ms: 4.8911
+  type: 'test'
+  ...
+# Subtest: every released pitch snapshot renders without nonfinite numbers or signed zero
+ok 158 - every released pitch snapshot renders without nonfinite numbers or signed zero
+  ---
+  duration_ms: 336.1853
+  type: 'test'
+  ...
+# Subtest: raw pitch view uses observed proportions and never reuses adjusted intervals or claims
+ok 159 - raw pitch view uses observed proportions and never reuses adjusted intervals or claims
+  ---
+  duration_ms: 2.4062
+  type: 'test'
+  ...
+# Subtest: validation distinguishes absolute MSE difference from relative improvement
+ok 160 - validation distinguishes absolute MSE difference from relative improvement
+  ---
+  duration_ms: 11.0124
+  type: 'test'
+  ...
+# Subtest: timeline WPA missing and tiny values are not displayed as a measured zero
+ok 161 - timeline WPA missing and tiny values are not displayed as a measured zero
+  ---
+  duration_ms: 0.6644
+  type: 'test'
+  ...
+# Subtest: pitch card reads snapshots without AbortSignal.timeout
+ok 162 - pitch card reads snapshots without AbortSignal.timeout
+  ---
+  duration_ms: 6.7874
+  type: 'test'
+  ...
+# Subtest: static selection is strictly before the requested date for every hand
+ok 163 - static selection is strictly before the requested date for every hand
+  ---
+  duration_ms: 5.5492
+  type: 'test'
+  ...
+# Subtest: failed fetch is retryable instead of permanently cached
+ok 164 - failed fetch is retryable instead of permanently cached
+  ---
+  duration_ms: 4.1313
+  type: 'test'
+  ...
+# Subtest: unknown pitcher produces a clear error without requesting a guessed filename
+ok 165 - unknown pitcher produces a clear error without requesting a guessed filename
+  ---
+  duration_ms: 1.8048
+  type: 'test'
+  ...
+# Subtest: invalid handedness and impossible dates are rejected
+ok 166 - invalid handedness and impossible dates are rejected
+  ---
+  duration_ms: 0.8179
+  type: 'test'
+  ...
+# Subtest: exactly three presets persist, including intentional empty groups, isolated by team
+ok 167 - exactly three presets persist, including intentional empty groups, isolated by team
+  ---
+  duration_ms: 1.9839
+  type: 'test'
+  ...
+# Subtest: malformed old data is preserved and never overwritten with defaults
+ok 168 - malformed old data is preserved and never overwritten with defaults
+  ---
+  duration_ms: 0.1995
+  type: 'test'
+  ...
+# Subtest: denied and silently refusing storage never reports success
+ok 169 - denied and silently refusing storage never reports success
+  ---
+  duration_ms: 0.3422
+  type: 'test'
+  ...
+# Subtest: membership selects available names and keeps missing names for explicit feedback
+ok 170 - membership selects available names and keeps missing names for explicit feedback
+  ---
+  duration_ms: 0.1251
+  type: 'test'
+  ...
+# Subtest: saved same-name pitchers migrate by team without overwriting legacy storage
+ok 171 - saved same-name pitchers migrate by team without overwriting legacy storage
+  ---
+  duration_ms: 0.1499
+  type: 'test'
+  ...
+# Subtest: v2 selected custom group migrates while all old presets remain recoverable
+ok 172 - v2 selected custom group migrates while all old presets remain recoverable
+  ---
+  duration_ms: 0.1981
+  type: 'test'
+  ...
+# Subtest: ambiguous legacy groups do not guess a latest or merge members
+ok 173 - ambiguous legacy groups do not guess a latest or merge members
+  ---
+  duration_ms: 0.1169
+  type: 'test'
+  ...
+# Subtest: valid v3 is independent of damaged obsolete storage
+ok 174 - valid v3 is independent of damaged obsolete storage
+  ---
+  duration_ms: 0.1164
+  type: 'test'
+  ...
+# Subtest: extra or missing groups cannot be saved as a valid fixed configuration
+ok 175 - extra or missing groups cannot be saved as a valid fixed configuration
+  ---
+  duration_ms: 0.1266
+  type: 'test'
+  ...
+# Subtest: six teams have two nonoverlapping reliever templates and an empty custom slot
+ok 176 - six teams have two nonoverlapping reliever templates and an empty custom slot
+  ---
+  duration_ms: 8.711
+  type: 'test'
+  ...
+# Subtest: 2025 closer stays in the documented suggested winning template when present
+ok 177 - 2025 closer stays in the documented suggested winning template when present
+  ---
+  duration_ms: 0.0969
+  type: 'test'
+  ...
+# Subtest: light default exists before application initialization and saved dark stays dark
+ok 178 - light default exists before application initialization and saved dark stays dark
+  ---
+  duration_ms: 1.8562
+  type: 'test'
+  ...
+# Subtest: light preference survives reopening and controls update accessibly
+ok 179 - light preference survives reopening and controls update accessibly
+  ---
+  duration_ms: 1.5966
+  type: 'test'
+  ...
+# Subtest: storage refusal and corrupted preference never prevent switching
+ok 180 - storage refusal and corrupted preference never prevent switching
+  ---
+  duration_ms: 1.0575
+  type: 'test'
+  ...
+# Subtest: one theme button toggles both ways and announces its next action
+ok 181 - one theme button toggles both ways and announces its next action
+  ---
+  duration_ms: 0.5644
+  type: 'test'
+  ...
+1..181
+# tests 181
+# suites 0
+# pass 181
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 875.0612

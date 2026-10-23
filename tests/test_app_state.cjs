@@ -130,8 +130,8 @@ test('tiny positive differences never become a strong recommendation from SE',()
   const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,誤差:0,階層式:0,機器學習:0,樣本球數:1000},
     {角色:'代打',球員:'One',守備:'ok',預估勝率:.00001,誤差:0,階層式:.00001,機器學習:.00001,樣本球數:1000}];
   const rec=f.eval('recommendation(cands)');
-  assert.equal(rec.kind,'neutral');assert.match(rec.text,/不必只依排序換人/);
-  assert.match(rec.title,/差距極小/);
+  assert.equal(rec.kind,'neutral');assert.match(rec.text,/不到 0\.01.*維持原人選/);
+  assert.match(rec.title,/續用.*打擊/);
 });
 test('empty bench differs from candidates whose fielding is unconfirmed',()=>{
  const f=fixture();f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0}];
@@ -562,7 +562,7 @@ test('single-day review preserves the current date scope without reviving the se
  f.eval('json=async url=>files[url];timingData=null;');await f.eval('renderReview()');
  const html=f.node('#reviewBody').innerHTML;
  assert.equal((html.match(/<article /g)||[]).length,1);
- assert.match(html,/實際代打/);assert.match(html,/單日結果不代表模型準確度/);
+ assert.match(html,/實際代打/);assert.match(html,/6 局起顯示換人提示/);
  assert.match(html,new RegExp('data-history-game="'+selected[0].game+'"'));
  assert.doesNotMatch(html,/全聯盟回測|提早建議時的中位數|分歧最大的打席/);
 });
@@ -925,4 +925,31 @@ test('all 226 fixed-day PAs load and render both decision views through the stat
  f.eval(`S.pa=${JSON.stringify(next)};historyDisclosure.select(S.pa)`);
  await f.eval("run(()=>api('api/replay?pa='+S.pa+'&decision=ph'),'replay')");
  assert.doesNotMatch(f.node('#resultBody').innerHTML,/data-reveal-action open|data-reveal-outcome open/);
+});
+
+test('single-day navigation contains only overview and replay, with no validation mount',async()=>{
+ const html=fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8');
+ const seg=html.match(/id="backtestSeg"[\s\S]*?<\/div>/)[0];
+ assert.deepEqual([...seg.matchAll(/data-sub="([^"]+)"/g)].map(m=>m[1]),['season','replay']);
+ assert.doesNotMatch(html,/id="modelValidation|data-sub="validation"|id="validationTitle/);
+ const f=entryFixture();let refreshes=0;
+ f.context.BacktestView={validation(){throw Error('validation must never load')}};
+ f.context.recordRefresh=()=>refreshes++;f.eval('refreshHistoryDay=async()=>recordRefresh();');
+ await f.eval("showFeaturePage('review','validation')");
+ assert.equal(f.eval('backtestSub'),'season');assert.equal(f.eval('currentPage()'),'review');
+ assert.equal(f.node('#historyDayContent').hidden,false);assert.equal(refreshes,1);
+ assert.equal(f.node('.skip-link').href,'#reviewTitle');
+ const code=fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
+ assert.doesNotMatch(code,/BacktestView\.validation|#modelValidation|#validationTitle/);
+});
+
+test('concise recommendation keeps sample and model-disagreement states without asserting certainty',()=>{
+ const f=fixture();
+ f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,階層式:0,機器學習:0,樣本球數:1000},
+ {角色:'代打',球員:'Next',守備:'ok',預估勝率:2,階層式:2,機器學習:2,樣本球數:10}];
+ assert.match(f.eval('recommendation(cands).title'),/候選比較：Next/);
+ assert.match(f.eval('recommendation(cands).text'),/樣本有限/);
+ f.context.cands[1].機器學習=-1;
+ assert.match(f.eval('recommendation(cands).text'),/模型排序不同/);
+ assert.doesNotMatch(f.eval('recommendation(cands).text'),/已驗證|保證|完整且沒問題/);
 });
