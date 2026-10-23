@@ -380,28 +380,52 @@ async function init() {
   $('#historyPitcher').onchange=mountHistoricalPitch;
   LineupBoard.mount({element:$('#lineupPage'),teams:S.teams,team,matches:matchesPlayerSearch,pitchCount:()=>$('#pitchCount').value,role:()=>S.starter,applied:applyOwnLineup});
   $$('[data-page]').forEach(b=>b.onclick=()=>showFeaturePage(b.dataset.page));
-  try{const saved=localStorage.getItem('cpbl-audience-mode');if(saved==='team')audienceMode='team';}catch{}
-  $$('[data-audience]').forEach(b=>b.onclick=()=>setAudienceMode(b.dataset.audience));
-  await setAudienceMode(audienceMode);
+  // Every new visit starts with direct evaluation; stored lineups remain available in 球隊.
+  $$('[data-entry]').forEach(b=>b.onclick=()=>selectAudienceEntry(b.dataset.entry));
+  await selectAudienceEntry('general');
   bindMotion();
 }
 
 let audienceMode='general';
+let entryGeneration=0;
+function syncEntryNavigation(){
+  const review=currentPage()==='review',entry=review?'review':audienceMode;
+  $$('[data-entry]').forEach(b=>{
+    const active=b.dataset.entry===entry;
+    b.classList.toggle('on',active);b.setAttribute('aria-pressed',String(active));
+    if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+  });
+  $('.audience-control').hidden=false;
+  $('.feature-nav').hidden=review||audienceMode!=='team';
+  if(review)$('#audienceStatus').textContent='2025/09/20 歷史分析；不受一般使用者、球隊名單或今日設定影響。';
+}
+async function selectAudienceEntry(entry){
+  if(!['general','team','review'].includes(entry))return;
+  const destination=entry==='team'?'lineup':entry==='review'?'review':'evaluation';
+  if(entryGeneration>0&&currentPage()===destination&&(entry==='review'||audienceMode===entry)){syncEntryNavigation();return;}
+  const token=++entryGeneration;
+  if(entry==='review'){await showFeaturePage('review');if(token===entryGeneration)syncEntryNavigation();return;}
+  audienceMode=entry;
+  // Navigate out of history before applying current-team constraints.
+  await showFeaturePage(entry==='team'?'lineup':'evaluation');
+  if(token!==entryGeneration)return;
+  await setAudienceMode(entry);
+  if(token!==entryGeneration)return;
+  syncEntryNavigation();
+}
 function confirmedOwnLineup(){if(typeof LineupBoard==='undefined')return null;const name=$('#myTeam').value,c=LineupBoard.current(name),r=S.roster[name];return c&&r&&LineupBoard.validate(c,r).length===0?c:null;}
 async function setAudienceMode(mode){
   if(!['general','team'].includes(mode))return;
   if(currentPage()==='review')return;
   audienceMode=mode;try{localStorage.setItem('cpbl-audience-mode',mode);}catch{}
-  $$('[data-audience]').forEach(b=>{b.classList.toggle('on',b.dataset.audience===mode);b.setAttribute('aria-pressed',String(b.dataset.audience===mode));});
+  syncEntryNavigation();
   await applyOwnLineup($('#myTeam').value);
-  if(audienceMode!==mode)return;
+  if(audienceMode!==mode||currentPage()==='review')return;
   if(mode==='team'&&!confirmedOwnLineup()){await showFeaturePage('lineup');$('#lineupTitle').focus();}
 }
 let dueFromLineup = false;  // 「輪到的打者」選項目前是否來自場上名單
 function ownLineup() { return currentPage()==='review'?null:audienceMode==='team'?confirmedOwnLineup():null; }
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name)&&!c?.unavailable?.includes(name); }
-/* 功能頁依選單順序排列；滑入方向與手勢都依這個順序 */
-const PAGES = ["evaluation", "lineup", "review"];
 const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lineupTitle","跳到場上名單"], review:["#reviewTitle","跳到當日總覽"], replay:["#workspace","跳到選擇比賽"]};
 /* 「模型回測」頁分成賽季總覽（#reviewPage）與逐打席回放（沿用評估頁版面的回放模式） */
 const HISTORY_DATE="2025-09-20";
@@ -428,7 +452,7 @@ async function showFeaturePage(page, sub) {
   if(page==='review'&&sub)backtestSub=sub;
   const replay=page==='review'&&backtestSub==='replay',main=page==='evaluation'||replay;
   $('#lineupPage').hidden=page!=='lineup';$('#reviewPage').hidden=page!=='review'||replay;$('#evaluationPage').hidden=!main;
-  $('.audience-control').hidden=page==='review';
+  if(page!=='review'&&S.mode==='replay')setMode('custom');
   if(replay)$('#rpTeam').value=$('#reviewTeam').value;
   if(main)setMode(replay?'replay':'custom');
   $('#backtestBar').hidden=page!=='review';
@@ -442,6 +466,7 @@ async function showFeaturePage(page, sub) {
   $('.mobile-jump a[href="#workspace"]').textContent=replay?'選擇比賽':'情境設定';
   const skip=validation?['#validationTitle','跳到模型驗證']:PAGE_SKIP[replay?'replay':page];$('.skip-link').href=skip[0];$('.skip-link').textContent=skip[1];
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+  syncEntryNavigation();
   if(page==='lineup')await LineupBoard.selectTeam($('#myTeam').value);
   if(validation&&typeof BacktestView!=='undefined')await BacktestView.validation($('#modelValidationBody'),json,activeBatchId());
   if(page==='review'&&!replay&&!validation){if(!$('#reviewTeam').value)$('#reviewTeam').value=S.teams[0]||'';await refreshHistoryDay();}
@@ -455,6 +480,12 @@ function battingOptions(roster,configured,restricted){
   if(restricted)return nine;
   const active=new Set(configured.slots.map(s=>s.name));
   return `<optgroup label="已設定場上九棒">${nine}</optgroup><optgroup label="其他球員">${roster.hitters.filter(h=>!active.has(h.name)).map(h=>`<option value="${esc(h.name)}">${esc(h.name)}（${h.hand==='L'?'左':h.hand==='R'?'右':'兩'}打）</option>`).join('')}</optgroup>`;
+}
+function lineupSelectionSummary(configured,mode=audienceMode){
+  const teamMode=mode==='team';
+  const description=teamMode?(configured?`依場上名單選人 · 投手 ${esc(configured.pitcher)}`:'先設定九棒、守位與投手，再套用名單。'):'自由選擇球員；不需先設定場上名單。';
+  const action=teamMode?`<button type="button" data-page="lineup">${configured?'編輯名單':'設定名單'}</button>`:'<span class="selection-badge">自由選人</span>';
+  return `<span class="lineup-summary-text">${description}</span><span class="lineup-summary-actions">${action}</span>`;
 }
 function syncOwnLineup() {
   const c=ownLineup(),my=S.roster[$('#myTeam').value];if(!my)return;
@@ -471,12 +502,9 @@ function syncOwnLineup() {
     $('#duePos').value=c.slots.find(s=>s.name===$('#dueBatter').value).pos;
   }
   $('#duePos').disabled=!!c;$('#myPitcher').disabled=!!c;$('#duePosLock').hidden=!c;$('#myPitcherLock').hidden=!c;
-  $('#lineupSummary').innerHTML=c
-    ?`<span>依場上名單評估 · 場上投手 ${esc(c.pitcher)}</span><span class="lineup-summary-actions"><button type="button" data-page="lineup">編輯配置</button><button type="button" id="lineupRelease">切換一般使用者</button></span>`
-    :`<span>${audienceMode==='team'?'球隊模式：請先設定並套用場上名單。':(confirmedOwnLineup()?'已設定九棒列在前方；仍可選其他球員。':'一般使用者：可直接評估，不需設定名單。')}</span><button type="button" data-page="lineup">設定場上名單</button>`;
+  $('#lineupSummary').innerHTML=lineupSelectionSummary(c);
   $('#audienceStatus').textContent=audienceMode==='team'?(c?'依已套用的場上名單評估。':'請先完成九棒、守位與投手，再套用配置。'):'自由選擇球員；已存的球隊名單仍會保留。';
-  $('#lineupSummary [data-page]').onclick=()=>showFeaturePage('lineup');
-  if($('#lineupRelease'))$('#lineupRelease').onclick=async()=>{await setAudienceMode('general');$('#lineupSummary button')?.focus();};
+  const editLineup=$('#lineupSummary [data-page]');if(editLineup)editLineup.onclick=()=>showFeaturePage('lineup');
   S.bench.forEach(n=>{if(!benchEligible(n))S.bench.delete(n);});
   groupControl?.refresh();
 }
@@ -1091,17 +1119,7 @@ function switchTab(t) {
   if(S.mode==='replay'&&S.pa){clearResult();return run(()=>api(`api/replay?pa=${S.pa}&decision=${t}`),'replay');}
   renderResult(true);
 }
-/* 手機左右滑動：切換評估、名單與模型回測頁（沒有動畫） */
-function handleSwipe(dir, target) {
-  const M = motion();
-  if (!M) return;
-  if ($("#lineupPicker")?.open) return;
-  // 左滑到下一個功能頁、右滑回上一個（評估 → 名單 → 模型回測）
-  const i = PAGES.indexOf(currentPage()), next = PAGES[i + (dir === "left" ? 1 : -1)];
-  if (next) showFeaturePage(next);
-}
 function bindMotion() {
-  motion()?.onSwipe(handleSwipe);
   $(".result-return").addEventListener("click", e => {
     if (S.mode !== "replay") return;
     const btn = S.pa && $(`#paList [data-p="${S.pa}"]`);

@@ -6,7 +6,7 @@
 <meta name="description" content="以中華職棒 2024–2025 歷史資料，比較代打與換投人選、安排我方場上名單，查看對決與配球。">
 <title>臨場用人決策</title>
 <script src="theme.js?v=20261021-v4-r1"></script>
-<link rel="stylesheet" href="style.css?v=20261023-motion-prune1">
+<link rel="stylesheet" href="style.css?v=20261023-layout1">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -36,12 +36,11 @@
   <button type="button" class="theme-toggle" data-theme-toggle aria-label="切換為深色主題"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><symbol id="theme-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1 1M18 18l1 1M5 19l1-1M18 6l1-1"/></symbol><symbol id="theme-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol></defs><use href="#theme-moon"/></svg><span>深色</span></button>
 </header>
 
-<nav class="feature-nav" aria-label="功能選單">
-  <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
+<section class="audience-control" aria-label="選擇使用方式"><nav class="entry-nav" aria-label="主要入口"><div class="seg" id="audienceSeg"><button type="button" data-entry="general" class="on" aria-pressed="true" aria-current="page">一般使用者</button><button type="button" data-entry="team" aria-pressed="false">球隊</button><button type="button" data-entry="review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>單日分析</button></div></nav><p id="audienceStatus" class="mut" role="status">一般使用者：直接比較換打／換投人選。</p></section>
+<nav class="feature-nav" aria-label="球隊功能" hidden>
   <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
-  <button type="button" data-page="review"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>2025 單日分析</button>
+  <button type="button" data-page="evaluation"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
 </nav>
-<section class="audience-control" aria-label="評估與名單的使用方式"><div class="seg" id="audienceSeg"><button type="button" data-audience="general" class="on" aria-pressed="true">一般使用者</button><button type="button" data-audience="team" aria-pressed="false">球隊</button></div><p id="audienceStatus" class="mut" role="status">一般使用者可直接評估。</p></section>
 <!-- 模型回測：用 2024–2025 資料檢驗模型，與當下（2026）的換打／換投評估分開 -->
 <div id="backtestBar" class="backtest-bar" hidden>
   <p class="mut">2025/09/20 三場比賽 · 只用賽前資料</p>
@@ -60,7 +59,7 @@
   </div>
 <details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">由你確認本場狀態；套用後排除候選，不影響歷史分析。重設預設名單會清除此紀錄。</p><div id="lineupUnavailable"></div></details>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>↶ 復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
-  <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">返回評估 →</button></div>
+  <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
   <p class="mut lineup-footnote">預設為 2025 最後 30 場最常先發的球員；配置存在此瀏覽器。</p>
   <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2025 背號…"><div id="lineupPlayerList"></div></dialog>
 </section>
@@ -119,7 +118,7 @@
             <div><label class="f" for="myTeam">我方球隊</label><select id="myTeam"></select></div>
             <div><label class="f" for="oppTeam">對手球隊</label><select id="oppTeam"></select></div>
           </div>
-          <div id="lineupSummary" class="lineup-summary"><span>場上名單未設定；仍可直接評估。</span><button type="button" data-page="lineup">設定名單</button></div>
+          <div id="lineupSummary" class="lineup-summary"><span class="lineup-summary-text">自由選擇球員；不需先設定場上名單。</span><span class="lineup-summary-actions"><span class="selection-badge">自由選人</span></span></div>
           <div class="state">
             <div class="state-control">
               <label class="f">局數</label>
@@ -249,11 +248,11 @@
 </footer>
 
 <script src="engine.js?v=20261021-v4-r1"></script>
-<script src="pitch-change.js?v=20261023-coverage1"></script>
+<script src="pitch-change.js?v=20261023-entry1"></script>
 <script src="pitcher-groups.js?v=20261021-v4-r1"></script>
 <script src="motion.js?v=20261023-motion1"></script>
 <script src="lineup.js?v=20261021-v4-r1"></script>
 <script src="backtest.js?v=20261022-numeric1"></script>
-<script src="app.js?v=20261023-coverage1"></script>
+<script src="app.js?v=20261023-layout1"></script>
 </body>
 </html>

@@ -882,7 +882,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 
 
 /* ---------- 使用者體驗調整 ---------- */
-/* 兩層選單：功能選單（評估／名單）為主；頁首的「評估資料」切換只屬於評估頁 */
+/* 頂部使用方式為主；球隊入口才顯示名單／評估次選單。 */
 .mode-caption { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .mode-caption[hidden] { display: none; }
 .feature-nav { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
@@ -993,7 +993,41 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .backtest-bar p { margin: 0; font-size: 13px; }
 @media (max-width: 520px) { .backtest-bar { padding: 0 12px; } .backtest-bar .seg { width: 100%; } .backtest-bar .seg button { flex: 1; } }
 
-.audience-control{max-width:1440px;margin:16px auto;padding:0 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}.audience-control p{margin:0}.audience-control .seg{flex-shrink:0}.audience-control button{min-height:44px}
+.audience-control{max-width:1400px;margin:16px auto 8px;padding:0 24px;display:flex;gap:12px 24px;align-items:center;flex-wrap:wrap}.audience-control p{margin:0;flex:1;min-width:180px;line-height:1.6}.audience-control button{min-height:48px}
+.entry-nav{min-width:0;width:min(100%,480px)}
+#audienceSeg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:4px;padding:4px}
+#audienceSeg::before{display:none}
+#audienceSeg button{padding:10px 8px;white-space:normal;word-break:keep-all;font-size:16px;gap:5px}
+#audienceSeg button.on{background:var(--panel);color:var(--accent);box-shadow:inset 0 -3px var(--accent);font-weight:700}
+.feature-nav{margin:8px auto 12px;gap:8px}
+.feature-nav button{min-height:48px;flex:0 1 230px}
+.feature-nav button:focus-visible,.entry-nav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* Both audiences share the same selection-summary frame and all evaluation panels. */
+.lineup-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;min-height:72px;align-items:center}
+.lineup-summary-text{min-width:0;overflow-wrap:anywhere}
+.lineup-summary-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.lineup-summary-actions button,.selection-badge{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:88px;padding:8px 10px;border-radius:var(--radius-control);white-space:nowrap}
+.selection-badge{color:var(--muted);border:1px solid var(--line);background:var(--panel)}
+@media(max-width:600px){
+  .audience-control{padding:0 12px;margin:12px auto 8px;gap:8px}
+  .entry-nav{width:100%}
+  .audience-control p{font-size:14px;min-width:0;flex-basis:100%}
+  #audienceSeg button{font-size:15px;padding:10px 4px;min-height:48px}
+  #audienceSeg .ui-icon{display:none}
+  .feature-nav{padding:0 12px 10px}
+  .feature-nav button{flex:1;white-space:normal;min-width:0;font-size:15px}
+  .lineup-row{grid-template-columns:24px minmax(0,1fr) 96px;gap:8px;padding:12px 0}
+  .lineup-row .lineup-order{grid-column:1;grid-row:1}
+  .lineup-row .lineup-name{grid-column:2/-1;grid-row:1;font-size:16px;min-height:44px}
+  .lineup-row select{grid-column:2;grid-row:2;font-size:16px;min-height:44px}
+  .lineup-row .lineup-move{grid-column:3;grid-row:2;gap:8px}
+  .lineup-move button{min-width:44px;width:44px;min-height:44px}
+  .lineup-actions{gap:8px;justify-content:stretch}
+  .lineup-actions button{flex:1 1 100%;min-height:48px}
+  select,input[type=number],input[type=search]{font-size:16px;min-height:44px}
+  .comparison-circle{min-width:44px}
+  .compare-chips button{min-height:44px}
+}
 
 .history-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.history-actions button,.history-actions a{min-height:44px;display:inline-flex;align-items:center;justify-content:center}.history-actions button{padding:8px 12px}
 

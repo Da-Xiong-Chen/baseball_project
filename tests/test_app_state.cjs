@@ -461,7 +461,6 @@ test('season review verdict is plain language and divergent list links each plat
   assert.match(html,/data-review-pa="2025-001-a030"/);assert.match(html,/8 局下/);assert.match(html,/甲<\/b> 續投 → 建議換上 <b>乙/);
   assert.match(html,/B&lt;隊&gt;/);assert.doesNotMatch(html,/B<隊>/);
   assert.match(f.eval("divergentList([],'ph')"),/沒有系統建議換人/);
-  assert.deepEqual(JSON.parse(f.eval('JSON.stringify(PAGES)')),['evaluation','lineup','review']);
 });
 test('default pitch count follows the inning for starters and stays 15 for relievers',()=>{
   const f=fixture();
@@ -611,6 +610,94 @@ test('single-day analysis ignores audience changes without clearing its result o
  await f.eval("setAudienceMode('team')");assert.equal(f.eval('S.last.id'),'historical');assert.equal(f.eval('audienceMode'),'general');
 });
 
+function entryFixture(){
+ const f=fixture();
+ f.node('#lineupPage').hidden=true;f.node('#reviewPage').hidden=true;f.node('#evaluationPage').hidden=false;
+ f.context.LineupBoard={cancelSwap(){},selectTeam:async()=>{},current:()=>null};
+ f.eval('S.ready=true;S.teams=["A"];S.mode="custom";applyOwnLineup=async()=>{};confirmedOwnLineup=()=>({pitcher:"P",slots:[]});refreshHistoryDay=async()=>{};');
+ return f;
+}
+
+test('general entry opens evaluation and hides team-only navigation even after leaving team lineup',async()=>{
+ const f=entryFixture();
+ await f.eval("selectAudienceEntry('team')");assert.equal(f.eval('currentPage()'),'lineup');
+ assert.equal(f.node('.feature-nav').hidden,false);assert.equal(f.eval('audienceMode'),'team');
+ await f.eval("selectAudienceEntry('general')");
+ assert.equal(f.eval('currentPage()'),'evaluation');assert.equal(f.eval('audienceMode'),'general');
+ assert.equal(f.node('.feature-nav').hidden,true);assert.equal(f.node('.audience-control').hidden,false);
+});
+
+test('team entry always opens lineup even with an already confirmed saved team',async()=>{
+ const f=entryFixture();await f.eval("selectAudienceEntry('team')");
+ assert.equal(f.eval('currentPage()'),'lineup');assert.equal(f.eval('audienceMode'),'team');
+ await f.eval("showFeaturePage('evaluation')");assert.equal(f.node('.feature-nav').hidden,false);
+ await f.eval("selectAudienceEntry('team')");assert.equal(f.eval('currentPage()'),'lineup');
+});
+
+test('general and team share a selection-summary frame with only the player-selection action differing',()=>{
+ const f=fixture();
+ for(const mode of ['general','team']){
+  const html=f.eval(`lineupSelectionSummary({pitcher:'P<unsafe>'},'${mode}')`);
+  assert.match(html,/<span class="lineup-summary-text">/);assert.match(html,/<span class="lineup-summary-actions">/);
+  assert.doesNotMatch(html,/lineupRelease|切換一般使用者|P<unsafe>/);
+  if(mode==='team'){assert.match(html,/編輯名單/);assert.match(html,/P&lt;unsafe&gt;/);}
+  else{assert.match(html,/自由選人/);assert.doesNotMatch(html,/data-page="lineup"/);}
+ }
+ assert.match(f.eval("lineupSelectionSummary(null,'team')"),/設定名單/);
+});
+
+test('reselecting the current entry preserves visible results and unsaved lineup work',async()=>{
+ const f=entryFixture();let applied=0,loaded=0;
+ f.context.recordApply=()=>applied++;f.context.recordLoad=()=>loaded++;
+ f.eval('applyOwnLineup=async()=>recordApply();LineupBoard.selectTeam=async()=>recordLoad();');
+ await f.eval("selectAudienceEntry('general')");const baseline=applied;
+ f.eval('S.last={id:"keep-result"}');await f.eval("selectAudienceEntry('general')");
+ assert.equal(applied,baseline);assert.equal(f.eval('S.last.id'),'keep-result');
+ await f.eval("selectAudienceEntry('team')");const teamLoads=loaded;
+ await f.eval("selectAudienceEntry('team')");assert.equal(loaded,teamLoads);
+});
+
+test('day-analysis entry keeps primary navigation available without applying the current team roster',async()=>{
+ const f=entryFixture();f.eval('audienceMode="team";applyOwnLineup=async()=>{throw Error("history must remain independent")};');
+ await f.eval("selectAudienceEntry('review')");
+ assert.equal(f.eval('currentPage()'),'review');assert.equal(f.node('.feature-nav').hidden,true);
+ assert.equal(f.node('.audience-control').hidden,false);assert.match(f.node('#audienceStatus').textContent,/不受一般使用者、球隊名單/);
+ assert.equal(f.eval('audienceMode'),'team');
+});
+
+test('leaving historical replay through either user entry restores custom mode before applying roster',async()=>{
+ for(const entry of ['general','team']){
+  const f=entryFixture();f.node('#reviewPage').hidden=true;f.node('#lineupPage').hidden=true;
+  f.eval('S.mode="replay";applyOwnLineup=async()=>{if(currentPage()==="review"||S.mode!=="custom")throw Error("still in history");};');
+  await f.eval(`selectAudienceEntry('${entry}')`);
+  assert.equal(f.eval('S.mode'),'custom');assert.equal(f.eval('currentPage()'),entry==='general'?'evaluation':'lineup');
+  assert.equal(f.eval('audienceMode'),entry);
+ }
+});
+
+test('rapid entry clicks cannot let a pending team load override general or day-analysis selection',async()=>{
+ for(const latest of ['general','review']){
+  const f=entryFixture(),pending=deferred();f.context.pendingTeam=pending.promise;
+  f.eval('LineupBoard.selectTeam=()=>pendingTeam;');
+  const old=f.eval("selectAudienceEntry('team')");
+  assert.equal(f.eval('audienceMode'),'team');assert.equal(f.node('.feature-nav').hidden,false);
+  await f.eval(`selectAudienceEntry('${latest}')`);
+  pending.resolve();await old;
+  assert.equal(f.eval('currentPage()'),latest==='review'?'review':'evaluation');
+  assert.equal(f.eval('audienceMode'),latest==='review'?'team':'general');assert.equal(f.node('.feature-nav').hidden,true);
+ }
+});
+
+test('late team roster application cannot redirect away from independent day analysis',async()=>{
+ const f=entryFixture(),pending=deferred(),entered=deferred();
+ f.context.pendingApply=pending.promise;f.context.entered=()=>entered.resolve();
+ f.eval('confirmedOwnLineup=()=>null;applyOwnLineup=()=>{entered();return pendingApply;};');
+ const old=f.eval("selectAudienceEntry('team')");await entered.promise;
+ await f.eval("selectAudienceEntry('review')");pending.resolve();await old;
+ assert.equal(f.eval('currentPage()'),'review');assert.equal(f.node('.feature-nav').hidden,true);
+ assert.equal(f.node('.audience-control').hidden,false);
+});
+
 test('historical analysis refuses custom roster application, refresh and evaluation',async()=>{
  const f=fixture();f.node('#myTeam').value='Original';f.node('#oppTeam').value='Opponent';
  f.eval("currentPage=()=> 'review';audienceMode='team';S.last={id:'historical'};S.ready=true;confirmedOwnLineup=()=>{throw Error('must not consult current lineup')};");
@@ -725,6 +812,8 @@ test('all 18 real-model custom scenarios render both assessment views with finit
   await f.eval('S.tab=numericTab;run(()=>api("api/evaluate",numericRequest),numericView)');
   const html=f.node('#resultBody').innerHTML;
   assert.match(html,/id="candidateCompare"/);assert.doesNotMatch(html,/評估未完成|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
+  f.eval("audienceMode='general';renderResult()");const general=f.node('#resultBody').innerHTML;
+  f.eval("audienceMode='team';renderResult()");assert.equal(f.node('#resultBody').innerHTML,general,'Both audiences must use identical result layout and numeric presentation');
  }
 });
 

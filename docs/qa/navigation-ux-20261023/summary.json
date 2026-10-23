@@ -1,0 +1,22 @@
+{
+  "node_tests": 178,
+  "python_tests": 88,
+  "http_decision_views": 452,
+  "local_url": "http://127.0.0.1:8011/",
+  "primary_entries": [
+    "一般使用者",
+    "球隊",
+    "單日分析"
+  ],
+  "fresh_visit": "general evaluation",
+  "team_entry": "lineup even if saved",
+  "default_theme": "light; explicit saved dark preference respected",
+  "numerical_data_and_model_weights_unchanged": true,
+  "browser_visual_testing": "blocked: Local browser use is disabled in Work settings",
+  "responsive_changes": "implemented; mobile and desktop browser visual recheck pending",
+  "git_status": "PR #27 review branch release/competition-readiness-20261023; no merge or deployment",
+  "ppt": "unchanged",
+  "shared_result_layout": true,
+  "shared_selection_summary_frame": true,
+  "real_model_layout_parity_views": 36
+}
