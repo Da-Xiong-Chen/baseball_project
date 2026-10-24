@@ -1,5 +1,9 @@
 # 換打／換投 v2 實作與驗收報告
 
+> **重點**：換打／換投 v2 的實作與驗收報告。
+>
+> **性質**：2026-10-03 的歷史紀錄，數字與畫面以當時版本為準；現行說明見 [README](../../README.md)。
+
 日期：2026-10-03。專案：`baseball_project`。本次交付狀態為 **工程操作驗收完成，真人與實體手機驗收待完成**。本機網址：<http://127.0.0.1:8011/>。公開 GitHub Pages 是否包含更新，仍以合併及部署為準。
 
 ## 完成的範圍
@@ -33,19 +37,19 @@
 | --- | --- | --- |
 | Python 單元與邊界 | 29 通過 | `python -m unittest discover -s tests -p 'test_*.py'` |
 | JavaScript 狀態／日期／主題／原計算式 | 24 通過 | `node --test tests/*.cjs`；包含慢回應不能覆蓋新情境、模式切換失效化、重試、缺歷史明細不補全季資料、初始兩候選並列及極小差值提示 |
-| Python／靜態版自訂評估 | 18 組通過，最大數值差異 0.0000096269 | `python tests/verify_decisions.py`；[parity.json](output/decision_v2/parity.json)。同來源參數核對，並非證明模型準確 |
+| Python／靜態版自訂評估 | 18 組通過，最大數值差異 0.0000096269 | `python tests/verify_decisions.py`；[parity.json](../../output/decision_v2/parity.json)。同來源參數核對，並非證明模型準確 |
 | 歷史快照全量 | 275 場、498 情境，缺漏 0、舊版 0 | 同上；模型日期不晚於情境日期；換投明細合計一致 |
-| 真實 HTTP | 7 種正常路由；評估 3 情境；配球 3 左右打條件共 15 次；10 種無效輸入正確拒絕 | `python tests/qa_http.py`；[http_report.json](output/qa/http_report.json) |
-| 深／淺 × 桌面／手機 × 換打／換投 | 8 組均完成，無整頁水平溢出、無錯誤框，初始均有兩候選並列 | 桌面 1440×900、手機 viewport 390×844；[ui-evidence.json](output/decision_v2/ui/ui-evidence.json) 與同目錄八張 PNG |
+| 真實 HTTP | 7 種正常路由；評估 3 情境；配球 3 左右打條件共 15 次；10 種無效輸入正確拒絕 | `python tests/qa_http.py`；[http_report.json](../../output/qa/http_report.json) |
+| 深／淺 × 桌面／手機 × 換打／換投 | 8 組均完成，無整頁水平溢出、無錯誤框，初始均有兩候選並列 | 桌面 1440×900、手機 viewport 390×844；[ui-evidence.json](../../output/decision_v2/ui/ui-evidence.json) 與同目錄八張 PNG |
 | 兩主題計算一致 | 4 組對應表格文字完全相同 | `python tests/check_ui_evidence.py`；這支程式核對已存證據，不代替瀏覽器操作 |
-| 公開資料獨立重建 | 通過：720 場資料重新下載、9 個模型重新訓練、277 個 JSON 比對最大差異 0 | 全新 venv 固定依賴，未使用既有 pickle 或不公開的 2025 守位資料；[reproduction.json](output/decision_v2/reproduction.json)、[isolated-requirements.txt](output/decision_v2/isolated-requirements.txt) |
-| 最後單位與版面核對 | v5、320／390／1440px、深淺共 6 組無整頁溢出，百分點單位正確 | [final-unit-layout.json](output/decision_v2/ui/final-unit-layout.json)；16 次主要控制 Tab 巡覽見 [keyboard-traversal.json](output/decision_v2/ui/keyboard-traversal.json)，不等於全頁無障礙認證 |
-| 色彩 | 14 組主要文字／背景配對 ≥ 4.5:1，最低 5.14:1 | [contrast.json](output/decision_v2/ui/contrast.json)；不是完整 WCAG 合規認證 |
-| 額外響應式 | 320×740、375×812、844×390、720×900 無整頁溢出 | [additional-checks.json](output/decision_v2/ui/additional-checks.json)；720px 不是實際 200% 瀏覽器縮放 |
+| 公開資料獨立重建 | 通過：720 場資料重新下載、9 個模型重新訓練、277 個 JSON 比對最大差異 0 | 全新 venv 固定依賴，未使用既有 pickle 或不公開的 2025 守位資料；[reproduction.json](../../output/decision_v2/reproduction.json)、[isolated-requirements.txt](../../output/decision_v2/isolated-requirements.txt) |
+| 最後單位與版面核對 | v5、320／390／1440px、深淺共 6 組無整頁溢出，百分點單位正確 | [final-unit-layout.json](../../output/decision_v2/ui/final-unit-layout.json)；16 次主要控制 Tab 巡覽見 [keyboard-traversal.json](../../output/decision_v2/ui/keyboard-traversal.json)，不等於全頁無障礙認證 |
+| 色彩 | 14 組主要文字／背景配對 ≥ 4.5:1，最低 5.14:1 | [contrast.json](../../output/decision_v2/ui/contrast.json)；不是完整 WCAG 合規認證 |
+| 額外響應式 | 320×740、375×812、844×390、720×900 無整頁溢出 | [additional-checks.json](../../output/decision_v2/ui/additional-checks.json)；720px 不是實際 200% 瀏覽器縮放 |
 | 鍵盤、主題記憶 | Enter 可切主題；重新整理仍保留；切換後結果相同 | 瀏覽器操作紀錄與 theme 單元測試；儲存拒絕以受控單元測試驗證 |
-| 靜態版完整操作 | 無板凳仍能續打評估；換投可評估；10-05 及 04-03 回放完成 | 04-03 可切換投，顯示階層式 04-03／逐球模型 04-01；[早季畫面](output/decision_v2/ui/static-early-replay-defense.png) |
+| 靜態版完整操作 | 無板凳仍能續打評估；換投可評估；10-05 及 04-03 回放完成 | 04-03 可切換投，顯示階層式 04-03／逐球模型 04-01；[早季畫面](../../output/decision_v2/ui/static-early-replay-defense.png) |
 | 資料不足 | 馮皓 0 球回放仍可降級，明示聯盟配球回退 | 10-05 陳聖平代打案例；缺守位、未知慣用手等另有受控測試 |
-| 網路失敗／亂序 | 首次失敗顯示重試；重試成功；L 慢回應晚於 R 回來但畫面維持 R | 實際瀏覽器操作 `tests/ui_pitch_change.html`；[故障測試畫面](output/decision_v2/ui/fault-retry-race.png)。人工資料、非模型效能驗證 |
+| 網路失敗／亂序 | 首次失敗顯示重試；重試成功；L 慢回應晚於 R 回來但畫面維持 R | 實際瀏覽器操作 `tests/ui_pitch_change.html`；[故障測試畫面](../../output/decision_v2/ui/fault-retry-race.png)。人工資料、非模型效能驗證 |
 
 最終瀏覽器無 JavaScript error。HTTP 配球首個冷查詢約 1.23 秒、後續約 0.8–18.3ms；這是本機測量，不能外推至公開部署。Windows 無法讀取實體核心數時，joblib 回退邏輯核心；核對程式仍成功。
 
