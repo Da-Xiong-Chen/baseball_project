@@ -25,7 +25,7 @@ def starter_curve(cutoff=None):
         p = pitches_before(cutoff)
         boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
     p = p.assign(pc=p.groupby(["game", "pitcher"]).cumcount())
-    p = p[p["cell"].notna()]
+    p = p[p['cell'].notna() & p['platoon'].notna()]
     st = boxes[(boxes["role"] == "P") & (boxes["order"] == 1)][["game", "name"]].rename(columns={"name": "pitcher"})
     p = p.merge(st.assign(sp=True), on=["game", "pitcher"], how="left")
     p = p[p["sp"].eq(True)]

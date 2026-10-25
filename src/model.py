@@ -78,22 +78,33 @@ class Model:
         return c
 
     def pitch_mix(self, pitcher, bhand):
-        bhand = bhand if bhand in ("L", "R") else "R"
+        if bhand not in ('L','R'):
+            pairs = [self.pitch_mix(pitcher, h) for h in ('L','R')]
+            return sum(x[0] for x in pairs) / 2, min(x[1] for x in pairs)
         if (pitcher, bhand) in self.mix.index:
             return self.mix.loc[(pitcher, bhand)], int(self.mix_n.get((pitcher, bhand), 0))
-        ph = self.phand.get(pitcher, "R")
+        ph = self.phand.get(pitcher, 'U')
+        if ph not in ('L','R'):
+            return (self.league_mix.loc[('L', bhand)] + self.league_mix.loc[('R', bhand)]) / 2, 0
         return self.league_mix.loc[(ph, bhand)], 0
 
-    def matchup(self, batter, bhand, pitcher):
+    def matchup(self, batter, bhand, pitcher, _pitch_hand=None):
         """回傳 (每打席預期得分值，相對聯盟平均打者)、標準誤、打者總樣本球數、投手樣本。"""
         L = self._lookup()
-        bhand = bhand if bhand in ("L", "R") else "R"
+        ph = _pitch_hand or L['phand'].get(pitcher, 'U')
+        if bhand not in ('L','R') or ph not in ('L','R'):
+            variants = [self.matchup(batter, bh, pitcher, _pitch_hand=ph_)
+                        for bh in ((bhand,) if bhand in ('L','R') else ('L','R'))
+                        for ph_ in ((ph,) if ph in ('L','R') else ('L','R'))]
+            result = {key: sum(v[key] for v in variants) / len(variants) for key in variants[0]}
+            result['n'] = min(v['n'] for v in variants)
+            result['mix_n'] = min(v['mix_n'] for v in variants)
+            result['se_pa'] = float(np.sqrt(np.mean([v['se_pa']**2 + (v['rel_pa']-result['rel_pa'])**2 for v in variants])))
+            return result
         if (pitcher, bhand) in L["mix"]:
             m, mix_n = L["mix"][(pitcher, bhand)].copy(), L["mix_n"].get((pitcher, bhand), 0)
         else:
-            m, mix_n = L["league_mix"][(L["phand"].get(pitcher, "R"), bhand)].copy(), 0
-        ph = L["phand"].get(pitcher, "R")
-        ph = ph if ph in ("L", "R") else "R"
+            m, mix_n = L["league_mix"][(ph, bhand)].copy(), 0
         platoon = "同側" if ph == bhand else "異側"
         lg_base = float((m * L["league"][platoon]).sum())
 
@@ -163,7 +174,8 @@ def fit(cutoff, season=None, pitcher_half_life=PITCHER_HALF_LIFE):
     season = season or cutoff.year
     pa, _, _ = load()
     p = pitches_before(str(cutoff.date()))
-    p = p[p["cell"].notna() & p["rv"].notna()].copy()
+    p = p[p['cell'].notna() & p['rv'].notna() & p['platoon'].notna() &
+          p.batter.notna() & p.pitcher.notna()].copy()
     p["w"] = np.where(p["season"] < season, PRIOR_SEASON_WEIGHT, 1.0)
     pa_ = pa[pa["date"] < cutoff].copy()
 

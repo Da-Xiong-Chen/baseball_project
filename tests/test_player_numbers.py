@@ -7,13 +7,13 @@ class NumberExportTests(unittest.TestCase):
    game={'date':date,'homeTeam':'A','awayTeam':'B','homeBatterBox':players,'homePitcherBox':[],'awayBatterBox':[],'awayPitcherBox':[]}
    Path(folder,'game.json').write_text(json.dumps(game),encoding='utf-8')
    return build(Path(folder))
- def player(self,name,number,pid=1): return {'playerName':name,'playerNumber':number,'playerId':pid}
+ def player(self,name,number,pid="one"): return {'playerName':name,'playerNumber':number,'playerId':pid}
  def test_zero_strings(self):
-  self.assertEqual(self.extract([self.player('Zero','0'),self.player('Double','00',2)])['teams']['A'],{'Double':'00','Zero':'0'})
+  self.assertEqual(self.extract([self.player('Zero','0'),self.player('Double','00','two')])['teams']['A'],{'rebas:CPBL:two':'00','rebas:CPBL:one':'0'})
  def test_conflict_excluded(self):
   data=self.extract([self.player('Same','1'),self.player('Same','2')]);self.assertEqual(data['teams'],{});self.assertEqual(len(data['excluded']),1)
  def test_identity_excluded(self):
-  self.assertEqual(len(self.extract([self.player('Same','1',1),self.player('Same','1',2)])['excluded']),1)
+  self.assertEqual(set(self.extract([self.player('Same','1','one'),self.player('Same','1','two')])['teams']['A']),{'rebas:CPBL:one','rebas:CPBL:two'})
  def test_other_season_rejected(self):
   with self.assertRaises(ValueError): self.extract([],date='2024-04-01')
  def test_missing_number_rejected(self):

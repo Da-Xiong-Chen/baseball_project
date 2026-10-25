@@ -6,8 +6,8 @@ function pitchModule(){
  vm.runInNewContext(source,c);return c.window.PitchChange;
 }
 function pitchPayload(){
- const index=JSON.parse(fs.readFileSync(path.join(root,'docs/data/pitch-change/2025/index.json'),'utf8'));
- const file=JSON.parse(fs.readFileSync(path.join(root,'docs/data/pitch-change/2025',Object.values(index.pitchers)[0]),'utf8'));
+ const index=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'pitch-change/2025/index.json'),'utf8'));
+ const file=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'pitch-change/2025',Object.values(index.pitchers)[0]),'utf8'));
  return structuredClone(file.snapshots.at(-1).hands.ALL);
 }
 test('pitch percentages retain small changes without signed zero or nonfinite text',()=>{
@@ -23,7 +23,7 @@ test('pitch percentages retain small changes without signed zero or nonfinite te
 });
 
 test('every released pitch snapshot renders without nonfinite numbers or signed zero',()=>{
- const api=pitchModule(),folder=path.join(root,'docs/data/pitch-change/2025');
+ const api=pitchModule(),folder=path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'pitch-change/2025');
  const index=JSON.parse(fs.readFileSync(path.join(folder,'index.json'),'utf8'));let snapshots=0,rows=0;
  for(const name of Object.values(index.pitchers)){
   const file=JSON.parse(fs.readFileSync(path.join(folder,name),'utf8'));
@@ -50,11 +50,11 @@ test('raw pitch view uses observed proportions and never reuses adjusted interva
 });
 
 test('validation distinguishes absolute MSE difference from relative improvement',async()=>{
- const B=require('../docs/backtest.js'),report=require('../docs/data/model-evaluation.json');
+ const B=require('../docs/backtest.js'),report=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'model-evaluation.json'),'utf8'));
  const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
  await B.validation(el,async()=>report,report.batch_id);
- assert.match(el.innerHTML,/MSE 差值（基準－模型）/);assert.match(el.innerHTML,/誤差減少 <b>0\.18%/);
- assert.match(el.innerHTML,/\+0\.000406/);assert.doesNotMatch(el.innerHTML,/相對基準誤差減少 \+0\.000406/);
+ assert.match(el.innerHTML,/MSE 差值（基準－模型）/);assert.match(el.innerHTML,/誤差減少 <b>0\.19%/);
+ assert.match(el.innerHTML,/\+0\.000423/);assert.doesNotMatch(el.innerHTML,/相對基準誤差減少 \+0\.000423/);
 });
 
 test('timeline WPA missing and tiny values are not displayed as a measured zero',()=>{

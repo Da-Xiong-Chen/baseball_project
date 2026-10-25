@@ -14,9 +14,9 @@ class BatchTests(unittest.TestCase):
     def test_mixed_versions_are_rejected(self):
         for r in ({},{'training_version':2,'engine_contract':3},{'training_version':3}):
             with self.assertRaises(ValueError):contract(r,'snapshot')
-        contract({'training_version':4,'engine_contract':4,'batch_id':'batch'},'snapshot')
+        contract({'training_version':5,'engine_contract':5,'batch_id':'batch'},'snapshot')
         with self.assertRaisesRegex(ValueError,'Different batch'):
-            contract({'training_version':4,'engine_contract':4,'batch_id':'other'},'snapshot','batch')
+            contract({'training_version':5,'engine_contract':5,'batch_id':'other'},'snapshot','batch')
 
     def test_interruption_restores_original_and_preserves_stage(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'output') as folder:
@@ -44,13 +44,13 @@ class WholeBatchTests(unittest.TestCase):
             (site/'.nojekyll').touch();(site/'index.html').write_text('<script src="app.js"></script>')
             (site/'app.js').write_text('// same executable source')
             (site/'data/replay/games.json').write_text('[]')
-            (site/'data/snapshot.json').write_text(json.dumps({'value':label,'training_version':4}))
-        self.context={'training_version':4,'engine_contract':4,'models':[]}
-        for name in ['a_v4.pkl','b_v4.pkl']:
+            (site/'data/snapshot.json').write_text(json.dumps({'value':label,'training_version':5}))
+        self.context={'training_version':5,'engine_contract':5,'models':[]}
+        for name in ['a_v5.pkl','b_v5.pkl']:
             p=self.weights/name;p.write_bytes(('NEW_'+name).encode())
             self.context['models'].append({'name':name,'sha256':batch.digest(p)})
         self.context['batch_id']=hashlib.sha256(json.dumps(self.context,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-        (self.root/'models/a_v4.pkl').write_bytes(b'OLD_A')
+        (self.root/'models/a_v5.pkl').write_bytes(b'OLD_A')
         (self.root/'models/active-batch.json').write_text('{"old":true}')
         receipts={}
         for key in ['decisions','history_day','timing','calibration']:
@@ -62,8 +62,8 @@ class WholeBatchTests(unittest.TestCase):
 
     def assert_old(self):
         self.assertEqual(json.loads((self.root/'docs/data/snapshot.json').read_text())['value'],'old')
-        self.assertEqual((self.root/'models/a_v4.pkl').read_bytes(),b'OLD_A')
-        self.assertFalse((self.root/'models/b_v4.pkl').exists())
+        self.assertEqual((self.root/'models/a_v5.pkl').read_bytes(),b'OLD_A')
+        self.assertFalse((self.root/'models/b_v5.pkl').exists())
         self.assertEqual((self.root/'models/active-batch.json').read_text(),'{"old":true}')
         self.assertFalse((self.root/'output/promotion-journal.json').exists())
 
@@ -75,7 +75,7 @@ class WholeBatchTests(unittest.TestCase):
 
     def test_actual_root_weights_and_context_are_checked(self):
         batch.promote_revision(self.stage,self.weights,self.root/'backup')
-        (self.root/'models/a_v4.pkl').write_bytes(b'CORRUPTED')
+        (self.root/'models/a_v5.pkl').write_bytes(b'CORRUPTED')
         with self.assertRaisesRegex(ValueError,'Active weight checksum'):
             batch.verify_manifest(self.root/'docs',self.root/'models',active=True)
 

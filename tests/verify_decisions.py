@@ -39,7 +39,7 @@ def main():
                 for metric in ['價值分數','預估勝率','相對現任','預估失分','守方勝率增減','階層式','機器學習','疲勞調整']:
                     if metric not in x or x[metric] is None:continue
                     error=abs(x[metric]-y[metric]);max_error=max(max_error,error)
-                    assert error<0.0001,(identity,x[identity],metric,error)
+                    assert error<=1e-8+1e-7*abs(x[metric]),(identity,x[identity],metric,error)
                 if '對決明細' in x:
                     assert abs(sum(d['runs']+d['fatigue'] for d in x['對決明細'])-x['預估失分'])<1e-9
         assert local['schema_version']==result['schema_version']==2

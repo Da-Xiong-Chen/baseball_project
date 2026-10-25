@@ -9,7 +9,7 @@ class BatchContractTests(unittest.TestCase):
     def test_weight_is_checked_again_after_replacement_and_missing_members_fail(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);p=root/'weight.pkl';p.write_bytes(b'original')
-            c={'training_version':4,'engine_contract':4,'models':[{'name':p.name,'cutoff':'2025-09-01','sha256':hashlib.sha256(p.read_bytes()).hexdigest()}]}
+            c={'training_version':5,'engine_contract':5,'models':[{'name':p.name,'cutoff':'2025-09-01','sha256':hashlib.sha256(p.read_bytes()).hexdigest()}]}
             c['batch_id']=hashlib.sha256(json.dumps(c,sort_keys=True,separators=(',',':')).encode()).hexdigest()
             context=root/'active-batch.json';context.write_text(json.dumps(c),encoding='utf8')
             with patch.object(batch,'ROOT',root),patch.object(batch,'context_path',return_value=context):

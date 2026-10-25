@@ -9,7 +9,7 @@ const Engine = (() => {
   async function load(base = "data/") {
     if (!M) {
       const model=await (await fetch(base + "model.json", {cache:"no-cache"})).json();
-      if(model.training_version!==4||model.engine_contract!==4||!model.batch_id)throw new Error('模型資料版本不相容，請重新載入完整版本');
+      if(model.training_version!==5||model.engine_contract!==5||!model.batch_id||model.identity_namespace!=='rebas:CPBL')throw new Error('模型資料版本不相容，請重新載入完整版本');
       M=model;
     }
     return M;
@@ -31,25 +31,39 @@ const Engine = (() => {
   }
 
   // ---------- 對戰 ----------
-  const hand = (h) => (h === "L" || h === "R" ? h : "R");
+  const hand = (h) => (h === 'L' || h === 'R' ? h : 'U');
+  const playerName = id => M.players?.[id] || (String(id).startsWith('rebas:CPBL:')?'未有姓名紀錄的球員':id);
   function batHand(batter, phand) {
-    const h = M.bhand[batter] || "R";
-    return h === "S" ? (phand === "R" ? "L" : "R") : h;
+    const h = M.bhand[batter] || 'U';
+    return h === 'S' ? (phand === 'R' ? 'L' : phand === 'L' ? 'R' : 'U') : h;
   }
-  function pitchMix(pitcher, bhand) {
+  function pitchMix(pitcher, bhand, pitchHand) {
     bhand = hand(bhand);
+    if(bhand==='U'){
+      const pairs=['L','R'].map(h=>pitchMix(pitcher,h,pitchHand));
+      return {m:M.cells.map((_,i)=>(pairs[0].m[i]+pairs[1].m[i])/2),n:Math.min(...pairs.map(x=>x.n))};
+    }
     const row = M.mix[pitcher] && M.mix[pitcher][bhand];
     if (row) return { m: row.slice(0, M.cells.length), n: row[M.cells.length] };
-    const ph = hand(M.phand[pitcher]);
+    const ph = hand(pitchHand || (M.model_phand||M.phand)[pitcher]);
+    if(ph==='U')return {m:M.cells.map((_,i)=>(M.league_mix[`L|${bhand}`][i]+M.league_mix[`R|${bhand}`][i])/2),n:0};
     return { m: M.league_mix[`${ph}|${bhand}`], n: 0 };
   }
   function neutralBase(m) {
     return M.cells.reduce((s, c, i) => s + m[i] * ((M.league[`同側|${c}`] || 0) + (M.league[`異側|${c}`] || 0)) / 2, 0);
   }
-  function matchup(batter, bhand, pitcher) {
+  function matchup(batter, bhand, pitcher, pitchHand) {
     bhand = hand(bhand);
-    const { m, n: mixN } = pitchMix(pitcher, bhand);
-    const ph = hand(M.phand[pitcher]);
+    const ph = hand(pitchHand || (M.model_phand||M.phand)[pitcher]);
+    if(bhand==='U'||ph==='U'){
+      const variants=(bhand==='U'?['L','R']:[bhand]).flatMap(bh=>(ph==='U'?['L','R']:[ph]).map(p=>matchup(batter,bh,pitcher,p)));
+      const avg=key=>variants.reduce((s,v)=>s+v[key],0)/variants.length;
+      const out=Object.fromEntries(Object.keys(variants[0]).map(key=>[key,Array.isArray(variants[0][key])?variants[0][key].map((_,i)=>variants.reduce((s,v)=>s+v[key][i],0)/variants.length):avg(key)]));
+      out.n=Math.min(...variants.map(v=>v.n));out.mix_n=Math.min(...variants.map(v=>v.mix_n));
+      out.se_pa=Math.sqrt(variants.reduce((s,v)=>s+v.se_pa**2+(v.rel_pa-out.rel_pa)**2,0)/variants.length);
+      return out;
+    }
+    const { m, n: mixN } = pitchMix(pitcher, bhand, ph);
     const platoonKey = ph === bhand ? "同側" : "異側";
     const lgBase = M.cells.reduce((s, c, i) => s + m[i] * (M.league[`${platoonKey}|${c}`] || 0), 0);
     const a = M.bat_all[batter];
@@ -86,14 +100,14 @@ const Engine = (() => {
   const positionsOf = (name) => M.eligible[name] || [];
   const canPlay = (name, pos) => pos === "DH" || positionsOf(name).includes(pos);
   function defenseCheck(outName, outPos, inName, benchAfter) {
-    if (outPos === "DH") return ["ok", `${inName} 接任指定打擊`];
+    if (outPos === 'DH') return ['ok', `${playerName(inName)} 接任指定打擊`];
     let msg, status;
     if (canPlay(inName, outPos)) {
-      msg = `${inName} 可直接接守${POS_ZH[outPos]}`; status = "ok";
+      msg = `${playerName(inName)} 可直接接守${POS_ZH[outPos]}`; status = 'ok';
     } else {
       const cover = benchAfter.filter((b) => canPlay(b, outPos));
       if (!cover.length) return ["unknown", `沒有已確認可接守${POS_ZH[outPos]}的紀錄；需人工確認`];
-      msg = `需由 ${cover[0]} 接守${POS_ZH[outPos]}（再消耗 1 名板凳）`; status = "warn";
+      msg = `需由 ${playerName(cover[0])} 接守${POS_ZH[outPos]}（再消耗 1 名板凳）`; status = 'warn';
     }
     if (outPos === "C" && !benchAfter.filter((b) => canPlay(b, "C") && b !== inName).length) {
       msg += "；之後板凳已無備用捕手";
@@ -191,7 +205,7 @@ const Engine = (() => {
         本身能力: r.skill_pa - r.fit_pa, 球路適性: r.fit_pa, 左右優勢: r.platoon_pa, 樣本球數: r.n,
         近況: rw ? recentForm(name, "bat") : null, 近況權重: rw,
         可守: positionsOf(name).join(",") || "-", 投手對此側樣本:r.mix_n, 比較池人數:pool.length,
-        資料警示:[!M.bhand[name] ? '打者慣用手缺資料，暫以右打估計' : '', !M.phand[row.pitcher] ? '投手慣用手缺資料，球路基準暫以右投估計' : '', !r.mix_n ? '投手對此侧球路採聯盟回退' : ''].filter(Boolean).join('；'),
+        資料警示:[!['L','R','S'].includes(M.bhand[name]) ? '打者手別未記錄，採雙側平均估計' : '', hand(M.phand[row.pitcher])==='U' ? '投手手別未記錄，採雙側平均估計' : '', !r.mix_n ? '投手對此侧球路採聯盟回退' : ''].filter(Boolean).join('；'),
       };
       if (name !== due) [rec.守備, rec.守備說明] = defenseCheck(due, duePos, name, bench.filter((b) => b !== name));
       else [rec.守備, rec.守備說明] = ["ok", `目前守${POS_ZH[duePos] || duePos}`];
@@ -227,7 +241,7 @@ const Engine = (() => {
         疲勞: [cur && fatWarn ? fatWarn : "", streak >= 2 ? `已連投 ${streak} 天` : ""].filter(Boolean).join("；") || "-",
         階層式:hRuns.reduce((s,v)=>s+v,0), 機器學習:gRuns.some(v=>v==null) ? null : gRuns.reduce((s,v)=>s+v,0),
         對決明細:details, 比較池人數:pool.length,
-        資料警示:[!M.phand[pit] ? '投手慣用手缺資料，暫以右投估計' : '', ...nextBatters.filter(b=>!M.bhand[b]).map(b=>`${b}慣用手缺資料，暫以右打估計`)].filter(Boolean).join('；'),
+        資料警示:[hand(M.phand[pit])==='U' ? '投手手別未記錄，採雙側平均估計' : '', ...nextBatters.filter(b=>!['L','R','S'].includes(M.bhand[b])).map(b=>'部分打者手別未記錄，採雙側平均估計')].filter(Boolean).join('；'),
       };
     });
     const curRuns = rows[0].預估失分;
@@ -245,6 +259,24 @@ const Engine = (() => {
 
   /** 與 server.py /api/evaluate 相同的輸入輸出。 */
   function evaluate(b) {
+    b={...b};
+    const bat=M.rosters?.[b.bat_team],fld=M.rosters?.[b.fld_team];
+    if(!bat||!fld||b.bat_team===b.fld_team)throw new Error('請選不同的有效球隊');
+    const resolve=(value,pool)=>{
+      if(typeof value!=='string')throw new Error('球員參數須為文字');
+      if(pool.some(p=>p.name===value))return value;
+      const ids=[...new Set(pool.filter(p=>p.display_name===value||p.aliases?.includes(value)||M.players?.[p.name]===value).map(p=>p.name))];
+      if(ids.length!==1)throw new Error('球員名稱無法唯一辨識，請重新選取球隊與球員');
+      return ids[0];
+    };
+    b.due=resolve(b.due,bat.hitters);b.pitcher=resolve(b.pitcher,fld.pitchers);
+    for(const [field,pool] of [['bench',bat.hitters],['next_batters',bat.hitters],['pen',fld.pitchers]])if(b[field]!=null){
+      if(!Array.isArray(b[field]))throw new Error('名單格式無效');
+      b[field]=b[field].map(n=>resolve(n,pool));
+      if(new Set(b[field]).size!==b[field].length)throw new Error('名單不能重複');
+    }
+    if(b.bench?.includes(b.due))throw new Error('現任打者不能同時列入板凳');
+    if(b.streaks)b.streaks=Object.fromEntries(Object.entries(b.streaks).map(([n,v])=>[resolve(n,fld.pitchers),v]));
     const row = {
       inning: +b.inning, half: b.half, bat_score: +b.bat_score, fld_score: +b.fld_score, bases: +b.bases, outs: +b.outs,
       pitcher: b.pitcher, phand: hand(M.phand[b.pitcher]), bat_team: b.bat_team, fld_team: b.fld_team, date: M.cutoff,
@@ -262,7 +294,7 @@ const Engine = (() => {
       bullpen: { next, rows: evaluateBullpen(row, next, pen, pc, starter,
         { streaks: b.streaks || {}, fatigue_d2: b.fatigue_d2, fatigue_d3: b.fatigue_d3, recent_weight: rw }) }, model_cutoff: M.cutoff,
       method: M.ml ? "集成（階層式＋梯度提升樹）" : "階層式",
-      ml_cutoff:M.ml ? M.cutoff : null, schema_version:2, training_version:M.training_version, engine_contract:4, batch_id:M.batch_id,
+      ml_cutoff:M.ml ? M.cutoff : null, schema_version:2, training_version:M.training_version, engine_contract:5, batch_id:M.batch_id,
       availability:'人工勾選可用名單；請確認當日登錄、健康與已用人選',
       fielding_source:'截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位',
     };

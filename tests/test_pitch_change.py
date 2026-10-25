@@ -1,3 +1,4 @@
+import os
 import json
 import sys
 import unittest
@@ -105,12 +106,12 @@ class PitchChangeTests(unittest.TestCase):
         self.assertIsNotNone(d['rows'][0]['interval'])
         self.assertEqual(d, compare(records, 'P', 2025, '2025-05-01', settings=self.settings))
 
-    @unittest.skipUnless((ROOT/'docs/data/pitch-change/2025/index.json').exists(), 'requires exported data')
+    @unittest.skipUnless((Path(os.environ.get('BASEBALL_STATIC_OUT',ROOT/'docs/data'))/'pitch-change/2025/index.json').exists(), 'requires exported data')
     def test_export_api_and_date_boundary_parity(self):
-        index = json.loads((ROOT/'docs/data/pitch-change/2025/index.json').read_text(encoding='utf8'))
+        index = json.loads((Path(os.environ.get('BASEBALL_STATIC_OUT',ROOT/'docs/data'))/'pitch-change/2025/index.json').read_text(encoding='utf8'))
         # An actual pitcher, beginning/middle/end snapshots, and all three hand filters.
         name = next(iter(index['pitchers']))
-        file = ROOT/'docs/data/pitch-change/2025'/index['pitchers'][name]
+        file = Path(os.environ.get('BASEBALL_STATIC_OUT',ROOT/'docs/data'))/'pitch-change/2025'/index['pitchers'][name]
         snapshots = json.loads(file.read_text(encoding='utf8'))['snapshots']
         sys.path.insert(0, str(ROOT))
         from server import api

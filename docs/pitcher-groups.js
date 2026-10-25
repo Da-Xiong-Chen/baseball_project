@@ -2,6 +2,7 @@
 (function(root) {
   const names=['勝投組','敗投組','自訂義群組'], prefix='cpbl-pitcher-groups-v3:';
   const sessions=new Map();
+  const label=n=>typeof PlayerIdentity!=='undefined'?PlayerIdentity.currentName(n):String(n??'');
   const copy=g=>({name:g.name,members:[...g.members]});
   function migrateGroup(g,team){
     const canonical={'樂天桃猿':'林子崴〔樂天〕','統一7-ELEVEn獅':'林子崴〔統一〕'}[team];
@@ -32,7 +33,7 @@
   }
   const closers={'中信兄弟':'吳俊偉','台鋼雄鷹':'林詩翔','味全龍':'陳冠偉','富邦悍將':'曾峻岳','樂天桃猿':'陳柏豪','統一7-ELEVEn獅':'陳韻文'};
   function defaults(pitchers,team) {
-    const relievers=pitchers.filter(p=>p.role==='後援').slice().sort((a,b)=>Number(b.name===closers[team])-Number(a.name===closers[team])||(b.games||0)-(a.games||0)||a.name.localeCompare(b.name,'zh-Hant'));
+    const relievers=pitchers.filter(p=>p.role==='後援').slice().sort((a,b)=>Number((b.display_name||b.name)===closers[team])-Number((a.display_name||a.name)===closers[team])||(b.games||0)-(a.games||0)||label(a.name).localeCompare(label(b.name),'zh-Hant'));
     const split=Math.min(3,Math.max(1,relievers.length-1));
     return [{name:names[0],members:relievers.slice(0,split).map(p=>p.name)},{name:names[1],members:relievers.slice(split).map(p=>p.name)},{name:names[2],members:[]}];
   }
@@ -45,16 +46,33 @@
         const saved=JSON.parse(storage.getItem(prefix+team));
         let preserved=[];
         try { const older=storage.getItem('cpbl-pitcher-groups-v2:'+team);preserved=sanitize(older?JSON.parse(older).groups:JSON.parse(storage.getItem('cpbl-pitcher-groups-v1:'+team)||'[]')); } catch {}
-        return {groups:existing,legacy:preserved,selected:names.includes(saved.selected)?saved.selected:names[0],error:''};
+        const migrated=resolveMembers(existing,pitchers),selected=names.includes(saved.selected)?saved.selected:names[0];
+        let error='';
+        if(migrated.changed||migrated.unresolved.length){
+          const backup=prefix+team+':identity-backup',raw=storage.getItem(prefix+team);
+          if(!storage.getItem(backup)){storage.setItem(backup,raw);if(storage.getItem(backup)!==raw)throw Error('backup failed');}
+          if(!migrated.unresolved.length&&!write(storage,team,migrated.groups,selected))error='舊群組已保留；身份對應本次可用，但無法保存。';
+        }
+        if(migrated.unresolved.length)error='有 '+migrated.unresolved.length+' 位舊群組球員無法唯一對應，請核對成員。';
+        return {groups:migrated.groups,legacy:resolveMembers(preserved,pitchers).groups,selected,error};
       }
       const raw=storage.getItem('cpbl-pitcher-groups-v2:'+team), old=raw==null?null:JSON.parse(raw);
       const legacy=sanitize(old?old.groups:JSON.parse(storage.getItem('cpbl-pitcher-groups-v1:'+team)||'[]')).map(g=>migrateGroup(g,team));
       const custom=legacy.filter(g=>!names.includes(g.name));
       const chosen=legacy.find(g=>g.name===names[2])||custom.find(g=>g.name===old?.selected)||(custom.length===1?custom[0]:null);
-      const groups=fallback.map(g=>copy(legacy.find(o=>o.name===g.name)||(g.name===names[2]&&chosen?{...chosen,name:names[2]}:g)));
+      const originalGroups=fallback.map(g=>copy(legacy.find(o=>o.name===g.name)||(g.name===names[2]&&chosen?{...chosen,name:names[2]}:g)));
+      const migrated=resolveMembers(originalGroups,pitchers),groups=migrated.groups;
       const selected=names.includes(old?.selected)?old.selected:chosen?names[2]:names[0];
-      return {groups,legacy,selected,error:write(storage,team,groups,selected)?'':'儲存不可用；可手動選人，群組尚未保存。'};
+      return {groups,legacy:resolveMembers(legacy,pitchers).groups,selected,error:migrated.unresolved.length?'舊群組已保留，部分球員需重新選取。':write(storage,team,groups,selected)?'':'儲存不可用；可手動選人，群組尚未保存。'};
     } catch{return {groups:fallback,legacy:[],selected:names[0],error:'無法讀取群組；原設定保留，可手動選人。',blocked:true};}
+  }
+  function resolveMembers(groups,pitchers){
+    if(typeof PlayerIdentity==='undefined')return {groups:groups.map(copy),changed:false,unresolved:[]};
+    let changed=false;const unresolved=[];
+    return {groups:groups.map(g=>({name:g.name,members:[...new Set(g.members.map(old=>{
+      const id=PlayerIdentity.resolve(old,pitchers);if(id===null){unresolved.push(old);return old;}
+      if(id!==old)changed=true;return id;
+    }))]})),get changed(){return changed;},unresolved:[...new Set(unresolved)]};
   }
   const load=(storage,team,pitchers)=>loadState(storage,team,pitchers).groups;
   function membership(group,available) {
@@ -78,7 +96,7 @@
       boxes().forEach(input=>{input.disabled=input.value===current()||unavailable().includes(input.value);input.title=input.disabled?'場上投手，固定為比較基準':'';});
       const selected=[...effective()],count=selected.length, applied=session.applied;
       const namesOpen=availabilityBox.querySelector('.availability-more')?.open;
-      availabilityBox.innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>名單需確認；排除未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.slice(0,4).map(name=>`<span class="chip">${esc(name)}</span>`).join('')+(selected.length>4?`<details class="availability-more" ${namesOpen?'open':''}><summary>另 ${selected.length-4} 人</summary><div class="availability-extra">${selected.slice(4).map(name=>`<span class="chip">${esc(name)}</span>`).join('')}</div></details>`:''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
+      availabilityBox.innerHTML=`<div class="today-availability-head"><strong>今日勾選 ${count} 人</strong><span>名單需確認；排除未登錄與已退場者</span></div><div class="today-availability-names">${selected.length?selected.slice(0,4).map(name=>`<span class="chip">${esc(label(name))}</span>`).join('')+(selected.length>4?`<details class="availability-more" ${namesOpen?'open':''}><summary>另 ${selected.length-4} 人</summary><div class="availability-extra">${selected.slice(4).map(name=>`<span class="chip">${esc(label(name))}</span>`).join('')}</div></details>`:''):'<span>未勾選候選，僅比較續投</span>'}</div>`;
       const same=applied&&equal(effective(),new Set(applied.members.filter(n=>n!==current()&&!unavailable().includes(n))));
       status.textContent=message||state.error||(applied?applied.name+' · '+(same?'已套用':'已微調'):'');
     }
@@ -92,7 +110,7 @@
     function choose() {
       session.selected=select.value;
       const known=new Set(pitchers.map(p=>p.name)), members=draft();
-      q('.group-members').innerHTML=pitchers.map(p=>`<label><input type="checkbox" value="${esc(p.name)}" ${members.has(p.name)?'checked':''}>${esc(p.name)}<span class="meta">${esc(p.role)}</span></label>`).join('')+[...members].filter(n=>!known.has(n)).map(n=>`<label><input type="checkbox" value="${esc(n)}" checked>${esc(n)}<span class="meta">未收錄</span></label>`).join('');
+      q('.group-members').innerHTML=pitchers.map(p=>`<label><input type="checkbox" value="${esc(p.name)}" ${members.has(p.name)?'checked':''}>${esc(label(p.name))}<span class="meta">${esc(p.role)}</span></label>`).join('')+[...members].filter(n=>!known.has(n)).map(n=>`<label><input type="checkbox" value="${esc(n)}" checked>${esc(label(n))}<span class="meta">未收錄</span></label>`).join('');
       updateDraft();feedback(group().members.length?'':'尚未設定成員；可在下方編輯。');
     }
     const render=()=>{select.replaceChildren();groups.forEach(g=>select.add(new Option(g.name+' · '+g.members.length+' 人',g.name)));select.value=session.selected;choose();};
@@ -121,6 +139,6 @@
   if(root.addEventListener)root.addEventListener('beforeunload',e=>{
     if([...sessions.values()].some(s=>s.dirty)){e.preventDefault();e.returnValue='';}
   });
-  root.PitcherGroups={read,write,defaults,load,loadState,membership,mount,names};
+  root.PitcherGroups={read,write,defaults,load,loadState,membership,mount,names,resolveMembers};
   if(typeof module!=='undefined')module.exports=root.PitcherGroups;
 })(typeof window!=='undefined'?window:globalThis);

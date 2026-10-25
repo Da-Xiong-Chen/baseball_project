@@ -19,7 +19,7 @@ def atomic_json(path,data):
     tmp.replace(path)
 
 def contract(r,label,expected=None):
-    if r.get('training_version')!=4 or r.get('engine_contract')!=4 or not r.get('batch_id'):
+    if r.get('training_version')!=5 or r.get('engine_contract')!=5 or not r.get('batch_id'):
         raise ValueError('Mixed or incomplete batch: '+label)
     if expected and r['batch_id']!=expected:raise ValueError('Different batch identity: '+label)
 
@@ -159,16 +159,19 @@ def promote_data(stage,target,backup,fail_after_backup=False):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--site',type=Path,default=ROOT/'output/revision-20261021/staging-site')
-    ap.add_argument('--weights',type=Path,default=ROOT/'models/revision-20261021')
-    ap.add_argument('--context',type=Path,default=ROOT/'output/revision-20261021/training-manifest.json')
+    revision=ROOT/'output/identity-integration-20261025'
+    ap.add_argument('--site',type=Path,default=revision/'staging-site')
+    ap.add_argument('--weights',type=Path,default=revision/'candidate-models')
+    ap.add_argument('--context',type=Path,default=revision/'candidate-context.json')
+    ap.add_argument('--receipts',type=Path,default=revision/'verification')
+    ap.add_argument('--backup',type=Path,default=revision/'promotion-backup')
     for flag in ('seal','verify-live','promote','recover'):ap.add_argument('--'+flag,action='store_true')
     a=ap.parse_args()
     if sum((a.seal,a.verify_live,a.promote,a.recover))!=1:ap.error('Choose one operation')
     if a.recover:print('Recovered:',recover());return
     if a.seal:
-        m=seal(a.site,read_json(a.context),a.weights,{k:a.context.parent/(k+'-receipt.json') for k in ('decisions','history_day','timing','calibration')})
-    elif a.promote:m=promote_revision(a.site,a.weights,a.context.parent/'promotion-backup')
+        m=seal(a.site,read_json(a.context),a.weights,{k:a.receipts/(k+'-receipt.json') for k in ('decisions','history_day','timing','calibration')})
+    elif a.promote:m=promote_revision(a.site,a.weights,a.backup)
     else:m=verify_manifest(ROOT/'docs',ROOT/'models',active=True)
     print(json.dumps({'verified':True,'batch_id':m['training']['batch_id']},indent=2))
 

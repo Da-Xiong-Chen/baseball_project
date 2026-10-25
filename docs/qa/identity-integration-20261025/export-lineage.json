@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "original_receipts": [
+    {
+      "receipt": "auxiliary.json",
+      "sha256": "ccfa02d04f6df43c8c4f5db59fb8d26f29245014f61f45fa210121fcdc4a9de9",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 2
+    },
+    {
+      "receipt": "daily.json",
+      "sha256": "3b21d2f27bf02d1b1b2868b8873d10a7980d8d9b2452c898509e3d8ee7c6be87",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 227
+    },
+    {
+      "receipt": "fielding.json",
+      "sha256": "3b07d78f92b03b0122d46770768f67c86455b1c9e81a102f4047a3b53da1e8a5",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 1
+    },
+    {
+      "receipt": "history-context.json",
+      "sha256": "667a256e3a5901d71b344511deba5f1961e15e3b4d102bb901e54694784b2ed1",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 1
+    },
+    {
+      "receipt": "lineups.json",
+      "sha256": "91dfef5791ba4d9174e63d253512c8f996ae05cc73325e19ca8e444398fbc6a8",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 1
+    },
+    {
+      "receipt": "model-replays.json",
+      "sha256": "09de25b8ede71dd42e5b2b607e3b3a69a2760e568366f92bfa4b14830e254cdb",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 278
+    },
+    {
+      "receipt": "pitch-change.json",
+      "sha256": "df246447dfac76bcd4f3744317f1a57219cf4123ba2ae94b5a15b917624f4e56",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 169
+    },
+    {
+      "receipt": "timing.json",
+      "sha256": "d34975b933c5565944fe83177e8481576e3e6375f65cd810e1f6439319572d66",
+      "original_source_authority": "e7f6369f48c26c8394854b4989719aff820e474592321b95566dc3fc324e8d59",
+      "files": 276
+    }
+  ],
+  "explicit_upgrade": "f49b4c0d5d7a2e3c44cd43ab5809c79715862820b66d9a70956c4bc12e5c0893",
+  "checked_json_files": 680,
+  "fixed_evaluation_sha256": "c0cd3f425c05a7e7e73006b5833b5ae1f41102dcbf3214e7d39b9b00c2b32612",
+  "policy": "Original source tokens retained; opening-actor correction independently verified; final values checked by four recomputation receipts."
+}

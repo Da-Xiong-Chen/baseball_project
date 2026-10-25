@@ -5,260 +5,263 @@
     "中信兄弟": {
       "slots": [
         {
-          "name": "王威晨",
+          "name": "rebas:CPBL:C5Lw5",
           "pos": "3B"
         },
         {
-          "name": "黃韋盛",
+          "name": "rebas:CPBL:42OO1",
           "pos": "DH"
         },
         {
-          "name": "岳政華",
+          "name": "rebas:CPBL:yDdjY",
           "pos": "CF"
         },
         {
-          "name": "宋晟睿",
+          "name": "rebas:CPBL:eChCD",
           "pos": "RF"
         },
         {
-          "name": "許基宏",
+          "name": "rebas:CPBL:c3PEk",
           "pos": "1B"
         },
         {
-          "name": "詹子賢",
+          "name": "rebas:CPBL:0uRxO",
           "pos": "LF"
         },
         {
-          "name": "江坤宇",
+          "name": "rebas:CPBL:rfEOE",
           "pos": "SS"
         },
         {
-          "name": "岳東華",
+          "name": "rebas:CPBL:Dvre5",
           "pos": "2B"
         },
         {
-          "name": "陳統恩",
+          "name": "rebas:CPBL:P4Fe3",
           "pos": "C"
         }
       ],
-      "pitcher": "李博登",
+      "pitcher": "rebas:CPBL:nyxoS",
       "games": 30,
       "through": "2025-10-05"
     },
     "台鋼雄鷹": {
       "slots": [
         {
-          "name": "王博玄",
+          "name": "rebas:CPBL:WiffT",
           "pos": "RF"
         },
         {
-          "name": "曾子祐",
+          "name": "rebas:CPBL:TgNKb",
           "pos": "SS"
         },
         {
-          "name": "吳念庭",
+          "name": "rebas:CPBL:ojwr3",
           "pos": "3B"
         },
         {
-          "name": "魔鷹",
+          "name": "rebas:CPBL:XuDGV",
           "pos": "DH"
         },
         {
-          "name": "張肇元",
+          "name": "rebas:CPBL:puKjJ",
           "pos": "C"
         },
         {
-          "name": "王柏融",
+          "name": "rebas:CPBL:1juVE",
           "pos": "LF"
         },
         {
-          "name": "顏郁軒",
+          "name": "rebas:CPBL:zpOzg",
           "pos": "1B"
         },
         {
-          "name": "曾昱磬",
+          "name": "rebas:CPBL:PtuDN",
           "pos": "CF"
         },
         {
-          "name": "林家鋐",
+          "name": "rebas:CPBL:B2um0",
           "pos": "2B"
         }
       ],
-      "pitcher": "艾速特",
+      "pitcher": "rebas:CPBL:mxPQL",
       "games": 30,
       "through": "2025-10-03"
     },
     "味全龍": {
       "slots": [
         {
-          "name": "郭天信",
+          "name": "rebas:CPBL:KNmRt",
           "pos": "CF"
         },
         {
-          "name": "李凱威",
+          "name": "rebas:CPBL:u6XUJ",
           "pos": "2B"
         },
         {
-          "name": "吉力吉撈．鞏冠",
+          "name": "rebas:CPBL:elqzw",
           "pos": "DH"
         },
         {
-          "name": "朱育賢",
+          "name": "rebas:CPBL:VZZgs",
           "pos": "1B"
         },
         {
-          "name": "陳子豪",
+          "name": "rebas:CPBL:yvoBa",
           "pos": "LF"
         },
         {
-          "name": "劉基鴻",
+          "name": "rebas:CPBL:8wMt5",
           "pos": "3B"
         },
         {
-          "name": "張政禹",
+          "name": "rebas:CPBL:dFblH",
           "pos": "SS"
         },
         {
-          "name": "蔣少宏",
+          "name": "rebas:CPBL:nm81R",
           "pos": "C"
         },
         {
-          "name": "曾聖安",
+          "name": "rebas:CPBL:ldmM0",
           "pos": "RF"
         }
       ],
-      "pitcher": "鋼龍",
+      "pitcher": "rebas:CPBL:KPTzi",
       "games": 30,
       "through": "2025-09-28"
     },
     "富邦悍將": {
       "slots": [
         {
-          "name": "林澤彬",
+          "name": "rebas:CPBL:SioVD",
           "pos": "SS"
         },
         {
-          "name": "林岳谷",
+          "name": "rebas:CPBL:psHWp",
           "pos": "2B"
         },
         {
-          "name": "張育成",
+          "name": "rebas:CPBL:OqNVW",
           "pos": "DH"
         },
         {
-          "name": "范國宸",
+          "name": "rebas:CPBL:iDWQ3",
           "pos": "1B"
         },
         {
-          "name": "董子恩",
+          "name": "rebas:CPBL:a45g",
           "pos": "3B"
         },
         {
-          "name": "陳真",
+          "name": "rebas:CPBL:lWSaS",
           "pos": "LF"
         },
         {
-          "name": "戴培峰",
+          "name": "rebas:CPBL:NvcWV",
           "pos": "C"
         },
         {
-          "name": "蔡佳諺",
+          "name": "rebas:CPBL:zGfee",
           "pos": "CF"
         },
         {
-          "name": "孔念恩",
+          "name": "rebas:CPBL:5PuU",
           "pos": "RF"
         }
       ],
-      "pitcher": "魔力藍",
+      "pitcher": "rebas:CPBL:QRk3",
       "games": 30,
       "through": "2025-10-04"
     },
     "樂天桃猿": {
       "slots": [
         {
-          "name": "林立",
+          "name": "rebas:CPBL:RJzVu",
           "pos": "2B"
         },
         {
-          "name": "陳晨威",
+          "name": "rebas:CPBL:xdLku",
           "pos": "LF"
         },
         {
-          "name": "林智平",
+          "name": "rebas:CPBL:ElLgX",
           "pos": "1B"
         },
         {
-          "name": "成晉",
+          "name": "rebas:CPBL:ZtyCx",
           "pos": "RF"
         },
         {
-          "name": "林泓育",
+          "name": "rebas:CPBL:7vTQV",
           "pos": "DH"
         },
         {
-          "name": "林承飛",
+          "name": "rebas:CPBL:xZBmj",
           "pos": "3B"
         },
         {
-          "name": "張閔勛",
+          "name": "rebas:CPBL:PoOO0",
           "pos": "C"
         },
         {
-          "name": "林子偉",
+          "name": "rebas:CPBL:vdpJ5",
           "pos": "SS"
         },
         {
-          "name": "林政華",
+          "name": "rebas:CPBL:UeDA6",
           "pos": "CF"
         }
       ],
-      "pitcher": "魔神龍",
+      "pitcher": "rebas:CPBL:fDihN",
       "games": 30,
       "through": "2025-10-06"
     },
     "統一7-ELEVEn獅": {
       "slots": [
         {
-          "name": "陳傑憲",
+          "name": "rebas:CPBL:LlGVK",
           "pos": "CF"
         },
         {
-          "name": "林佳緯",
+          "name": "rebas:CPBL:7TPaU",
           "pos": "DH"
         },
         {
-          "name": "林安可",
+          "name": "rebas:CPBL:Ifqha",
           "pos": "RF"
         },
         {
-          "name": "蘇智傑",
+          "name": "rebas:CPBL:PKNKN",
           "pos": "LF"
         },
         {
-          "name": "潘傑楷",
+          "name": "rebas:CPBL:LsMyw",
           "pos": "3B"
         },
         {
-          "name": "林子豪",
+          "name": "rebas:CPBL:Y0UJM",
           "pos": "1B"
         },
         {
-          "name": "陳聖平",
+          "name": "rebas:CPBL:gPoLb",
           "pos": "SS"
         },
         {
-          "name": "林岱安",
+          "name": "rebas:CPBL:ZkDCF",
           "pos": "C"
         },
         {
-          "name": "林泓弦",
+          "name": "rebas:CPBL:1i8C4",
           "pos": "2B"
         }
       ],
-      "pitcher": "奧德銳",
+      "pitcher": "rebas:CPBL:Fdxmu",
       "games": 30,
       "through": "2025-10-06"
     }
-  }
+  },
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
 }

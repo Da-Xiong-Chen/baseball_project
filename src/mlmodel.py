@@ -30,7 +30,7 @@ SAMPLE = 150          # 每位投手（對該手打者）抽樣的歷史球數
 MIN_OWN = 40          # 少於此數改用聯盟同投打組合的球
 ENSEMBLE_W = 0.5      # 集成中梯度提升樹的權重
 AVG = "__聯盟平均打者__"
-TRAINING_VERSION = 4  # chronological, cutoff-safe calibration reference
+TRAINING_VERSION = 5  # source-ID and event-level identity, cutoff-safe calibration
 
 
 def calibration_reference(pa, cutoff, size=2000):
@@ -89,15 +89,18 @@ class Simulator:
         """queries: DataFrame[batter, bhand, pitcher] → {模型名: 每打席預期得分值 array}"""
         parts = []
         for i, (b, bh, p) in enumerate(queries[["batter", "bhand", "pitcher"]].itertuples(index=False)):
-            bh = bh if bh in ("L", "R") else "R"
-            ph = self.phand.get(p, "R")
-            ph = ph if ph in ("L", "R") else "R"
-            s = self.own.get((p, bh))
-            if s is None:
-                s = self.lg[(ph, bh)]
-            s = s.copy()
-            s["batter"], s["bhand"], s["pitcher"], s["phand"], s["q"] = b, bh, p, ph, i
-            parts.append(s)
+            ph = self.phand.get(p, 'U')
+            for bi, bh_ in enumerate((bh,) if bh in ('L','R') else ('L','R')):
+                for pi, ph_ in enumerate((ph,) if ph in ('L','R') else ('L','R')):
+                    s = self.own.get((p, bh_))
+                    if s is None:
+                        s = self.lg[(ph_, bh_)]
+                    s = s.copy()
+                    s['batter'], s['bhand'], s['pitcher'], s['phand'], s['q'] = b, bh_, p, ph_, i
+                    s['branch'] = bi * 2 + pi
+                    parts.append(s)
+        if not parts:
+            return {name: np.array([]) for name in self.models}
         sim = pd.concat(parts, ignore_index=True)
         sim["platoon"] = np.where(sim["phand"] == sim["bhand"], "同側", "異側")
         X = features(sim, apply_tendencies(self.tb, sim), self.velo_tbl, self.velo_type)
@@ -105,7 +108,8 @@ class Simulator:
         out = {}
         for name, mdl in self.models.items():
             ev = (mdl.predict_proba(X) * rv_rows).sum(1)
-            out[name] = pd.Series(ev).groupby(sim["q"]).mean().reindex(range(len(queries))).to_numpy() * PITCHES_PER_PA
+            out[name] = (pd.Series(ev).groupby([sim['q'],sim['branch']]).mean().groupby(level=0).mean()
+                         .reindex(range(len(queries))).to_numpy() * PITCHES_PER_PA)
         return out
 
 
@@ -152,6 +156,7 @@ def train(cutoff, gbt_options=None):
     tr = training_pitches(P, cutoff)
     velo_tbl = tr.groupby(["pitcher", "ptype"])["velo"].mean()
     velo_type = tr.groupby("ptype")["velo"].mean()
+    velo_type.attrs['training_global_mean'] = float(tr.velo.mean())
     gbt = make_gbt(**(gbt_options or {})).fit(features(tr, oof_tendencies(tr), velo_tbl, velo_type), tr["cls"].to_numpy())
     sim = Simulator(tr, {"gbt": gbt}, fit_tendencies(tr), velo_tbl, velo_type)
     # 平移量：讓梯度提升樹的整體水準與階層式模型一致（用截止日前最近 2000 個打席估計）
@@ -167,6 +172,11 @@ def train(cutoff, gbt_options=None):
     model.calibration_reference = {'policy':'chronological_latest_2000_before_cutoff',
         'pa_ids':list(ref.pa_id),'first_date':str(ref.date.min().date()),
         'last_date':str(ref.date.max().date())}
+    model.training_samples = dict(pitches=len(tr), first_date=str(tr.date.min().date()),
+                                  last_date=str(tr.date.max().date()),
+                                  missing_velocity=int(tr.velo.isna().sum()),
+                                  hand_policy='known_event_actor_hands_only; unknown queries average L/R',
+                                  velocity_policy='80_to_170_or_missing; training_only_imputation')
     print(f"訓練 {cutoff}：{len(tr):,} 球，{time.time() - t:.0f} 秒")
     return model
 

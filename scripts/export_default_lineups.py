@@ -72,10 +72,11 @@ if __name__ == "__main__":
     import server
     from load import load
     from roster import can_play, position_games
+    from batch_contract import metadata
 
     pa, _, boxes = load()
     teams = build(server.rosters(), pa, boxes, position_games, can_play)
-    result = {"season": 2025, "method": f"各隊最後 {RECENT} 場先發打者與先發投手（Rebas 2025 例行賽，ODC-By v1.0）", "teams": teams}
+    result = {"season": 2025, "method": f"各隊最後 {RECENT} 場先發打者與先發投手（Rebas 2025 例行賽，ODC-By v1.0）", "teams": teams, **metadata()}
     (Path(os.environ.get("BASEBALL_STATIC_OUT", ROOT/"docs/data")) / "default-lineups-2025.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     for t, v in teams.items():
         print(t, v["pitcher"], " ".join(f"{s['name']}({s['pos']})" for s in v["slots"]))

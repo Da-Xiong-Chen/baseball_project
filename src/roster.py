@@ -7,6 +7,7 @@ import pandas as pd
 from scipy.optimize import linear_sum_assignment
 
 from load import DATA, load
+from identity import display_name
 
 FIELD_POS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 POS_ZH = {"C": "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", "SS": "游擊",
@@ -20,30 +21,8 @@ CATCHER_MIN_PITCHES = 50
 @lru_cache(maxsize=64)
 def position_games(cutoff=None):
     """(team, name, pos) → 加權出賽場數。2025 中職官網 + 2023–2024 ldkrsi（MIT）。"""
-    frames = []
-    cur_path = os.path.join(DATA, "cpbl", "positions_2025.csv")
-    year = pd.Timestamp(cutoff).year if cutoff else 9999
-    if year > 2025 and os.path.exists(cur_path):  # 整季資料僅能於下一年使用
-        cur = pd.read_csv(cur_path, dtype={"ID": str}, encoding="utf-8-sig")
-        cur["w"] = 1.0
-        frames.append(cur.rename(columns={"Team Name": "team", "Name": "name"}))
-    for y, w in ((2024, 0.7), (2023, 0.4)):
-        if y >= year:
-            continue
-        path = os.path.join(DATA, "ldkrsi", f"fieldings_{y}.csv")
-        if not os.path.exists(path):
-            continue
-        d = pd.read_csv(path, dtype={"ID": str})
-        d = d[d["POS"] != "P"]
-        d["team"] = d["Team Name"].map(SHORT_TEAM).fillna(d["Team Name"])
-        d["w"] = w
-        frames.append(d.rename(columns={"Name": "name"}))
-    if not frames:
-        return pd.Series(dtype=float, index=pd.MultiIndex.from_tuples([], names=["name", "POS"]))
-    allp = pd.concat(frames)[["name", "team", "POS", "G", "w"]]
-    allp["G_w"] = allp["G"] * allp["w"]
-    # 守位能力跟人走、不跟隊伍走（轉隊仍能守）
-    return allp.groupby(["name", "POS"])["G_w"].sum()
+    from source_registry import fielding_registry
+    return fielding_registry(cutoff)[0]
 
 
 @lru_cache(maxsize=64)
@@ -89,14 +68,14 @@ def assign_positions(lineup, cutoff=None):
 def defense_check(out_name, out_pos, in_name, bench_after, cutoff=None):
     """out_name（守 out_pos）被 in_name 代打後，守備排不排得出來。"""
     if out_pos == "DH":
-        return "ok", f"{in_name} 接任指定打擊"
+        return 'ok', f'{display_name(in_name,cutoff)} 接任指定打擊'
     if can_play(in_name, out_pos, cutoff):
-        msg = f"{in_name} 可直接接守{POS_ZH[out_pos]}"
+        msg = f'{display_name(in_name,cutoff)} 可直接接守{POS_ZH[out_pos]}'
         status = "ok"
     else:
         cover = [b for b in bench_after if can_play(b, out_pos, cutoff)]
         if cover:
-            msg = f"需由 {cover[0]} 接守{POS_ZH[out_pos]}（再消耗 1 名板凳）"
+            msg = f'需由 {display_name(cover[0],cutoff)} 接守{POS_ZH[out_pos]}（再消耗 1 名板凳）'
             status = "warn"
         else:
             return "unknown", f"沒有已確認可接守{POS_ZH[out_pos]}的紀錄；需人工確認"

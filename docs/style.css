@@ -64,7 +64,9 @@ header {
   display: flex; align-items: center; gap: 16px; padding: 14px 24px;
   background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5;
 }
-.brand { display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; min-inline-size:0; }
+.brand > div { min-inline-size:0; }
+.brand h1 span { display:inline-block; max-inline-size:100%; }
 .brand svg { width: 30px; height: 30px; }
 .brand h1 { font-size: 17px; margin: 0; letter-spacing: .02em; }
 .brand small { color: var(--muted); font-size: 12px; display: block; margin-top: -2px; }

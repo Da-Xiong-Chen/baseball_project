@@ -28,11 +28,12 @@ def main():
                         assert np.isfinite(value) and value>=0
                         n+=1
     roster=server.rosters()
-    bat=next(t for t,r in roster.items() if any(h['name']=='林佳緯' for h in r['hitters']))
-    fld=next(t for t,r in roster.items() if any(p['name']=='魔力藍' for p in r['pitchers']))
+    bat=next(t for t,r in roster.items() if any(h.get('display_name')=='林佳緯' for h in r['hitters']))
+    fld=next(t for t,r in roster.items() if any(p.get('display_name')=='魔力藍' for p in r['pitchers']))
     body=dict(inning=9,half='away',outs=1,bases=6,bat_score=2,fld_score=1,
               pitcher='魔力藍',due='林佳緯',due_pos='DH',bench=['胡金龍','陳鏞基','楊竣翔'],
-              bat_team=bat,fld_team=fld,next_batters=['林佳緯']+[h['name'] for h in roster[bat]['hitters'] if h['name']!='林佳緯'][:2],pen=[],pitch_count=10,starter=False)
+              bat_team=bat,fld_team=fld,next_batters=['林佳緯']+[h['name'] for h in roster[bat]['hitters'] if h.get('display_name')!='林佳緯'][:2],pen=[],pitch_count=10,starter=False)
+    body=server.validate_evaluation(body)
     out=Path(os.environ.get('BASEBALL_REPORT_OUT',ROOT/'output/closeout'));out.mkdir(parents=True,exist_ok=True)
     cases=out/'calibration-cases.json';cases.write_text(json.dumps([body],ensure_ascii=False),encoding='utf-8')
     subprocess.run([os.environ.get('NODE_BINARY','node'),'tests/compute_static.js',str(cases),str(out/'calibration-static.json')],cwd=ROOT,check=True)
@@ -44,7 +45,7 @@ def main():
         assert a['球員']==b['球員']
         assert a['誤差']>=0 and b['誤差']>=0
         for key in ('相對現任','預估勝率','誤差'):
-            max_error=max(max_error,abs(a[key]-b[key]));assert abs(a[key]-b[key])<.0001,(key,a,b)
+            max_error=max(max_error,abs(a[key]-b[key]));assert abs(a[key]-b[key])<=1e-8+1e-7*abs(a[key]),(key,a,b)
     report={'states_scanned':n,'calibration':m.calibration_audit,'known_failure_reproduced_then_fixed':True,
             'leverage':py['leverage'],'max_python_js_error':max_error,
             'candidates':[{'name':r['球員'],'difference':r['相對現任'],'error':r['誤差']} for r in py['candidates']]}

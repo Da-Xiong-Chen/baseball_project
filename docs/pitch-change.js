@@ -25,11 +25,12 @@ window.PitchChange = (() => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(cutoff) || Number.isNaN(Date.parse(cutoff)) || new Date(cutoff).toISOString().slice(0,10) !== cutoff) throw new Error('截止日期無效');
     const root = `data/pitch-change/${season}/`;
     const index = await read(root + "index.json");
-    if (index.schema_version !== 1) throw new Error("配球資料版本不相容");
+    if (index.schema_version !== 2 || index.training_version !== 5 || index.engine_contract !== 5) throw new Error("配球資料版本不相容，請重新載入");
+    if(typeof Engine!=='undefined'&&Engine.model()?.batch_id&&index.batch_id!==Engine.model().batch_id)throw new Error('配球與模型批次不同，請重新載入完整版本');
     const key = index.pitchers[pitcher];
     if (!key) throw new Error("此投手在所選球季沒有配球資料");
     const file = await read(root + key);
-    if (file.schema_version !== 1) throw new Error("配球資料版本不相容");
+    if (file.schema_version !== 2 || file.batch_id !== index.batch_id) throw new Error("配球資料版本不相容，請重新載入");
     const eligible = file.snapshots.filter(s => s.effective_from <= cutoff);
     const snap = eligible[eligible.length - 1];
     if (!snap) throw new Error("截止日早於所選球季");
@@ -58,7 +59,8 @@ window.PitchChange = (() => {
     const wasOpen = element.querySelector('.pc-toggle')?.getAttribute('aria-expanded') === 'true';
     let generation = 0;
     let opened = false;
-    element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>近期配球比較</h2><p class="pc-subtitle">${escape(pitcher)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球比較</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;
+    const label=typeof PlayerIdentity!=='undefined'?PlayerIdentity.name(pitcher):pitcher;
+    element.innerHTML = `<section class="card pc-card"><div class="card-h"><div><h2>近期配球比較</h2><p class="pc-subtitle">${escape(label)}</p></div><button class="pc-toggle" type="button" aria-expanded="false">查看配球比較</button></div><div class="pc-body" hidden><div class="pc-controls"><label>面對打者<select aria-label="配球比較的實際打者左右打"><option value="ALL">左右打合計</option><option value="L">面對左打</option><option value="R">面對右打</option></select></label><button class="pc-retry" type="button">重新載入</button></div><div class="pc-result" aria-live="polite"></div></div></section>`;
     const toggle = element.querySelector('.pc-toggle'), body = element.querySelector('.pc-body');
     element.querySelector('.pc-controls').insertAdjacentHTML('beforeend','<label>比較方式<select class="pc-view" aria-label="配球比較方式"><option value="adjusted">同條件比較</option><option value="raw">觀察配球（未調整）</option></select></label>');
     const viewSelect=element.querySelector('.pc-view');

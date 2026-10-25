@@ -1,0 +1,39 @@
+{
+  "states_scanned": 7488,
+  "calibration": {
+    "policy": "nonnegative_local_or_valid_parent",
+    "fine_fallbacks": 6,
+    "coarse_fallbacks": 0,
+    "fine_states": 1952,
+    "coarse_states": 86
+  },
+  "known_failure_reproduced_then_fixed": true,
+  "leverage": 5.903242544235498,
+  "max_python_js_error": 1.1102230246251565e-16,
+  "candidates": [
+    {
+      "name": "rebas:CPBL:7TPaU",
+      "difference": 0.0,
+      "error": 0.09375994722893108
+    },
+    {
+      "name": "rebas:CPBL:FlXMq",
+      "difference": 0.30010560292000443,
+      "error": 0.1301044207984399
+    },
+    {
+      "name": "rebas:CPBL:P5S6r",
+      "difference": 0.24855552783417423,
+      "error": 0.11356771581789171
+    },
+    {
+      "name": "rebas:CPBL:VESWD",
+      "difference": 0.146276474349992,
+      "error": 0.15778753937265103
+    }
+  ],
+  "passed": true,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
+}

@@ -1,5 +1,5 @@
 """Export optional dated defensive rearrangements; never alter rankings or timing markers."""
-import argparse,json,sys,hashlib
+import argparse,json,sys,hashlib,os
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'src')]
@@ -9,7 +9,7 @@ from batch_contract import metadata
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
-    day=ROOT/'docs/data/replay/day-2025-09-20';index=json.loads((day/'index.json').read_text(encoding='utf8'))
+    day=Path(os.environ.get('BASEBALL_STATIC_OUT',ROOT/'docs/data'))/'replay/day-2025-09-20';index=json.loads((day/'index.json').read_text(encoding='utf8'))
     plans={};counts={'unknown_pas':0,'unknown_late_pas':0,'pas_with_plan':0,'late_pas_with_plan':0,'candidate_plans':0}
     for pid,name in index['files'].items():
         payload=json.loads((day/name).read_text(encoding='utf8'));r=payload['ph']

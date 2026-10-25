@@ -11,12 +11,15 @@ async function moduleFor(fetch, signal=AbortSignal) {
   vm.runInNewContext(await fs.readFile(path.join(root,'docs/pitch-change.js'),'utf8'), context);
   return context.window.PitchChange;
 }
-const fileFetch = async url => ({ok:true, json:async()=>JSON.parse(await fs.readFile(path.join(root,'docs',url),'utf8'))});
+const dataRoot=process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data');
+const fileFetch = async url => ({ok:true, json:async()=>JSON.parse(await fs.readFile(path.join(dataRoot,url.replace(/^data\//,'')),'utf8'))});
+const knownPitcher=JSON.parse(require('node:fs').readFileSync(path.join(dataRoot,'model.json'),'utf8'));
+const pitcherId=Object.keys(knownPitcher.players).find(k=>knownPitcher.players[k]==='鋼龍');
 
 test('pitch card reads snapshots without AbortSignal.timeout',async()=>{
   const api=await moduleFor(fileFetch,{});
-  const result=await api.staticResult({pitcher:'鋼龍',season:2025,cutoff:'2026-01-01',hand:'ALL'});
-  assert.equal(result.pitcher,'鋼龍');
+  const result=await api.staticResult({pitcher:pitcherId,season:2025,cutoff:'2026-01-01',hand:'ALL'});
+  assert.equal(result.pitcher,pitcherId);
 });
 
 test('static selection is strictly before the requested date for every hand', async()=>{
@@ -44,9 +47,9 @@ test('failed fetch is retryable instead of permanently cached', async()=>{
     if (calls++ === 0) return {ok:false};
     return fileFetch(url);
   });
-  const opts = {pitcher:'鋼龍',season:2025,cutoff:'2026-01-01',hand:'ALL'};
+  const opts = {pitcher:pitcherId,season:2025,cutoff:'2026-01-01',hand:'ALL'};
   await assert.rejects(()=>api.staticResult(opts));
-  assert.equal((await api.staticResult(opts)).pitcher,'鋼龍');
+  assert.equal((await api.staticResult(opts)).pitcher,pitcherId);
 });
 
 test('unknown pitcher produces a clear error without requesting a guessed filename', async()=>{
@@ -57,6 +60,6 @@ test('unknown pitcher produces a clear error without requesting a guessed filena
 test('invalid handedness and impossible dates are rejected', async()=>{
   const api = await moduleFor(fileFetch);
   for (const extra of [{hand:'S'},{cutoff:'2025-02-30'},{cutoff:'oops'}]) {
-    await assert.rejects(()=>api.staticResult({pitcher:'鋼龍',season:2025,cutoff:'2026-01-01',hand:'ALL',...extra}));
+    await assert.rejects(()=>api.staticResult({pitcher:pitcherId,season:2025,cutoff:'2026-01-01',hand:'ALL',...extra}));
   }
 });

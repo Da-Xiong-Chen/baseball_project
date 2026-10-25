@@ -7,6 +7,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from pitch_change import ROOT, SCHEMA, compare, observations
+from batch_contract import metadata
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
     args = parser.parse_args()
     out = Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data')) / 'pitch-change' / str(args.season)
     out.mkdir(parents=True, exist_ok=True)
-    index = dict(schema_version=SCHEMA, season=args.season, pitchers={})
+    index = dict(schema_version=SCHEMA, season=args.season, pitchers={}, **metadata())
     dataset = observations()
     if not dataset:
         raise SystemExit('Run python download_data.py first')
@@ -27,8 +28,8 @@ def main():
         snapshots = []
         for cutoff in [f'{args.season}-01-01'] + [(date.fromisoformat(d)+timedelta(days=1)).isoformat() for d in days]:
             snapshots.append(dict(effective_from=cutoff, hands={
-                h: compare(records, name, args.season, cutoff, h) for h in ('ALL', 'L', 'R')}))
-        (out / key).write_text(json.dumps(dict(schema_version=SCHEMA, snapshots=snapshots),
+                h: dict(compare(records, name, args.season, cutoff, h), **metadata()) for h in ('ALL', 'L', 'R')}))
+        (out / key).write_text(json.dumps(dict(schema_version=SCHEMA, snapshots=snapshots, **metadata()),
                                ensure_ascii=False, separators=(',', ':'), allow_nan=False), encoding='utf8')
         index['pitchers'][name] = key
     (out / 'index.json').write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding='utf8')

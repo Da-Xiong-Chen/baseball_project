@@ -1,1 +1,307 @@
-{"schema_version":1,"training_version":4,"engine_contract":4,"batch_id":"3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f","status":"evaluated","evaluation":"retrospective_rolling_not_prospective","target":"observed_single_pa_RE24","primary_metric":"mse","ci_method":"paired_game_cluster_bootstrap","seed":20261020,"bootstrap_reps":2000,"development_months":["2025-05","2025-08"],"time_check_months":["2025-09","2025-10"],"selected_config":{"hierarchy_scale":1.25,"gbt_weight":0.5,"tree_variant":"current"},"selected_key":"s1.25_w0.5","current_key":"s1_w0.5","candidates":[{"key":"s1.25_w0.5","hierarchy_scale":1.25,"gbt_weight":0.5,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.24982513778847448,"mae":0.3771566075663261,"baseline_mse":0.2508763335616706,"mse_reduction":0.0010511957731960805,"mse_reduction_ci":[0.0004875288440373415,0.0016259354314998758]},"time_check":{"n":5396,"games":72,"mse":0.2255747075865886,"mae":0.360264081148177,"baseline_mse":0.22599778547890279,"mse_reduction":0.00042307789231415226,"mse_reduction_ci":[-0.000485883333910555,0.0013197291603204337]}},{"key":"s1.25_w0.25","hierarchy_scale":1.25,"gbt_weight":0.25,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.24982521326061444,"mae":0.37710858705364547,"baseline_mse":0.2508763335616706,"mse_reduction":0.0010511203010561154,"mse_reduction_ci":[0.0004284745780661509,0.001683583352442399]},"time_check":{"n":5396,"games":72,"mse":0.22573648181442899,"mae":0.36034522529943214,"baseline_mse":0.22599778547890279,"mse_reduction":0.0002613036644737806,"mse_reduction_ci":[-0.0007476021511730175,0.0012793640859326278]}},{"key":"reg_w0.25","hierarchy_scale":1,"gbt_weight":0.25,"tree_variant":"regularized_15_leaf_l2_3","development":{"n":16981,"games":222,"mse":0.24985052319021242,"mae":0.377410216955294,"baseline_mse":0.2508763335616706,"mse_reduction":0.0010258103714581657,"mse_reduction_ci":[0.0004605637706341471,0.0015885535734766242]},"time_check":{"n":5396,"games":72,"mse":0.22569085221743496,"mae":0.3606331135027736,"baseline_mse":0.22599778547890279,"mse_reduction":0.0003069332614678025,"mse_reduction_ci":[-0.0005830209393783521,0.0012002683015212676]}},{"key":"s1_w0.25","hierarchy_scale":1,"gbt_weight":0.25,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2498581200886918,"mae":0.37739268696785927,"baseline_mse":0.2508763335616706,"mse_reduction":0.0010182134729788117,"mse_reduction_ci":[0.0004614265275910368,0.0015727699009156666]},"time_check":{"n":5396,"games":72,"mse":0.22570406903471346,"mae":0.3606331766802351,"baseline_mse":0.22599778547890279,"mse_reduction":0.0002937164441892975,"mse_reduction_ci":[-0.0006120568645824041,0.0011825085462756405]}},{"key":"reg_w0.5","hierarchy_scale":1,"gbt_weight":0.5,"tree_variant":"regularized_15_leaf_l2_3","development":{"n":16981,"games":222,"mse":0.2498672743895691,"mae":0.3773832087711031,"baseline_mse":0.2508763335616706,"mse_reduction":0.0010090591721015018,"mse_reduction_ci":[0.0004903639687716382,0.0015583983651299082]},"time_check":{"n":5396,"games":72,"mse":0.22556622077170366,"mae":0.3604583239017152,"baseline_mse":0.22599778547890279,"mse_reduction":0.0004315647071990906,"mse_reduction_ci":[-0.0003995444714885882,0.001243855739075794]}},{"key":"s1_w0.5","hierarchy_scale":1,"gbt_weight":0.5,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.24988016218931097,"mae":0.3773473106308211,"baseline_mse":0.2508763335616706,"mse_reduction":0.0009961713723595986,"mse_reduction_ci":[0.0004860423126542788,0.0015277928650015476]},"time_check":{"n":5396,"games":72,"mse":0.2255913044336861,"mae":0.36045892083519643,"baseline_mse":0.22599778547890279,"mse_reduction":0.00040648104521668254,"mse_reduction_ci":[-0.00042525958972570993,0.0012153447730232497]}},{"key":"s1_w0","hierarchy_scale":1,"gbt_weight":0,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2499460012159773,"mae":0.37744646468095117,"baseline_mse":0.2508763335616706,"mse_reduction":0.0009303323456932542,"mse_reduction_ci":[0.00033600918686801354,0.0015233111440783194]},"time_check":{"n":5396,"games":72,"mse":0.22591660076714232,"mae":0.36082669609447265,"baseline_mse":0.22599778547890279,"mse_reduction":8.118471176042741e-05,"mse_reduction_ci":[-0.0008797795645229283,0.0010690138515797455]}},{"key":"s0.75_w0.25","hierarchy_scale":0.75,"gbt_weight":0.25,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.24995123734978458,"mae":0.3776796374610994,"baseline_mse":0.2508763335616706,"mse_reduction":0.0009250962118859752,"mse_reduction_ci":[0.0004438823326773842,0.0014202006347781094]},"time_check":{"n":5396,"games":72,"mse":0.2257415710772651,"mae":0.36092501153003304,"baseline_mse":0.22599778547890279,"mse_reduction":0.00025621440163768854,"mse_reduction_ci":[-0.0005134157923584023,0.0010214422879594718]}},{"key":"s0.75_w0.5","hierarchy_scale":0.75,"gbt_weight":0.5,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2499619467825988,"mae":0.37753969733176884,"baseline_mse":0.2508763335616706,"mse_reduction":0.0009143867790717692,"mse_reduction_ci":[0.0004460387152788469,0.0014074000118447347]},"time_check":{"n":5396,"games":72,"mse":0.22563897453512452,"mae":0.360653760522216,"baseline_mse":0.22599778547890279,"mse_reduction":0.00035881094377826625,"mse_reduction_ci":[-0.00040863288773457224,0.0010922501266299534]}},{"key":"s1.25_w0.75","hierarchy_scale":1.25,"gbt_weight":0.75,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.24996807205969093,"mae":0.37721373843504485,"baseline_mse":0.2508763335616706,"mse_reduction":0.0009082615019796634,"mse_reduction_ci":[0.00039053512614211093,0.0014593703215035022]},"time_check":{"n":5396,"games":72,"mse":0.2255509058570576,"mae":0.36019078305919516,"baseline_mse":0.22599778547890279,"mse_reduction":0.000446879621845218,"mse_reduction_ci":[-0.00037556875482275856,0.0012318432645675955]}},{"key":"s1.25_w0","hierarchy_scale":1.25,"gbt_weight":0,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2499682984761108,"mae":0.377079514334001,"baseline_mse":0.2508763335616706,"mse_reduction":0.000908035085559767,"mse_reduction_ci":[0.00020222407273476814,0.0015953890104894815]},"time_check":{"n":5396,"games":72,"mse":0.2260362285405787,"mae":0.3604507387306247,"baseline_mse":0.22599778547890279,"mse_reduction":-3.8443061675889586e-05,"mse_reduction_ci":[-0.001161660507377713,0.0011113016086528912]}},{"key":"reg_w0.75","hierarchy_scale":1,"gbt_weight":0.75,"tree_variant":"regularized_15_leaf_l2_3","development":{"n":16981,"games":222,"mse":0.24999625481404728,"mae":0.3773633788907216,"baseline_mse":0.2508763335616706,"mse_reduction":0.0008800787476232641,"mse_reduction_ci":[0.00035050360374945863,0.0014427761346304789]},"time_check":{"n":5396,"games":72,"mse":0.22554270642994848,"mae":0.36028988616772345,"baseline_mse":0.22599778547890279,"mse_reduction":0.0004550790489542878,"mse_reduction_ci":[-0.0003621363348270351,0.0012568073626196797]}},{"key":"s1_w0.75","hierarchy_scale":1,"gbt_weight":0.75,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2500121275178349,"mae":0.37731071736411637,"baseline_mse":0.2508763335616706,"mse_reduction":0.0008642060438356159,"mse_reduction_ci":[0.00036407340245904094,0.0014035212728166037]},"time_check":{"n":5396,"games":72,"mse":0.2255783069640602,"mae":0.3602883478570232,"baseline_mse":0.22599778547890279,"mse_reduction":0.00041947851484257757,"mse_reduction_ci":[-0.00038194798831371396,0.0011844458336900772]}},{"key":"s0.75_w0","hierarchy_scale":0.75,"gbt_weight":0,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.25003074472564923,"mae":0.3778260050111286,"baseline_mse":0.2508763335616706,"mse_reduction":0.0008455888360213491,"mse_reduction_ci":[0.00033411057697143063,0.001349449256931331]},"time_check":{"n":5396,"games":72,"mse":0.2259212660110698,"mae":0.36121104870456155,"baseline_mse":0.22599778547890279,"mse_reduction":7.651946783296553e-05,"mse_reduction_ci":[-0.0007475805207296346,0.0008897702628827534]}},{"key":"s0.75_w0.75","hierarchy_scale":0.75,"gbt_weight":0.75,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.25006287302409186,"mae":0.37740830189517505,"baseline_mse":0.2508763335616706,"mse_reduction":0.0008134605375787318,"mse_reduction_ci":[0.00033106800123129264,0.0013205949255597404]},"time_check":{"n":5396,"games":72,"mse":0.22561347638464804,"mae":0.3603862795744655,"baseline_mse":0.22599778547890279,"mse_reduction":0.0003843090942546981,"mse_reduction_ci":[-0.0003999515070293496,0.001119962016286801]}},{"key":"reg_w1","hierarchy_scale":1,"gbt_weight":1,"tree_variant":"regularized_15_leaf_l2_3","development":{"n":16981,"games":222,"mse":0.25023746446364714,"mae":0.3773532726600117,"baseline_mse":0.2508763335616706,"mse_reduction":0.0006388690980234488,"mse_reduction_ci":[8.522070995243262e-05,0.0012307135089541356]},"time_check":{"n":5396,"games":72,"mse":0.22562030919216935,"mae":0.3601413798455701,"baseline_mse":0.22599778547890279,"mse_reduction":0.0003774762867334024,"mse_reduction_ci":[-0.0005128332299749379,0.0011829481695624664]}},{"key":"s0.75_w1","hierarchy_scale":0.75,"gbt_weight":1,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2502540160742637,"mae":0.3772868020096972,"baseline_mse":0.2508763335616706,"mse_reduction":0.0006223174874068635,"mse_reduction_ci":[0.0001011662919234973,0.0011915164474500899]},"time_check":{"n":5396,"games":72,"mse":0.2256650766258358,"mae":0.3601403220540972,"baseline_mse":0.22599778547890279,"mse_reduction":0.0003327088530669827,"mse_reduction_ci":[-0.0005169200526813052,0.0011036913019314616]}},{"key":"s1_w1","hierarchy_scale":1,"gbt_weight":1,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2502540160742637,"mae":0.3772868020096972,"baseline_mse":0.2508763335616706,"mse_reduction":0.0006223174874068635,"mse_reduction_ci":[0.0001011662919234973,0.0011915164474500899]},"time_check":{"n":5396,"games":72,"mse":0.2256650766258358,"mae":0.3601403220540972,"baseline_mse":0.22599778547890279,"mse_reduction":0.0003327088530669827,"mse_reduction_ci":[-0.0005169200526813052,0.0011036913019314616]}},{"key":"s1.25_w1","hierarchy_scale":1.25,"gbt_weight":1,"tree_variant":"current","development":{"n":16981,"games":222,"mse":0.2502540160742637,"mae":0.3772868020096972,"baseline_mse":0.2508763335616706,"mse_reduction":0.0006223174874068635,"mse_reduction_ci":[0.0001011662919234973,0.0011915164474500899]},"time_check":{"n":5396,"games":72,"mse":0.2256650766258358,"mae":0.3601403220540972,"baseline_mse":0.22599778547890279,"mse_reduction":0.0003327088530669827,"mse_reduction_ci":[-0.0005169200526813052,0.0011036913019314616]}}],"monthly":[{"month":"2025-05","period":"development","current":{"n":4367,"games":57,"mse":0.2604901697227161,"mae":0.384660461928575,"baseline_mse":0.26173834589071254,"mse_reduction":0.0012481761679964069,"mse_reduction_ci":[0.0002538782278531243,0.0021697010295061363]},"selected":{"n":4367,"games":57,"mse":0.26039051850477835,"mae":0.38439479367064755,"baseline_mse":0.26173834589071254,"mse_reduction":0.0013478273859342052,"mse_reduction_ci":[0.00031188777967830884,0.002331886255978446]}},{"month":"2025-06","period":"development","current":{"n":4407,"games":57,"mse":0.24701288142351926,"mae":0.3768492161285652,"baseline_mse":0.24775383064355527,"mse_reduction":0.0007409492200360556,"mse_reduction_ci":[-0.0003193624190926481,0.0018141880045180823]},"selected":{"n":4407,"games":57,"mse":0.24698756062127109,"mae":0.3766535554737884,"baseline_mse":0.24775383064355527,"mse_reduction":0.0007662700222842156,"mse_reduction_ci":[-0.0003681085948388196,0.001923334861697394]}},{"month":"2025-07","period":"development","current":{"n":3192,"games":41,"mse":0.26590016496478025,"mae":0.38144632491451813,"baseline_mse":0.2675775430989107,"mse_reduction":0.0016773781341304396,"mse_reduction_ci":[0.0004779697802479835,0.0029772365624456407]},"selected":{"n":3192,"games":41,"mse":0.26577600807768054,"mae":0.381215898764415,"baseline_mse":0.2675775430989107,"mse_reduction":0.0018015350212301556,"mse_reduction_ci":[0.000464202319963991,0.0032057645133537764]}},{"month":"2025-08","period":"development","current":{"n":5015,"games":67,"mse":0.23296418104816755,"mae":0.36880783249733945,"baseline_mse":0.2335316080734028,"mse_reduction":0.0005674270252352498,"mse_reduction_ci":[-0.00041662052962065823,0.0015356567239759767]},"selected":{"n":5015,"games":67,"mse":0.23296591685619547,"mae":0.36871204811466923,"baseline_mse":0.2335316080734028,"mse_reduction":0.0005656912172073327,"mse_reduction_ci":[-0.0005304295517837015,0.0016320853652277989]}},{"month":"2025-09","period":"time_check","current":{"n":4435,"games":59,"mse":0.22787404430429334,"mae":0.36308925725659724,"baseline_mse":0.22854755370052154,"mse_reduction":0.0006735093962281776,"mse_reduction_ci":[-0.00023448424313054535,0.0016066902090082927]},"selected":{"n":4435,"games":59,"mse":0.2278189936405147,"mae":0.36289340672866915,"baseline_mse":0.22854755370052154,"mse_reduction":0.0007285600600068407,"mse_reduction_ci":[-0.00026361627357694695,0.0017379626012408536]}},{"month":"2025-10","period":"time_check","current":{"n":961,"games":13,"mse":0.21505649556152873,"mae":0.3483199593066716,"baseline_mse":0.21423064493480368,"mse_reduction":-0.0008258506267250239,"mse_reduction_ci":[-0.0023615421247717315,0.0006388768615899077]},"selected":{"n":961,"games":13,"mse":0.21521736247819928,"mae":0.3481297846346672,"baseline_mse":0.21423064493480368,"mse_reduction":-0.0009867175433956013,"mse_reduction_ci":[-0.0027440616133476187,0.0006536131987795917]}}],"adopted_key":"s1_w0.5","adopted_config":{"hierarchy_scale":1,"gbt_weight":0.5,"tree_variant":"current"},"sampling_sensitivity":[{"month":"2025-05","sample":75,"seed":0,"n":4367,"mse":0.26050329863989213,"mean_absolute_prediction_shift":0.004406112804936998,"max_absolute_prediction_shift":0.021499427048072},{"month":"2025-05","sample":300,"seed":0,"n":4367,"mse":0.26042533951195795,"mean_absolute_prediction_shift":0.002594279371893996,"max_absolute_prediction_shift":0.0177683706879516},{"month":"2025-05","sample":150,"seed":1,"n":4367,"mse":0.2602920477750964,"mean_absolute_prediction_shift":0.004566439710546698,"max_absolute_prediction_shift":0.0215399295789169},{"month":"2025-06","sample":75,"seed":0,"n":4407,"mse":0.24714582906698138,"mean_absolute_prediction_shift":0.004555129129356899,"max_absolute_prediction_shift":0.0201626965011435},{"month":"2025-06","sample":300,"seed":0,"n":4407,"mse":0.24698452204954946,"mean_absolute_prediction_shift":0.003187113692717486,"max_absolute_prediction_shift":0.0157475959054345},{"month":"2025-06","sample":150,"seed":1,"n":4407,"mse":0.24711154680950811,"mean_absolute_prediction_shift":0.005191965408002963,"max_absolute_prediction_shift":0.0200753169794579},{"month":"2025-07","sample":75,"seed":0,"n":3192,"mse":0.266023856211559,"mean_absolute_prediction_shift":0.004579551012589032,"max_absolute_prediction_shift":0.0203364353252367},{"month":"2025-07","sample":300,"seed":0,"n":3192,"mse":0.26602325143164385,"mean_absolute_prediction_shift":0.0027003600101125195,"max_absolute_prediction_shift":0.0135371098607441},{"month":"2025-07","sample":150,"seed":1,"n":3192,"mse":0.2659898296176672,"mean_absolute_prediction_shift":0.00495819784762165,"max_absolute_prediction_shift":0.018940276831062898},{"month":"2025-08","sample":75,"seed":0,"n":5015,"mse":0.23299591087740867,"mean_absolute_prediction_shift":0.004682528378690742,"max_absolute_prediction_shift":0.0205421142918144},{"month":"2025-08","sample":300,"seed":0,"n":5015,"mse":0.23293626081971694,"mean_absolute_prediction_shift":0.003024479281951781,"max_absolute_prediction_shift":0.0143561705566567},{"month":"2025-08","sample":150,"seed":1,"n":5015,"mse":0.2329437559836601,"mean_absolute_prediction_shift":0.004777581920009107,"max_absolute_prediction_shift":0.027273288057747},{"month":"2025-09","sample":75,"seed":0,"n":4435,"mse":0.22792989095248775,"mean_absolute_prediction_shift":0.0048255779959792975,"max_absolute_prediction_shift":0.017876491893743303},{"month":"2025-09","sample":300,"seed":0,"n":4435,"mse":0.22777471716908096,"mean_absolute_prediction_shift":0.002865883467258513,"max_absolute_prediction_shift":0.0151028770635389},{"month":"2025-09","sample":150,"seed":1,"n":4435,"mse":0.22765704951191063,"mean_absolute_prediction_shift":0.004873886517033478,"max_absolute_prediction_shift":0.0206837351779338},{"month":"2025-10","sample":75,"seed":0,"n":961,"mse":0.21520750525465476,"mean_absolute_prediction_shift":0.0043401104879229055,"max_absolute_prediction_shift":0.019808675210168398},{"month":"2025-10","sample":300,"seed":0,"n":961,"mse":0.21481868880220129,"mean_absolute_prediction_shift":0.0025985031797849893,"max_absolute_prediction_shift":0.0137146566803477},{"month":"2025-10","sample":150,"seed":1,"n":961,"mse":0.21479382832307517,"mean_absolute_prediction_shift":0.004393063967257673,"max_absolute_prediction_shift":0.0213041646307513}],"development_selected_vs_current_ci":[-3.7727731753136757e-06,0.00011278186893863596],"adoption_rule":"calibration-only revision; retain s1_w0.5; development-selected intervals are descriptive, not independent selection evidence","provenance":{"git_base":"c5d2180a5fb029d16ffd2a574274a4c8150d983a","training_manifest_sha256":"637ad31479b98efbe0811ca33e61b881b3eaa35310de08cd3f3437767b3785e9","calibration_revision_proof_sha256":"8c2bf7eb37337914187d056016b9afb8a66bcf0ec1e24b98f1bc41f3c465df98","prediction_sha256":"7e5e303caefa4bbd5a7a360fd4ebdca7d7f340def7b858f51321025bd091d253"},"decision_sampling_sensitivity":{"training_version":4,"engine_contract":4,"batch_id":"3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f","status":"diagnostic_completed","date":"2025-09-20","ml_cutoff":"2025-09-01","cases":17,"sampling_rule":"per team and decision kind: eligible PA nearest to 1 percentage-point threshold plus highest gain; deduplicate within kind","limitations":"Purposive single-day sample; no population accuracy, probability of winning, causal effect or full ensemble confidence interval.","variants":[{"sample":75,"seed":0,"cases":[{"kind":"ph","pa_id":"2025-342-h024","team":"中信兄弟","baseline":{"best":"許基宏","gain":0.29951254634433355,"suggested":false,"gap":0.2492523547820346},"variant":{"best":"許基宏","gain":0.4028838693060243,"suggested":false,"gap":0.2404145965456239},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.10337132296169077},{"kind":"ph","pa_id":"2025-341-a026","team":"台鋼雄鷹","baseline":{"best":"杜家明","gain":0.8533381446657808,"suggested":false,"gap":0.19281786488344554},"variant":{"best":"杜家明","gain":0.9603222160269311,"suggested":false,"gap":0.18865752509595723},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.10698407136115029},{"kind":"ph","pa_id":"2025-341-a025","team":"台鋼雄鷹","baseline":{"best":"杜家明","gain":1.4269895440113132,"suggested":true,"gap":0.2820462867517213},"variant":{"best":"杜家明","gain":1.5423831784334703,"suggested":true,"gap":0.27596070754776214},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.11539363442215711},{"kind":"ph","pa_id":"2025-342-a026","team":"味全龍","baseline":{"best":"陳子豪","gain":0.5388892668062016,"suggested":false,"gap":0.15630191109913727},"variant":{"best":"陳子豪","gain":0.5393806160992941,"suggested":false,"gap":0.15782334456169927},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.000491349293092469},{"kind":"ph","pa_id":"2025-341-h028","team":"富邦悍將","baseline":{"best":"林澤彬","gain":0.2788410301884453,"suggested":false,"gap":0.0729440405705491},"variant":{"best":"林澤彬","gain":0.2684224910827802,"suggested":false,"gap":0.05242514119351635},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.010418539105665092},{"kind":"ph","pa_id":"2025-340-a032","team":"樂天桃猿","baseline":{"best":"林子偉","gain":0.8443535886989311,"suggested":false,"gap":0.3331881575845669},"variant":{"best":"林子偉","gain":1.0837728852063606,"suggested":true,"gap":0.23011562466902324},"top1_changed":false,"threshold_changed":true,"absolute_gain_shift":0.23941929650742955},{"kind":"ph","pa_id":"2025-340-a026","team":"樂天桃猿","baseline":{"best":"廖健富","gain":1.4189281676425247,"suggested":true,"gap":0.025831297737064052},"variant":{"best":"林泓育","gain":1.354907031778792,"suggested":true,"gap":0.2983590253102846},"top1_changed":true,"threshold_changed":false,"absolute_gain_shift":0.06402113586373281},{"kind":"ph","pa_id":"2025-340-h035","team":"統一7-ELEVEn獅","baseline":{"best":"邱智呈","gain":0.20724578580422934,"suggested":false,"gap":0.042109761510053356},"variant":{"best":"邱智呈","gain":0.20840579527404657,"suggested":false,"gap":0.05117501877445102},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.0011600094698172303},{"kind":"pen","pa_id":"2025-342-a025","team":"中信兄弟","baseline":{"best":"江忠城","gain":0.39513059012593515,"suggested":false,"gap":0.280635059113996},"variant":{"best":"江忠城","gain":0.44707692175795444,"suggested":false,"gap":0.5159394357391475},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.05194633163201928},{"kind":"pen","pa_id":"2025-341-h022","team":"台鋼雄鷹","baseline":{"best":"林詩翔","gain":1.1110485064099542,"suggested":true,"gap":0.28871077498757425},"variant":{"best":"林詩翔","gain":1.289503120318648,"suggested":true,"gap":0.4923578812824888},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.17845461390869377},{"kind":"pen","pa_id":"2025-342-h031","team":"味全龍","baseline":{"best":"鎛銳","gain":0.46631026451342755,"suggested":false,"gap":0.014923087228597809},"variant":{"best":"鎛銳","gain":0.4370025302857866,"suggested":false,"gap":0.0030401631665329942},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.029307734227640936},{"kind":"pen","pa_id":"2025-341-a028","team":"富邦悍將","baseline":{"best":"曾峻岳","gain":0.9836430486117976,"suggested":false,"gap":0.45630659117972494},"variant":{"best":"曾峻岳","gain":0.9785291512974004,"suggested":false,"gap":0.3477630816328181},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.005113897314397264},{"kind":"pen","pa_id":"2025-341-a027","team":"富邦悍將","baseline":{"best":"曾峻岳","gain":2.383850593391336,"suggested":true,"gap":0.48026945876400395},"variant":{"best":"曾峻岳","gain":2.5946427332993385,"suggested":true,"gap":0.6263172691785541},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.2107921399080026},{"kind":"pen","pa_id":"2025-340-h026","team":"樂天桃猿","baseline":{"best":"朱承洋","gain":1.0923628616370429,"suggested":true,"gap":0.22354110644125602},"variant":{"best":"朱承洋","gain":0.9535897872107296,"suggested":false,"gap":0.17546593384341425},"top1_changed":false,"threshold_changed":true,"absolute_gain_shift":0.13877307442631326},{"kind":"pen","pa_id":"2025-340-h029","team":"樂天桃猿","baseline":{"best":"朱承洋","gain":2.2523895564377163,"suggested":true,"gap":1.0223961171587914},"variant":{"best":"朱承洋","gain":2.4033204091200275,"suggested":true,"gap":1.0839705522977967},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.1509308526823112},{"kind":"pen","pa_id":"2025-340-a032","team":"統一7-ELEVEn獅","baseline":{"best":"吳承諭","gain":-0.33445227496247554,"suggested":false,"gap":0.044866023102079655},"variant":{"best":"鍾允華","gain":0.05548858867404856,"suggested":false,"gap":0.4000103528581872},"top1_changed":true,"threshold_changed":false,"absolute_gain_shift":0.3899408636365241},{"kind":"pen","pa_id":"2025-340-a024","team":"統一7-ELEVEn獅","baseline":{"best":"髙塩將樹","gain":6.247489137191218,"suggested":true,"gap":2.4252834155191563},"variant":{"best":"髙塩將樹","gain":6.172321251768362,"suggested":true,"gap":1.6818082935762533},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.07516788542285635}],"top1_changes":2,"threshold_changes":2,"max_gain_shift":0.3899408636365241},{"sample":300,"seed":0,"cases":[{"kind":"ph","pa_id":"2025-342-h024","team":"中信兄弟","baseline":{"best":"許基宏","gain":0.29951254634433355,"suggested":false,"gap":0.2492523547820346},"variant":{"best":"許基宏","gain":0.2399143406208299,"suggested":false,"gap":0.2428224173257896},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.05959820572350366},{"kind":"ph","pa_id":"2025-341-a026","team":"台鋼雄鷹","baseline":{"best":"杜家明","gain":0.8533381446657808,"suggested":false,"gap":0.19281786488344554},"variant":{"best":"杜家明","gain":0.6446524965532613,"suggested":false,"gap":0.19739648642525542},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.20868564811251955},{"kind":"ph","pa_id":"2025-341-a025","team":"台鋼雄鷹","baseline":{"best":"杜家明","gain":1.4269895440113132,"suggested":true,"gap":0.2820462867517213},"variant":{"best":"杜家明","gain":1.1161815514416054,"suggested":true,"gap":0.28874371183258474},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.3108079925697078},{"kind":"ph","pa_id":"2025-342-a026","team":"味全龍","baseline":{"best":"陳子豪","gain":0.5388892668062016,"suggested":false,"gap":0.15630191109913727},"variant":{"best":"陳子豪","gain":0.4099138950178032,"suggested":false,"gap":0.08099876764303415},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.12897537178839846},{"kind":"ph","pa_id":"2025-341-h028","team":"富邦悍將","baseline":{"best":"林澤彬","gain":0.2788410301884453,"suggested":false,"gap":0.0729440405705491},"variant":{"best":"林澤彬","gain":0.27609813156967683,"suggested":false,"gap":0.0779228199864146},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.0027428986187684745},{"kind":"ph","pa_id":"2025-340-a032","team":"樂天桃猿","baseline":{"best":"林子偉","gain":0.8443535886989311,"suggested":false,"gap":0.3331881575845669},"variant":{"best":"林子偉","gain":0.6223681617712297,"suggested":false,"gap":0.11200726941558303},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.2219854269277014},{"kind":"ph","pa_id":"2025-340-a026","team":"樂天桃猿","baseline":{"best":"廖健富","gain":1.4189281676425247,"suggested":true,"gap":0.025831297737064052},"variant":{"best":"廖健富","gain":1.406295411472966,"suggested":true,"gap":0.07909828328088819},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.012632756169558723},{"kind":"ph","pa_id":"2025-340-h035","team":"統一7-ELEVEn獅","baseline":{"best":"邱智呈","gain":0.20724578580422934,"suggested":false,"gap":0.042109761510053356},"variant":{"best":"邱智呈","gain":0.2122934856025614,"suggested":false,"gap":0.0372601693310633},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.005047699798332056},{"kind":"pen","pa_id":"2025-342-a025","team":"中信兄弟","baseline":{"best":"江忠城","gain":0.39513059012593515,"suggested":false,"gap":0.280635059113996},"variant":{"best":"江忠城","gain":0.4745810343989249,"suggested":false,"gap":0.17236036463534588},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.07945044427298975},{"kind":"pen","pa_id":"2025-341-h022","team":"台鋼雄鷹","baseline":{"best":"林詩翔","gain":1.1110485064099542,"suggested":true,"gap":0.28871077498757425},"variant":{"best":"林詩翔","gain":1.0503800672561459,"suggested":true,"gap":0.2511961882415098},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.06066843915380837},{"kind":"pen","pa_id":"2025-342-h031","team":"味全龍","baseline":{"best":"鎛銳","gain":0.46631026451342755,"suggested":false,"gap":0.014923087228597809},"variant":{"best":"陳冠偉","gain":0.467456760162689,"suggested":false,"gap":0.020408160627415683},"top1_changed":true,"threshold_changed":false,"absolute_gain_shift":0.0011464956492614475},{"kind":"pen","pa_id":"2025-341-a028","team":"富邦悍將","baseline":{"best":"曾峻岳","gain":0.9836430486117976,"suggested":false,"gap":0.45630659117972494},"variant":{"best":"曾峻岳","gain":1.0959832567967591,"suggested":true,"gap":0.3914319797279735},"top1_changed":false,"threshold_changed":true,"absolute_gain_shift":0.11234020818496149},{"kind":"pen","pa_id":"2025-341-a027","team":"富邦悍將","baseline":{"best":"曾峻岳","gain":2.383850593391336,"suggested":true,"gap":0.48026945876400395},"variant":{"best":"曾峻岳","gain":2.2825647731801775,"suggested":true,"gap":0.36743120362542325},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.1012858202111584},{"kind":"pen","pa_id":"2025-340-h026","team":"樂天桃猿","baseline":{"best":"朱承洋","gain":1.0923628616370429,"suggested":true,"gap":0.22354110644125602},"variant":{"best":"朱承洋","gain":1.191115266706292,"suggested":true,"gap":0.21145600693518507},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.0987524050692492},{"kind":"pen","pa_id":"2025-340-h029","team":"樂天桃猿","baseline":{"best":"朱承洋","gain":2.2523895564377163,"suggested":true,"gap":1.0223961171587914},"variant":{"best":"朱承洋","gain":2.1842598046194315,"suggested":true,"gap":0.9921258420105885},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.06812975181828484},{"kind":"pen","pa_id":"2025-340-a032","team":"統一7-ELEVEn獅","baseline":{"best":"吳承諭","gain":-0.33445227496247554,"suggested":false,"gap":0.044866023102079655},"variant":{"best":"吳承諭","gain":0.07202087094650439,"suggested":false,"gap":0.45094561387336213},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.4064731459089799},{"kind":"pen","pa_id":"2025-340-a024","team":"統一7-ELEVEn獅","baseline":{"best":"髙塩將樹","gain":6.247489137191218,"suggested":true,"gap":2.4252834155191563},"variant":{"best":"髙塩將樹","gain":5.959803611275123,"suggested":true,"gap":2.2780696466634938},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.2876855259160953}],"top1_changes":1,"threshold_changes":1,"max_gain_shift":0.4064731459089799},{"sample":150,"seed":1,"cases":[{"kind":"ph","pa_id":"2025-342-h024","team":"中信兄弟","baseline":{"best":"許基宏","gain":0.29951254634433355,"suggested":false,"gap":0.2492523547820346},"variant":{"best":"許基宏","gain":0.2582347904484453,"suggested":false,"gap":0.24836642404877723},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.04127775589588828},{"kind":"ph","pa_id":"2025-341-a026","team":"台鋼雄鷹","baseline":{"best":"杜家明","gain":0.8533381446657808,"suggested":false,"gap":0.19281786488344554},"variant":{"best":"杜家明","gain":0.7671568470622064,"suggested":false,"gap":0.26539772045273646},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.0861812976035744},{"kind":"ph","pa_id":"2025-341-a025","team":"台鋼雄鷹","baseline":{"best":"杜家明","gain":1.4269895440113132,"suggested":true,"gap":0.2820462867517213},"variant":{"best":"杜家明","gain":1.2844990702307262,"suggested":true,"gap":0.38821320634015777},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.142490473780587},{"kind":"ph","pa_id":"2025-342-a026","team":"味全龍","baseline":{"best":"陳子豪","gain":0.5388892668062016,"suggested":false,"gap":0.15630191109913727},"variant":{"best":"陳子豪","gain":0.4931975926946869,"suggested":false,"gap":0.16244762177472538},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.04569167411151476},{"kind":"ph","pa_id":"2025-341-h028","team":"富邦悍將","baseline":{"best":"林澤彬","gain":0.2788410301884453,"suggested":false,"gap":0.0729440405705491},"variant":{"best":"林澤彬","gain":0.20227562885412229,"suggested":false,"gap":0.07234978615393015},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.07656540133432302},{"kind":"ph","pa_id":"2025-340-a032","team":"樂天桃猿","baseline":{"best":"林子偉","gain":0.8443535886989311,"suggested":false,"gap":0.3331881575845669},"variant":{"best":"林子偉","gain":0.8344222028656381,"suggested":false,"gap":0.20583302225758937},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.009931385833293005},{"kind":"ph","pa_id":"2025-340-a026","team":"樂天桃猿","baseline":{"best":"廖健富","gain":1.4189281676425247,"suggested":true,"gap":0.025831297737064052},"variant":{"best":"廖健富","gain":1.3418128453363207,"suggested":true,"gap":0.0348413695875347},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.07711532230620399},{"kind":"ph","pa_id":"2025-340-h035","team":"統一7-ELEVEn獅","baseline":{"best":"邱智呈","gain":0.20724578580422934,"suggested":false,"gap":0.042109761510053356},"variant":{"best":"邱智呈","gain":0.21867931646762712,"suggested":false,"gap":0.04418637924932006},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.011433530663397778},{"kind":"pen","pa_id":"2025-342-a025","team":"中信兄弟","baseline":{"best":"江忠城","gain":0.39513059012593515,"suggested":false,"gap":0.280635059113996},"variant":{"best":"江忠城","gain":0.47037452146617265,"suggested":false,"gap":0.2921577524285299},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.07524393134023749},{"kind":"pen","pa_id":"2025-341-h022","team":"台鋼雄鷹","baseline":{"best":"林詩翔","gain":1.1110485064099542,"suggested":true,"gap":0.28871077498757425},"variant":{"best":"林詩翔","gain":1.2079031494724022,"suggested":true,"gap":0.30566823793966325},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.09685464306244795},{"kind":"pen","pa_id":"2025-342-h031","team":"味全龍","baseline":{"best":"鎛銳","gain":0.46631026451342755,"suggested":false,"gap":0.014923087228597809},"variant":{"best":"陳冠偉","gain":0.5252146197530141,"suggested":false,"gap":0.03009984066483734},"top1_changed":true,"threshold_changed":false,"absolute_gain_shift":0.05890435523958654},{"kind":"pen","pa_id":"2025-341-a028","team":"富邦悍將","baseline":{"best":"曾峻岳","gain":0.9836430486117976,"suggested":false,"gap":0.45630659117972494},"variant":{"best":"曾峻岳","gain":1.433144839780602,"suggested":true,"gap":0.8200283628483847},"top1_changed":false,"threshold_changed":true,"absolute_gain_shift":0.4495017911688043},{"kind":"pen","pa_id":"2025-341-a027","team":"富邦悍將","baseline":{"best":"曾峻岳","gain":2.383850593391336,"suggested":true,"gap":0.48026945876400395},"variant":{"best":"曾峻岳","gain":2.191567749766858,"suggested":true,"gap":0.49877278329229413},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.1922828436244779},{"kind":"pen","pa_id":"2025-340-h026","team":"樂天桃猿","baseline":{"best":"朱承洋","gain":1.0923628616370429,"suggested":true,"gap":0.22354110644125602},"variant":{"best":"朱承洋","gain":1.177305092124251,"suggested":true,"gap":0.37299585883514563},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.08494223048720806},{"kind":"pen","pa_id":"2025-340-h029","team":"樂天桃猿","baseline":{"best":"朱承洋","gain":2.2523895564377163,"suggested":true,"gap":1.0223961171587914},"variant":{"best":"朱承洋","gain":2.120003144701308,"suggested":true,"gap":1.046147339017899},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.13238641173640842},{"kind":"pen","pa_id":"2025-340-a032","team":"統一7-ELEVEn獅","baseline":{"best":"吳承諭","gain":-0.33445227496247554,"suggested":false,"gap":0.044866023102079655},"variant":{"best":"吳承諭","gain":0.08104849250593887,"suggested":false,"gap":1.0674503470262715},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":0.4155007674684144},{"kind":"pen","pa_id":"2025-340-a024","team":"統一7-ELEVEn獅","baseline":{"best":"髙塩將樹","gain":6.247489137191218,"suggested":true,"gap":2.4252834155191563},"variant":{"best":"髙塩將樹","gain":4.3904421170424675,"suggested":true,"gap":1.0988203520104038},"top1_changed":false,"threshold_changed":false,"absolute_gain_shift":1.8570470201487508}],"top1_changes":1,"threshold_changes":1,"max_gain_shift":1.8570470201487508}]}}
+{
+  "schema_version": 1,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924",
+  "status": "evaluated",
+  "evaluation": "retrospective_fixed_config_already_inspected_not_new_holdout",
+  "target": "observed_single_pa_RE24",
+  "primary_metric": "mse",
+  "seed": 20261025,
+  "bootstrap_reps": 2000,
+  "ci_method": "paired_game_cluster_bootstrap",
+  "development_months": [
+    "2025-05",
+    "2025-08"
+  ],
+  "time_check_months": [
+    "2025-09",
+    "2025-10"
+  ],
+  "selected_key": "s1_w0.5",
+  "current_key": "s1_w0.5",
+  "adopted_key": "s1_w0.5",
+  "selected_config": {
+    "hierarchy_scale": 1,
+    "gbt_weight": 0.5,
+    "tree_variant": "current"
+  },
+  "adopted_config": {
+    "hierarchy_scale": 1,
+    "gbt_weight": 0.5,
+    "tree_variant": "current"
+  },
+  "adoption_rule": "unchanged predeclared 0.5 ensemble; no tuning or selection from this audit",
+  "development_selected_vs_current_ci": [
+    0,
+    0
+  ],
+  "sampling_sensitivity": [],
+  "candidates": [
+    {
+      "key": "s1_w0",
+      "hierarchy_scale": 1,
+      "gbt_weight": 0,
+      "tree_variant": "current",
+      "development": {
+        "n": 16981,
+        "games": 222,
+        "mse": 0.24993188537278518,
+        "mae": 0.3773814650199064,
+        "baseline_mse": 0.2508763335616706,
+        "mse_reduction": 0.0009444481888853329,
+        "mse_reduction_ci": [
+          0.000358027608629655,
+          0.0015427028557061144
+        ]
+      },
+      "time_check": {
+        "n": 5396,
+        "games": 72,
+        "mse": 0.22589158506210452,
+        "mae": 0.3609486160438944,
+        "baseline_mse": 0.22599778547890276,
+        "mse_reduction": 0.00010620041679823019,
+        "mse_reduction_ci": [
+          -0.0008321783892913316,
+          0.001057140204769809
+        ]
+      }
+    },
+    {
+      "key": "s1_w1",
+      "hierarchy_scale": 1,
+      "gbt_weight": 1,
+      "tree_variant": "current",
+      "development": {
+        "n": 16981,
+        "games": 222,
+        "mse": 0.25032480544106894,
+        "mae": 0.37749256019930616,
+        "baseline_mse": 0.2508763335616706,
+        "mse_reduction": 0.0005515281206016942,
+        "mse_reduction_ci": [
+          2.490641123368174e-05,
+          0.0010877667290430213
+        ]
+      },
+      "time_check": {
+        "n": 5396,
+        "games": 72,
+        "mse": 0.22561809238272904,
+        "mae": 0.3601994721657391,
+        "baseline_mse": 0.22599778547890276,
+        "mse_reduction": 0.0003796930961737493,
+        "mse_reduction_ci": [
+          -0.0003730209590861384,
+          0.0011225028941613273
+        ]
+      }
+    },
+    {
+      "key": "s1_w0.5",
+      "hierarchy_scale": 1,
+      "gbt_weight": 0.5,
+      "tree_variant": "current",
+      "development": {
+        "n": 16981,
+        "games": 222,
+        "mse": 0.24991221405954003,
+        "mae": 0.3774180904853919,
+        "baseline_mse": 0.2508763335616706,
+        "mse_reduction": 0.0009641195021305334,
+        "mse_reduction_ci": [
+          0.0004730723117573748,
+          0.001488924097493353
+        ]
+      },
+      "time_check": {
+        "n": 5396,
+        "games": 72,
+        "mse": 0.22557467664798278,
+        "mae": 0.36055371018480337,
+        "baseline_mse": 0.22599778547890276,
+        "mse_reduction": 0.0004231088309199804,
+        "mse_reduction_ci": [
+          -0.00035410021747372733,
+          0.001235824349944789
+        ]
+      }
+    }
+  ],
+  "monthly": [
+    {
+      "month": "2025-05",
+      "period": "development",
+      "current": {
+        "n": 4367,
+        "games": 57,
+        "mse": 0.26037375468024826,
+        "mae": 0.3844558512587123,
+        "baseline_mse": 0.26173834589071254,
+        "mse_reduction": 0.0013645912104642464,
+        "mse_reduction_ci": [
+          0.0003812611121621918,
+          0.0023916771637582245
+        ]
+      },
+      "selected": {
+        "n": 4367,
+        "games": 57,
+        "mse": 0.26037375468024826,
+        "mae": 0.3844558512587123,
+        "baseline_mse": 0.26173834589071254,
+        "mse_reduction": 0.0013645912104642464,
+        "mse_reduction_ci": [
+          0.0003812611121621918,
+          0.0023916771637582245
+        ]
+      }
+    },
+    {
+      "month": "2025-06",
+      "period": "development",
+      "current": {
+        "n": 4407,
+        "games": 57,
+        "mse": 0.24710580685087558,
+        "mae": 0.37711455424997503,
+        "baseline_mse": 0.24775383064355533,
+        "mse_reduction": 0.0006480237926797901,
+        "mse_reduction_ci": [
+          -0.00038857449552400744,
+          0.0017178921804248415
+        ]
+      },
+      "selected": {
+        "n": 4407,
+        "games": 57,
+        "mse": 0.24710580685087558,
+        "mae": 0.37711455424997503,
+        "baseline_mse": 0.24775383064355533,
+        "mse_reduction": 0.0006480237926797901,
+        "mse_reduction_ci": [
+          -0.00038857449552400744,
+          0.0017178921804248415
+        ]
+      }
+    },
+    {
+      "month": "2025-07",
+      "period": "development",
+      "current": {
+        "n": 3192,
+        "games": 41,
+        "mse": 0.2660666107820747,
+        "mae": 0.3816147679859896,
+        "baseline_mse": 0.2675775430989107,
+        "mse_reduction": 0.0015109323168359568,
+        "mse_reduction_ci": [
+          0.0003335285533177822,
+          0.0026996097829377116
+        ]
+      },
+      "selected": {
+        "n": 3192,
+        "games": 41,
+        "mse": 0.2660666107820747,
+        "mae": 0.3816147679859896,
+        "baseline_mse": 0.2675775430989107,
+        "mse_reduction": 0.0015109323168359568,
+        "mse_reduction_ci": [
+          0.0003335285533177822,
+          0.0026996097829377116
+        ]
+      }
+    },
+    {
+      "month": "2025-08",
+      "period": "development",
+      "current": {
+        "n": 5015,
+        "games": 67,
+        "mse": 0.232986482123273,
+        "mae": 0.3688852865592671,
+        "baseline_mse": 0.2335316080734028,
+        "mse_reduction": 0.0005451259501298133,
+        "mse_reduction_ci": [
+          -0.0004175364946376739,
+          0.0015488467501058034
+        ]
+      },
+      "selected": {
+        "n": 5015,
+        "games": 67,
+        "mse": 0.232986482123273,
+        "mae": 0.3688852865592671,
+        "baseline_mse": 0.2335316080734028,
+        "mse_reduction": 0.0005451259501298133,
+        "mse_reduction_ci": [
+          -0.0004175364946376739,
+          0.0015488467501058034
+        ]
+      }
+    },
+    {
+      "month": "2025-09",
+      "period": "time_check",
+      "current": {
+        "n": 4435,
+        "games": 59,
+        "mse": 0.22788828400590377,
+        "mae": 0.36296477169140806,
+        "baseline_mse": 0.22854755370052154,
+        "mse_reduction": 0.0006592696946177423,
+        "mse_reduction_ci": [
+          -0.00021482480167537503,
+          0.0015662479549541162
+        ]
+      },
+      "selected": {
+        "n": 4435,
+        "games": 59,
+        "mse": 0.22788828400590377,
+        "mae": 0.36296477169140806,
+        "baseline_mse": 0.22854755370052154,
+        "mse_reduction": 0.0006592696946177423,
+        "mse_reduction_ci": [
+          -0.00021482480167537503,
+          0.0015662479549541162
+        ]
+      }
+    },
+    {
+      "month": "2025-10",
+      "period": "time_check",
+      "current": {
+        "n": 961,
+        "games": 13,
+        "mse": 0.21489741480367516,
+        "mae": 0.34942669896545714,
+        "baseline_mse": 0.2142306449348037,
+        "mse_reduction": -0.0006667698688714605,
+        "mse_reduction_ci": [
+          -0.0023723173873573663,
+          0.0007216276081075921
+        ]
+      },
+      "selected": {
+        "n": 961,
+        "games": 13,
+        "mse": 0.21489741480367516,
+        "mae": 0.34942669896545714,
+        "baseline_mse": 0.2142306449348037,
+        "mse_reduction": -0.0006667698688714605,
+        "mse_reduction_ci": [
+          -0.0023723173873573663,
+          0.0007216276081075921
+        ]
+      }
+    }
+  ],
+  "provenance": {
+    "predictions_sha256": "6b9d0af37c53ac317f3a7f1513099238edaebe28f0e7422c00882f8d65f6ad0f",
+    "context_sha256": "74060b75e4be6de2bf2d90cd7c0ab7a04593bd09d6b2946f719b76ad558b855a",
+    "source_id": "2b99976ea35e6edc1ce96221e96bd67b28ed9489535fc2d84c6d2c989771f86d"
+  }
+}

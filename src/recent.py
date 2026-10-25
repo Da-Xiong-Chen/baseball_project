@@ -21,7 +21,7 @@ HALF_LIFE = 30
 def deltas(cutoff, k_bat, k_pit):
     """回傳 (打者近況偏離, 投手近況偏離)，單位為每球得分值；正值＝打者近期較好／投手近期較差。"""
     p = pitches_before(cutoff)
-    p = p[p["cell"].notna() & p["rv"].notna()]
+    p = p[p['cell'].notna() & p['rv'].notna() & p['platoon'].notna()]
     season = pd.Timestamp(cutoff).year
     w = np.where(p["season"] < season, PRIOR_SEASON_WEIGHT, 1.0)
     lg = (pd.Series(w * p["rv"].to_numpy()).groupby(pd.MultiIndex.from_frame(p[["platoon", "cell"]])).sum()

@@ -21,6 +21,17 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('unknown and historical hands never generate an unsupported platoon explanation',()=>{
+ const f=fixture();f.eval("S.roster={X:{hitters:[{name:'B',hand:'R'}]}};");
+ f.context.result={view:'replay',situation:{pitcher:'P',phand:'U'},candidates:[{球員:'B',打擊:'U'}],bullpen:{next:['B'],rows:[]}};
+ f.context.pitcher={投:'R'};
+ assert.doesNotMatch(JSON.stringify(f.eval('pitcherReasons(pitcher,result)')),/同側|異側|左右對戰/);
+ f.context.result.view='defense';f.context.pitcher.投='U';
+ assert.doesNotMatch(JSON.stringify(f.eval('pitcherReasons(pitcher,result)')),/同側|異側|左右對戰/);
+ f.context.batter={打擊:'R',左右優勢:.02};
+ assert.doesNotMatch(JSON.stringify(f.eval('batterReasons(batter,result)')),/打對|左右對戰/);
+});
+
 test('both modes keep the latest four candidates, evict oldest at five and isolate results',()=>{
   const f=fixture();
   f.context.result={candidates:[{角色:'現任',球員:'Current'},...['A','B','C','D','E'].map(球員=>({角色:'代打',球員}))],bullpen:{rows:[{角色:'場上',投手:'Pitcher'},...['V','W','X','Y','Z'].map(投手=>({角色:'牛棚',投手}))]}};
@@ -200,7 +211,7 @@ test('mode switch invalidates a pending evaluation',async()=>{
 
 test('slow game cannot replace the latest plate appearance list',async()=>{
   const f=fixture(),a=deferred(),b=deferred();f.context.a=a.promise;f.context.b=b.promise;
-  f.eval("renderGames=()=>{};renderPAs=()=>{};api=p=>p.endsWith('A')?a:b;");
+  f.eval("renderGames=()=>{};renderPAs=()=>{};json=async()=>({date:HISTORY_DATE,players:{}});api=p=>p.endsWith('A')?a:b;");
   const first=f.eval("loadGame('A')"),second=f.eval("loadGame('B')");
   b.resolve([{id:'B'}]);await second;a.resolve([{id:'A'}]);await first;
   assert.equal(f.eval('S.pas[0].id'),'B');
@@ -817,10 +828,10 @@ test('switching to pitching hides fielding plans and rejects late pinch-hit plan
 
 test('all 18 real-model custom scenarios render both assessment views with finite numbers',async()=>{
  const f=fixture(),dataRoot=path.join(__dirname,'../docs');
- const model=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/model.json'),'utf8'));
+ const model=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(dataRoot,'data'),'model.json'),'utf8'));
  const engineContext={fetch:async()=>({json:async()=>model})};vm.createContext(engineContext);
  vm.runInContext(fs.readFileSync(path.join(dataRoot,'engine.js'),'utf8')+'\nthis.numericEngine=Engine;',engineContext);
- await engineContext.numericEngine.load();f.context.Engine=engineContext.numericEngine;
+ await engineContext.numericEngine.load();f.context.Engine=engineContext.numericEngine;f.context.PlayerIdentity=require('../docs/players.js');f.context.PlayerIdentity.setRegistry(model.players);
  f.eval('STATIC=true;S.mode="custom";S.ready=true;showDetail=()=>{};');
  f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
  const scenarios=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/qa_scenarios.json'),'utf8'));
@@ -829,14 +840,14 @@ test('all 18 real-model custom scenarios render both assessment views with finit
   f.context.numericRequest=request;f.context.numericView=view;f.context.numericTab=tab;
   await f.eval('S.tab=numericTab;run(()=>api("api/evaluate",numericRequest),numericView)');
   const html=f.node('#resultBody').innerHTML;
-  assert.match(html,/id="candidateCompare"/);assert.doesNotMatch(html,/評估未完成|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
+  assert.match(html,/id="candidateCompare"/);assert.doesNotMatch(html.replace(/<[^>]+>/g,''),/rebas:CPBL:/);assert.doesNotMatch(html,/評估未完成|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
   f.eval("audienceMode='general';renderResult()");const general=f.node('#resultBody').innerHTML;
   f.eval("audienceMode='team';renderResult()");assert.equal(f.node('#resultBody').innerHTML,general,'Both audiences must use identical result layout and numeric presentation');
  }
 });
 
 test('model validation retry refetches a schema-invalid JSON response instead of reusing it forever',async()=>{
- const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model-evaluation.json'),'utf8'));
+ const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
  let requests=0;f.context.Engine.model=()=>({batch_id:good.batch_id});
  f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{batch_id:good.batch_id}:good});
  const control={insertAdjacentHTML(){}};
@@ -849,7 +860,7 @@ test('model validation retry refetches a schema-invalid JSON response instead of
 
 test('retrying unavailable timing markers replaces a cached invalid response',async()=>{
  const f=fixture();let requests=0;f.context.Engine.model=()=>({batch_id:'expected'});
- f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{}:{schema_version:2,training_version:4,engine_contract:4,batch_id:'expected',season:2025,games:{}}});
+ f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{}:{schema_version:2,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'expected',season:2025,games:{}}});
  assert.equal(await f.eval('loadTiming()'),false);
  assert.ok(await f.eval('timingData=null;loadTiming()'));
  assert.equal(requests,2);
@@ -865,11 +876,11 @@ test('an older failed JSON request cannot evict a newer successful reload',async
 });
 
 test('all 226 fixed-day PAs load and render both decision views through the static app workflow',async()=>{
- const f=fixture(),dataRoot=path.join(__dirname,'../docs'),model=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/model.json'),'utf8'));
- const index=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/replay/day-2025-09-20/index.json'),'utf8'));
- f.context.Engine.model=()=>model;
+ const f=fixture(),dataRoot=path.join(__dirname,'../docs'),model=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(dataRoot,'data'),'model.json'),'utf8'));
+ const index=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(dataRoot,'data'),'replay/day-2025-09-20/index.json'),'utf8'));
+ f.context.Engine.model=()=>model;f.context.PlayerIdentity=require('../docs/players.js');f.context.PlayerIdentity.setRegistry(model.players);
  f.context.fetch=async url=>process.env.BASEBALL_QA_BASE_URL?fetch(new URL(url,process.env.BASEBALL_QA_BASE_URL)):
-  {ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(dataRoot,url),'utf8'))};
+  {ok:true,json:async()=>JSON.parse(fs.readFileSync((process.env.BASEBALL_STATIC_OUT&&url.startsWith('data/')?path.join(process.env.BASEBALL_STATIC_OUT,url.slice(5)):path.join(dataRoot,url)),'utf8'))};
  f.eval('const qaShowDetail=showDetail;STATIC=true;S.mode="replay";S.ready=true;showDetail=()=>{};');
  f.node('tr[data-batter].best-row').dataset={};f.node('tr[data-pitcher].cur').dataset={};
  await f.eval('loadTiming()');
@@ -889,18 +900,19 @@ test('all 226 fixed-day PAs load and render both decision views through the stat
   await f.eval(`loadGame(${JSON.stringify(game)})`);
   assert.equal(f.eval('S.pas.length'),ids.length);
   assert.doesNotMatch(f.node('#paList').innerHTML,/尚未匯出/);
+  assert.doesNotMatch(f.node('#paList').innerHTML,/未有姓名紀錄的球員/,'all suggested candidates use the dated registry, including unused pitchers');
   f.node('#lateOnly').checked=true;f.eval('renderPAs()');
   assert.equal((f.node('#paList').innerHTML.match(/data-p="/g)||[]).length,f.eval('S.pas.filter(p=>p.inning>=6).length'));
   f.node('#lateOnly').checked=false;f.eval('renderPAs()');
   assert.equal((f.node('#paList').innerHTML.match(/data-p="/g)||[]).length,ids.length);
   for(const pa of ids){
-   const bundle=JSON.parse(fs.readFileSync(path.join(dataRoot,'data/replay/day-2025-09-20',index.files[pa]),'utf8'));
+   const bundle=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(dataRoot,'data'),'replay/day-2025-09-20',index.files[pa]),'utf8'));
    if(bundle.pen)changes++;
    for(const decision of ['ph','pen']){
     f.eval(`S.pa=${JSON.stringify(pa)};S.tab=${JSON.stringify(decision)};historyDisclosure.select(S.pa);`);
     await f.eval(`run(()=>api('api/replay?pa='+S.pa+'&decision='+S.tab),'replay')`);
     const html=f.node('#resultBody').innerHTML;
-    assert.match(html,/data-reveal-action/,[pa,decision].join(' '));assert.match(html,/id="candidateCompare"/);
+    assert.doesNotMatch(html.replace(/<[^>]+>/g,''),/rebas:CPBL:/,[pa,decision,'readable player labels'].join(' '));assert.match(html,/data-reveal-action/,[pa,decision].join(' '));assert.match(html,/id="candidateCompare"/);
     assert.doesNotMatch(html,/評估未完成|NaN|undefined|data-reveal-action open|data-reveal-outcome open/);
     assert.doesNotMatch(html,/[−-]0\.0+(?!\d)/,[pa,decision,'signed zero'].join(' '));
     assert.equal(f.eval('S.last.replay_context.decision'),decision);

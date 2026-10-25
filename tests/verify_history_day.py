@@ -31,7 +31,7 @@ def main():
                     for metric in ("相對現任", "守方勝率增減", "預估失分", "預估勝率", "疲勞調整"):
                         if y.get(metric) is not None:
                             error = abs(x[metric] - y[metric]);max_error = max(max_error, error)
-                            assert math.isfinite(x[metric]) and error < .0001, (pid, metric, error)
+                            assert math.isfinite(x[metric]) and error <= 1e-8+1e-7*abs(y[metric]), (pid, metric, error)
             marker = timing["games"].get("-".join(pid.split("-")[:2]), {}).get(pid)
             if marker:
                 rows = [r for r in expected["bullpen"]["rows"] if r["角色"] == "牛棚"] if decision == "pen" else [r for r in expected["candidates"] if r["角色"] == "代打" and r["守備"] in ("ok", "warn")]

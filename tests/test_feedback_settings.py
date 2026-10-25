@@ -8,6 +8,8 @@ sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "src"))
 
 import server  # noqa: E402
+from identity import resolve_player
+def key(name): return resolve_player(name, cutoff=server.FULL, role="P")
 
 OFFENSE = dict(inning=8, half="home", bat_score=3, fld_score=3, bases=1, outs=1, pitcher="林子昱", due="梁家榮",
                due_pos="3B", bench=["林智平", "林子偉", "成晉"], bat_team="樂天桃猿", fld_team="味全龍")
@@ -33,9 +35,9 @@ class FeedbackSettings(unittest.TestCase):
         d0 = rows(server.api("/api/evaluate", {}, DEFENSE)["bullpen"]["rows"], "預估失分", "投手")
         d1 = rows(server.api("/api/evaluate", {}, dict(DEFENSE, streaks={"朱承洋": 1, "莊昕諺": 2},
                                                         fatigue_d2=0.02, fatigue_d3=0.05))["bullpen"]["rows"], "預估失分", "投手")
-        self.assertAlmostEqual(d1["朱承洋"] - d0["朱承洋"], 0.02 * 3, places=9)
-        self.assertAlmostEqual(d1["莊昕諺"] - d0["莊昕諺"], 0.05 * 3, places=9)
-        self.assertAlmostEqual(d1["陳冠宇"], d0["陳冠宇"], places=12)
+        self.assertAlmostEqual(d1[key("朱承洋")] - d0[key("朱承洋")], 0.02 * 3, places=9)
+        self.assertAlmostEqual(d1[key("莊昕諺")] - d0[key("莊昕諺")], 0.05 * 3, places=9)
+        self.assertAlmostEqual(d1[key("陳冠宇")], d0[key("陳冠宇")], places=12)
 
     def test_recent_weight_moves_by_recent_form(self):
         r0 = server.api("/api/evaluate", {}, OFFENSE)["candidates"]

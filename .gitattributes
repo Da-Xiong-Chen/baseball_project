@@ -1,5 +1,14 @@
 # Keep sealed batch bytes identical in Git, GitHub Pages and every checkout.
 # CRLF/LF conversion would invalidate the release SHA-256 contract.
+/docs/data/** -text
+/docs/*.js -text
+/docs/*.html -text
+/docs/*.css -text
+/src/*.py -text
+/scripts/*.py -text
+/server.py -text
+/models/active-batch.json -text
+/models/*.pkl -text
 /docs/.nojekyll -text
 /docs/app.js -text
 /docs/backtest.js -text

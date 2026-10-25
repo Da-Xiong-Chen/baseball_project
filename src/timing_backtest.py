@@ -31,6 +31,7 @@ from fatigue import pitch_count_before
 from load import ROOT, load
 from batch_contract import metadata as batch_metadata
 import mlmodel
+from historical_actors import decorate
 
 MIN_INNING = 6
 THRESHOLD = 1.0          # 百分點；網站標記與總覽使用
@@ -44,19 +45,27 @@ CHUNK = 300              # 每個平行工作的打席數
 def decision_points():
     """每個打席前的決策點；inc 為上一打席（同場、同防守隊）的投手，即「若不換投會續投的人」。"""
     pa, _, _ = load()
-    d = pa[pa["season"] == SEASON].copy()
+    d = decorate(pa[pa["season"] == SEASON])
     d["h"] = d["half"].map({"away": 0, "home": 1})
     d = d.sort_values(["game", "inning", "h", "seq"])
     g = d.groupby(["game", "fld_team"])
     d["inc"], d["inc_hand"] = g["pitcher"].shift(), g["phand"].shift()
     # Construct stints before filtering or evaluation: missing gains must never
     # erase a real pitching change and join two different pitchers' segments.
-    changed = d["pitcher"].ne(d["inc"])
-    d["stint_id"] = changed.groupby([d["game"], d["fld_team"]]).cumsum().astype(int)
-    d["inc_stint_id"] = d.groupby(["game", "fld_team"])["stint_id"].shift()
-    starts=d.groupby(['game','fld_team','stint_id']).inning.min()
-    d['window_left_censored']=[bool(starts.get((r.game,r.fld_team,r.inc_stint_id),MIN_INNING)<MIN_INNING)
-                               for r in d.itertuples()]
+    # A mid-PA replacement starts a new stint even when no PA opened with that
+    # pitcher yet. Do not join two different pitchers' exposure windows.
+    last={};starts={};stints=[];prior_stints=[]
+    for r in d.itertuples():
+        token=(r.game,r.fld_team);prior=last.get(token);number=prior[1] if prior else 0
+        prior_stints.append(number if prior else None)
+        if prior is None or r.start_pitcher!=prior[0]:number+=1
+        stints.append(number);starts.setdefault((*token,number),r.inning)
+        if r.pitcher!=r.start_pitcher:number+=1;starts.setdefault((*token,number),r.inning)
+        last[token]=(r.pitcher,number)
+    d['stint_id']=stints;d['inc_stint_id']=prior_stints
+    d['window_left_censored']=[bool(starts.get((r.game,r.fld_team,r.inc_stint_id),MIN_INNING)<MIN_INNING) for r in d.itertuples()]
+    d['final_pitcher']=d.pitcher;d['pitcher']=d.start_pitcher;d['phand']=d.start_phand
+    d['final_batter']=d.batter;d['batter']=d.start_batter
     return d[(d["inning"] >= MIN_INNING) & d["inc"].notna()]
 
 
@@ -76,7 +85,8 @@ def evaluate(r, m, ml):
     out = dict(pa_id=r["pa_id"], game=r["game"], date=str(r["date"].date()), inning=int(r["inning"]), half=r["half"],
                bat_team=r["bat_team"], fld_team=r["fld_team"], inc=r["inc"], pitcher=r["pitcher"],
                due=sit["due"], batter=r["batter"], is_ph=bool(r["is_ph"]), pen_change=bool(r["pitcher"] != r["inc"]),
-               RE24=float(r["RE24"]) if pd.notna(r["RE24"]) else None)
+               mid_pa_actor_change=bool(r.get('mid_pa_actor_change',False)),
+               RE24=float(r["RE24"]) if pd.notna(r["RE24"]) and not r.get('mid_pa_actor_change',False) else None)
     out.update(bat_score=int(r['bat_score']),fld_score=int(r['fld_score']),
                outs=int(r['outs']),bases=int(r['bases']))
     out.update(stint_id=int(r['stint_id']), inc_stint_id=int(r['inc_stint_id']),
@@ -170,7 +180,8 @@ def summarize(d, t):
                        stay_re24_suggested=round(float(re_sug.mean()), 3) if len(re_sug) else None, stay_n_suggested=int(len(re_sug)),
                        stay_re24_not=round(float(re_not.mean()), 3) if len(re_not) else None, stay_n_not=int(len(re_not)))
         s[kind].update(stay_games_suggested=int(stay.loc[stay_sug,'game'].nunique()),
-                       stay_games_not=int(stay.loc[~stay_sug,'game'].nunique()))
+                       stay_games_not=int(stay.loc[~stay_sug,'game'].nunique()),
+                       outcome_excluded_mid_pa=int(x.get('mid_pa_actor_change',pd.Series(False,index=x.index)).fillna(False).astype(bool).sum()))
     return s
 
 
@@ -258,7 +269,7 @@ def simulate(d, workers):
     jobs = [(mo, [r for _, r in g.iloc[i:i + CHUNK].iterrows()])
             for mo, g in d.groupby("month") for i in range(0, len(g), CHUNK)]
     digest=hashlib.sha256()
-    for name in ('load.py','identity.py','model.py','engine.py','roster.py','fatigue.py','mlmodel.py','timing_backtest.py'):
+    for name in ('load.py','identity.py','historical_actors.py','model.py','engine.py','roster.py','source_registry.py','fatigue.py','mlmodel.py','timing_backtest.py'):
         digest.update((Path(__file__).parent/name).read_bytes())
     for path in sorted(Path(mlmodel.MODEL_DIR).glob(f'gbt_*_v{mlmodel.TRAINING_VERSION}.pkl')):
         digest.update(hashlib.sha256(path.read_bytes()).digest())
