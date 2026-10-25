@@ -29,7 +29,10 @@ def _read_context(path,stamp,size):
 
 def context():
     ensure_available();path=context_path();stat=path.stat()
-    return _read_context(str(path),stat.st_mtime_ns,stat.st_size)
+    c=_read_context(str(path),stat.st_mtime_ns,stat.st_size)
+    from runtime_config import check_model_runtime
+    check_model_runtime(c)
+    return c
 
 
 def metadata():

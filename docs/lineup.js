@@ -2,6 +2,8 @@
 (function(root){
   'use strict';
   const POS={C:'捕手','1B':'一壘','2B':'二壘','3B':'三壘',SS:'游擊',LF:'左外野',CF:'中外野',RF:'右外野',DH:'指定打擊'};
+  let runtimeSeason=2025;
+  function setRuntime(config){if(!Number.isInteger(config.season))throw Error('Invalid season');if(runtimeSeason!==config.season){states.clear();defaults={};defaultsMeta={};}runtimeSeason=config.season;}
   const clone=x=>JSON.parse(JSON.stringify(x));
   function migrateIdentity(config,team){
     if(!config)return false;
@@ -43,19 +45,19 @@
   }
   function validState(s){
     const shape=c=>c&&Array.isArray(c.slots)&&c.slots.length===9&&c.slots.every(x=>x&&typeof x.name==='string'&&POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9&&typeof c.pitcher==='string'&&(!c.unavailable||(Array.isArray(c.unavailable)&&c.unavailable.every(n=>typeof n==='string')&&new Set(c.unavailable).size===c.unavailable.length));
-    return s&&[1,2].includes(s.version)&&s.season===2025&&shape(s.draft)&&(!s.confirmed||shape(s.confirmed));
+    return s&&[1,2].includes(s.version)&&s.season===runtimeSeason&&shape(s.draft)&&(!s.confirmed||shape(s.confirmed));
   }
   const states=new Map();let defaults={},defaultsMeta={},options,teamName='',roster,pickerIndex=null,pickerField=false,returnFocus=null;
   let swapMode=null,swapFirst=null,swapUndo=null;
   const q=s=>options.element.querySelector(s);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const label=n=>typeof PlayerIdentity!=='undefined'?PlayerIdentity.currentName(n):String(n??'');
-  const key=t=>'cpbl-lineup-2025-v1:'+t;
+  const key=t=>'cpbl-lineup-'+runtimeSeason+'-v1:'+t;
   function get(t){
     if(!states.has(t)){
-      let s={version:2,season:2025,draft:empty(),confirmed:null};
+      let s={version:2,season:runtimeSeason,draft:empty(),confirmed:null};
       let raw=null;
-      try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:parsed.version,season:2025,draft:parsed.draft,confirmed:parsed.confirmed||null,legacyRaw:raw};}}
+      try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:parsed.version,season:runtimeSeason,draft:parsed.draft,confirmed:parsed.confirmed||null,legacyRaw:raw};}}
       catch{s.storageError=true;}
       const draftMigrated=typeof PlayerIdentity==='undefined'&&migrateIdentity(s.draft,t),confirmedMigrated=typeof PlayerIdentity==='undefined'&&migrateIdentity(s.confirmed,t);
       s.identityMigrated=draftMigrated||confirmedMigrated;
@@ -79,7 +81,7 @@
   function persist(){
     const s=get(teamName);
     if(s.storageError){message('本次可用；舊資料無法讀取，未覆寫瀏覽器記錄。');return false;}
-    try{const raw=JSON.stringify({version:2,season:2025,draft:s.draft,confirmed:s.confirmed});localStorage.setItem(key(teamName),raw);if(localStorage.getItem(key(teamName))!==raw)throw Error('not saved');return true;}
+    try{const raw=JSON.stringify({version:2,season:runtimeSeason,draft:s.draft,confirmed:s.confirmed});localStorage.setItem(key(teamName),raw);if(localStorage.getItem(key(teamName))!==raw)throw Error('not saved');return true;}
     catch{message('本次可用，但無法保存到瀏覽器。');return false;}
   }
   function current(t){const s=get(t);return s.confirmed&&(typeof PlayerIdentity==='undefined'||s.identityChecked)?clone(s.confirmed):null;}
@@ -108,7 +110,7 @@
   function render(){
     const s=get(teamName),c=s.draft;
     q('#lineupTeam').value=teamName;
-    q('#lineupStatus').textContent=(s.isDefault?'預設名單（2025 最後 '+(defaultsMeta[teamName]?.games||30)+' 場先發）'+(s.confirmed?'':' · 尚未套用'):s.confirmed?(JSON.stringify(s.confirmed)===JSON.stringify(c)?'已有套用配置':'已套用配置 · 有未套用的修改'):(c.slots.some(x=>x.name)?'尚未套用':'尚未設定'))+' · 已填 '+c.slots.filter(x=>x.name).length+'/9 棒';
+    q('#lineupStatus').textContent=(s.isDefault?'預設名單（'+runtimeSeason+' 最後 '+(defaultsMeta[teamName]?.games||30)+' 場先發）'+(s.confirmed?'':' · 尚未套用'):s.confirmed?(JSON.stringify(s.confirmed)===JSON.stringify(c)?'已有套用配置':'已套用配置 · 有未套用的修改'):(c.slots.some(x=>x.name)?'尚未套用':'尚未設定'))+' · 已填 '+c.slots.filter(x=>x.name).length+'/9 棒';
     q('#lineupRows').innerHTML=c.slots.map((slot,i)=>`<div class="lineup-row"><strong class="lineup-order">${i+1}</strong><button type="button" class="lineup-name" data-pick="${i}" aria-label="第 ${i+1} 棒選擇球員">${esc(label(slot.name)||'選擇球員')}<span aria-hidden="true">⌄</span></button><select data-position="${i}" aria-label="第 ${i+1} 棒守位">${Object.entries(POS).map(([p,label])=>`<option value="${p}" ${slot.pos===p?'selected':''}>${label}</option>`).join('')}</select><div class="lineup-move"><button type="button" data-move="${i}" data-step="-1" aria-label="第 ${i+1} 棒上移" ${i===0?'disabled':''}>↑</button><button type="button" data-move="${i}" data-step="1" aria-label="第 ${i+1} 棒下移" ${i===8?'disabled':''}>↓</button></div></div>`).join('');
     q('#lineupPitcherName').textContent=label(c.pitcher)||'選擇投手';
     options.element.querySelectorAll('[data-field]').forEach(b=>{
@@ -188,6 +190,6 @@
   function setDefaults(map){defaults={};defaultsMeta={};Object.entries(map||{}).forEach(([t,v])=>{const c={slots:v.slots.map(x=>({name:x.name,pos:x.pos})),pitcher:v.pitcher};if(c.slots.length===9&&c.slots.every(x=>POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9){defaults[t]=c;defaultsMeta[t]={games:v.games,through:v.through};}});states.forEach((s,t)=>{if(!s.confirmed&&defaults[t]&&!s.storageError&&(s.isDefault||!s.draft.pitcher)){s.draft=clone(defaults[t]);s.isDefault=true;}});}
   function defaultFor(t){return defaults[t]?clone(defaults[t]):null;}
   function cancelSwap(){swapMode=null;swapFirst=null;if(options&&roster)render();}
-  const api={release,setDefaults,defaultFor,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity};
+  const api={setRuntime,release,setDefaults,defaultFor,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LineupBoard=api;
 })(typeof window!=='undefined'?window:globalThis);

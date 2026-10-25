@@ -1,0 +1,210 @@
+{
+  "status": "local_review_only",
+  "release_ready": false,
+  "all_tasks_complete": false,
+  "base_commit": "c8862ee0e37bd580e7fa9331192bdf7eb4cff545",
+  "branch": "codex/future-foundation-20261026",
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924",
+  "runtime": {
+    "data_seasons": [
+      2024,
+      2025
+    ],
+    "season": 2025,
+    "cutoff": "2026-01-01",
+    "history_date": "2025-09-20",
+    "replay_cutoffs": [
+      "2025-03-01",
+      "2025-04-01",
+      "2025-05-01",
+      "2025-06-01",
+      "2025-07-01",
+      "2025-08-01",
+      "2025-09-01",
+      "2025-10-01"
+    ],
+    "schema_version": 1,
+    "runtime_id": "0f1c5fc3699f2ca9c55e1920f450d680b47220e1bfa937a6e4216bdb2b3c3993",
+    "assets": {
+      "default_lineups": "data/default-lineups-2025.json",
+      "numbers": "data/player-numbers-2025.json",
+      "history_context": "data/history-context-2025-09-20.json",
+      "fielding_plans": "data/fielding-plans-2025-09-20.json",
+      "timing": "data/timing-2025.json",
+      "day_index": "data/replay/day-2025-09-20/index.json"
+    },
+    "cutoff_inclusive": false
+  },
+  "dataset_id": "a69d17d391f8ce55e7e3946a48a3b60aedb220179768e7f0336847d63ef01e3d",
+  "checks": {
+    "raw_files_unchanged": 720,
+    "weights_unchanged": 9,
+    "static_numeric_fields_exactly_unchanged": true,
+    "default_lineups_exactly_unchanged": true,
+    "python_tests": 142,
+    "javascript_tests": 198,
+    "http_requests": 29,
+    "ppt_pages": 32,
+    "ppt_unchanged_content_slides": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      31,
+      32
+    ],
+    "media_preserved": true,
+    "notes": 0,
+    "animation_slides": 0,
+    "pdf_pages": 32,
+    "browser_core_flows_tested": true
+  },
+  "artifacts": {
+    "pptx": {
+      "file": "presentations\\competition-2026\\future-foundation-20261026\\一球兩面_臨場用人決策_32頁_20261026_審閱版.pptx",
+      "sha256": "8c19f09597bf33a139c5b802f7e17a91aad43f09b56b5a6d8054f340341a5308"
+    },
+    "pdf": {
+      "file": "presentations\\competition-2026\\future-foundation-20261026\\一球兩面_臨場用人決策_32頁_20261026_審閱版.pdf",
+      "sha256": "c1e75dbaccdecc79b9ce7f2cfd07a743a1eee5d0b9a98a0c0f302c8393f73c0a"
+    }
+  },
+  "remaining": [
+    "dated pitching-obligation rule verification; prototype is capacity accounting only",
+    "new-season source and separately validated training",
+    "full prospective recency adoption evaluation if pursued",
+    "D2/D3 multi-inning model not started",
+    "lineup mobile viewport retest after multi-tab viewport targeting issue",
+    "physical touch, offline/storage denial/cancel manually untested"
+  ],
+  "published": false,
+  "modified_files": [
+    {
+      "file": ".gitignore",
+      "sha256": "94cd832ef5b344073344ebe161184e0198546ce4b83e1cf42dee34a4069b74b6"
+    },
+    {
+      "file": "docs/app.js",
+      "sha256": "b14de1b2c8db4611803a6c7f8fa234ed4f43e238e5f07e755142db3ef51d35ab"
+    },
+    {
+      "file": "docs/data/model.json",
+      "sha256": "61ebd027119745b7213a307d468de69124596b9021354d23d8daeec62f3ef5eb"
+    },
+    {
+      "file": "docs/future-work-progress.md",
+      "sha256": "a946930cb39a373e05cb4b880018f391699851a34ac180a7fef99e9539ab596e"
+    },
+    {
+      "file": "docs/index.html",
+      "sha256": "f3db3511c89e23f21e5d99750e015fb3f61272c0cbbda6d04c0166e104ed99f8"
+    },
+    {
+      "file": "docs/lineup.js",
+      "sha256": "975c0c05bda434edd4cd40977c19b8b069ff5178a70a758d8373421c8da3db28"
+    },
+    {
+      "file": "docs/pitcher-groups.js",
+      "sha256": "602b6485f333f98c280b806054d5e4e70bdb4a2b9ae50a6c3c41e2b5115fc11f"
+    },
+    {
+      "file": "docs/style.css",
+      "sha256": "df0587bde0d346d7bf0ba86ffe602e30d8cefc20d5276014a04bf9b540f32f85"
+    },
+    {
+      "file": "scripts/export_default_lineups.py",
+      "sha256": "486015d0b5030d49b45fe2a658f419ec73d7d259aa3192eb8fd3086d9f372a5c"
+    },
+    {
+      "file": "scripts/export_fielding_plans.py",
+      "sha256": "b54fc5e00d918792ee99cf154e95866900de585dc7da7fb751d0ef967ee74bfc"
+    },
+    {
+      "file": "scripts/export_history_context.py",
+      "sha256": "7fe15b00feafdcbf5e7cbb3df24239ef1a3b38428c7eff7d334fe24e4d21839e"
+    },
+    {
+      "file": "scripts/export_history_day.py",
+      "sha256": "b0b71c1de744677df327cb23e5aa4cc6eb0205c4b5e0730cc5317c3f6240932a"
+    },
+    {
+      "file": "scripts/export_identity_auxiliary.py",
+      "sha256": "5d5e1482b6a099a81e256e57ca776bdcc92fc6bb79741ad74ca6f9388b542337"
+    },
+    {
+      "file": "scripts/export_player_numbers.py",
+      "sha256": "348c62d04611c2af38b783ffb907a28e54f5908a99f6c4c4159008a17d5de781"
+    },
+    {
+      "file": "server.py",
+      "sha256": "314a56eb6265f9a3b0a0548593c638178c8d647160534423d96a0e9dd0ae6891"
+    },
+    {
+      "file": "src/batch_contract.py",
+      "sha256": "186ed5c887acbded8bb9698a84b107f12ebb2aba0fc6342792e9e26db8889c44"
+    },
+    {
+      "file": "src/engine.py",
+      "sha256": "7d8c0562d2163b152612f02d5c9852ee9f3e03bba7a395a75000c57c9bd3acb6"
+    },
+    {
+      "file": "src/export_static.py",
+      "sha256": "27706f0e4dc104c244b1594414ff492b2a276df209c6810a9ec621aa55e0486f"
+    },
+    {
+      "file": "src/load.py",
+      "sha256": "d2ef1859c489136582be382e8d5272a0e8f99c49d2afff010364ad59e57626bd"
+    },
+    {
+      "file": "src/mlmodel.py",
+      "sha256": "aff8a3bc0aa57d82c86670b8bd27fefc6c688aa9b2a1af109f7ff891ae8e87c9"
+    },
+    {
+      "file": "src/roster.py",
+      "sha256": "5544218b046fdf90d099c2095224021e197c1366ee44e6fe55e27a0dfd35cb09"
+    },
+    {
+      "file": "src/timing_backtest.py",
+      "sha256": "acd68309319ffab33d17e9eaaa567afac646fb45c47462db1111e2eab19fdf02"
+    }
+  ],
+  "browser_receipt": {
+    "file": "docs/qa/future-foundation-20261026/browser/report.json",
+    "sha256": "b32431e0fccca7bba7b28c0d18187f2cc8ab3ef10217d85a2047b4a817637e8b"
+  },
+  "fixes_after_initial_audit": [
+    {
+      "file": "docs/bullpen-plan-ui.js",
+      "change": "retain same-roster draft on collapse/reopen",
+      "sha256": "818b602c9e936d8b01dd1054b2dca178277ab16f826860df1089147f7c912185"
+    },
+    {
+      "file": "docs/index.html",
+      "change": "capacity UI cache version 20261026-2",
+      "sha256": "8ad8f6520ef574be71fceaede391aa3cbe9b05751e777901795fdc36e7b5928b"
+    }
+  ]
+}

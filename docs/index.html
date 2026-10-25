@@ -6,7 +6,7 @@
 <meta name="description" content="以中華職棒 2024–2025 歷史資料，比較代打與換投人選、安排我方場上名單，查看對決與配球。">
 <title>一球兩面 | 臨場用人決策</title>
 <script src="theme.js?v=20261025-v5-id1"></script>
-<link rel="stylesheet" href="style.css?v=20261025-v5-id1">
+<link rel="stylesheet" href="style.css?v=20261026-capacity1">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -60,7 +60,7 @@
 <details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">套用後排除候選；恢復預設名單會清除此紀錄。</p><div id="lineupUnavailable"></div></details>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>↶ 復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
   <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
-  <p class="mut lineup-footnote">預設為 2025 最後 30 場最常先發的球員；配置存在此瀏覽器。</p>
+  <p class="mut lineup-footnote" id="lineupSeasonNote">預設為 2025 最後 30 場最常先發的球員；配置存在此瀏覽器。</p>
   <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2025 背號…"><div id="lineupPlayerList"></div></dialog>
 </section>
 
@@ -189,6 +189,7 @@
               <p id="penSearchStatus" class="mut hidden" role="status"></p>
               <div class="checklist" id="penList" hidden></div>
               <div class="mini-actions"><button class="link" id="penAll" aria-label="全選牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>全選</button><button class="link" id="penNone" aria-label="清除牛棚投手"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clear"/></svg>清除選取</button></div>
+              <details id="bullpenCapacity" class="capacity-planner"></details>
             </div>
           </div>
 
@@ -200,7 +201,7 @@
     <!-- 歷史回放 -->
     <div id="replayPanel" class="hidden">
       <div class="card">
-        <div class="card-h"><h2>選擇比賽</h2><span class="hint">2025/09/20</span></div>
+        <div class="card-h"><h2>選擇比賽</h2><span class="hint" data-runtime-date>2025/09/20</span></div>
         <div class="card-b">
           <div><label class="f" for="rpTeam">觀察球隊</label><select id="rpTeam"></select></div>
           <label class="toggle server-only"><input type="checkbox" id="onlyPhGames" checked> 只顯示有代打的比賽</label>
@@ -249,10 +250,12 @@
 <script src="engine.js?v=20261025-v5-id1"></script>
 <script src="players.js?v=20261025-v5"></script>
 <script src="pitch-change.js?v=20261025-v5-id1"></script>
-<script src="pitcher-groups.js?v=20261025-v5-id1"></script>
+<script src="pitcher-groups.js?v=20261026-runtime1"></script>
 <script src="motion.js?v=20261023-motion1"></script>
-<script src="lineup.js?v=20261025-v5-id1"></script>
+<script src="lineup.js?v=20261026-runtime1"></script>
 <script src="backtest.js?v=20261025-v5-id1"></script>
-<script src="app.js?v=20261025-v5-id3"></script>
+<script src="bullpen-plan.js?v=20261026-1"></script>
+<script src="bullpen-plan-ui.js?v=20261026-2"></script>
+<script src="app.js?v=20261026-runtime1"></script>
 </body>
 </html>

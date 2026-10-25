@@ -26,18 +26,19 @@ from roster import POS_ZH, can_play, pitcher_names, positions_of  # noqa: E402
 from identity import labels, display_name
 from player_input import resolve_player
 from historical_actors import at_start, decorate
+from runtime_config import settings
 
 PORT = int(os.environ.get("PORT", 8000))
 WEB = os.environ.get('BASEBALL_WEB_ROOT',os.path.join(ROOT,"docs"))
 _lock = threading.Lock()
 _models = {}
-FULL = "2026-01-01"  # 自訂情境用全部資料
+FULL = settings().cutoff  # exclusive data boundary
 
 
 def model_for(date_str):
     with _lock:
         if date_str not in _models:
-            _models[date_str] = fit(date_str, season=2025 if date_str == FULL else None)
+            _models[date_str] = fit(date_str, season=settings().season if date_str == FULL else None)
         return _models[date_str]
 
 
@@ -68,8 +69,9 @@ def rosters():
     if _rosters is not None:
         return _rosters
     pa, _, boxes = load()
-    b25 = boxes[boxes["date"].dt.year == 2025].sort_values("date")
-    bh, ph = _hands()
+    boxes=boxes[boxes.date<pd.Timestamp(FULL)]
+    b25 = boxes[boxes["date"].dt.year == settings().season].sort_values("date")
+    bh, ph = _hands(FULL)
     out = {}
     for team, d in b25.groupby("team"):
         hit = d[d["role"] == "B"]
@@ -83,7 +85,7 @@ def rosters():
             if last_team_b.get(name) != team or name in true_pitchers:
                 continue
             hitters.append(dict(name=name, display_name=display_name(name,FULL), aliases=sorted(set(boxes.loc[boxes.name==name,'raw_name'])|{display_name(name,FULL)}), hand=bh.get(name, 'U'), pa=int(g['PA'].sum()), games=int(g['game'].nunique()),
-                                positions=positions_of(name), catcher=bool(can_play(name, "C"))))
+                                positions=positions_of(name,FULL), catcher=bool(can_play(name, "C",FULL))))
         pitchers = []
         for name, g in pit.groupby("name"):
             if last_team_p.get(name) != team or name not in true_pitchers:
@@ -240,17 +242,17 @@ def api(path, qs, body):
     ensure_available()
     if path == "/api/pitch-change":
         from pitch_change import pitch_change
-        return pitch_change(qs["pitcher"][0], int(qs.get("season", ["2025"])[0]),
+        return pitch_change(qs["pitcher"][0], int(qs.get("season", [str(settings().season)])[0]),
                             qs["cutoff"][0], qs.get("hand", ["ALL"])[0])
     pa, _, boxes = load()
     if path == "/api/meta":
         r = rosters()
-        return dict(teams=sorted(r), cells=CELLS, positions=POS_ZH, players=labels(FULL), **batch_metadata())
+        return dict(teams=sorted(r), cells=CELLS, positions=POS_ZH, players=labels(FULL), runtime=settings().public(), **batch_metadata())
     if path == "/api/team":
         return rosters()[qs["team"][0]]
     if path == "/api/games":
         team = qs["team"][0]
-        g = pa[(pa["season"] == 2025) & ((pa["bat_team"] == team) | (pa["fld_team"] == team))]
+        g = pa[(pa["season"] == settings().season) & (pa.date<pd.Timestamp(FULL)) & ((pa["bat_team"] == team) | (pa["fld_team"] == team))]
         out = []
         for gid, d in g.groupby("game"):
             aw = d[d["half"] == "away"]

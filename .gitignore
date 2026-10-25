@@ -59,3 +59,5 @@ output/ppt-final-audit-20261022/
 # Local identity databases, evaluation rows, model checkpoints and slide workspaces.
 output/identity-integration-20261025/
 !models/gbt_*_v5.pkl
+output/future-foundation-20261026/
+IMPLEMENTATION_CLOSEOUT.md

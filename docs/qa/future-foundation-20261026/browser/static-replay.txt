@@ -1,0 +1,588 @@
+- link "跳到選擇比賽":
+  - /url: "#workspace"
+- banner:
+  - heading "一球兩面 | 臨場用人決策" [level=1]:
+    - generic: 一球兩面 |
+    - generic: 臨場用人決策
+  - generic: CPBL · 對決分析 / 2024–2025
+  - button "切換為淺色主題":
+    - generic: 淺色
+- region "選擇使用方式":
+  - navigation "主要入口":
+    - button "一般使用者"
+    - button "球隊"
+    - button "單日分析" [pressed]:
+      - text: 單日分析
+  - status: 2025/09/20 歷史分析；不受一般使用者、球隊名單或今日設定影響。
+- paragraph: 2025/09/20 · 只用賽前資料
+- generic "單日分析內容":
+  - button "當日總覽"
+  - button "逐打席回放" [pressed]
+- main:
+  - complementary:
+    - text: 場上
+    - heading "選擇比賽" [level=2]
+    - generic: 2025/09/20
+    - generic: 觀察球隊
+    - combobox "觀察球隊":
+      - option "中信兄弟"
+      - option "台鋼雄鷹" [selected]
+      - option "味全龍"
+      - option "富邦悍將"
+      - option "樂天桃猿"
+      - option "統一7-ELEVEn獅"
+    - button "09-20 台鋼雄鷹 vs 富邦悍將 代打 1" [pressed]:
+      - generic: 09-20
+      - generic: 台鋼雄鷹 vs 富邦悍將
+      - generic: 代打 1
+    - heading "選擇打席" [level=2]
+    - generic: 在該打席開始前做決策
+    - checkbox "只顯示 6 局起" [checked]
+    - text: 只顯示 6 局起
+    - checkbox "顯示系統建議" [checked]
+    - text: 顯示系統建議
+    - checkbox "只看有換人或有建議的打席"
+    - text: 只看有換人或有建議的打席
+    - paragraph:
+      - generic: 系統：換投
+      - generic: 系統：代打
+      - text: 系統建議
+      - generic: 換投
+      - generic: 代打
+      - text: 實際調度
+    - generic: 可選取當日任一打席，比較代打或換投。
+    - generic: 6 局上・台鋼雄鷹 攻擊
+    - button "0 出・無人 吳念庭 結果未揭示":
+      - generic: 0 出・無人
+      - generic: 吳念庭
+      - generic: 結果未揭示
+    - button "1 出・無人 魔鷹 結果未揭示":
+      - generic: 1 出・無人
+      - generic: 魔鷹
+      - generic: 結果未揭示
+    - button "1 出・一壘 張肇元 結果未揭示":
+      - generic: 1 出・一壘
+      - generic: 張肇元
+      - generic: 結果未揭示
+    - button "2 出・一壘 顏郁軒 結果未揭示":
+      - generic: 2 出・一壘
+      - generic: 顏郁軒
+      - generic: 結果未揭示
+    - generic: 6 局下・富邦悍將 攻擊
+    - button "0 出・無人 陳真 換投 系統：換投 結果未揭示" [pressed]:
+      - generic: 0 出・無人
+      - generic: 陳真
+      - generic: 換投
+      - generic "系統建議換上 林詩翔（+1.07 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "0 出・二壘 孔念恩 結果未揭示":
+      - generic: 0 出・二壘
+      - generic: 孔念恩
+      - generic: 結果未揭示
+    - button "1 出・三壘 董子恩 結果未揭示":
+      - generic: 1 出・三壘
+      - generic: 董子恩
+      - generic: 結果未揭示
+    - button "2 出・三壘 戴培峰 結果未揭示":
+      - generic: 2 出・三壘
+      - generic: 戴培峰
+      - generic: 結果未揭示
+    - generic: 7 局上・台鋼雄鷹 攻擊
+    - button "0 出・無人 王柏融 結果未揭示":
+      - generic: 0 出・無人
+      - generic: 王柏融
+      - generic: 結果未揭示
+    - button "1 出・無人 紀慶然 系統：換投 系統：代打 結果未揭示":
+      - generic: 1 出・無人
+      - generic: 紀慶然
+      - generic "系統建議換上 曾峻岳（+1.90 百分點）": 系統：換投
+      - generic "系統建議 杜家明 代打（+1.49 百分點）": 系統：代打
+      - generic: 結果未揭示
+    - button "1 出・一壘 郭永維 代打 系統：換投 結果未揭示":
+      - generic: 1 出・一壘
+      - generic: 郭永維
+      - generic: 代打
+      - generic "系統建議換上 曾峻岳（+1.86 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "1 出・一二壘 曾子祐 換投 系統：換投 結果未揭示":
+      - generic: 1 出・一二壘
+      - generic: 曾子祐
+      - generic: 換投
+      - generic "系統建議換上 曾峻岳（+2.12 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "1 出・二三壘 王博玄 結果未揭示":
+      - generic: 1 出・二三壘
+      - generic: 王博玄
+      - generic: 結果未揭示
+    - button "2 出・一三壘 吳念庭 系統：換投 結果未揭示":
+      - generic: 2 出・一三壘
+      - generic: 吳念庭
+      - generic "系統建議換上 曾峻岳（+1.28 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "2 出・滿壘 魔鷹 換投 系統：換投 結果未揭示":
+      - generic: 2 出・滿壘
+      - generic: 魔鷹
+      - generic: 換投
+      - generic "系統建議換上 曾峻岳（+1.39 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - generic: 7 局下・富邦悍將 攻擊
+    - button "0 出・無人 葉子霆 換投 結果未揭示":
+      - generic: 0 出・無人
+      - generic: 葉子霆
+      - generic: 換投
+      - generic: 結果未揭示
+    - button "0 出・一壘 林哲瑄 結果未揭示":
+      - generic: 0 出・一壘
+      - generic: 林哲瑄
+      - generic: 結果未揭示
+    - button "2 出・無人 林岳谷 結果未揭示":
+      - generic: 2 出・無人
+      - generic: 林岳谷
+      - generic: 結果未揭示
+    - generic: 8 局上・台鋼雄鷹 攻擊
+    - button "0 出・無人 張肇元 系統：換投 結果未揭示":
+      - generic: 0 出・無人
+      - generic: 張肇元
+      - generic "系統建議換上 曾峻岳（+1.21 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "1 出・無人 顏郁軒 結果未揭示":
+      - generic: 1 出・無人
+      - generic: 顏郁軒
+      - generic: 結果未揭示
+    - button "1 出・一壘 王柏融 系統：換投 結果未揭示":
+      - generic: 1 出・一壘
+      - generic: 王柏融
+      - generic "系統建議換上 曾峻岳（+1.12 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "1 出・一二壘 紀慶然 換投 系統：換投 結果未揭示":
+      - generic: 1 出・一二壘
+      - generic: 紀慶然
+      - generic: 換投
+      - generic "系統建議換上 曾峻岳（+1.51 百分點）": 系統：換投
+      - generic: 結果未揭示
+    - button "2 出・一二壘 郭永維 結果未揭示":
+      - generic: 2 出・一二壘
+      - generic: 郭永維
+      - generic: 結果未揭示
+    - generic: 8 局下・富邦悍將 攻擊
+    - button "0 出・無人 張育成 換投 結果未揭示":
+      - generic: 0 出・無人
+      - generic: 張育成
+      - generic: 換投
+      - generic: 結果未揭示
+    - button "1 出・無人 王念好 結果未揭示":
+      - generic: 1 出・無人
+      - generic: 王念好
+      - generic: 結果未揭示
+    - button "1 出・無人 蔡佳諺 結果未揭示":
+      - generic: 1 出・無人
+      - generic: 蔡佳諺
+      - generic: 結果未揭示
+    - button "1 出・三壘 孔念恩 結果未揭示":
+      - generic: 1 出・三壘
+      - generic: 孔念恩
+      - generic: 結果未揭示
+    - button "2 出・三壘 董子恩 結果未揭示":
+      - generic: 2 出・三壘
+      - generic: 董子恩
+      - generic: 結果未揭示
+    - button "2 出・一三壘 戴培峰 結果未揭示":
+      - generic: 2 出・一三壘
+      - generic: 戴培峰
+      - generic: 結果未揭示
+    - generic: 9 局上・台鋼雄鷹 攻擊
+    - button "0 出・無人 曾子祐 結果未揭示":
+      - generic: 0 出・無人
+      - generic: 曾子祐
+      - generic: 結果未揭示
+    - button "1 出・無人 王博玄 結果未揭示":
+      - generic: 1 出・無人
+      - generic: 王博玄
+      - generic: 結果未揭示
+    - button "2 出・無人 吳念庭 結果未揭示":
+      - generic: 2 出・無人
+      - generic: 吳念庭
+      - generic: 結果未揭示
+  - region "評估結果":
+    - text: "6"
+    - generic: 局下
+    - generic: 富邦悍將
+    - generic: "2"
+    - generic: ":"
+    - generic: 台鋼雄鷹
+    - generic: "0"
+    - generic: 0 出局・無人
+    - text: 投手 江承諺
+    - generic: 左
+    - generic: 先發・本場已投 89 球
+    - generic: 局勢張力：一般
+    - generic: 1 分 ≈ 8.0 百分點
+    - generic "聯盟平均每分 8.6 百分點"
+    - generic: 進攻方領先 2
+    - generic: 平均每分 8.6 百分點
+    - generic: ↻
+    - heading "可考慮換上 林詩翔" [level=3]
+    - paragraph: 主要原因：對 董子恩 的對決明顯優於場上投手、對這幾棒的預估失分在主力後援中屬前段。對接下來 3 棒，比場上投手多 +1.07 百分點。已計入 江承諺 89 球的疲勞（3 打席 +0.052 分）。
+    - paragraph: 換投前比較：以 江承諺 若續投為基準。
+    - generic "揭示實際調度"
+    - button "代打評估（進攻方）"
+    - button "換投評估（防守方）" [pressed]
+    - paragraph: 歷史名單與守位為推估；換人前請確認上場資格。
+    - navigation "評估結果導航":
+      - link "比較已選球員 ↓":
+        - /url: "#candidateCompare"
+        - text: 比較已選球員 ↓
+      - generic: 最多 4 人
+    - region "球員評估表，可左右捲動":
+      - text: 比較接下來 3 棒 · 未模擬換局與後續調度
+      - text: 打者：陳真、孔念恩、董子恩
+      - generic: 價值分數（相對排名）：
+      - generic: 80+ 極佳
+      - generic: 60–79 佳
+      - generic: 40–59 普通
+      - generic: 20–39 不利
+      - generic: <20 很不利
+      - generic: 現任 江承諺 · 4 分
+      - table "固定三打席比較，未模擬換局與後續調度。":
+        - caption: 固定三打席比較，未模擬換局與後續調度。
+        - rowgroup:
+          - row "投手 價值分數 勝率變化（相對現任） 疲勞／警示":
+            - columnheader "投手"
+            - columnheader "價值分數"
+            - columnheader "勝率變化（相對現任）"
+            - columnheader "疲勞／警示"
+        - rowgroup:
+          - row "場上 查看 江承諺 配球與對決 江承諺：CPBL 官方球員搜尋（另開分頁） 左 本場已投 89 球 已加計疲勞 +0.052 分（用球數） 對這幾棒的預估失分在主力後援中屬後段 4 很不利 基準 —":
+            - cell "場上 查看 江承諺 配球與對決 江承諺：CPBL 官方球員搜尋（另開分頁） 左 本場已投 89 球 已加計疲勞 +0.052 分（用球數） 對這幾棒的預估失分在主力後援中屬後段":
+              - text: 場上
+              - button "查看 江承諺 配球與對決": 基準
+              - link "江承諺：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E6%B1%9F%E6%89%BF%E8%AB%BA
+                - text: 江承諺
+              - generic: 左
+              - generic: 本場已投 89 球
+              - list:
+                - generic: －
+                - generic: 已加計疲勞 +0.052 分（用球數）
+                - generic: －
+                - generic: 對這幾棒的預估失分在主力後援中屬後段
+              - generic "樣本與數據"
+            - cell "4 很不利":
+              - generic "對上後續打者的比較池百分位":
+                - text: "4"
+                - generic: 很不利
+            - cell "基準":
+              - generic: 基準
+            - cell "—"
+          - row "牛棚 比較並查看 林詩翔 對決 林詩翔：CPBL 官方球員搜尋（另開分頁） 右 估計較佳 未登板 對 董子恩 的對決明顯優於場上投手 對這幾棒的預估失分在主力後援中屬前段 88 極佳 +1.07 百分點 —":
+            - cell "牛棚 比較並查看 林詩翔 對決 林詩翔：CPBL 官方球員搜尋（另開分頁） 右 估計較佳 未登板 對 董子恩 的對決明顯優於場上投手 對這幾棒的預估失分在主力後援中屬前段":
+              - text: 牛棚
+              - checkbox "比較並查看 林詩翔 對決" [checked]
+              - link "林詩翔：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E6%9E%97%E8%A9%A9%E7%BF%94
+                - text: 林詩翔
+              - generic: 右
+              - text: 估計較佳
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+                - generic: ＋
+                - generic: 對這幾棒的預估失分在主力後援中屬前段
+              - generic "樣本與數據"
+            - cell "88 極佳":
+              - generic "對上後續打者的比較池百分位":
+                - text: "88"
+                - generic: 極佳
+            - cell "+1.07 百分點":
+              - text: "+1.07"
+              - generic: 百分點
+            - cell "—"
+          - row "牛棚 比較並查看 韋宏亮 對決 韋宏亮：CPBL 官方球員搜尋（另開分頁） 手別未記錄 未登板 對 董子恩 的對決明顯優於場上投手 54 普通 +0.53 百分點 —":
+            - cell "牛棚 比較並查看 韋宏亮 對決 韋宏亮：CPBL 官方球員搜尋（另開分頁） 手別未記錄 未登板 對 董子恩 的對決明顯優於場上投手":
+              - text: 牛棚
+              - checkbox "比較並查看 韋宏亮 對決" [checked]
+              - link "韋宏亮：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E9%9F%8B%E5%AE%8F%E4%BA%AE
+                - text: 韋宏亮
+              - generic: 手別未記錄
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+              - generic "樣本與數據"
+            - cell "54 普通":
+              - generic "對上後續打者的比較池百分位":
+                - text: "54"
+                - generic: 普通
+            - cell "+0.53 百分點":
+              - text: "+0.53"
+              - generic: 百分點
+            - cell "—"
+          - row "牛棚 比較並查看 王躍霖 對決 王躍霖：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 董子恩 的對決明顯優於場上投手 49 普通 +0.48 百分點 —":
+            - cell "牛棚 比較並查看 王躍霖 對決 王躍霖：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 董子恩 的對決明顯優於場上投手":
+              - text: 牛棚
+              - checkbox "比較並查看 王躍霖 對決" [checked]
+              - link "王躍霖：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E7%8E%8B%E8%BA%8D%E9%9C%96
+                - text: 王躍霖
+              - generic: 右
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+              - generic "樣本與數據"
+            - cell "49 普通":
+              - generic "對上後續打者的比較池百分位":
+                - text: "49"
+                - generic: 普通
+            - cell "+0.48 百分點":
+              - text: "+0.48"
+              - generic: 百分點
+            - cell "—"
+          - row "牛棚 比較並查看 許育銘 對決 許育銘：CPBL 官方球員搜尋（另開分頁） 左 未登板 對 董子恩 的對決明顯優於場上投手 48 普通 +0.46 百分點 已連投 2 天":
+            - cell "牛棚 比較並查看 許育銘 對決 許育銘：CPBL 官方球員搜尋（另開分頁） 左 未登板 對 董子恩 的對決明顯優於場上投手":
+              - text: 牛棚
+              - checkbox "比較並查看 許育銘 對決" [checked]
+              - link "許育銘：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E8%A8%B1%E8%82%B2%E9%8A%98
+                - text: 許育銘
+              - generic: 左
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+              - generic "樣本與數據"
+            - cell "48 普通":
+              - generic "對上後續打者的比較池百分位":
+                - text: "48"
+                - generic: 普通
+            - cell "+0.46 百分點":
+              - text: "+0.46"
+              - generic: 百分點
+            - cell "已連投 2 天":
+              - generic: 已連投 2 天
+          - row "牛棚 比較並查看 伍祐城 對決 伍祐城：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 董子恩 的對決明顯優於場上投手 30 不利 +0.31 百分點 —":
+            - cell "牛棚 比較並查看 伍祐城 對決 伍祐城：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 董子恩 的對決明顯優於場上投手":
+              - text: 牛棚
+              - checkbox "比較並查看 伍祐城 對決"
+              - link "伍祐城：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E4%BC%8D%E7%A5%90%E5%9F%8E
+                - text: 伍祐城
+              - generic: 右
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+              - generic "樣本與數據"
+            - cell "30 不利":
+              - generic "對上後續打者的比較池百分位":
+                - text: "30"
+                - generic: 不利
+            - cell "+0.31 百分點":
+              - text: "+0.31"
+              - generic: 百分點
+            - cell "—"
+          - row "牛棚 比較並查看 施子謙 對決 施子謙：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 董子恩 的對決明顯優於場上投手 27 不利 +0.29 百分點 —":
+            - cell "牛棚 比較並查看 施子謙 對決 施子謙：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 董子恩 的對決明顯優於場上投手":
+              - text: 牛棚
+              - checkbox "比較並查看 施子謙 對決"
+              - link "施子謙：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E6%96%BD%E5%AD%90%E8%AC%99
+                - text: 施子謙
+              - generic: 右
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+              - generic "樣本與數據"
+            - cell "27 不利":
+              - generic "對上後續打者的比較池百分位":
+                - text: "27"
+                - generic: 不利
+            - cell "+0.29 百分點":
+              - text: "+0.29"
+              - generic: 百分點
+            - cell "—"
+          - row "牛棚 比較並查看 陳柏清 對決 陳柏清：CPBL 官方球員搜尋（另開分頁） 左 未登板 對 董子恩 的對決明顯優於場上投手 對這幾棒的預估失分在主力後援中屬後段 23 不利 +0.26 百分點 —":
+            - cell "牛棚 比較並查看 陳柏清 對決 陳柏清：CPBL 官方球員搜尋（另開分頁） 左 未登板 對 董子恩 的對決明顯優於場上投手 對這幾棒的預估失分在主力後援中屬後段":
+              - text: 牛棚
+              - checkbox "比較並查看 陳柏清 對決"
+              - link "陳柏清：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E9%99%B3%E6%9F%8F%E6%B8%85
+                - text: 陳柏清
+              - generic: 左
+              - generic: 未登板
+              - list:
+                - generic: ＋
+                - generic: 對 董子恩 的對決明顯優於場上投手
+                - generic: －
+                - generic: 對這幾棒的預估失分在主力後援中屬後段
+              - generic "樣本與數據"
+            - cell "23 不利":
+              - generic "對上後續打者的比較池百分位":
+                - text: "23"
+                - generic: 不利
+            - cell "+0.26 百分點":
+              - text: "+0.26"
+              - generic: 百分點
+            - cell "—"
+          - row "牛棚 比較並查看 楊達翔 對決 楊達翔：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 孔念恩 的對決不如場上投手 對這幾棒的預估失分在主力後援中屬後段 1 很不利 −0.66 百分點 —":
+            - cell "牛棚 比較並查看 楊達翔 對決 楊達翔：CPBL 官方球員搜尋（另開分頁） 右 未登板 對 孔念恩 的對決不如場上投手 對這幾棒的預估失分在主力後援中屬後段":
+              - text: 牛棚
+              - checkbox "比較並查看 楊達翔 對決"
+              - link "楊達翔：CPBL 官方球員搜尋（另開分頁）":
+                - /url: https://stats.cpbl.com.tw/players?playerName=%E6%A5%8A%E9%81%94%E7%BF%94
+                - text: 楊達翔
+              - generic: 右
+              - generic: 未登板
+              - list:
+                - generic: －
+                - generic: 對 孔念恩 的對決不如場上投手
+                - generic: －
+                - generic: 對這幾棒的預估失分在主力後援中屬後段
+              - generic "樣本與數據"
+            - cell "1 很不利":
+              - generic "對上後續打者的比較池百分位":
+                - text: "1"
+                - generic: 很不利
+            - cell "−0.66 百分點":
+              - text: −0.66
+              - generic: 百分點
+            - cell "—"
+    - heading "現任與候選比較" [level=2]
+    - generic: 基準：江承諺
+    - link "返回選人 ↑":
+      - /url: "#evaluationSection"
+    - paragraph: 對上接下來 3 棒。
+    - status: 已選 4/4
+    - button "移除 林詩翔 的比較":
+      - text: 林詩翔
+      - generic: ×
+    - button "移除 韋宏亮 的比較":
+      - text: 韋宏亮
+      - generic: ×
+    - button "移除 王躍霖 的比較":
+      - text: 王躍霖
+      - generic: ×
+    - button "移除 許育銘 的比較":
+      - text: 許育銘
+      - generic: ×
+    - generic: 較不利
+    - generic: 現任 0
+    - generic: 較有利
+    - generic: 林詩翔
+    - text: "+1.07"
+    - generic: 百分點
+    - generic: 韋宏亮
+    - text: "+0.53"
+    - generic: 百分點
+    - generic: 王躍霖
+    - text: "+0.48"
+    - generic: 百分點
+    - generic: 許育銘
+    - text: "+0.46"
+    - generic: 百分點
+    - article:
+      - heading "林詩翔" [level=3]
+      - paragraph:
+        - text: 相對現任 +1.07
+        - generic: 百分點
+      - generic "查看差距拆解"
+    - article:
+      - heading "韋宏亮 資料有限" [level=3]:
+        - text: 韋宏亮
+        - generic: 資料有限
+      - paragraph:
+        - text: 相對現任 +0.53
+        - generic: 百分點
+      - generic "查看差距拆解"
+    - article:
+      - heading "王躍霖 資料有限" [level=3]:
+        - text: 王躍霖
+        - generic: 資料有限
+      - paragraph:
+        - text: 相對現任 +0.48
+        - generic: 百分點
+      - generic "查看差距拆解"
+    - article:
+      - heading "許育銘 模型分歧" [level=3]:
+        - text: 許育銘
+        - generic: 模型分歧
+      - paragraph:
+        - text: 相對現任 +0.46
+        - generic: 百分點
+      - paragraph: 已連投 2 天
+      - generic "查看差距拆解"
+    - heading "江承諺 的球路" [level=2]
+    - group "球路面對的打者":
+      - button "對右打" [pressed]
+      - button "對左打"
+    - paragraph: 有效樣本 1323 球 · 主要球種：速球、低落
+    - article:
+      - heading "速球" [level=3]
+      - strong: 41.8%
+      - paragraph: 中高區 31.9% · 低球 9.9%
+    - article:
+      - heading "低落" [level=3]
+      - strong: 32.6%
+      - paragraph: 中高區 17.2% · 低球 15.4%
+    - article:
+      - heading "曲球" [level=3]
+      - strong: 18.4%
+      - paragraph: 中高區 9.5% · 低球 8.9%
+    - article:
+      - heading "滑卡" [level=3]
+      - strong: 7.1%
+      - paragraph: 中高區 4.1% · 低球 3.0%
+    - paragraph: 四類球種的模型配球估計；高低區為比例分類。
+    - heading "近期配球比較" [level=2]
+    - paragraph: 江承諺
+    - button "查看配球比較"
+    - heading "陳真 vs 江承諺" [level=2]
+    - generic: 右打 vs 左投
+    - generic: 中高區
+    - generic: 低球
+    - generic: 速球
+    - generic "打者在此格的樣本 510 球":
+      - generic: 32%
+      - generic: 揮空 +0.7
+    - generic "打者在此格的樣本 201 球":
+      - generic: 10%
+      - generic: 揮空 −0.4
+    - generic: 滑卡
+    - generic "打者在此格的樣本 139 球":
+      - generic: 4%
+      - generic: 揮空 −0.3
+    - generic "打者在此格的樣本 195 球":
+      - generic: 3%
+      - generic: 揮空 +0.9
+    - generic: 曲球
+    - generic "打者在此格的樣本 70 球":
+      - generic: 10%
+      - generic: 揮空 −0.4
+    - generic "打者在此格的樣本 60 球":
+      - generic: 9%
+      - generic: 揮空 +2.3
+    - generic: 低落
+    - generic "打者在此格的樣本 97 球":
+      - generic: 17%
+      - generic: 揮空 −0.4
+    - generic "打者在此格的樣本 140 球":
+      - generic: 15%
+      - generic: 揮空 −2.9
+    - paragraph: 配球：比例；揮空差值：百分點（相對自身平均）。
+    - paragraph: 能力拆解 · 分／打席
+    - generic: 本身能力
+    - text: −0.009
+    - generic: 球路適性
+    - text: "+0.001"
+    - generic: 左右投打
+    - text: "+0.008"
+    - status: 目前查看 陳真 對 江承諺
+    - paragraph: 分數是相對排名，不是成功機率。
+    - generic "資料與評估依據"
+    - generic "換人規則提醒"
+- contentinfo "網站資訊":
+  - paragraph: 2024–2025 歷史資料 · 非即時賽況
+  - generic "資料與使用說明"

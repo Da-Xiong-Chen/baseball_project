@@ -17,8 +17,9 @@ from batch_contract import metadata as batch_metadata
 from engine import matchup_detail
 from export_static import rnd
 from load import load
+from runtime_config import settings
 
-DATE = "2025-09-20"
+DATE = settings().history_date
 OUT = Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data')) / 'replay' / ('day-'+DATE)
 
 
@@ -39,8 +40,8 @@ def export():
     day = pa[pa["date"].dt.strftime("%Y-%m-%d") == DATE].sort_values(["game", "inning", "half", "seq"])
     games = list(dict.fromkeys(day["game"]))
     teams = set(day["bat_team"]) | set(day["fld_team"])
-    if len(games) != 3 or len(teams) != 6:
-        raise ValueError("固定日必須包含六隊三場")
+    if not games or not teams:
+        raise ValueError('Configured historical date has no games; no other day is substituted')
     OUT.mkdir(parents=True, exist_ok=True)
     model = server.model_for(DATE)
     index = dict(schema_version=1, **batch_metadata(), date=DATE, model_cutoff=DATE, ml_cutoff=month,

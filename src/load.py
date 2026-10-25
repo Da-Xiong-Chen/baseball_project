@@ -9,6 +9,7 @@ from functools import lru_cache
 import numpy as np
 import pandas as pd
 from identity import source_key, game_rosters, participant_key
+from runtime_config import settings
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
@@ -29,8 +30,11 @@ FOUL_CODES = {"F", "FOUL_BUNT"}
 
 
 def _game_files():
-    files = sorted(glob.glob(os.path.join(DATA, "rebas", "2024", "*.json")))
-    files += sorted(glob.glob(os.path.join(DATA, "rebas", "2025", "*.json")))
+    files=[]
+    for year in settings().data_seasons:
+        selected=sorted(glob.glob(os.path.join(DATA,'rebas',str(year),'*.json')))
+        if not selected:raise ValueError(f'Missing configured season: {year}')
+        files.extend(selected)
     return files
 
 

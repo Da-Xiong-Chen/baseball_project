@@ -11,6 +11,8 @@ const GROUPS = ["速球", "滑卡", "曲球", "低落"];
 const GROUP_COLOR = { 速球: "#d9534f", 滑卡: "#e0a03a", 曲球: "#4a7fd0", 低落: "#3f9a6b" };
 let officialPlayers = {};
 let playerNumbers2025 = {};
+let runtime={season:2025,history_date:"2025-09-20"};
+const runtimeAsset=(key,fallback)=>runtime.assets?.[key]||fallback;
 function matchesPlayerSearch(name,team,query) {
   const q=String(query||'').normalize('NFKC').trim();
   if(!q)return true;
@@ -131,7 +133,7 @@ function batchMismatch(){const error=new Error('資料與模型批次不同，�
 async function json(url, {reload=false}={}) {
   if(reload)delete cache[url];
   if (!cache[url]) {
-    const request=fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).then(data=>{const identity=typeof Engine!=='undefined'?activeBatchId():S.batch_id;const bound=/data\/(?:model-evaluation|timing-2025|default-lineups-2025|history-context-2025-09-20|fielding-plans-2025-09-20|player-numbers-2025|cpbl-players)\.json$/.test(url);if(identity&&((data?.batch_id&&data.batch_id!==identity)||(bound&&data?.batch_id!==identity)))throw batchMismatch();return data;}).catch(e => { if(cache[url]===request)delete cache[url]; throw e; });
+    const request=fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).then(data=>{const identity=typeof Engine!=='undefined'?activeBatchId():S.batch_id;const bound=/data\/(?:model-evaluation|timing-\d{4}|default-lineups-\d{4}|history-context-\d{4}-\d{2}-\d{2}|fielding-plans-\d{4}-\d{2}-\d{2}|player-numbers-\d{4}|cpbl-players)\.json$/.test(url);if(identity&&((data?.batch_id&&data.batch_id!==identity)||(bound&&data?.batch_id!==identity)))throw batchMismatch();return data;}).catch(e => { if(cache[url]===request)delete cache[url]; throw e; });
     cache[url]=request;
   }
   return cache[url];
@@ -140,7 +142,7 @@ async function staticApi(path, body) {
   const u = new URL(path, location.href), q = (k) => u.searchParams.get(k);
   const M = Engine.model();
   switch (u.pathname.split("/").pop()) {
-    case 'meta': return { teams:M.teams, players:M.players, training_version:M.training_version, engine_contract:M.engine_contract, batch_id:M.batch_id };
+    case 'meta': return { runtime:M.runtime, teams:M.teams, players:M.players, training_version:M.training_version, engine_contract:M.engine_contract, batch_id:M.batch_id };
     case "team": return M.rosters[q("team")];
     case "games": {
       const t = q("team");
@@ -354,9 +356,6 @@ const reasonText = items => playerText(items.filter(i => i.good !== null).map(i 
 
 /* ---------------- 初始化 ---------------- */
 async function init() {
-  try { const numbers=await json('data/player-numbers-2025.json'); if(numbers.season===2025&&numbers.teams)playerNumbers2025=numbers.teams; } catch { /* Name search remains usable without number aliases. */ }
-  try { officialPlayers = (await json('data/cpbl-players.json')).players || {}; } catch { /* Search remains available when the mapping cannot load. */ }
-  try { const d=await json('data/default-lineups-2025.json'); if(d.season===2025&&typeof LineupBoard!=='undefined')LineupBoard.setDefaults(d.teams); } catch { /* Lineup page starts empty without defaults. */ }
   try {
     const r = await fetchTimed("api/meta");
     if (!r.ok || !(r.headers.get("content-type") || "").includes("json")) throw 0;
@@ -367,6 +366,22 @@ async function init() {
   }
   const meta = await api("api/meta");
   S.teams = meta.teams;S.batch_id=meta.batch_id;
+  if(meta.runtime){
+    if(!Number.isInteger(meta.runtime.season)||!/^\d{4}-\d{2}-\d{2}$/.test(meta.runtime.history_date))throw Error('年度設定無效');
+    runtime=meta.runtime;HISTORY_DATE=runtime.history_date;
+  }
+  if(typeof LineupBoard!=='undefined'&&LineupBoard.setRuntime)LineupBoard.setRuntime(runtime);
+  if(typeof PitcherGroups!=='undefined'&&PitcherGroups.setRuntime)PitcherGroups.setRuntime(runtime);
+  const dayLabel=HISTORY_DATE.replaceAll('-','/');
+  $('#reviewTitle').textContent=`${dayLabel} 單日分析`;
+  $$('.review-heading .eyebrow').forEach(el=>el.textContent=`DAY REVIEW / ${runtime.season}`);
+  $$('[data-runtime-date]').forEach(el=>el.textContent=dayLabel);
+  $('#lineupSeasonNote').textContent=`預設為 ${runtime.season} 最後 30 場最常先發的球員；配置存在此瀏覽器。`;
+  $$('input[placeholder="姓名或 2025 背號…"]').forEach(el=>el.placeholder=`姓名或 ${runtime.season} 背號…`);
+  try { const numbers=await json(runtimeAsset('numbers',`data/player-numbers-${runtime.season}.json`));if(numbers.season===runtime.season&&numbers.teams)playerNumbers2025=numbers.teams; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
+  try { officialPlayers=(await json('data/cpbl-players.json')).players||{}; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
+  try { const d=await json(runtimeAsset('default_lineups',`data/default-lineups-${runtime.season}.json`));if(d.season===runtime.season&&typeof LineupBoard!=='undefined')LineupBoard.setDefaults(d.teams); } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
+
   if(typeof PlayerIdentity!=='undefined')PlayerIdentity.setRegistry(meta.players||{});
   const opts = S.teams.map((t) => `<option>${esc(t)}</option>`).join("");
   $("#myTeam").innerHTML = opts;
@@ -376,6 +391,10 @@ async function init() {
   $("#oppTeam").value = "味全龍";
   $("#duePos").innerHTML = Object.entries(POS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
   bindStatic();
+  if(typeof BullpenPlanUI!=='undefined')BullpenPlanUI.mount({element:$('#bullpenCapacity'),label:playerText,snapshot:()=>{
+    const pitchers=$$('#penList input:checked').map(p=>({id:p.value})).filter(p=>p.id!==$('#myPitcher').value&&!ownLineup()?.unavailable?.includes(p.id));
+    return {pitchers,key:JSON.stringify([runtime.season,$('#myTeam').value,$('#myPitcher').value,pitchers])};
+  }});
   loadPrefSettings();
   renderState();
   await refreshCustom();
@@ -410,7 +429,7 @@ function syncEntryNavigation(){
   functions.setAttribute('aria-label',audienceMode==='team'?'球隊功能':'一般使用者功能');
   const first=functions.querySelector(`[data-page="${audienceMode==='team'?'lineup':'evaluation'}"]`);
   if(first&&functions.firstElementChild!==first)functions.prepend(first);
-  if(review)$('#audienceStatus').textContent='2025/09/20 歷史分析；不受一般使用者、球隊名單或今日設定影響。';
+  if(review)$('#audienceStatus').textContent=`${HISTORY_DATE.replaceAll('-','/')} 歷史分析；不受一般使用者、球隊名單或今日設定影響。`;
 }
 async function selectAudienceEntry(entry){
   if(!['general','team','review'].includes(entry))return;
@@ -441,7 +460,7 @@ function ownLineup() { return currentPage()==='review'?null:audienceMode==='team
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name)&&!c?.unavailable?.includes(name); }
 const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lineupTitle","跳到場上名單"], review:["#reviewTitle","跳到當日總覽"], replay:["#workspace","跳到選擇比賽"]};
 /* 「模型回測」頁分成賽季總覽（#reviewPage）與逐打席回放（沿用評估頁版面的回放模式） */
-const HISTORY_DATE="2025-09-20";
+let HISTORY_DATE="2025-09-20";
 let backtestSub = "season";
 let featureGeneration=0,loadedReplayTeam='';
 async function historyReplayIndex(){
@@ -472,7 +491,7 @@ async function showFeaturePage(page, sub) {
   $('#backtestBar').hidden=page!=='review';
   $('#historyDayContent').hidden=false;
   $('#reviewPage').setAttribute('aria-labelledby','reviewTitle');
-  $('#backtestBar > p').textContent='2025/09/20 三場比賽 · 只用賽前資料';
+  $('#backtestBar > p').textContent=`${HISTORY_DATE.replaceAll('-','/')} · 只用賽前資料`;
   $$('#backtestSeg button').forEach(b=>b.classList.toggle('on',b.dataset.sub===backtestSub));syncPressed();
   $('.matchday-intro').hidden=page!=='evaluation';$('.mobile-jump').hidden=!main;
   $('.mobile-jump a[href="#workspace"]').textContent=replay?'選擇比賽':'情境設定';
@@ -888,7 +907,7 @@ async function run(fn, view) {
 let timingData = null;
 async function loadTiming() {
   if (timingData === null) {
-    try { const d = await json('data/timing-2025.json',{reload:true}); timingData = d.schema_version===2 && d.training_version===5 && d.engine_contract===5 && d.batch_id===activeBatchId() && d.season === 2025 && d.games ? d : false; }
+    try { const d = await json(runtimeAsset('timing',`data/timing-${runtime.season}.json`),{reload:true}); timingData = d.schema_version===2 && d.training_version===5 && d.engine_contract===5 && d.batch_id===activeBatchId() && d.season === runtime.season && d.games ? d : false; }
     catch { timingData = false; }  // 沒有時機資料時，回放照常使用
   }
   return timingData;
@@ -953,7 +972,7 @@ async function loadHistoryContext(){
  if(historySelectionKey&&!player.disabled&&player.value)historySelections.set(historySelectionKey,player.value);
  const key=JSON.stringify([$('#reviewTeam').value,historyRole]);
  const token=++historyContextGeneration;player.disabled=true;
- try{historyContext=await json('data/history-context-2025-09-20.json');if(token!==historyContextGeneration)return;if(historyContext.date!==HISTORY_DATE)throw Error('date');if(typeof PlayerIdentity!=='undefined'&&currentPage()==='review')PlayerIdentity.setContext(historyContext.players||{});
+ try{historyContext=await json(runtimeAsset('history_context',`data/history-context-${HISTORY_DATE}.json`));if(token!==historyContextGeneration)return;if(historyContext.date!==HISTORY_DATE)throw Error('date');if(typeof PlayerIdentity!=='undefined'&&currentPage()==='review')PlayerIdentity.setContext(historyContext.players||{});
  const list=[...(historyContext.teams[$('#reviewTeam').value]?.[historyRole]||[])].sort((a,b)=>b.games14-a.games14||b.last_date.localeCompare(a.last_date));
  player.innerHTML=list.map(p=>`<option value="${esc(p.name)}">${N(p.name)}</option>`).join('');
  const saved=historySelections.get(key);player.value=list.some(p=>p.name===saved)?saved:(list[0]?.name||'');
@@ -985,7 +1004,7 @@ async function renderReview(){
     box.innerHTML=data.map(({g,replay})=>{const marked=timingData?.games?.[g.game]||{},pas=replay.pas,late=pas.filter(p=>p.inning>=6),changes=pitcherChanges(pas),actualPh=late.filter(p=>p.bat_team===name&&p.is_ph).length;
       const actualPen=late.filter(p=>p.fld_team===name&&changes.has(p.pa_id)).length;
       const suggestedPh=late.filter(p=>p.bat_team===name&&marked[p.pa_id]?.[3]>=1).length,suggestedPen=late.filter(p=>p.fld_team===name&&marked[p.pa_id]?.[0]>=1).length;
-      return `<article class="card"><div class="card-h"><h3>${esc(g.away)} vs ${esc(g.home)}</h3></div><div class="card-b"><p>依打席順序比較系統提示與實際代打／換投。</p><div data-decision-timeline="${esc(g.game)}"></div><p class="mut">${pas.length} 打席可回放；6 局起顯示換人提示。</p><details data-history-score="${esc(g.game)}" ${historyDisclosure.scores.has(g.game)?'open':''}><summary>揭示賽後比分</summary><p>${g.away_score}：${g.home_score}（客：主）</p></details><div class="history-actions"><button class="link" type="button" data-history-game="${esc(g.game)}">查看當日打席</button><a href="https://www.cpbl.com.tw/box?gameSno=${Number(g.game.split('-')[1])}&kindCode=A&year=2025" target="_blank" rel="noopener noreferrer">官方紀錄 ↗</a></div></div></article>`;
+      return `<article class="card"><div class="card-h"><h3>${esc(g.away)} vs ${esc(g.home)}</h3></div><div class="card-b"><p>依打席順序比較系統提示與實際代打／換投。</p><div data-decision-timeline="${esc(g.game)}"></div><p class="mut">${pas.length} 打席可回放；6 局起顯示換人提示。</p><details data-history-score="${esc(g.game)}" ${historyDisclosure.scores.has(g.game)?'open':''}><summary>揭示賽後比分</summary><p>${g.away_score}：${g.home_score}（客：主）</p></details><div class="history-actions"><button class="link" type="button" data-history-game="${esc(g.game)}">查看當日打席</button><a href="https://www.cpbl.com.tw/box?gameSno=${Number(g.game.split('-')[1])}&kindCode=A&year=${runtime.season}" target="_blank" rel="noopener noreferrer">官方紀錄 ↗</a></div></div></article>`;
     }).join('')||'<p>此隊當日無收錄比賽。</p>';
     if(!timingData)box.insertAdjacentHTML('beforeend','<p class="mut" role="status">系統建議標記暫時無法載入；實際紀錄仍可查看。</p><button type="button" id="timingRetry">重新載入建議</button>');
     if($('#timingRetry'))$('#timingRetry').onclick=()=>{timingData=null;renderReview();};
@@ -1004,14 +1023,14 @@ const historyPitchSelections=new Map();
 function mountHistoricalPitch(){
   const pitcher=$('#historyPitcher').value;if(!pitcher)return;
   if(historyPitchTeam)historyPitchSelections.set(historyPitchTeam,pitcher);
-  PitchChange.mount({element:$('#historyPitchChange'),pitcher,cutoff:HISTORY_DATE,season:2025,hand:'ALL',fetcher:STATIC?PitchChange.staticResult:o=>api(`api/pitch-change?${new URLSearchParams(o)}`)});
+  PitchChange.mount({element:$('#historyPitchChange'),pitcher,cutoff:HISTORY_DATE,season:runtime.season,hand:'ALL',fetcher:STATIC?PitchChange.staticResult:o=>api(`api/pitch-change?${new URLSearchParams(o)}`)});
 }
 async function loadHistoricalPitchers(){
   const token=++historyPitchGeneration,name=$('#reviewTeam').value;
   if(historyPitchTeam&&!$('#historyPitcher').disabled&&$('#historyPitcher').value)historyPitchSelections.set(historyPitchTeam,$('#historyPitcher').value);
   $('#historyPitcher').disabled=true;$('#historyPitchChange').innerHTML='<p role="status">載入投手…</p>';
   try{
-    const [r,context]=await Promise.all([team(name),json('data/history-context-2025-09-20.json')]);
+    const [r,context]=await Promise.all([team(name),json(runtimeAsset('history_context',`data/history-context-${HISTORY_DATE}.json`))]);
     if(token!==historyPitchGeneration)return;
     if(context.date!==HISTORY_DATE)throw new Error('歷史日期不一致');
     const prior=new Set((context.teams[name]?.pitchers||[]).map(p=>p.name));
@@ -1084,7 +1103,7 @@ async function loadGame(gid) {
   renderGames();
   $("#paList").innerHTML = `<div class="empty" style="padding:24px"><span class="loading"></span></div>`;
   try {
-    const [pas,index,datedContext] = await Promise.all([api(`api/game?game=${gid}`),STATIC?historyReplayIndex():Promise.resolve(null),json('data/history-context-2025-09-20.json')]);
+    const [pas,index,datedContext] = await Promise.all([api(`api/game?game=${gid}`),STATIC?historyReplayIndex():Promise.resolve(null),json(runtimeAsset('history_context',`data/history-context-${HISTORY_DATE}.json`))]);
     if (token !== gameGeneration) return;
     if(datedContext.date!==HISTORY_DATE)throw Error('Historical player date mismatch');
     S.pas = pas;
@@ -1327,7 +1346,7 @@ async function mountFieldingPlans(R,pa,tab=S.tab||'ph'){
   if(box&&tab!=='ph'){box.innerHTML='';return;}
   if(!box||R.view!=='replay'||!pa||R.candidates.some(c=>c['角色']==='代打'&&['ok','warn'].includes(c['守備'])))return;
   try{
-    const data=await json('data/fielding-plans-2025-09-20.json');
+    const data=await json(runtimeAsset('fielding_plans',`data/fielding-plans-${HISTORY_DATE}.json`));
     if(box!==$('#fieldingPlans')||S.last!==R||S.pa!==pa||(S.tab||'ph')!==tab)return;
     if(data.schema_version!==1||data.date!==HISTORY_DATE||data.status!=='conditional_only')throw Error('schema');
     const plans=Object.values(data.plans[pa]||{}).filter(p=>p.requires_confirmation===true&&R.candidates.some(c=>c['角色']==='代打'&&c['球員']===p.incoming));
@@ -1557,7 +1576,7 @@ let detailGeneration = 0;
 function mountPitchChange(pitcher, hand = "ALL") {
   if(S.last?.view!=='replay'){if($("#pitchChange"))$("#pitchChange").innerHTML='';return;}
   const cutoff = String(S.last.view === 'replay' ? S.last.situation.date : S.last.model_cutoff).slice(0, 10);
-  const season = S.last.view === "replay" ? Number(cutoff.slice(0, 4)) : 2025;
+  const season = S.last.view === "replay" ? Number(cutoff.slice(0, 4)) : runtime.season;
   PitchChange.mount({element: $("#pitchChange"), pitcher, cutoff, season, hand,
     fetcher: STATIC ? PitchChange.staticResult : (o) => api(`api/pitch-change?${new URLSearchParams(o)}`)});
 }
