@@ -216,10 +216,10 @@ def pitch_change(pitcher, season, cutoff, hand='ALL'):
     from player_input import resolve_player
     from batch_contract import metadata
     records = observations()
-    if pitcher not in records:
-        pitcher = resolve_player(pitcher, cutoff=cutoff, role='P')
     if not records:
         raise ValueError('尚未下載 Rebas 原始資料，請執行 python download_data.py')
+    if pitcher not in records:
+        pitcher = resolve_player(pitcher, cutoff=cutoff, role='P')
     if pitcher not in records:
         raise ValueError('找不到此投手的資料')
     return dict(compare(records[pitcher], pitcher, season, cutoff, hand), **metadata())
