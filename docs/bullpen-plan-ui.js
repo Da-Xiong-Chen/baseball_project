@@ -35,6 +35,7 @@
     q('[data-output]').innerHTML=`<p><strong>${r.complete?'容量足夠':`尚缺 ${r.uncovered} 打席容量`}</strong> · 已涵蓋 ${r.covered}／${r.target} 打席</p><ol>${r.allocations.filter(p=>p.used).map(p=>`<li>${html(label(p.id))}：安排 ${p.assigned} 打席，剩餘 ${p.remaining}</li>`).join('')}</ol><p>保留：${r.reserve.map(p=>`${html(label(p.id))}（${p.remaining===null?'容量待確認':p.remaining+' 打席'}）`).join('、')||'無'}</p><small class="mut">${html(r.assumption)}</small>`;
    }catch(e){q('[data-output]').textContent=e.message;}
   };
+  return {contextChanged(){if(source&&source.key!==snapshot().key){clear();q('[data-output]').textContent='牛棚名單已變更，請重新帶入已選牛棚。';q('[data-calculate]').disabled=true;}}};
  }
  root.BullpenPlanUI={mount};
 })(typeof window!=='undefined'?window:globalThis);

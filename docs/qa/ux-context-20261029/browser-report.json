@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-29",
+  "url": "http://127.0.0.1:8026/",
+  "mode": "pure static",
+  "capacityWidths": [
+    {
+      "capacity": "容量足夠 · 已涵蓋 9／9 打席\n\n陳冠宇：安排 9 打席，剩餘 0\n\n保留：朱承洋（容量待確認）、莊昕諺（容量待確認）、陳柏豪（容量待確認）、蘇俊璋（容量待確認）、賴胤豪（容量待確認）、王志煊（容量待確認）、呂詠臻（容量待確認）、邱駿威（容量待確認）、曾仁和（容量待確認）、舒治浩（容量待確認）、劉昱言（容量待確認）、黃偉晟（容量待確認）、盧冠宇（容量待確認）、黃子鵬（容量待確認）、魔神龍（容量待確認）、波賽樂（容量待確認）、霸鉧德（容量待確認）、陳克羿（容量待確認）、林子崴〔樂天〕（容量待確認）、凱樂（容量待確認）、劉家翔（容量待確認）、曾家輝（容量待確認）\n\n容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。",
+      "client": 305,
+      "overflow": 0,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "capacity": "容量足夠 · 已涵蓋 9／9 打席\n\n陳冠宇：安排 9 打席，剩餘 0\n\n保留：朱承洋（容量待確認）、莊昕諺（容量待確認）、陳柏豪（容量待確認）、蘇俊璋（容量待確認）、賴胤豪（容量待確認）、王志煊（容量待確認）、呂詠臻（容量待確認）、邱駿威（容量待確認）、曾仁和（容量待確認）、舒治浩（容量待確認）、劉昱言（容量待確認）、黃偉晟（容量待確認）、盧冠宇（容量待確認）、黃子鵬（容量待確認）、魔神龍（容量待確認）、波賽樂（容量待確認）、霸鉧德（容量待確認）、陳克羿（容量待確認）、林子崴〔樂天〕（容量待確認）、凱樂（容量待確認）、劉家翔（容量待確認）、曾家輝（容量待確認）\n\n容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。",
+      "client": 375,
+      "overflow": 0,
+      "scroll": 375,
+      "width": 390
+    },
+    {
+      "capacity": "容量足夠 · 已涵蓋 9／9 打席\n\n陳冠宇：安排 9 打席，剩餘 0\n\n保留：朱承洋（容量待確認）、莊昕諺（容量待確認）、陳柏豪（容量待確認）、蘇俊璋（容量待確認）、賴胤豪（容量待確認）、王志煊（容量待確認）、呂詠臻（容量待確認）、邱駿威（容量待確認）、曾仁和（容量待確認）、舒治浩（容量待確認）、劉昱言（容量待確認）、黃偉晟（容量待確認）、盧冠宇（容量待確認）、黃子鵬（容量待確認）、魔神龍（容量待確認）、波賽樂（容量待確認）、霸鉧德（容量待確認）、陳克羿（容量待確認）、林子崴〔樂天〕（容量待確認）、凱樂（容量待確認）、劉家翔（容量待確認）、曾家輝（容量待確認）\n\n容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。",
+      "client": 1009,
+      "overflow": 0,
+      "scroll": 1009,
+      "width": 1024
+    },
+    {
+      "capacity": "容量足夠 · 已涵蓋 9／9 打席\n\n陳冠宇：安排 9 打席，剩餘 0\n\n保留：朱承洋（容量待確認）、莊昕諺（容量待確認）、陳柏豪（容量待確認）、蘇俊璋（容量待確認）、賴胤豪（容量待確認）、王志煊（容量待確認）、呂詠臻（容量待確認）、邱駿威（容量待確認）、曾仁和（容量待確認）、舒治浩（容量待確認）、劉昱言（容量待確認）、黃偉晟（容量待確認）、盧冠宇（容量待確認）、黃子鵬（容量待確認）、魔神龍（容量待確認）、波賽樂（容量待確認）、霸鉧德（容量待確認）、陳克羿（容量待確認）、林子崴〔樂天〕（容量待確認）、凱樂（容量待確認）、劉家翔（容量待確認）、曾家輝（容量待確認）\n\n容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。",
+      "client": 1425,
+      "overflow": 0,
+      "scroll": 1425,
+      "width": 1440
+    }
+  ],
+  "lineupWidths": [
+    {
+      "client": 305,
+      "focus": "第 1 棒選擇球員",
+      "overflow": 0,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "client": 375,
+      "focus": "第 1 棒選擇球員",
+      "overflow": 0,
+      "scroll": 375,
+      "width": 390
+    },
+    {
+      "client": 1009,
+      "focus": "第 1 棒選擇球員",
+      "overflow": 0,
+      "scroll": 1009,
+      "width": 1024
+    },
+    {
+      "client": 1425,
+      "focus": "第 1 棒選擇球員",
+      "overflow": 0,
+      "scroll": 1425,
+      "width": 1440
+    }
+  ],
+  "checks": {
+    "comparisonPreservedDuringCapacityEditing": true,
+    "targetChangeRequestsRecheck": true,
+    "capacitySuccessAndShortage": true,
+    "duplicateOrderFocus": true,
+    "changedPitcherInvalidatesCapacity": true,
+    "emptyBullpenDisabled": true,
+    "lineupDialogReturnsFocus": true,
+    "unavailableCheckboxFocusAndSpaceToggle": true,
+    "dayOverviewAndReplayLoaded": true,
+    "consoleErrors": 0
+  },
+  "limitations": [
+    "physical touch device not tested",
+    "offline/storage denial/cancel manual simulation not performed",
+    "pending-request isolation covered by automated tests, not a slowed real browser request"
+  ],
+  "modelOrPptModified": false
+}

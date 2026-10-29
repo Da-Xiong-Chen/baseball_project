@@ -45,7 +45,7 @@ const historyDisclosure = {
   reset(){this.pa=null;this.action=false;this.outcome=false;this.scores.clear();},
   set(part,open){this[part]=open;if(part==='action'&&!open)this.outcome=false;if(part==='outcome'&&open)this.action=true;}
 };
-let resultInputKey = null, loadedTeams = {my:'',opp:''}, groupControl = null;
+let resultInputKey = null, loadedTeams = {my:'',opp:''}, groupControl = null, capacityControl = null;
 const benchOpen = new Map(), benchSearchOpen = new Map(), fieldErrors = new Map();
 const comparisonSelections = new WeakMap();
 const comparisonNotices = new WeakMap();
@@ -93,8 +93,9 @@ function clearResult() {
   $("#evalBtn").innerHTML = uiIcon("compare") + "評估";
 }
 function invalidateCustom(event) {
+  capacityControl?.contextChanged();
   clearValidErrors();
-  if (S.mode !== 'custom' || ['benchFilter','penFilter'].includes(event?.target?.id) || event?.target?.closest?.('#pitcherGroups')) return;
+  if (S.mode !== 'custom' || ['benchFilter','penFilter'].includes(event?.target?.id) || event?.target?.closest?.('#pitcherGroups') || event?.target?.closest?.('#bullpenCapacity')) return;
   if(resultInputKey!==null&&evaluationKey()===resultInputKey)return;
   clearResult();
 }
@@ -391,7 +392,7 @@ async function init() {
   $("#oppTeam").value = "味全龍";
   $("#duePos").innerHTML = Object.entries(POS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
   bindStatic();
-  if(typeof BullpenPlanUI!=='undefined')BullpenPlanUI.mount({element:$('#bullpenCapacity'),label:playerText,snapshot:()=>{
+  if(typeof BullpenPlanUI!=='undefined')capacityControl=BullpenPlanUI.mount({element:$('#bullpenCapacity'),label:playerText,snapshot:()=>{
     const pitchers=$$('#penList input:checked').map(p=>({id:p.value})).filter(p=>p.id!==$('#myPitcher').value&&!ownLineup()?.unavailable?.includes(p.id));
     return {pitchers,key:JSON.stringify([runtime.season,$('#myTeam').value,$('#myPitcher').value,pitchers])};
   }});

@@ -19,9 +19,9 @@ function worksheet(pitchers=[{id:'A'},{id:'B'}]){
  const rows=['A','B'].map(id=>{const fields={'[data-status]':field('available'),'[data-capacity]':field(''),'[data-order]':field('')};return {id,fields,querySelector:s=>fields[s]}});
  const el={open:true,innerHTML:'',querySelector:s=>s==='[data-order]'?rows[0].fields[s]:q(s),querySelectorAll:s=>s==='[data-arm]'?rows:s==='[aria-invalid]'?[...nodes.values(),...rows.flatMap(r=>Object.values(r.fields))].filter(f=>f.attrs['aria-invalid']):[],addEventListener:(n,f)=>events[n]=f};
  const context={window:{},BullpenPlan:require('../docs/bullpen-plan.js')};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../docs/bullpen-plan-ui.js'),'utf8'),context);
- context.window.BullpenPlanUI.mount({element:el,label:s=>'投手'+s,snapshot:()=>({key,pitchers})});
+ const control=context.window.BullpenPlanUI.mount({element:el,label:s=>'投手'+s,snapshot:()=>({key,pitchers})});
  events.toggle();q('[data-target]').value='7';
- return {q,rows,events,el,focus:()=>focused,setKey:v=>key=v,run:()=>q('[data-calculate]').onclick()};
+ return {q,rows,events,el,control,focus:()=>focused,setKey:v=>key=v,run:()=>q('[data-calculate]').onclick()};
 }
 test('capacity errors identify and focus the exact target, capacity, status and order field',()=>{
  const w=worksheet(),a=w.rows[0].fields,b=w.rows[1].fields;
@@ -41,4 +41,11 @@ test('a changed roster cannot reuse the previous capacity result',()=>{
 
 test('an empty bullpen disables calculation and explains how to continue',()=>{
  const w=worksheet([]);assert.equal(w.q('[data-calculate]').disabled,true);assert.match(w.q('[data-rows]').innerHTML,/先選取牛棚/);
+});
+
+test('a changed bullpen immediately invalidates worksheet results until reimport',()=>{
+ const w=worksheet();w.rows.forEach((r,i)=>{r.fields['[data-order]'].value=String(i+1);r.fields['[data-capacity]'].value='5'});w.run();assert.match(w.q('[data-output]').innerHTML,/容量足夠/);
+ w.control.contextChanged();assert.match(w.q('[data-output]').innerHTML,/容量足夠/);
+ w.setKey('B');w.control.contextChanged();assert.match(w.q('[data-output]').textContent,/名單已變更/);assert.equal(w.q('[data-calculate]').disabled,true);
+ w.q('[data-refresh]').onclick();assert.equal(w.q('[data-calculate]').disabled,false);assert.equal(w.q('[data-output]').textContent,'');
 });
