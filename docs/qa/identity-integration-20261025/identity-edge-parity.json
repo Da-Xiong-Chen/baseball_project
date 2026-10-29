@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "cases": 14,
+  "max_numeric_error": 7.993605777301127e-15,
+  "missing_hand_warnings_checked": 70,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
+}

@@ -1,0 +1,13 @@
+{
+  "pa_count": 226,
+  "evaluated_views": 452,
+  "max_numeric_error": 4.884981308350689e-15,
+  "timing_views_checked": 184,
+  "timing_mismatches": [],
+  "model_cutoff": "2025-09-20",
+  "ml_cutoff": "2025-09-01",
+  "passed": true,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
+}

@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "training_version": 4,
-  "engine_contract": 4,
-  "batch_id": "3a4f0420d9f741145ea8ec48a9da3e7ec7675b05e13ea4950b65c1bb72e41d5f",
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924",
   "date": "2025-09-20",
   "status": "conditional_only",
   "source": "2023–2024 ldkrsi fielding history; cutoff-safe catcher pitch history",
-  "replay_index_sha256": "0b9ac4990e1c6b1de67a714108f0f6d30c48b65d541d9d56959c868c8e4ed01a",
+  "replay_index_sha256": "50d79f33107b1ae2eb04b6dd9d4f406313754180cd988931d26bffa8f7c12782",
   "counts": {
     "unknown_pas": 36,
     "unknown_late_pas": 17,
@@ -16,97 +16,97 @@
   },
   "plans": {
     "2025-341-h030": {
-      "林澤彬": {
-        "incoming": "林澤彬",
+      "rebas:CPBL:SioVD": {
+        "incoming": "rebas:CPBL:SioVD",
         "incoming_position": "SS",
         "moves": [
           {
-            "player": "張育成",
+            "player": "rebas:CPBL:OqNVW",
             "from_position": "SS",
             "to_position": "1B"
           }
         ],
-        "retained_dh": "林岳谷",
+        "retained_dh": "rebas:CPBL:psHWp",
         "cutoff": "2025-09-20",
         "requires_confirmation": true
       }
     },
     "2025-341-h033": {
-      "林澤彬": {
-        "incoming": "林澤彬",
+      "rebas:CPBL:SioVD": {
+        "incoming": "rebas:CPBL:SioVD",
         "incoming_position": "2B",
         "moves": [
           {
-            "player": "葉子霆",
+            "player": "rebas:CPBL:N6NUc",
             "from_position": "2B",
             "to_position": "3B"
           }
         ],
-        "retained_dh": "林岳谷",
+        "retained_dh": "rebas:CPBL:psHWp",
         "cutoff": "2025-09-20",
         "requires_confirmation": true
       }
     },
     "2025-342-h001": {
-      "林書逸": {
-        "incoming": "林書逸",
+      "rebas:CPBL:8KmAn": {
+        "incoming": "rebas:CPBL:8KmAn",
         "incoming_position": "RF",
         "moves": [
           {
-            "player": "宋晟睿",
+            "player": "rebas:CPBL:eChCD",
             "from_position": "RF",
             "to_position": "CF"
           }
         ],
-        "retained_dh": "黃韋盛",
+        "retained_dh": "rebas:CPBL:42OO1",
         "cutoff": "2025-09-20",
         "requires_confirmation": true
       }
     },
     "2025-342-h010": {
-      "林書逸": {
-        "incoming": "林書逸",
+      "rebas:CPBL:8KmAn": {
+        "incoming": "rebas:CPBL:8KmAn",
         "incoming_position": "RF",
         "moves": [
           {
-            "player": "宋晟睿",
+            "player": "rebas:CPBL:eChCD",
             "from_position": "RF",
             "to_position": "CF"
           }
         ],
-        "retained_dh": "黃韋盛",
+        "retained_dh": "rebas:CPBL:42OO1",
         "cutoff": "2025-09-20",
         "requires_confirmation": true
       }
     },
     "2025-342-h019": {
-      "林書逸": {
-        "incoming": "林書逸",
+      "rebas:CPBL:8KmAn": {
+        "incoming": "rebas:CPBL:8KmAn",
         "incoming_position": "RF",
         "moves": [
           {
-            "player": "宋晟睿",
+            "player": "rebas:CPBL:eChCD",
             "from_position": "RF",
             "to_position": "CF"
           }
         ],
-        "retained_dh": "黃韋盛",
+        "retained_dh": "rebas:CPBL:42OO1",
         "cutoff": "2025-09-20",
         "requires_confirmation": true
       }
     },
     "2025-342-h028": {
-      "林書逸": {
-        "incoming": "林書逸",
+      "rebas:CPBL:8KmAn": {
+        "incoming": "rebas:CPBL:8KmAn",
         "incoming_position": "RF",
         "moves": [
           {
-            "player": "宋晟睿",
+            "player": "rebas:CPBL:eChCD",
             "from_position": "RF",
             "to_position": "CF"
           }
         ],
-        "retained_dh": "黃韋盛",
+        "retained_dh": "rebas:CPBL:42OO1",
         "cutoff": "2025-09-20",
         "requires_confirmation": true
       }

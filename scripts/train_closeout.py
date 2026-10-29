@@ -6,6 +6,9 @@ sys.path.insert(0,str(ROOT/'src'))
 
 
 def main():
+    from mlmodel import TRAINING_VERSION
+    if TRAINING_VERSION != 4:
+        raise RuntimeError('Historical v4 workflow. Use scripts/train_identity_batch.py for v5; do not relabel new weights as v4.')
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--models',type=Path,required=True)
     ap.add_argument('--output',type=Path,required=True)

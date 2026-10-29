@@ -2,10 +2,13 @@
 import glob
 import json
 import os
+from bisect import bisect_right
+from collections import defaultdict
 from functools import lru_cache
 
 import numpy as np
 import pandas as pd
+from identity import source_key, game_rosters, participant_key
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
@@ -37,8 +40,8 @@ def load():
     pa_rows, pitch_rows, box_rows = [], [], []
     for f in _game_files():
         with open(f, encoding="utf8") as source:
-            from identity import normalize_game
-            g = normalize_game(json.load(source))
+            g = json.load(source)
+        roster = game_rosters(g)
         season = int(g["date"][:4])
         gid = f"{season}-{g['seq']:03d}"
         date = pd.Timestamp(g["date"][:10])
@@ -46,10 +49,14 @@ def load():
         for side in ("away", "home"):
             other = "home" if side == "away" else "away"
             for b in g[side + "BatterBox"]:
-                box_rows.append(dict(game=gid, date=date, team=teams[side], name=b["playerName"],
+                box_rows.append(dict(game=gid, date=date, team=teams[side], name=source_key(b["playerId"]),
+                                     raw_name=b['playerName'], source_player_id=b['playerId'],
+                                     number=b.get('playerNumber'), source_file=f,
                                      order=b["order"], role="B", PA=b["PA"]))
             for i, p in enumerate(g[side + "PitcherBox"]):
-                box_rows.append(dict(game=gid, date=date, team=teams[side], name=p["playerName"],
+                box_rows.append(dict(game=gid, date=date, team=teams[side], name=source_key(p["playerId"]),
+                                     raw_name=p['playerName'], source_player_id=p['playerId'],
+                                     number=p.get('playerNumber'), source_file=f,
                                      order=i + 1, role="P", NP=p["NP"], BF=p["BF"]))
             for k, p in enumerate(g[side + "PAList"]):
                 bat_start = p["awayScores"] if side == "away" else p["homeScores"]
@@ -62,8 +69,11 @@ def load():
                     inning=p["inning"], outs=p["outs"], bases=p["bases"],
                     bat_score=bat_start, fld_score=fld_start, runs=bat_end - bat_start,
                     end_outs=p["endOuts"], end_bases=p["endBases"],
-                    batter=p["batterName"], bhand=p["batterHand"],
-                    pitcher=p["pitcherName"], phand=p["pitcherHand"], catcher=p["catcherName"],
+                    batter=participant_key(roster, side, 'batter', p['batterName']), bhand=p['batterHand'],
+                    pitcher=participant_key(roster, other, 'pitcher', p['pitcherName']), phand=p['pitcherHand'],
+                    catcher=participant_key(roster, other, 'catcher', p['catcherName']),
+                    batter_raw_name=p['batterName'], pitcher_raw_name=p['pitcherName'], catcher_raw_name=p['catcherName'],
+                    source_file=f,
                     is_ph=p["isPH"], pa_order=p["paOrder"],
                     result=p.get("result", p.get("results")),
                     hardness=p.get("hardness") or None, trajectory=p.get("trajectory") or None,
@@ -73,15 +83,25 @@ def load():
                 ))
                 # 依 event 重建球數
                 balls = strikes = 0
-                pitches = [e for e in p["events"] if e["type"] == "PITCH"]
-                for j, e in enumerate(pitches):
+                pitches = [(i,e) for i,e in enumerate(p["events"]) if e["type"] == "PITCH"]
+                parent = pa_rows[-1]
+                for j, (event_index, e) in enumerate(pitches):
                     code = e["pitchCode"]
-                    y = float(e["coordY"]) if e["coordY"] not in (None, "") else np.nan
+                    bn, pn, cn = (e[field] if field in e else p[field] for field in ('batterName','pitcherName','catcherName'))
+                    batter = participant_key(roster, side, 'batter', bn)
+                    pitcher = participant_key(roster, other, 'pitcher', pn)
+                    catcher = participant_key(roster, other, 'catcher', cn)
+                    velocity = _numeric(e.get('velocity'))
                     pitch_rows.append(dict(
                         pa_id=pa_id, j=j, last=(j == len(pitches) - 1), balls=min(balls, 3), strikes=min(strikes, 2),
+                        event_index=event_index, batter=batter, pitcher=pitcher, catcher=catcher,
+                        batter_raw_name=bn, pitcher_raw_name=pn, catcher_raw_name=cn,
+                        pa_batter=parent['batter'], pa_pitcher=parent['pitcher'], pa_catcher=parent['catcher'],
+                        bhand=p['batterHand'] if batter == parent['batter'] and batter is not None else None,
+                        phand=p['pitcherHand'] if pitcher == parent['pitcher'] and pitcher is not None else None,
+                        velocity_raw=e.get('velocity'), velo=velocity if 80 <= velocity <= 170 else np.nan,
                         ptype=e["pitchType"] or None, code=code,
-                        y=y, x=float(e["coordX"]) if e["coordX"] not in (None, "") else np.nan,
-                        catcher=e["catcherName"],
+                        y=_numeric(e.get('coordY')), x=_numeric(e.get('coordX')),
                     ))
                     if code == "B":
                         balls += 1
@@ -97,8 +117,9 @@ def load():
     half_key = ["game", "half", "inning"]
     pa["runs_to_end"] = pa.groupby(half_key)["runs"].transform(lambda s: s[::-1].cumsum()[::-1])
     pitches = pitches.merge(pa[["pa_id", "bases", "outs", "runs_to_end", "runs", "end_outs", "end_bases",
-                                "batter", "pitcher", "bhand", "phand", "date", "season", "game",
-                                "hardness"]], on="pa_id")
+                                "date", "season", "game", "seq", "half", "inning", "fld_team", "bat_team",
+                                "hardness"]], on="pa_id", validate='many_to_one')
+    _resolve_pitch_hands(pa, pitches)
     # 逐球結果分類：揮空、強勁擊球（進場且 hardness=H）、其他
     pitches["whiff"] = (pitches["code"] == "SW").astype(float)
     pitches["hard"] = ((pitches["code"] == "H") & pitches["last"] & (pitches["hardness"] == "H")).astype(float)
@@ -107,9 +128,61 @@ def load():
     pitches["cell"] = pitches["group"] + np.where(pitches["low"], "低", "高中")
     pitches.loc[pitches["group"].isna() | pitches["y"].isna(), "cell"] = None
     pitches["platoon"] = np.where(pitches["bhand"] == pitches["phand"], "同側", "異側")
+    pitches.loc[~pitches.bhand.isin(['L','R']) | ~pitches.phand.isin(['L','R']), 'platoon'] = None
 
     pitches["rv"] = _pitch_run_values(pitches)
     return pa, pitches, boxes
+
+
+def _numeric(value):
+    if isinstance(value, bool):
+        return np.nan
+    try:
+        value = float(value)
+        return value if np.isfinite(value) else np.nan
+    except (ValueError, TypeError, OverflowError):
+        return np.nan
+
+
+def _resolve_pitch_hands(pa, pitches):
+    """Use same-actor PA evidence or dated own-player evidence, never another actor's hand."""
+    histories = {}
+    for actor, hand in (('pitcher','phand'), ('batter','bhand')):
+        known = pa[pa[hand].isin(['L','R','S']) & pa[actor].notna()].sort_values('date', kind='stable')
+        histories[actor] = {key: (list(rows.date), list(rows[hand])) for key, rows in known.groupby(actor)}
+    cache = {}
+
+    def lookup(actor, key, day, opposite=None):
+        token = (actor,key,day,opposite)
+        if token in cache:
+            return cache[token]
+        days, hands = histories[actor].get(key, ([],[]))
+        stop = bisect_right(days, day)
+        if not stop:
+            result = (None, None)
+        else:
+            observed = hands[:stop]
+            switch = 'S' in observed or (set(observed) >= {'L','R'} and
+                     min(observed.count('L'),observed.count('R')) / len(observed) > .1)
+            if actor == 'batter' and switch:
+                result = (('L' if opposite == 'R' else 'R') if opposite in ('L','R') else None, days[stop-1])
+            else:
+                result = (observed[-1] if observed[-1] in ('L','R') else None, days[stop-1])
+        cache[token] = result
+        return result
+
+    for actor, column in (('pitcher','phand'), ('batter','bhand')):
+        source_col, date_col = column + '_source', column + '_evidence_date'
+        pitches[source_col] = np.where(pitches[column].isin(['L','R']), 'same_actor_pa', 'unresolved')
+        pitches[date_col] = pitches['date'].where(pitches[column].isin(['L','R']))
+        missing = pitches.index[~pitches[column].isin(['L','R'])]
+        for index in missing:
+            row = pitches.loc[index]
+            hand, evidence_day = lookup(actor, row[actor], row['date'], row['phand'] if actor == 'batter' else None)
+            if hand:
+                pitches.at[index, column] = hand
+                pitches.at[index, source_col] = 'dated_own_player_evidence'
+                pitches.at[index, date_col] = evidence_day
 
 
 def _pitch_run_values(p):

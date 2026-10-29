@@ -4,7 +4,7 @@ from functools import lru_cache
 import hashlib,json,os
 
 ROOT=Path(__file__).resolve().parents[1]
-ENGINE_CONTRACT=4
+ENGINE_CONTRACT=5
 
 
 def ensure_available():
@@ -22,7 +22,7 @@ def _read_context(path,stamp,size):
     data=json.loads(Path(path).read_text(encoding='utf8'))
     authority={k:v for k,v in data.items() if k!='batch_id'}
     expected=hashlib.sha256(json.dumps(authority,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-    if data.get('batch_id')!=expected or data.get('engine_contract')!=ENGINE_CONTRACT or data.get('training_version')!=4:
+    if data.get('batch_id')!=expected or data.get('engine_contract')!=ENGINE_CONTRACT or data.get('training_version')!=5:
         raise ValueError('批次來源識別不一致')
     return data
 

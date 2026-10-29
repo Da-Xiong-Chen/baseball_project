@@ -21,6 +21,7 @@ import mlmodel  # noqa: E402
 import recent  # noqa: E402
 from model import PITCHES_PER_PA, fit  # noqa: E402
 from roster import can_play, hitter_pool, positions_of, reliever_pool  # noqa: E402
+from identity import labels
 
 sys.path.insert(0, ROOT)
 import server  # noqa: E402
@@ -28,7 +29,7 @@ import server  # noqa: E402
 OUT = os.environ.get('BASEBALL_STATIC_OUT', os.path.join(ROOT, "docs", "data"))
 
 
-def rnd(o, d=5):
+def rnd(o, d=14):
     if isinstance(o, dict):
         return {str(k): rnd(v, d) for k, v in o.items()}
     if isinstance(o, (list, tuple)):
@@ -69,6 +70,7 @@ def export_model():
         mix.setdefault(p, {})[h] = [r[c] for c in CELLS] + [float(m.mix_n.get((p, h), 0))]
     model = dict(
         cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, **batch_metadata(),
+        identity_namespace='rebas:CPBL', players=labels(server.FULL), model_phand=m.phand.to_dict(),
         league={f"{a}|{c}": v for (a, c), v in m.league.items()},
         league_mix={f"{a}|{b}": [r[c] for c in CELLS] for (a, b), r in m.league_mix.iterrows()},
         bat_all={b: [r["effect"], r["var"], r["n"]] for b, r in m.bat_all.iterrows()},
@@ -88,8 +90,8 @@ def export_model():
     pitchers = sorted({p["name"] for r in rosters.values() for p in r["pitchers"]})
     grid = {}
     for p in pitchers:
-        ph_ = ph.get(p, "R")
-        grid[p] = list(ml.abs_many([(h, bh.get(h, "R") if bh.get(h) != "S" else ("L" if ph_ == "R" else "R"), p) for h in hitters]))
+        ph_ = ph.get(p, "U")
+        grid[p] = list(ml.abs_many([(h, bh.get(h, "U") if bh.get(h) != "S" else ("L" if ph_ == "R" else "R" if ph_ == "L" else "U"), p) for h in hitters]))
     model["pools"] = dict(hitters=hitter_pool(), relievers=reliever_pool())
     model["ml"] = dict(w=mlmodel.ENSEMBLE_W, hitters=hitters, grid=grid, ref={p: ml.ref(p) for p in pitchers})
     # 近況偏離（每球得分值）：使用者可設定權重（預設 0），只匯出名單上的球員
@@ -128,7 +130,9 @@ def export_replays():
         g = g.assign(h=g["half"].map({"away": 0, "home": 1})).sort_values(["inning", "h", "seq"])
         cols = ["pa_id", "inning", "half", "outs", "bases", "bat_team", "fld_team", "bat_score", "fld_score",
                 "batter", "pitcher", "is_ph", "result", "WPA"]
-        dump(dict(pas=g[cols], results=results, **batch_metadata()), "replay", f"{gid}.json")
+        dump(dict(pas=g[cols], results=results,
+                  players=labels(str(g['date'].iat[0].date()), inclusive=True),
+                  **batch_metadata()), "replay", f"{gid}.json")
         aw, hm = g[g["half"] == "away"], g[g["half"] == "home"]
         index.append(dict(game=gid, date=str(g["date"].iat[0].date()),
                           away=aw["bat_team"].iat[0] if len(aw) else hm["fld_team"].iat[0],

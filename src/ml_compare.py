@@ -38,7 +38,8 @@ def log(s=""):
 # ---------------- 資料 ----------------
 def prepare():
     _, p, _ = load()
-    p = p[p["cell"].notna() & p["x"].notna() & p["y"].notna()].copy()
+    p = p[p['cell'].notna() & p['x'].notna() & p['y'].notna() & p['platoon'].notna() &
+          p.batter.notna() & p.pitcher.notna()].copy()
     code = p["code"]
     p["cls"] = np.select(
         [code == "B", code == "S", code == "SW", code.isin(["F", "FT", "FOUL_BUNT"]),
@@ -50,7 +51,9 @@ def prepare():
 
 
 def add_velocity(p):
-    """逐球球速（load() 未保留，從原始欄位補）。"""
+    """Use the already aligned event velocity from the formal loader."""
+    if 'velo' in p.columns:
+        return p.copy()
     import glob
     import json
     rows = []
@@ -129,7 +132,9 @@ def features(df, tend, velo_tbl, velo_type):
     fill = np.where(np.isnan(fill), df["ptype"].map(velo_type).to_numpy(dtype=float), fill)
     X["velo_missing"] = v.isna().astype(float)
     X["velo"] = np.where(v.isna(), fill, v)
-    X["velo"] = X["velo"].fillna(X["velo"].mean())
+    # Both fallbacks are frozen from training data; never inspect the query
+    # batch mean. If training has no velocity evidence, keep NaN explicitly.
+    X['velo'] = X['velo'].fillna(velo_type.attrs.get('training_global_mean', velo_type.mean()))
     for t in PTYPES:
         X[f"pt_{t}"] = (df["ptype"] == t).astype(float)
     X["balls"], X["strikes"] = df["balls"], df["strikes"]

@@ -1,3 +1,4 @@
+import os
 """預設場上名單的棒球規則檢查（docs/data/default-lineups-2025.json）。"""
 import json
 import sys
@@ -15,7 +16,7 @@ POSITIONS = {"C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"}
 class DefaultLineupTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = json.loads((ROOT / "docs/data/default-lineups-2025.json").read_text(encoding="utf-8"))
+        cls.data = json.loads((Path(os.environ.get("BASEBALL_STATIC_OUT",ROOT/"docs/data"))/"default-lineups-2025.json").read_text(encoding="utf-8"))
         cls.rosters = server.rosters()
 
     def test_every_team_has_a_default(self):

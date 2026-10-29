@@ -23,9 +23,12 @@ from batch_contract import metadata as batch_metadata, ensure_available
 import mlmodel  # noqa: E402
 from model import fit  # noqa: E402
 from roster import POS_ZH, can_play, pitcher_names, positions_of  # noqa: E402
+from identity import labels, display_name
+from player_input import resolve_player
+from historical_actors import at_start, decorate
 
 PORT = int(os.environ.get("PORT", 8000))
-WEB = os.path.join(ROOT, "docs")
+WEB = os.environ.get('BASEBALL_WEB_ROOT',os.path.join(ROOT,"docs"))
 _lock = threading.Lock()
 _models = {}
 FULL = "2026-01-01"  # 自訂情境用全部資料
@@ -79,14 +82,14 @@ def rosters():
         for name, g in hit.groupby("name"):
             if last_team_b.get(name) != team or name in true_pitchers:
                 continue
-            hitters.append(dict(name=name, hand=bh.get(name, "R"), pa=int(g["PA"].sum()), games=int(g["game"].nunique()),
+            hitters.append(dict(name=name, display_name=display_name(name,FULL), aliases=sorted(set(boxes.loc[boxes.name==name,'raw_name'])|{display_name(name,FULL)}), hand=bh.get(name, 'U'), pa=int(g['PA'].sum()), games=int(g['game'].nunique()),
                                 positions=positions_of(name), catcher=bool(can_play(name, "C"))))
         pitchers = []
         for name, g in pit.groupby("name"):
             if last_team_p.get(name) != team or name not in true_pitchers:
                 continue
             starts = int((g["order"] == 1).sum())
-            pitchers.append(dict(name=name, hand=ph.get(name, "R"), games=int(len(g)), starts=starts,
+            pitchers.append(dict(name=name, display_name=display_name(name,FULL), aliases=sorted(set(boxes.loc[boxes.name==name,'raw_name'])|{display_name(name,FULL)}), hand=ph.get(name, 'U'), games=int(len(g)), starts=starts,
                                  role="先發" if starts >= len(g) / 2 else "後援", np=int(g["NP"].sum())))
         out[team] = dict(hitters=sorted(hitters, key=lambda x: -x["pa"]),
                          pitchers=sorted(pitchers, key=lambda x: (x["role"] != "後援", -x["games"])))
@@ -123,6 +126,7 @@ def build_result(sit, m, ml=None, actual=None):
         availability="人工勾選可用名單；請確認當日登錄、健康與已用人選" if not row.get("game") else "依此前 10 天出賽推估，非官方當日登錄名單；守位由既有紀錄推估",
         fielding_source="截止日以前的完整球季守位紀錄與捕手經驗；不含當季整季守位",
         method="集成（階層式＋梯度提升樹）" if ml else "階層式",
+        players=labels(str(pd.Timestamp(row['date']).date()),inclusive=True),
     ))
 
 
@@ -137,7 +141,8 @@ def replay_result(pid, decision="ph"):
     row = found.iloc[0]
     date = str(row["date"].date())
     sit = situation(pid)
-    incumbent = row["pitcher"]
+    opening = at_start(row)
+    incumbent = opening['pitcher']
     previous = pa[(pa["game"] == row["game"]) & (pa["fld_team"] == row["fld_team"])].sort_values(["inning", "seq"])
     order = previous["pa_id"].tolist().index(pid)
     if order:
@@ -148,11 +153,14 @@ def replay_result(pid, decision="ph"):
             sit = incumbent_situation(sit, dict(inc=incumbent, inc_hand=prior["phand"]))
     with _lock:
         ml = mlmodel.for_date(date)
-    actual = dict(batter=row["batter"], pitcher=row["pitcher"], is_ph=bool(row["is_ph"]),
+    actual = dict(batter=opening['batter'], pitcher=opening['pitcher'], is_ph=bool(row["is_ph"]),
+                  final_batter=row['batter'],final_pitcher=row['pitcher'],
+                  mid_pa_actor_change=any(opening[f]!=row[f] for f in ('batter','pitcher')),
                   result=row["result"], WPA=row["WPA"])
     result = build_result(sit, model_for(date), ml, actual)
     result["replay_context"] = dict(decision=decision, incumbent_pitcher=incumbent,
-                                    actual_pitcher=row["pitcher"], pitcher_changed=incumbent != row["pitcher"])
+                                    actual_pitcher=opening['pitcher'],final_pitcher=row['pitcher'],
+                                    pitcher_changed=incumbent != opening['pitcher'])
     return result
 
 
@@ -174,6 +182,34 @@ def validate_evaluation(body):
     bat, fld = body.get('bat_team'), body.get('fld_team')
     if bat not in r or fld not in r or bat == fld:
         raise ValueError('請選不同的有效球隊')
+    # Convert legacy labels only with unique team/role evidence, on a copy.
+    body = dict(body)
+    def resolve(value,team,role):
+        pool=r[team]['hitters' if role=='B' else 'pitchers']
+        if not isinstance(value,str): raise ValueError('球員參數須為文字')
+        if any(p['name']==value for p in pool): return value
+        return resolve_player(value,cutoff=FULL,team=team,role=role)
+    for key, team, role in [('due',bat,'B'),('pitcher',fld,'P')]:
+        body[key] = resolve(body.get(key),team,role)
+    for key, team, role in [('bench',bat,'B'),('pen',fld,'P'),('next_batters',bat,'B')]:
+        if key in body:
+            if not isinstance(body[key],list): raise ValueError(f'{key} 名單無效')
+            body[key] = [resolve(v,team,role) for v in body[key]]
+    if isinstance(body.get('streaks'),dict):
+        migrated = {}
+        for key,value in body['streaks'].items():
+            player = resolve(key,fld,'P')
+            if player in migrated: raise ValueError('連續登板投手重複')
+            migrated[player] = value
+        body['streaks'] = migrated
+    if 'lineup_positions' in body:
+        if not isinstance(body['lineup_positions'],dict): raise ValueError('場上守位資料無效')
+        positions={}
+        for old,pos in body['lineup_positions'].items():
+            player=resolve(old,bat,'B')
+            if player in positions or pos not in POS_ZH: raise ValueError('場上守位資料無效')
+            positions[player]=pos
+        body['lineup_positions']=positions
     hitters = {h['name'] for h in r[bat]['hitters']}
     pitchers = {p['name'] for p in r[fld]['pitchers']}
     if body.get('pitcher') not in pitchers or body.get('due') not in hitters:
@@ -197,6 +233,7 @@ def validate_evaluation(body):
         v = body.get(key)
         if v is not None and (type(v) not in (int, float) or not 0 <= v <= high):
             raise ValueError(f'{key} 須介於 0 至 {high}')
+    return body
 
 
 def api(path, qs, body):
@@ -208,7 +245,7 @@ def api(path, qs, body):
     pa, _, boxes = load()
     if path == "/api/meta":
         r = rosters()
-        return dict(teams=sorted(r), cells=CELLS, positions=POS_ZH, **batch_metadata())
+        return dict(teams=sorted(r), cells=CELLS, positions=POS_ZH, players=labels(FULL), **batch_metadata())
     if path == "/api/team":
         return rosters()[qs["team"][0]]
     if path == "/api/games":
@@ -227,16 +264,19 @@ def api(path, qs, body):
         return sorted(out, key=lambda x: x["date"], reverse=True)
     if path == "/api/game":
         gid = qs["game"][0]
-        d = pa[pa["game"] == gid]
+        d = decorate(pa[pa["game"] == gid])
         d = d.assign(h=d["half"].map({"away": 0, "home": 1})).sort_values(["inning", "h", "seq"])
         cols = ["pa_id", "inning", "half", "outs", "bases", "bat_team", "fld_team", "bat_score", "fld_score",
                 "batter", "pitcher", "is_ph", "result", "WPA"]
-        return clean(d[cols])
+        names=labels(str(d.date.iat[0].date()),inclusive=True) if len(d) else {}
+        d=d.assign(batter_display=d.start_batter.map(names),pitcher_display=d.start_pitcher.map(names),
+                   final_batter_display=d.batter.map(names),final_pitcher_display=d.pitcher.map(names))
+        return clean(d[cols+['start_batter','start_pitcher','mid_pa_actor_change','batter_display','pitcher_display','final_batter_display','final_pitcher_display']])
     if path == "/api/replay":
         pid = qs["pa"][0]
         return replay_result(pid, qs.get("decision", ["ph"])[0])
     if path == "/api/evaluate":
-        validate_evaluation(body)
+        body = validate_evaluation(body)
         m = model_for(FULL)
         s = custom_situation(**body)
         with _lock:
@@ -244,8 +284,11 @@ def api(path, qs, body):
         return build_result(s, m, ml)
     if path == "/api/detail":
         date = qs.get("date", [FULL])[0]
-        m = model_for(date if date != "custom" else FULL)
-        return clean(matchup_detail(m, qs["batter"][0], qs["pitcher"][0]))
+        cutoff = date if date != 'custom' else FULL
+        batter = resolve_player(qs['batter'][0],cutoff=cutoff,team=qs.get('bat_team',[None])[0],role='B')
+        pitcher = resolve_player(qs['pitcher'][0],cutoff=cutoff,team=qs.get('fld_team',[None])[0],role='P')
+        m = model_for(cutoff)
+        return clean(matchup_detail(m,batter,pitcher))
     raise KeyError(path)
 
 

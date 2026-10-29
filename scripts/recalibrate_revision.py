@@ -11,6 +11,8 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def main():
+    if mlmodel.TRAINING_VERSION != 4:
+        raise RuntimeError('Historical v4 calibration workflow; use scripts/train_identity_batch.py for the current identity contract.')
     out=ROOT/'output/revision-20261021';out.mkdir(exist_ok=True,parents=True)
     dest=ROOT/'models/revision-20261021';dest.mkdir(exist_ok=True)
     pa=load()[0];records=[];experiments=[]

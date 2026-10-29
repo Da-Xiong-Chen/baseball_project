@@ -6,26 +6,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "林詩翔",
-    "due": "江坤宇",
+    "pitcher": "rebas:CPBL:FEjzB",
+    "due": "rebas:CPBL:rfEOE",
     "due_pos": "DH",
     "bench": [
-      "宋晟睿",
-      "許基宏",
-      "岳東華",
-      "王威晨"
+      "rebas:CPBL:eChCD",
+      "rebas:CPBL:c3PEk",
+      "rebas:CPBL:Dvre5",
+      "rebas:CPBL:C5Lw5"
     ],
     "bat_team": "中信兄弟",
     "fld_team": "台鋼雄鷹",
     "next_batters": [
-      "江坤宇",
-      "宋晟睿",
-      "許基宏"
+      "rebas:CPBL:rfEOE",
+      "rebas:CPBL:eChCD",
+      "rebas:CPBL:c3PEk"
     ],
     "pen": [
-      "許育銘",
-      "陳柏清",
-      "張誠恩"
+      "rebas:CPBL:cDiBm",
+      "rebas:CPBL:nVk1Q",
+      "rebas:CPBL:w3aQC"
     ],
     "pitch_count": 90,
     "starter": true
@@ -37,26 +37,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "林詩翔",
-    "due": "江坤宇",
+    "pitcher": "rebas:CPBL:FEjzB",
+    "due": "rebas:CPBL:rfEOE",
     "due_pos": "DH",
     "bench": [
-      "宋晟睿",
-      "許基宏",
-      "岳東華",
-      "王威晨"
+      "rebas:CPBL:eChCD",
+      "rebas:CPBL:c3PEk",
+      "rebas:CPBL:Dvre5",
+      "rebas:CPBL:C5Lw5"
     ],
     "bat_team": "中信兄弟",
     "fld_team": "台鋼雄鷹",
     "next_batters": [
-      "江坤宇",
-      "宋晟睿",
-      "許基宏"
+      "rebas:CPBL:rfEOE",
+      "rebas:CPBL:eChCD",
+      "rebas:CPBL:c3PEk"
     ],
     "pen": [
-      "許育銘",
-      "陳柏清",
-      "張誠恩"
+      "rebas:CPBL:cDiBm",
+      "rebas:CPBL:nVk1Q",
+      "rebas:CPBL:w3aQC"
     ],
     "pitch_count": 90,
     "starter": true
@@ -68,26 +68,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "林詩翔",
-    "due": "江坤宇",
+    "pitcher": "rebas:CPBL:FEjzB",
+    "due": "rebas:CPBL:rfEOE",
     "due_pos": "DH",
     "bench": [
-      "宋晟睿",
-      "許基宏",
-      "岳東華",
-      "王威晨"
+      "rebas:CPBL:eChCD",
+      "rebas:CPBL:c3PEk",
+      "rebas:CPBL:Dvre5",
+      "rebas:CPBL:C5Lw5"
     ],
     "bat_team": "中信兄弟",
     "fld_team": "台鋼雄鷹",
     "next_batters": [
-      "江坤宇",
-      "宋晟睿",
-      "許基宏"
+      "rebas:CPBL:rfEOE",
+      "rebas:CPBL:eChCD",
+      "rebas:CPBL:c3PEk"
     ],
     "pen": [
-      "許育銘",
-      "陳柏清",
-      "張誠恩"
+      "rebas:CPBL:cDiBm",
+      "rebas:CPBL:nVk1Q",
+      "rebas:CPBL:w3aQC"
     ],
     "pitch_count": 90,
     "starter": true
@@ -99,26 +99,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "林子昱",
-    "due": "曾子祐",
+    "pitcher": "rebas:CPBL:NHGwk",
+    "due": "rebas:CPBL:TgNKb",
     "due_pos": "DH",
     "bench": [
-      "王博玄",
-      "王柏融",
-      "張肇元",
-      "魔鷹"
+      "rebas:CPBL:WiffT",
+      "rebas:CPBL:1juVE",
+      "rebas:CPBL:puKjJ",
+      "rebas:CPBL:XuDGV"
     ],
     "bat_team": "台鋼雄鷹",
     "fld_team": "味全龍",
     "next_batters": [
-      "曾子祐",
-      "王博玄",
-      "王柏融"
+      "rebas:CPBL:TgNKb",
+      "rebas:CPBL:WiffT",
+      "rebas:CPBL:1juVE"
     ],
     "pen": [
-      "陳冠偉",
-      "陳禹勳",
-      "李超"
+      "rebas:CPBL:Q5oCF",
+      "rebas:CPBL:C6A1j",
+      "rebas:CPBL:nUjcY"
     ],
     "pitch_count": 90,
     "starter": true
@@ -130,26 +130,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "林子昱",
-    "due": "曾子祐",
+    "pitcher": "rebas:CPBL:NHGwk",
+    "due": "rebas:CPBL:TgNKb",
     "due_pos": "DH",
     "bench": [
-      "王博玄",
-      "王柏融",
-      "張肇元",
-      "魔鷹"
+      "rebas:CPBL:WiffT",
+      "rebas:CPBL:1juVE",
+      "rebas:CPBL:puKjJ",
+      "rebas:CPBL:XuDGV"
     ],
     "bat_team": "台鋼雄鷹",
     "fld_team": "味全龍",
     "next_batters": [
-      "曾子祐",
-      "王博玄",
-      "王柏融"
+      "rebas:CPBL:TgNKb",
+      "rebas:CPBL:WiffT",
+      "rebas:CPBL:1juVE"
     ],
     "pen": [
-      "陳冠偉",
-      "陳禹勳",
-      "李超"
+      "rebas:CPBL:Q5oCF",
+      "rebas:CPBL:C6A1j",
+      "rebas:CPBL:nUjcY"
     ],
     "pitch_count": 90,
     "starter": true
@@ -161,26 +161,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "林子昱",
-    "due": "曾子祐",
+    "pitcher": "rebas:CPBL:NHGwk",
+    "due": "rebas:CPBL:TgNKb",
     "due_pos": "DH",
     "bench": [
-      "王博玄",
-      "王柏融",
-      "張肇元",
-      "魔鷹"
+      "rebas:CPBL:WiffT",
+      "rebas:CPBL:1juVE",
+      "rebas:CPBL:puKjJ",
+      "rebas:CPBL:XuDGV"
     ],
     "bat_team": "台鋼雄鷹",
     "fld_team": "味全龍",
     "next_batters": [
-      "曾子祐",
-      "王博玄",
-      "王柏融"
+      "rebas:CPBL:TgNKb",
+      "rebas:CPBL:WiffT",
+      "rebas:CPBL:1juVE"
     ],
     "pen": [
-      "陳冠偉",
-      "陳禹勳",
-      "李超"
+      "rebas:CPBL:Q5oCF",
+      "rebas:CPBL:C6A1j",
+      "rebas:CPBL:nUjcY"
     ],
     "pitch_count": 90,
     "starter": true
@@ -192,26 +192,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "李吳永勤",
-    "due": "李凱威",
+    "pitcher": "rebas:CPBL:5ZFTZ",
+    "due": "rebas:CPBL:u6XUJ",
     "due_pos": "DH",
     "bench": [
-      "吉力吉撈．鞏冠",
-      "郭天信",
-      "劉基鴻",
-      "陳子豪"
+      "rebas:CPBL:elqzw",
+      "rebas:CPBL:KNmRt",
+      "rebas:CPBL:8wMt5",
+      "rebas:CPBL:yvoBa"
     ],
     "bat_team": "味全龍",
     "fld_team": "富邦悍將",
     "next_batters": [
-      "李凱威",
-      "吉力吉撈．鞏冠",
-      "郭天信"
+      "rebas:CPBL:u6XUJ",
+      "rebas:CPBL:elqzw",
+      "rebas:CPBL:KNmRt"
     ],
     "pen": [
-      "林栚呈",
-      "富藍戈",
-      "曾峻岳"
+      "rebas:CPBL:CE17i",
+      "rebas:CPBL:BLal8",
+      "rebas:CPBL:Fraw"
     ],
     "pitch_count": 90,
     "starter": true
@@ -223,26 +223,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "李吳永勤",
-    "due": "李凱威",
+    "pitcher": "rebas:CPBL:5ZFTZ",
+    "due": "rebas:CPBL:u6XUJ",
     "due_pos": "DH",
     "bench": [
-      "吉力吉撈．鞏冠",
-      "郭天信",
-      "劉基鴻",
-      "陳子豪"
+      "rebas:CPBL:elqzw",
+      "rebas:CPBL:KNmRt",
+      "rebas:CPBL:8wMt5",
+      "rebas:CPBL:yvoBa"
     ],
     "bat_team": "味全龍",
     "fld_team": "富邦悍將",
     "next_batters": [
-      "李凱威",
-      "吉力吉撈．鞏冠",
-      "郭天信"
+      "rebas:CPBL:u6XUJ",
+      "rebas:CPBL:elqzw",
+      "rebas:CPBL:KNmRt"
     ],
     "pen": [
-      "林栚呈",
-      "富藍戈",
-      "曾峻岳"
+      "rebas:CPBL:CE17i",
+      "rebas:CPBL:BLal8",
+      "rebas:CPBL:Fraw"
     ],
     "pitch_count": 90,
     "starter": true
@@ -254,26 +254,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "李吳永勤",
-    "due": "李凱威",
+    "pitcher": "rebas:CPBL:5ZFTZ",
+    "due": "rebas:CPBL:u6XUJ",
     "due_pos": "DH",
     "bench": [
-      "吉力吉撈．鞏冠",
-      "郭天信",
-      "劉基鴻",
-      "陳子豪"
+      "rebas:CPBL:elqzw",
+      "rebas:CPBL:KNmRt",
+      "rebas:CPBL:8wMt5",
+      "rebas:CPBL:yvoBa"
     ],
     "bat_team": "味全龍",
     "fld_team": "富邦悍將",
     "next_batters": [
-      "李凱威",
-      "吉力吉撈．鞏冠",
-      "郭天信"
+      "rebas:CPBL:u6XUJ",
+      "rebas:CPBL:elqzw",
+      "rebas:CPBL:KNmRt"
     ],
     "pen": [
-      "林栚呈",
-      "富藍戈",
-      "曾峻岳"
+      "rebas:CPBL:CE17i",
+      "rebas:CPBL:BLal8",
+      "rebas:CPBL:Fraw"
     ],
     "pitch_count": 90,
     "starter": true
@@ -285,26 +285,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "陳冠宇",
-    "due": "范國宸",
+    "pitcher": "rebas:CPBL:V8XLP",
+    "due": "rebas:CPBL:iDWQ3",
     "due_pos": "DH",
     "bench": [
-      "戴培峰",
-      "林澤彬",
-      "申皓瑋",
-      "林岳谷"
+      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:SioVD",
+      "rebas:CPBL:ooOfM",
+      "rebas:CPBL:psHWp"
     ],
     "bat_team": "富邦悍將",
     "fld_team": "樂天桃猿",
     "next_batters": [
-      "范國宸",
-      "戴培峰",
-      "林澤彬"
+      "rebas:CPBL:iDWQ3",
+      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:SioVD"
     ],
     "pen": [
-      "朱承洋",
-      "莊昕諺",
-      "陳柏豪"
+      "rebas:CPBL:n6fv0",
+      "rebas:CPBL:JYGnI",
+      "rebas:CPBL:vY7S"
     ],
     "pitch_count": 90,
     "starter": true
@@ -316,26 +316,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "陳冠宇",
-    "due": "范國宸",
+    "pitcher": "rebas:CPBL:V8XLP",
+    "due": "rebas:CPBL:iDWQ3",
     "due_pos": "DH",
     "bench": [
-      "戴培峰",
-      "林澤彬",
-      "申皓瑋",
-      "林岳谷"
+      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:SioVD",
+      "rebas:CPBL:ooOfM",
+      "rebas:CPBL:psHWp"
     ],
     "bat_team": "富邦悍將",
     "fld_team": "樂天桃猿",
     "next_batters": [
-      "范國宸",
-      "戴培峰",
-      "林澤彬"
+      "rebas:CPBL:iDWQ3",
+      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:SioVD"
     ],
     "pen": [
-      "朱承洋",
-      "莊昕諺",
-      "陳柏豪"
+      "rebas:CPBL:n6fv0",
+      "rebas:CPBL:JYGnI",
+      "rebas:CPBL:vY7S"
     ],
     "pitch_count": 90,
     "starter": true
@@ -347,26 +347,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "陳冠宇",
-    "due": "范國宸",
+    "pitcher": "rebas:CPBL:V8XLP",
+    "due": "rebas:CPBL:iDWQ3",
     "due_pos": "DH",
     "bench": [
-      "戴培峰",
-      "林澤彬",
-      "申皓瑋",
-      "林岳谷"
+      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:SioVD",
+      "rebas:CPBL:ooOfM",
+      "rebas:CPBL:psHWp"
     ],
     "bat_team": "富邦悍將",
     "fld_team": "樂天桃猿",
     "next_batters": [
-      "范國宸",
-      "戴培峰",
-      "林澤彬"
+      "rebas:CPBL:iDWQ3",
+      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:SioVD"
     ],
     "pen": [
-      "朱承洋",
-      "莊昕諺",
-      "陳柏豪"
+      "rebas:CPBL:n6fv0",
+      "rebas:CPBL:JYGnI",
+      "rebas:CPBL:vY7S"
     ],
     "pitch_count": 90,
     "starter": true
@@ -378,26 +378,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "髙塩將樹",
-    "due": "陳晨威",
+    "pitcher": "rebas:CPBL:Qmj7D",
+    "due": "rebas:CPBL:xdLku",
     "due_pos": "DH",
     "bench": [
-      "林泓育",
-      "林智平",
-      "成晉",
-      "林子偉"
+      "rebas:CPBL:7vTQV",
+      "rebas:CPBL:ElLgX",
+      "rebas:CPBL:ZtyCx",
+      "rebas:CPBL:vdpJ5"
     ],
     "bat_team": "樂天桃猿",
     "fld_team": "統一7-ELEVEn獅",
     "next_batters": [
-      "陳晨威",
-      "林泓育",
-      "林智平"
+      "rebas:CPBL:xdLku",
+      "rebas:CPBL:7vTQV",
+      "rebas:CPBL:ElLgX"
     ],
     "pen": [
-      "陳韻文",
-      "王鏡銘",
-      "胡智爲"
+      "rebas:CPBL:yemqV",
+      "rebas:CPBL:IvH3O",
+      "rebas:CPBL:mlpZo"
     ],
     "pitch_count": 90,
     "starter": true
@@ -409,26 +409,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "髙塩將樹",
-    "due": "陳晨威",
+    "pitcher": "rebas:CPBL:Qmj7D",
+    "due": "rebas:CPBL:xdLku",
     "due_pos": "DH",
     "bench": [
-      "林泓育",
-      "林智平",
-      "成晉",
-      "林子偉"
+      "rebas:CPBL:7vTQV",
+      "rebas:CPBL:ElLgX",
+      "rebas:CPBL:ZtyCx",
+      "rebas:CPBL:vdpJ5"
     ],
     "bat_team": "樂天桃猿",
     "fld_team": "統一7-ELEVEn獅",
     "next_batters": [
-      "陳晨威",
-      "林泓育",
-      "林智平"
+      "rebas:CPBL:xdLku",
+      "rebas:CPBL:7vTQV",
+      "rebas:CPBL:ElLgX"
     ],
     "pen": [
-      "陳韻文",
-      "王鏡銘",
-      "胡智爲"
+      "rebas:CPBL:yemqV",
+      "rebas:CPBL:IvH3O",
+      "rebas:CPBL:mlpZo"
     ],
     "pitch_count": 90,
     "starter": true
@@ -440,26 +440,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "髙塩將樹",
-    "due": "陳晨威",
+    "pitcher": "rebas:CPBL:Qmj7D",
+    "due": "rebas:CPBL:xdLku",
     "due_pos": "DH",
     "bench": [
-      "林泓育",
-      "林智平",
-      "成晉",
-      "林子偉"
+      "rebas:CPBL:7vTQV",
+      "rebas:CPBL:ElLgX",
+      "rebas:CPBL:ZtyCx",
+      "rebas:CPBL:vdpJ5"
     ],
     "bat_team": "樂天桃猿",
     "fld_team": "統一7-ELEVEn獅",
     "next_batters": [
-      "陳晨威",
-      "林泓育",
-      "林智平"
+      "rebas:CPBL:xdLku",
+      "rebas:CPBL:7vTQV",
+      "rebas:CPBL:ElLgX"
     ],
     "pen": [
-      "陳韻文",
-      "王鏡銘",
-      "胡智爲"
+      "rebas:CPBL:yemqV",
+      "rebas:CPBL:IvH3O",
+      "rebas:CPBL:mlpZo"
     ],
     "pitch_count": 90,
     "starter": true
@@ -471,26 +471,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "蔡齊哲",
-    "due": "林佳緯",
+    "pitcher": "rebas:CPBL:5RDHC",
+    "due": "rebas:CPBL:7TPaU",
     "due_pos": "DH",
     "bench": [
-      "潘傑楷",
-      "邱智呈",
-      "林安可",
-      "陳聖平"
+      "rebas:CPBL:LsMyw",
+      "rebas:CPBL:Nf4Ac",
+      "rebas:CPBL:Ifqha",
+      "rebas:CPBL:gPoLb"
     ],
     "bat_team": "統一7-ELEVEn獅",
     "fld_team": "中信兄弟",
     "next_batters": [
-      "林佳緯",
-      "潘傑楷",
-      "邱智呈"
+      "rebas:CPBL:7TPaU",
+      "rebas:CPBL:LsMyw",
+      "rebas:CPBL:Nf4Ac"
     ],
     "pen": [
-      "王凱程",
-      "呂彥青",
-      "李振昌"
+      "rebas:CPBL:b76lK",
+      "rebas:CPBL:qQixh",
+      "rebas:CPBL:EIhcu"
     ],
     "pitch_count": 90,
     "starter": true
@@ -502,26 +502,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "蔡齊哲",
-    "due": "林佳緯",
+    "pitcher": "rebas:CPBL:5RDHC",
+    "due": "rebas:CPBL:7TPaU",
     "due_pos": "DH",
     "bench": [
-      "潘傑楷",
-      "邱智呈",
-      "林安可",
-      "陳聖平"
+      "rebas:CPBL:LsMyw",
+      "rebas:CPBL:Nf4Ac",
+      "rebas:CPBL:Ifqha",
+      "rebas:CPBL:gPoLb"
     ],
     "bat_team": "統一7-ELEVEn獅",
     "fld_team": "中信兄弟",
     "next_batters": [
-      "林佳緯",
-      "潘傑楷",
-      "邱智呈"
+      "rebas:CPBL:7TPaU",
+      "rebas:CPBL:LsMyw",
+      "rebas:CPBL:Nf4Ac"
     ],
     "pen": [
-      "王凱程",
-      "呂彥青",
-      "李振昌"
+      "rebas:CPBL:b76lK",
+      "rebas:CPBL:qQixh",
+      "rebas:CPBL:EIhcu"
     ],
     "pitch_count": 90,
     "starter": true
@@ -533,26 +533,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "蔡齊哲",
-    "due": "林佳緯",
+    "pitcher": "rebas:CPBL:5RDHC",
+    "due": "rebas:CPBL:7TPaU",
     "due_pos": "DH",
     "bench": [
-      "潘傑楷",
-      "邱智呈",
-      "林安可",
-      "陳聖平"
+      "rebas:CPBL:LsMyw",
+      "rebas:CPBL:Nf4Ac",
+      "rebas:CPBL:Ifqha",
+      "rebas:CPBL:gPoLb"
     ],
     "bat_team": "統一7-ELEVEn獅",
     "fld_team": "中信兄弟",
     "next_batters": [
-      "林佳緯",
-      "潘傑楷",
-      "邱智呈"
+      "rebas:CPBL:7TPaU",
+      "rebas:CPBL:LsMyw",
+      "rebas:CPBL:Nf4Ac"
     ],
     "pen": [
-      "王凱程",
-      "呂彥青",
-      "李振昌"
+      "rebas:CPBL:b76lK",
+      "rebas:CPBL:qQixh",
+      "rebas:CPBL:EIhcu"
     ],
     "pitch_count": 90,
     "starter": true

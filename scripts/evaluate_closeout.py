@@ -25,6 +25,8 @@ SCALES = [.75,1,1.25]
 
 
 def main():
+    if mlmodel.TRAINING_VERSION != 4:
+        raise RuntimeError('Historical v4 evaluation workflow; use scripts/evaluate_identity_batch.py and scripts/report_identity_evaluation.py for v5.')
     out=Path(os.environ.get('BASEBALL_REPORT_OUT',ROOT/'output/closeout'));out.mkdir(exist_ok=True,parents=True)
     pa=load()[0]; records=[]; candidates={}; sensitivity=[]
     for scale in SCALES:

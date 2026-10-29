@@ -22,7 +22,7 @@ test('model validation keeps small improvements visible and distinguishes candid
  const candidates=['s1_w0','s1_w1','current','candidate'].map(key=>({key,time_check:metric,development:metric}));
  const buttons=[{dataset:{period:'development'}},{dataset:{period:'time_check'}}];
  const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:sel=>sel==='[data-period]'?buttons:Array.from({length:5},()=>({insertAdjacentHTML(){}})),insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
- await B.validation(el,async()=>({schema_version:1,training_version:4,engine_contract:4,batch_id:'test-batch',status:'evaluated',current_key:'current',selected_key:'candidate',adopted_key:'current',candidates,monthly:[]}));
+ await B.validation(el,async()=>({schema_version:1,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'test-batch',status:'evaluated',current_key:'current',selected_key:'candidate',adopted_key:'current',candidates,monthly:[]}));
  assert.match(el.innerHTML,/改善尚不明確/);assert.match(el.innerHTML,/0\.13%/);assert.match(el.innerHTML,/0\.225711/);assert.match(el.innerHTML,/\+0\.000287/);
  assert.match(el.innerHTML,/現行集成的採用依據/);assert.match(el.innerHTML,/開發期最佳候選/);
  buttons[0].onclick();assert.match(el.innerHTML,/5–8月：開發比較/);
@@ -31,7 +31,7 @@ test('model validation keeps small improvements visible and distinguishes candid
 
 test('same version from another model batch is rejected',async()=>{
  const el={innerHTML:'',querySelector:()=>({})};
- await B.validation(el,async()=>({schema_version:1,training_version:4,engine_contract:4,batch_id:'other',status:'evaluated'}),'expected');
+ await B.validation(el,async()=>({schema_version:1,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'other',status:'evaluated'}),'expected');
  assert.match(el.innerHTML,/無法載入模型驗證/);
 });
 
@@ -51,7 +51,7 @@ test('truncated or invalid metrics never produce a partial validation conclusion
  for(const bad of [null,{...good,mse:NaN},{...good,baseline_mse:0},{...good,mse_reduction_ci:[.2,-.1]}]){
   const el={innerHTML:'',querySelector:()=>({})};
   const candidates=['s1_w0','s1_w1','current','candidate'].map(key=>({key,time_check:bad,development:good}));
-  await B.validation(el,async()=>({schema_version:1,training_version:4,engine_contract:4,batch_id:'expected',status:'evaluated',current_key:'current',selected_key:'candidate',candidates,monthly:[]}),'expected');
+  await B.validation(el,async()=>({schema_version:1,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'expected',status:'evaluated',current_key:'current',selected_key:'candidate',candidates,monthly:[]}),'expected');
   assert.match(el.innerHTML,/無法載入模型驗證/);assert.doesNotMatch(el.innerHTML,/bt-verdict/);
  }
 });
@@ -65,7 +65,7 @@ test('relative error change uses baseline MSE and rejects zero or missing baseli
 
 test('incomplete optional diagnostics fail before any model conclusion is displayed',async()=>{
  const metric={n:1,mse:.2,mae:.1,baseline_mse:.3,mse_reduction:.1,mse_reduction_ci:[-.1,.2]};
- const report={schema_version:1,training_version:4,engine_contract:4,batch_id:'expected',status:'evaluated',current_key:'current',selected_key:'candidate',
+ const report={schema_version:1,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'expected',status:'evaluated',current_key:'current',selected_key:'candidate',
   candidates:['s1_w0','s1_w1','current','candidate'].map(key=>({key,time_check:metric,development:metric})),monthly:[]};
  const variant={sample:75,seed:0,top1_changes:0,threshold_changes:0,max_gain_shift:.01};
  const diagnostic={cases:17,variants:[variant]};
@@ -81,14 +81,14 @@ test('incomplete optional diagnostics fail before any model conclusion is displa
 });
 
 test('complete release diagnostics render with finite values',async()=>{
- const report=require('../docs/data/model-evaluation.json');
+ const report=JSON.parse(require('node:fs').readFileSync(require('node:path').join(process.env.BASEBALL_STATIC_OUT||require('node:path').join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
  const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
  await B.validation(el,async()=>report,report.batch_id);
- assert.match(el.innerHTML,/bt-verdict/);assert.match(el.innerHTML,/最大差值位移/);assert.doesNotMatch(el.innerHTML,/NaN|undefined/);
+ assert.match(el.innerHTML,/bt-verdict/);assert.match(el.innerHTML,/MSE/);assert.doesNotMatch(el.innerHTML,/NaN|undefined/);
 });
 
 test('an older validation response cannot replace the latest success or error',async()=>{
- const good=require('../docs/data/model-evaluation.json');
+ const good=JSON.parse(require('node:fs').readFileSync(require('node:path').join(process.env.BASEBALL_STATIC_OUT||require('node:path').join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
  for(const staleSuccess of [false,true]){
   let resolve,reject;const pending=new Promise((a,b)=>{resolve=a;reject=b});
   const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};

@@ -1,0 +1,177 @@
+{
+  "passed": true,
+  "scope": "Four inspected large-change examples; not a causal attribution of every changed rank.",
+  "inputs": {
+    "shift-components-v4.json": "ee387d9d25c47ba7755525e7c1172da2628980e226eafbaebface8a18f498fcd",
+    "shift-components-v5.json": "9403d21507bf02690b68a0e8e17f77dcb3061de6b719371955a20c5ed64a9497"
+  },
+  "examples": [
+    {
+      "pa_id": "2025-339-h024",
+      "pitcher_id": "rebas:CPBL:Fdxmu",
+      "source_aliases": {
+        "奧德銳": {
+          "first": "2025-08-24 17:05",
+          "last": "2025-10-03 18:36",
+          "games": 7
+        }
+      },
+      "opening_batter_before": "江坤宇",
+      "opening_batter_after": "rebas:CPBL:rfEOE",
+      "pitch_count_unchanged": true,
+      "run_to_win_unchanged": true,
+      "components": {
+        "階層式": {
+          "v4": -0.12771206599956908,
+          "v5": 0.01299869490989427,
+          "delta": 0.14071076090946336
+        },
+        "機器學習": {
+          "v4": -0.0003548208064586174,
+          "v5": 0.045529894100035495,
+          "delta": 0.04588471490649411
+        },
+        "疲勞調整": {
+          "v4": 0.0867523793615503,
+          "v5": 0.08646923294717156,
+          "delta": -0.00028314641437873767
+        },
+        "預估失分": {
+          "v4": 0.02271893595853644,
+          "v5": 0.11573352745213644,
+          "delta": 0.0930145914936
+        }
+      },
+      "reconstruction_residual": 0.0,
+      "explanation": "未知投手手別改為雙側平均；舊版缺手別不再被當成同／異側對戰。"
+    },
+    {
+      "pa_id": "2025-127-h029",
+      "pitcher_id": "rebas:CPBL:ZE04R",
+      "source_aliases": {
+        "艾璞樂": {
+          "first": "2024-04-05 17:05",
+          "last": "2024-09-28 17:05",
+          "games": 24
+        },
+        "艾菩樂": {
+          "first": "2025-04-04 16:33",
+          "last": "2025-09-28 17:05",
+          "games": 21
+        }
+      },
+      "opening_batter_before": "林立",
+      "opening_batter_after": "rebas:CPBL:RJzVu",
+      "pitch_count_unchanged": true,
+      "run_to_win_unchanged": true,
+      "components": {
+        "階層式": {
+          "v4": -0.019695913806318167,
+          "v5": -0.019994685170312693,
+          "delta": -0.00029877136399452525
+        },
+        "機器學習": {
+          "v4": -0.09619950182962908,
+          "v5": 0.033475119599988105,
+          "delta": 0.1296746214296172
+        },
+        "疲勞調整": {
+          "v4": 0.06862357508625708,
+          "v5": 0.06904550142867796,
+          "delta": 0.00042192634242088634
+        },
+        "預估失分": {
+          "v4": 0.010675867268283457,
+          "v5": 0.07578571864351567,
+          "delta": 0.06510985137523222
+        }
+      },
+      "reconstruction_residual": 0.0,
+      "explanation": "同一來源 ID 的跨年異名合併；逐球傾向、個人歷史球抽樣與重新訓練的樹會改變。"
+    },
+    {
+      "pa_id": "2025-064-h028",
+      "pitcher_id": "rebas:CPBL:fDihN",
+      "source_aliases": {
+        "魔神樂": {
+          "first": "2024-04-19 18:35",
+          "last": "2024-10-06 17:05",
+          "games": 24
+        },
+        "魔神龍": {
+          "first": "2025-04-06 15:38",
+          "last": "2025-09-29 17:06",
+          "games": 25
+        }
+      },
+      "opening_batter_before": "李宗賢",
+      "opening_batter_after": "rebas:CPBL:oYqGo",
+      "pitch_count_unchanged": true,
+      "run_to_win_unchanged": true,
+      "components": {
+        "階層式": {
+          "v4": -0.03450488429051266,
+          "v5": -0.06503441229232021,
+          "delta": -0.030529528001807547
+        },
+        "機器學習": {
+          "v4": 0.05223959045626031,
+          "v5": -0.03199218909500243,
+          "delta": -0.08423177955126274
+        },
+        "疲勞調整": {
+          "v4": 0.019638216938043296,
+          "v5": 0.019795743293749814,
+          "delta": 0.0001575263557065179
+        },
+        "預估失分": {
+          "v4": 0.02850557002091712,
+          "v5": -0.028717557399911504,
+          "delta": -0.05722312742082862
+        }
+      },
+      "reconstruction_residual": -6.938893903907228e-18,
+      "explanation": "同一來源 ID 的跨年異名合併；逐球傾向、個人歷史球抽樣與重新訓練的樹會改變。"
+    },
+    {
+      "pa_id": "2025-068-h036",
+      "pitcher_id": "rebas:CPBL:vY7S",
+      "source_aliases": {
+        "陳柏豪": {
+          "first": "2024-03-30 17:07",
+          "last": "2025-10-06 17:05",
+          "games": 97
+        }
+      },
+      "opening_batter_before": "陳俊秀",
+      "opening_batter_after": "rebas:CPBL:8KmAn",
+      "pitch_count_unchanged": true,
+      "run_to_win_unchanged": true,
+      "components": {
+        "階層式": {
+          "v4": -0.002604584054434221,
+          "v5": -0.027453224769627287,
+          "delta": -0.024848640715193066
+        },
+        "機器學習": {
+          "v4": 0.14853027713798672,
+          "v5": 0.08258265674952522,
+          "delta": -0.0659476203884615
+        },
+        "疲勞調整": {
+          "v4": 0.0,
+          "v5": 0.0,
+          "delta": 0.0
+        },
+        "預估失分": {
+          "v4": 0.07296284654177625,
+          "v5": 0.027564715989948967,
+          "delta": -0.04539813055182728
+        }
+      },
+      "reconstruction_residual": 0.0,
+      "explanation": "逐球實際參與者修正：打席開始打者與完成打席打者分開，不能提前使用打席中才上場者。"
+    }
+  ],
+  "interpretation": "Identity/event corrections justify changed inputs. Re-training and sampling contribute jointly; no isolated improvement is claimed."
+}

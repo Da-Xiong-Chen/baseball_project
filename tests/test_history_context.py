@@ -1,3 +1,4 @@
+import os
 import unittest,sys,json
 from pathlib import Path
 import pandas as pd
@@ -10,7 +11,7 @@ class HistoryContextTest(unittest.TestCase):
   before=build(pa,p,boxes);future=boxes.iloc[-1].copy();future['game']='future';future['date']=pd.Timestamp('2025-09-20');future['NP']=150
   after=build(pa,p,pd.concat([boxes,pd.DataFrame([future])],ignore_index=True));self.assertEqual(before,after);row=before['teams']['T']['pitchers'][0];self.assertEqual(row['consecutive_days_before'],2);self.assertEqual(row['workload3'],50);self.assertEqual(row['rest_days'],0)
  def test_exported_logs_are_strictly_before_target_day(self):
-  data=json.loads((ROOT/'docs/data/history-context-2025-09-20.json').read_text(encoding='utf-8'));self.assertEqual(len(data['teams']),6)
+  data=json.loads((Path(os.environ.get('BASEBALL_STATIC_OUT',ROOT/'docs/data'))/'history-context-2025-09-20.json').read_text(encoding='utf-8'));self.assertEqual(len(data['teams']),6)
   for team in data['teams'].values():
    for row in team['pitchers']+team['hitters']:
     self.assertLess(row['last_date'],data['date']);self.assertTrue(all(x['date']<data['date'] for x in row['log']))

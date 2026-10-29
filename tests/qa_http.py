@@ -1,5 +1,6 @@
 """Actual HTTP integration after normal server.py startup. No mocked models."""
 import json
+import os
 import time
 import sys
 import urllib.request
@@ -67,7 +68,8 @@ def main():
     for q in [dict(pitcher='unknown',cutoff='2025-09-27'),dict(pitcher='鋼龍',cutoff='2025-02-30'),dict(pitcher='鋼龍',cutoff='2025-09-27',hand='S')]:
         try:request('api/pitch-change?'+urllib.parse.urlencode(q));raise AssertionError('invalid accepted')
         except urllib.error.HTTPError as e:assert e.code==400;report['invalid_requests']+=1
-    (ROOT/'output/closeout/http_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
+    out=Path(os.environ.get('BASEBALL_REPORT_OUT',ROOT/'output/closeout'));out.mkdir(parents=True,exist_ok=True)
+    (out/'http_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps(report,ensure_ascii=False,indent=2))
 
 if __name__=='__main__':main()

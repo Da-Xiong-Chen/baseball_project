@@ -5,13 +5,14 @@ from dataclasses import asdict, dataclass
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
+from itertools import groupby
 
 import numpy as np
 
 from load import PITCH_GROUP, GROUPS, STRIKE_CODES, FOUL_CODES
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = 1
+SCHEMA = 2
 
 
 @dataclass(frozen=True)
@@ -80,28 +81,43 @@ def add_pa(a, pa):
 
 @lru_cache(maxsize=1)
 def observations():
-    out, seen = {}, set()
-    for path in sorted((ROOT / 'data/rebas').glob('*/*.json')):
-        with path.open(encoding='utf8') as f:
-            from identity import normalize_game
-            g = normalize_game(json.load(f))
-        if not isinstance(g, dict) or 'seq' not in g:
-            continue  # never read a combined season export as game data
-        day = g['date'][:10]
-        game = f"{day[:4]}-{int(g['seq']):03d}"
-        if game in seen:
-            continue
-        seen.add(game)
-        local = {}
-        for side in ('away', 'home'):
-            for p in g.get(side + 'PitcherBox', []):
-                name = p['playerName']
-                local.setdefault(name, appearance(game, day, name))
-            for p in g.get(side + 'PAList', []):
-                name = p['pitcherName']
-                add_pa(local.setdefault(name, appearance(game, day, name)), p)
-        for name, a in local.items():
-            out.setdefault(name, []).append(a)
+    """Use actual event participants; validate unclipped counts for the whole PA."""
+    from load import load
+    _, pitches, boxes = load()
+    indexed = {}
+    for row in boxes[boxes.role == 'P'].itertuples():
+        indexed[(row.game, row.name)] = appearance(row.game, str(row.date.date()), row.name)
+    ordered=pitches.sort_values(['pa_id','j']).itertuples(index=False)
+    for _, events in groupby(ordered,key=lambda row:row.pa_id):
+        rows = list(events)
+        balls = strikes = 0
+        valid = True
+        for j, row in enumerate(rows):
+            if balls > 3 or strikes > 2 or row.code not in STRIKE_CODES | FOUL_CODES | {'B', 'H', 'BUNT'}:
+                valid = False; break
+            if row.balls != balls or row.strikes != strikes:
+                valid = False; break
+            if row.code in {'H', 'BUNT'} and j != len(rows)-1:
+                valid = False; break
+            if row.code == 'B': balls += 1
+            elif row.code in STRIKE_CODES or (row.code == 'FOUL_BUNT' and strikes == 2): strikes += 1
+            elif row.code in FOUL_CODES and strikes < 2: strikes += 1
+        for row in rows:
+            if not isinstance(row.pitcher, str): continue
+            token=(row.game,row.pitcher)
+            a=indexed.get(token)
+            if a is None:
+                a=appearance(row.game,str(row.date.date()),row.pitcher);indexed[token]=a
+            if not valid:
+                a['excluded']['ambiguous_count'] += 1; continue
+            if row.bhand not in ('L', 'R'):
+                a['excluded']['unknown_hand'] += 1; continue
+            hi = ('L', 'R').index(row.bhand)
+            group = PITCH_GROUP.get(row.ptype)
+            if group is None: a['unknown'][hi] += 1
+            else: a['counts'][hi*12 + row.balls*3 + row.strikes, GROUPS.index(group)] += 1
+    out = {}
+    for (_, key), record in indexed.items(): out.setdefault(key, []).append(record)
     return out
 
 
@@ -197,9 +213,13 @@ def compare(records, pitcher, season, cutoff, hand='ALL', settings=Settings()):
 
 @lru_cache(maxsize=256)
 def pitch_change(pitcher, season, cutoff, hand='ALL'):
+    from player_input import resolve_player
+    from batch_contract import metadata
     records = observations()
     if not records:
         raise ValueError('尚未下載 Rebas 原始資料，請執行 python download_data.py')
     if pitcher not in records:
+        pitcher = resolve_player(pitcher, cutoff=cutoff, role='P')
+    if pitcher not in records:
         raise ValueError('找不到此投手的資料')
-    return compare(records[pitcher], pitcher, season, cutoff, hand)
+    return dict(compare(records[pitcher], pitcher, season, cutoff, hand), **metadata())

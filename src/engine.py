@@ -11,6 +11,7 @@ import numpy as np
 import recent
 
 from roster import POS_ZH, active_roster, assign_positions, defense_check, hitter_pool, positions_of, reliever_pool
+from historical_actors import at_start, game_pitches
 
 
 @lru_cache(maxsize=32)
@@ -23,23 +24,23 @@ def _hands(cutoff=None):
     pa, _, _ = load()
     if cutoff:
         pa = pa[pa["date"] < pd.Timestamp(cutoff)]
-    b = pa.groupby("batter")["bhand"].agg(lambda s: "S" if s.nunique() > 1 and s.value_counts(normalize=True).min() > 0.1 else s.mode().iat[0])
-    p = pa.groupby("pitcher")["phand"].agg(lambda s: s.mode().iat[0])
+    b = pa[pa.bhand.isin(['L','R','S'])].groupby('batter')['bhand'].agg(lambda s: 'S' if 'S' in set(s) or (s.nunique() > 1 and s.value_counts(normalize=True).min() > .1) else s.mode().iat[0])
+    p = pa[pa.phand.isin(['L','R'])].groupby('pitcher')['phand'].agg(lambda s: s.mode().iat[0])
     return b, p
 
 
 def bat_hand(batter, phand, cutoff=None):
     b, _ = _hands(cutoff)
-    h = b.get(batter, "R")
+    h = b.get(batter, 'U')
     if h == "S":
-        return "L" if phand == "R" else "R"
+        return ('L' if phand == 'R' else 'R') if phand in ('L','R') else 'U'
     return h
 
 
 def situation(pa_id):
     """由歷史打席重建「該打席開始前」的決策情境。"""
-    pa, _, boxes = load()
-    row = pa.loc[pa["pa_id"] == pa_id].iloc[0]
+    pa, pitches, boxes = load()
+    row = at_start(pa.loc[pa["pa_id"] == pa_id].iloc[0])
     game_pa = pa[(pa["game"] == row["game"]) & (pa["half"] == row["half"])]
     before = game_pa[game_pa["seq"] < row["seq"]]
 
@@ -53,6 +54,9 @@ def situation(pa_id):
         lineup[row["pa_order"]] = row["batter"]
     due = lineup.get(row["pa_order"], row["batter"])        # 決策當下輪到的人（若實際換了代打，這裡是原打者）
     used = set(box.groupby("order")["name"].first()) | set(before["batter"])
+    events=game_pitches(row['game'])
+    prior_pitches=events[events.pa_id.isin(before.pa_id)]
+    used |= set(prior_pitches.batter.dropna())
 
     hitters, _ = active_roster(row["bat_team"], row["date"], row["game"])
     bench = [h for h in hitters if h not in used and h not in lineup.values()]
@@ -62,8 +66,9 @@ def situation(pa_id):
     fld_before = pa[(pa["game"] == row["game"]) & (pa["fld_team"] == row["fld_team"]) & (pa["date"] == row["date"])]
     fld_before = fld_before[(fld_before["inning"] < row["inning"]) | ((fld_before["inning"] == row["inning"]) & (fld_before["seq"] < row["seq"]))]
     pc, starter = pitch_count_before(row)
+    prior_field=events[events.pa_id.isin(fld_before.pa_id)]
     return dict(row=row, lineup=lineup, due=due, bench=bench, positions=pos,
-                used_pitchers=set(fld_before["pitcher"]) | {row["pitcher"]},
+                used_pitchers=set(prior_field.pitcher.dropna()) | set(fld_before["pitcher"]) | {row["pitcher"]},
                 pitch_count=pc, starter=starter)
 
 
@@ -98,7 +103,7 @@ def runs_matrix(m, ml, pitchers, batters):
     """每位投手對上每位打者的預期每打席得分值：(階層式, 梯度提升樹或 None)，形狀為 投手數 × 打者數。"""
     cutoff = str(m.cutoff.date())
     _, phands = _hands(cutoff)
-    rows = [(b, bat_hand(b, phands.get(p, "R"), cutoff), p) for p in pitchers for b in batters]
+    rows = [(b, bat_hand(b, phands.get(p, "U"), cutoff), p) for p in pitchers for b in batters]
     h = np.array([m.matchup(b, bh, p)["per_pa"] for b, bh, p in rows]).reshape(len(pitchers), len(batters))
     g = ml.abs_many(rows).reshape(len(pitchers), len(batters)) if ml else None
     return h, g
@@ -191,8 +196,8 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
             rec["守備"], rec["守備說明"] = "ok", f"目前守{POS_ZH.get(due_pos, due_pos)}"
         rec["可信度"] = "高" if r["n"] >= 1500 else "中" if r["n"] >= 500 else "低"
         bhist, phist = _hands(cutoff)
-        rec["資料警示"] = "；".join((["打者慣用手缺資料，暫以右打估計"] if name not in bhist.index else []) +
-                             (["投手慣用手缺資料，球路基準暫以右投估計"] if row["pitcher"] not in phist.index else []) +
+        rec["資料警示"] = "；".join((["打者手別未記錄，採雙側平均估計"] if name not in bhist.index else []) +
+                             (["投手手別未記錄，採雙側平均估計"] if row["pitcher"] not in phist.index else []) +
                              (["投手對此侧球路採聯盟回退"] if not r["mix_n"] else []))
         out.append(rec)
     df = pd.DataFrame(out)
@@ -215,7 +220,7 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
         starter = is_starter(pitcher, date)
     _, phands = _hands(date)
     row = dict(inning=int(inning), half=half, bat_score=int(bat_score), fld_score=int(fld_score),
-               bases=int(bases), outs=int(outs), pitcher=pitcher, phand=phands.get(pitcher, "R"),
+               bases=int(bases), outs=int(outs), pitcher=pitcher, phand=phands.get(pitcher, "U"),
                date=pd.Timestamp(date), bat_team=bat_team, fld_team=fld_team, game=None, pa_order=1)
     positions = dict(lineup_positions or {})
     positions[due] = due_pos
@@ -239,7 +244,7 @@ def matchup_detail(model, batter, pitcher):
     """單一對戰的球路格明細：投手使用率、打者揮空偏離、換算得分。"""
     cutoff = str(model.cutoff.date())
     _, phands = _hands(cutoff)
-    ph = phands.get(pitcher, "R")
+    ph = phands.get(pitcher, "U")
     bh = bat_hand(batter, ph, cutoff)
     r = model.matchup(batter, bh, pitcher)
     cells = []
@@ -286,7 +291,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
     form = recent_form(m, pitchers, "pitcher") if recent_w else np.zeros(len(pitchers))
     pool = reliever_pool_runs(m, ml, nxt, recent_w) if scores else np.array([])
     for k, pit in enumerate(pitchers):
-        ph = phands.get(pit, "R")
+        ph = phands.get(pit, "U")
         runs = float(all_runs[k])
         cur = pit == row["pitcher"]
         h = hist[hist["name"] == pit]
@@ -319,8 +324,8 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
                         樣本球數=int(m.pit_all["n"].get(pit, 0)),
                         階層式=float(sum(h_runs)), 機器學習=float(sum(g_runs)) if ml else None,
                         對決明細=details, 比較池人數=len(pool),
-                        資料警示="；".join((["投手慣用手缺資料，暫以右投估計"] if pit not in phands.index else []) +
-                                              [f"{b}慣用手缺資料，暫以右打估計" for b in nxt if b not in _hands(cutoff)[0].index]),
+                        資料警示="；".join((["投手手別未記錄，採雙側平均估計"] if pit not in phands.index else []) +
+                                              (["部分打者手別未記錄，採雙側平均估計"] if any(b not in _hands(cutoff)[0].index for b in nxt) else [])),
                         疲勞="；".join(warn) or "-"))
     df = pd.DataFrame(out)
     cur = df.loc[df["角色"] == "場上", "預估失分"].iat[0]

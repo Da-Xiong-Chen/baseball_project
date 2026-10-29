@@ -3,19 +3,29 @@ from pathlib import Path
 import argparse
 import json
 import math
+import os
 
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--out',type=Path,required=True);args=parser.parse_args()
-    manifest=json.loads((ROOT/'docs/data/batch-manifest.json').read_text(encoding='utf8'))
+    parser=argparse.ArgumentParser();parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--unsealed-context',type=Path);args=parser.parse_args()
+    site=Path(os.environ.get('BASEBALL_WEB_ROOT',ROOT/'docs')).resolve()
+    if args.unsealed_context:
+        import sys
+        sys.path.insert(0,str(ROOT/'scripts'))
+        from closeout_batch import context_identity
+        from prepare_site import inspect_site
+        context=json.loads(args.unsealed_context.read_text(encoding='utf8'));context_identity(context)
+        manifest={'training':context,'files':{p.relative_to(site).as_posix():None for p in inspect_site(site)}}
+    else:manifest=json.loads((site/'data/batch-manifest.json').read_text(encoding='utf8'))
     counts=dict(json_files=0,numeric_values=0,pitch_rows=0,pitch_snapshots=0,replay_views=0,candidate_rows=0,pitcher_rows=0,detail_cells=0,model_metrics=0)
     errors=[];max_errors=dict(candidate_delta_pp=0.,pitcher_delta_pp=0.,pitcher_runs_sum=0.,pitch_delta_pp=0.,mse_difference=0.)
     def check(condition,label):
         if not condition:errors.append(label)
     def finite(v):return isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(v)
-    # export_static.rnd retains six significant digits, not six decimal places.
-    def rounding_bound(v):return 0. if v==0 else .5*10**(math.floor(math.log10(abs(v)))-5)
+    # export_static.rnd retains fifteen significant digits in the v5 contract.
+    def rounding_bound(v):return 0. if v==0 else .5*10**(math.floor(math.log10(abs(v)))-14)
     def close(actual,expected,tolerance,key,label):
         if not finite(actual) or not finite(expected):check(False,label);return
         difference=abs(actual-expected);max_errors[key]=max(max_errors[key],difference);check(difference<=tolerance,label)
@@ -57,10 +67,10 @@ def main():
             for cell in cells:
                 counts['detail_cells']+=1
                 check(0<=cell['usage']<=1 and cell['n']>=0,label+' detail ratio/sample bounds')
-    for name in [*manifest['files'],'data/batch-manifest.json']:
+    for name in [*manifest['files'],*(['data/batch-manifest.json'] if not args.unsealed_context else [])]:
         if not name.endswith('.json'):continue
         counts['json_files']+=1
-        value=json.loads((ROOT/'docs'/name).read_text(encoding='utf8'));walk(value,name)
+        value=json.loads((site/name).read_text(encoding='utf8'));walk(value,name)
         if name.startswith('data/pitch-change/') and 'snapshots' in value:
             for snapshot in value['snapshots']:
                 for hand,data in snapshot['hands'].items():
@@ -76,7 +86,7 @@ def main():
                         if row['interval'] is not None:check(row['interval'][0]<=row['interval'][1],label+' interval order')
         if name.startswith('data/replay/day-') and 'pa_id' in value:
             for decision in ['ph','pen']:replay(value[decision] or value['ph'],name+'/'+decision)
-    report=dict(passed=not errors,batch_id=manifest['training']['batch_id'],counts=counts,max_rounding_residual=max_errors,errors=errors,
+    report=dict(passed=not errors,sealed_source=not bool(args.unsealed_context),batch_id=manifest['training']['batch_id'],counts=counts,max_rounding_residual=max_errors,errors=errors,
                 units={'candidate_benefit':'percentage points; candidate minus incumbent','pitcher_benefit':'percentage points; incumbent runs minus candidate runs, multiplied by leverage','wpa':'fraction in data, multiplied by 100 once for percentage points','pitch_mix':'fraction times 100 for percent; recent minus baseline times 100 for percentage points','mse':'absolute baseline minus model; relative percent divides by baseline MSE','value_score':'comparison-pool percentile 1..100; not probability'})
     args.out.parent.mkdir(exist_ok=True,parents=True);args.out.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps(report,ensure_ascii=False,indent=2))

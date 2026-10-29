@@ -6,20 +6,20 @@ from collections import defaultdict
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
-from identity import normalize_game
+from identity import source_key
 def build(folder):
     rows=defaultdict(lambda: {"numbers":set(), "ids":set()})
     files=sorted(folder.glob("*.json"))
     if not files: raise ValueError("No 2025 game files")
     for path in files:
-        game=normalize_game(json.loads(path.read_text(encoding="utf-8")))
+        game=json.loads(path.read_text(encoding="utf-8"))
         if not str(game["date"]).startswith("2025-"): raise ValueError("Non-2025 game")
         for side in ("home","away"):
             for kind in ("Batter","Pitcher"):
                 for player in game[side+kind+"Box"]:
                     number=player.get("playerNumber")
                     if not isinstance(number,str) or not number.isascii() or not number.isdigit(): raise ValueError("Invalid or missing number")
-                    row=rows[(game[side+"Team"],player["playerName"])]
+                    row=rows[(game[side+"Team"],source_key(player["playerId"]))]
                     row["numbers"].add(number);row["ids"].add(player["playerId"])
     teams={};excluded=[]
     for (team,name),row in sorted(rows.items()):
