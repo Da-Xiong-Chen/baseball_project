@@ -8,7 +8,7 @@ test('malformed draft and confirmed state are rejected',()=>{const c=config(),s=
 const fs=require('node:fs');const vm=require('node:vm');
 function uiFixture(storageMode='ok',loadTeam=async()=>roster){
  const values=new Map(),nodes=new Map(),listeners={};
- const node=id=>{if(!nodes.has(id)){const events={};nodes.set(id,{value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},classList:{add(){},toggle(){}},setAttribute(){},focus(){},showModal(){this.open=true;},close(){this.open=false;for(const fn of events.close||[])fn();events.close=[];},addEventListener(type,fn){(events[type]??=[]).push(fn);}});}return nodes.get(id);};
+ const node=id=>{if(!nodes.has(id)){const events={};nodes.set(id,{value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},classList:{add(){},toggle(){}},setAttribute(){},focus(){},showModal(){this.open=true;},close(){this.open=false;for(const fn of events.close||[])fn();events.close=[];},addEventListener(type,fn){(events[type]??=[]).push(fn);},dispatch(type,event){for(const fn of events[type]||[])fn(event);}});}return nodes.get(id);};
  const attrs=new Set(),element={querySelector:node,querySelectorAll:()=>[],setAttribute:a=>attrs.add(a),removeAttribute:a=>attrs.delete(a),hasAttribute:a=>attrs.has(a),addEventListener:(name,fn)=>listeners[name]=fn};
  const storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>{if(storageMode==='throw')throw Error('denied');if(storageMode!=='silent')values.set(k,v);},removeItem:k=>values.delete(k)};
  const context={module:{exports:{}},window:{},localStorage:storage,document:{activeElement:null},console};vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../docs/lineup.js'),'utf8'),context);const api=context.module.exports,applied=[];
@@ -97,4 +97,13 @@ test('unavailable checkbox retains keyboard focus after its list is rebuilt',asy
  f.element.querySelectorAll=selector=>selector==='[data-lineup-unavailable]'?[replacement]:[];
  f.node('#lineupUnavailable').onchange({target:{dataset:{lineupUnavailable:'H10'},checked:true}});
  assert.equal(focused,true);const saved=JSON.parse(f.values.get('cpbl-lineup-2025-v1:A'));assert.deepEqual(saved.draft.unavailable,['H10']);
+});
+
+test('Escape cancels the player picker without changing the draft and respects composition',async()=>{
+ const f=uiFixture();await fillUI(f);const before=JSON.parse(f.values.get('cpbl-lineup-2025-v1:A')).draft;
+ f.listeners.click({target:{closest:s=>s==='[data-pick]'?{dataset:{pick:'0'}}:null}});
+ assert.equal(f.node('#lineupPicker').open,true);let prevented=false;
+ f.node('#lineupPicker').dispatch('keydown',{key:'Escape',isComposing:true,preventDefault(){throw Error('must preserve IME')}});assert.equal(f.node('#lineupPicker').open,true);
+ f.node('#lineupPicker').dispatch('keydown',{key:'Escape',isComposing:false,preventDefault(){prevented=true}});
+ assert.equal(f.node('#lineupPicker').open,false);assert.equal(prevented,true);assert.deepEqual(JSON.parse(f.values.get('cpbl-lineup-2025-v1:A')).draft,before);
 });

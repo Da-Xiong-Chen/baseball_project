@@ -159,6 +159,7 @@
     q('#lineupTeam').onchange=e=>selectTeam(e.target.value);
     q('#lineupSearch').oninput=pickerRender;
     q('#lineupPickerClose').onclick=()=>q('#lineupPicker').close();
+    q('#lineupPicker').addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.isComposing){e.preventDefault();q('#lineupPicker').close();}});
     q('#lineupPicker').addEventListener('close',()=>{const target=returnFocus?.dataset.pick!==undefined?q(`[data-pick="${returnFocus.dataset.pick}"]`):returnFocus;target?.focus();});
     q('#lineupPlayerList').onclick=e=>{const button=e.target.closest('[data-player]');if(!button||button.disabled)return;swapUndo=null;assignPlayer(get(teamName).draft,pickerIndex,button.dataset.player,pickerField);q('#lineupPicker').close();draftChanged();};
     options.element.addEventListener('click',e=>{

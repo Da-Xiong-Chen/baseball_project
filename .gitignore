@@ -61,3 +61,6 @@ output/identity-integration-20261025/
 !models/gbt_*_v5.pkl
 output/future-foundation-20261026/
 IMPLEMENTATION_CLOSEOUT.md
+
+# Local PR-check reports, not public deliverables.
+output/ci-validation/

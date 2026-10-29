@@ -12,6 +12,7 @@
 
 | 日期 | 紀錄 | 重點 |
 |---|---|---|
+| 10-29 | [release-readiness-20261029/README.md](release-readiness-20261029/README.md) | raw-free PR 檢查、HTTP 故障／儲存拒絕／取消操作實測、單截止日真實訓練與中斷續跑 |
 | 10-29 | [review-fixes-20261029/README.md](review-fixes-20261029/README.md) | 修復來源綁定、可重現訓練入口及 starter 布林型別契約；保留原正式權重 |
 | 10-29 | [code-review-20261029/README.md](code-review-20261029/README.md) | 整體程式碼審查、可重現缺陷與文件導覽修正；不以測試通過宣稱零缺陷 |
 | 10-29 | [ux-context-20261029/README.md](ux-context-20261029/README.md) | 前端 206／Python 143、容量表及名單四尺寸實際操作、單日回放驗收 |

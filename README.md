@@ -12,6 +12,7 @@
 | 要找的內容 | 最新入口 |
 |---|---|
 | 網站操作與手機版驗收 | [10/29 容量表、名單與回放驗收](docs/qa/ux-context-20261029/README.md)；該輪前端 206 項、Python 143 項測試通過 |
+| PR 檢查、異常操作與真實訓練驗收 | [10/29 最新發布前驗收](docs/qa/release-readiness-20261029/README.md) · [CI 執行方式](docs/ci-validation.md) |
 | 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
 | 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
 | 最新簡報工作稿 | [10/26、32 頁審閱版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |

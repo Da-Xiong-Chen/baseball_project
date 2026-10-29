@@ -1,0 +1,165 @@
+[repository] exit=0
+{
+
+  "python_syntax": 101,
+
+  "javascript_syntax": 11,
+
+  "local_links": 222,
+
+  "documents": 10,
+
+  "errors": []
+
+}
+
+
+[site] exit=0
+{
+
+  "files": 696,
+
+  "json_files": 681,
+
+  "bytes": 80497058,
+
+  "output": null
+
+}
+
+
+[javascript] exit=0
+ claims (1.2689ms)
+✔ validation distinguishes absolute MSE difference from relative improvement (10.0669ms)
+✔ timeline WPA missing and tiny values are not displayed as a measured zero (0.7022ms)
+✔ pitch card reads snapshots without AbortSignal.timeout (8.3966ms)
+✔ static selection is strictly before the requested date for every hand (4.8523ms)
+✔ failed fetch is retryable instead of permanently cached (3.7341ms)
+✔ unknown pitcher produces a clear error without requesting a guessed filename (1.4948ms)
+✔ invalid handedness and impossible dates are rejected (1.1903ms)
+✔ exactly three presets persist, including intentional empty groups, isolated by team (2.1295ms)
+✔ malformed old data is preserved and never overwritten with defaults (0.2146ms)
+✔ denied and silently refusing storage never reports success (0.3748ms)
+✔ membership selects available names and keeps missing names for explicit feedback (0.1804ms)
+✔ saved same-name pitchers migrate by team without overwriting legacy storage (0.1586ms)
+✔ v2 selected custom group migrates while all old presets remain recoverable (0.2043ms)
+✔ ambiguous legacy groups do not guess a latest or merge members (0.113ms)
+✔ valid v3 is independent of damaged obsolete storage (0.1224ms)
+✔ extra or missing groups cannot be saved as a valid fixed configuration (0.1162ms)
+✔ six teams have two nonoverlapping reliever templates and an empty custom slot (11.8209ms)
+✔ 2025 closer stays in the documented suggested winning template when present (0.0991ms)
+✔ values stay distinct; legacy ambiguous names are never guessed (0.5144ms)
+✔ historical context never falls through to a later name (0.106ms)
+✔ lineup migration preserves unresolved entries for review and does not mutate input (0.493ms)
+✔ evaluation migration resolves every name-bearing request field (0.2086ms)
+✔ lineups are isolated by season and existing 2025 shape remains supported (0.506ms)
+✔ new-season pitcher groups cannot overwrite old-season groups (0.5995ms)
+✔ light default exists before application initialization and saved dark stays dark (1.7908ms)
+✔ light preference survives reopening and controls update accessibly (1.4838ms)
+✔ storage refusal and corrupted preference never prevent switching (0.9723ms)
+✔ one theme button toggles both ways and announces its next action (0.566ms)
+ℹ tests 208
+ℹ suites 0
+ℹ pass 208
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1039.855
+
+[test_runtime_config.py] exit=0
+...
+
+----------------------------------------------------------------------
+
+Ran 3 tests in 0.001s
+
+
+
+OK
+
+
+[test_training_source.py] exit=0
+.......
+
+----------------------------------------------------------------------
+
+Ran 7 tests in 1.115s
+
+
+
+OK
+
+
+[test_batch_contract.py] exit=0
+..
+
+----------------------------------------------------------------------
+
+Ran 2 tests in 0.007s
+
+
+
+OK
+
+
+[test_release_site.py] exit=0
+....
+
+----------------------------------------------------------------------
+
+Ran 4 tests in 5.104s
+
+
+
+OK
+
+
+[test_season_intake.py] exit=0
+......
+
+----------------------------------------------------------------------
+
+Ran 6 tests in 0.016s
+
+
+
+OK
+
+
+[test_incremental_intake.py] exit=0
+......
+
+----------------------------------------------------------------------
+
+Ran 6 tests in 0.061s
+
+
+
+OK
+
+
+[test_qa_boundaries.py] exit=0
+.............
+
+----------------------------------------------------------------------
+
+Ran 13 tests in 0.006s
+
+
+
+OK
+
+
+[test_repository_checks.py] exit=0
+....
+
+----------------------------------------------------------------------
+
+Ran 4 tests in 0.019s
+
+
+
+OK
+
+

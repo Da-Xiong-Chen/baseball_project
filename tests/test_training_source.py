@@ -92,14 +92,14 @@ class TrainingSourceTests(unittest.TestCase):
         base = [sys.executable, '-X', 'utf8', str(ROOT / 'scripts/train_identity_batch.py'), '--data-root', str(self.data),
                 '--source-manifest', str(manifest)]
         env = {k: v for k, v in os.environ.items() if k not in ('BASEBALL_RUNTIME_CONFIG', 'BASEBALL_DATA_ROOT')}
-        prepare = subprocess.run(base + ['--prepare-source'], cwd=self.root, env=env, capture_output=True, text=True)
+        prepare = subprocess.run(base + ['--prepare-source'], cwd=self.root, env=env, capture_output=True, text=True, encoding="utf8")
         self.assertEqual(prepare.returncode, 0, prepare.stderr)
         dry = subprocess.run(base + ['--dry-run', '--models', str(self.args.models), '--reports', str(self.args.reports)],
-            cwd=self.root, env=env, capture_output=True, text=True)
+            cwd=self.root, env=env, capture_output=True, text=True, encoding="utf8")
         self.assertEqual(dry.returncode, 0, dry.stderr)
         self.assertEqual(json.loads(dry.stdout)['status'], 'validated_only')
         self.assertFalse(self.args.models.exists()); self.assertFalse(self.args.reports.exists())
-        retry = subprocess.run(base + ['--prepare-source'], cwd=self.root, env=env, capture_output=True, text=True)
+        retry = subprocess.run(base + ['--prepare-source'], cwd=self.root, env=env, capture_output=True, text=True, encoding="utf8")
         self.assertNotEqual(retry.returncode, 0)  # frozen source manifest cannot be overwritten
 
     def test_worker_snapshot_paths_allowed_but_source_outputs_cannot_overlap(self):
@@ -136,7 +136,7 @@ class TrainingSourceTests(unittest.TestCase):
     def test_loader_reads_explicit_data_root_in_fresh_process(self):
         env={**os.environ,'BASEBALL_DATA_ROOT':str(self.data)}
         code="import sys;sys.path.insert(0,sys.argv[1]);import load;print(load.DATA)"
-        run=subprocess.run([sys.executable,'-X','utf8','-c',code,str(ROOT/'src')],env=env,capture_output=True,text=True)
+        run=subprocess.run([sys.executable,'-X','utf8','-c',code,str(ROOT/'src')],env=env,capture_output=True,text=True,encoding="utf8")
         self.assertEqual(run.returncode,0,run.stderr);self.assertEqual(run.stdout.strip(),str(self.data))
 
 if __name__ == '__main__': unittest.main()

@@ -1,0 +1,25 @@
+{
+  "initialFailure": {
+    "text": "資料尚未載入，請確認連線後重試。重新載入頁面",
+    "assessmentDisabled": true
+  },
+  "recoveredInitial": "1\n局上\n樂天桃猿\n0\n:\n味全龍\n0\n0 出局・無人\n投手 鋼龍 右\n局勢張力：一般\n1 分 ≈ 9.8 百分點\n平手\n平均每分 8.7 百分點\n=\n續用 林立 打擊\n\n林立：整體打擊能力高於聯盟平均、右打對右投，同側對決較吃虧。板凳沒有估計更好的人選。\n\n代打評估\n\n換人前請確認上場資格。\n\n比較已選球員 ↓\n最多 4 人\n價值分數（相對排名）：\n80+",
+  "replayFailure": "當日資料載入失敗。\n\n重新載入",
+  "delayedLatestTeam": "樂天桃猿 vs 統一7-ELEVEn獅",
+  "storageDeniedMessage": "已恢復預設並套用；本次可用，但無法保存到瀏覽器。",
+  "storageDeniedAssessment": "1\n局上\n樂天桃猿\n0\n:\n味全龍\n0\n0 出局・無人\n投手 鋼龍 右\n局勢張力：一般\n1 分 ≈ 9.8 百分點\n平手\n平均每分 8.7 百分點\n=\n續用 林立 打擊\n\n林立：整體打擊能力高於聯盟平均、右打對右投，同側對決較吃虧。板凳沒有估計更好的人選。\n\n代打評估\n\n換人前請確認上場資格。\n\n比較已選球員 ↓\n最多 4 人\n價值分數（相對排名）：\n80+",
+  "pickerCancelPreservesDraft": true,
+  "pickerCancelMethod": "explicit close button and Escape; Escape verified on normal page and opaque frame after fix",
+  "storageDenialMechanism": "opaque-origin sandbox iframe",
+  "normalEscapeClosed": true,
+  "normalCancelPreservesDraft": true,
+  "storageNote": "預設為 2025 最後 30 場最常先發的球員；名單不會跨裝置同步。",
+  "sandboxEscapeClosed": true,
+  "date": "2026-10-29",
+  "source": "real browser at local-only test host",
+  "failureMechanism": "HTTP 503; 1s replay delay; opaque-origin sandbox storage denial",
+  "limitations": [
+    "HTTP 503 is not OS-level offline",
+    "physical touch not tested"
+  ]
+}

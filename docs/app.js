@@ -377,7 +377,7 @@ async function init() {
   $('#reviewTitle').textContent=`${dayLabel} 單日分析`;
   $$('.review-heading .eyebrow').forEach(el=>el.textContent=`DAY REVIEW / ${runtime.season}`);
   $$('[data-runtime-date]').forEach(el=>el.textContent=dayLabel);
-  $('#lineupSeasonNote').textContent=`預設為 ${runtime.season} 最後 30 場最常先發的球員；配置存在此瀏覽器。`;
+  $('#lineupSeasonNote').textContent=`預設為 ${runtime.season} 最後 30 場最常先發的球員；名單不會跨裝置同步。`;
   $$('input[placeholder="姓名或 2025 背號…"]').forEach(el=>el.placeholder=`姓名或 ${runtime.season} 背號…`);
   try { const numbers=await json(runtimeAsset('numbers',`data/player-numbers-${runtime.season}.json`));if(numbers.season===runtime.season&&numbers.teams)playerNumbers2025=numbers.teams; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
   try { officialPlayers=(await json('data/cpbl-players.json')).players||{}; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
