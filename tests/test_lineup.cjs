@@ -14,7 +14,7 @@ function uiFixture(storageMode='ok',loadTeam=async()=>roster){
  const context={module:{exports:{}},window:{},localStorage:storage,document:{activeElement:null},console};vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../docs/lineup.js'),'utf8'),context);const api=context.module.exports,applied=[];
  api.mount({element,teams:['A','B'],team:loadTeam,matches:(name,team,q)=>name.includes(q),pitchCount:()=>15,role:()=>true,applied:async(t,c)=>applied.push({team:t,change:c})});
  const pick=(slot,name)=>{listeners.click({target:{closest:sel=>sel==='[data-pick]'?{dataset:{pick:String(slot)}}:null}});if(node('#lineupPicker').open)node('#lineupPlayerList').onclick({target:{closest:()=>({dataset:{player:name},disabled:false})}});};
- return {api,node,pick,values,applied,listeners};
+ return {api,node,pick,values,applied,listeners,element};
 }
 async function fillUI(f){await f.api.selectTeam('A');for(let i=0;i<9;i++)f.pick(i,'H'+i);f.node('#lineupPitcherPick').onclick({currentTarget:{}});f.node('#lineupPlayerList').onclick({target:{closest:()=>({dataset:{player:'P0'}})}});}
 test('UI draft is isolated until apply, and confirmed configuration persists by team',async()=>{const f=uiFixture();await fillUI(f);assert.equal(f.api.current('A'),null);await f.node('#lineupApply').onclick();assert.equal(f.api.current('A').slots.length,9);assert.equal(f.api.current('B'),null);const stored=JSON.parse([...f.values.values()][0]);assert.equal(stored.confirmed.pitcher,'P0');assert.equal(f.applied.length,1);});
@@ -89,4 +89,12 @@ test('first team load failure keeps apply disabled and picker safe until retry s
  assert.doesNotThrow(()=>f.node('#lineupPitcherPick').onclick({currentTarget:{}}));
  assert.notEqual(f.node('#lineupPicker').open,true);fail=false;await fillUI(f);
  await f.node('#lineupApply').onclick();assert.ok(f.api.current('A'));
+});
+
+test('unavailable checkbox retains keyboard focus after its list is rebuilt',async()=>{
+ const f=uiFixture();await fillUI(f);let focused=false;
+ const replacement={dataset:{lineupUnavailable:'H10'},focus(){focused=true}};
+ f.element.querySelectorAll=selector=>selector==='[data-lineup-unavailable]'?[replacement]:[];
+ f.node('#lineupUnavailable').onchange({target:{dataset:{lineupUnavailable:'H10'},checked:true}});
+ assert.equal(focused,true);const saved=JSON.parse(f.values.get('cpbl-lineup-2025-v1:A'));assert.deepEqual(saved.draft.unavailable,['H10']);
 });

@@ -1126,3 +1126,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .capacity-arm legend { padding:0 5px; font-weight:700; }
 .capacity-rows { display:grid; gap:12px; }
 .capacity-body [data-output] { overflow-wrap:anywhere; }
+
+.capacity-body [aria-invalid="true"] { border:2px solid var(--warn,#a14512); outline-offset:3px; }
+.capacity-body [data-output]:not(:empty) { padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--panel); }
+.capacity-body [data-output] p:first-child { margin-top:0; }

@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-29",
+  "base_commit": "0e94b76a5cf57351ea54af1c9e8e3fafe3f01425",
+  "scope": "capacity worksheet feedback and lineup keyboard continuity",
+  "javascript_tests": {
+    "total": 203,
+    "passed": 203,
+    "failed": 0
+  },
+  "browser": {
+    "status": "blocked",
+    "inventory": "no browsers",
+    "create_tab_error": "Browser is not available: iab",
+    "visual_or_mobile_pass_claimed": false,
+    "reopen_attempt": "Chrome launch failed: GetCursorPos access denied (0x80070005)"
+  },
+  "model_changed": false,
+  "ppt_changed": false,
+  "pushed": false,
+  "files": {
+    "docs/bullpen-plan-ui.js": "2c40189fccc37a9933176f82c33f1d519fa1f1435536bda2574a2c2ef7f85b3e",
+    "docs/index.html": "8bef9019619908629bd3196c4f1cd7873a004401c39de31bb3c5088f6722894a",
+    "docs/lineup.js": "55dee0adbf8dba321314746b8fb06293f2198a9b7f9f0b8c88e82789f9831c5d",
+    "docs/style.css": "c863c08b165dfc36d7da1eb4d92aaa0678a898a2ea9df6d558b8bc6f2dbe4ff2"
+  },
+  "push_authorized": true
+}

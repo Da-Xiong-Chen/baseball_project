@@ -127,6 +127,7 @@
       const name=e.target.dataset.lineupUnavailable;if(!name)return;
       const excluded=new Set(c.unavailable||[]);if(e.target.checked)excluded.add(name);else excluded.delete(name);
       c.unavailable=[...excluded];draftChanged();
+      [...options.element.querySelectorAll('[data-lineup-unavailable]')].find(input=>input.dataset.lineupUnavailable===name)?.focus();
     };
   }
   function pickerRender(){
