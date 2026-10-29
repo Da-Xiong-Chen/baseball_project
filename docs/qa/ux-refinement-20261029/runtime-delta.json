@@ -1,0 +1,36 @@
+{
+  "schema": "baseball.ui-runtime-delta.v1",
+  "previous_receipt": "docs/qa/future-foundation-20261026/release-manifest.json",
+  "previous_receipt_sha256": "0a4f4411838c15fe94dffdcf6f66c260ca60cabc5e891e9649cc8cadd03d017c",
+  "integrated_dependency_commit": "2074e424b89f70384c09a3f66ec90bb92ff39537",
+  "unchanged_files": 690,
+  "changed_files": {
+    "bullpen-plan-ui.js": {
+      "previous_sha256": "818b602c9e936d8b01dd1054b2dca178277ab16f826860df1089147f7c912185",
+      "sha256": "2c40189fccc37a9933176f82c33f1d519fa1f1435536bda2574a2c2ef7f85b3e"
+    },
+    "data/batch-manifest.json": {
+      "previous_sha256": "86cb97b29cc4fa33dde44e7adba58d707f2711e614a68751f527853b9db734d8",
+      "sha256": "436b73aca0200464c4e6239ab7ee683b06df56e45f3ae9a16dc0f84dd8ff333d"
+    },
+    "engine.js": {
+      "previous_sha256": "c362391a868629f8b62410b3629aebad34ea446997acd305980c099749b6499b",
+      "sha256": "7fae7f3802fb11572c752ff2da8f62e6b478b8c7b84381378953cf4f30598381"
+    },
+    "index.html": {
+      "previous_sha256": "8ad8f6520ef574be71fceaede391aa3cbe9b05751e777901795fdc36e7b5928b",
+      "sha256": "8bef9019619908629bd3196c4f1cd7873a004401c39de31bb3c5088f6722894a"
+    },
+    "lineup.js": {
+      "previous_sha256": "975c0c05bda434edd4cd40977c19b8b069ff5178a70a758d8373421c8da3db28",
+      "sha256": "55dee0adbf8dba321314746b8fb06293f2198a9b7f9f0b8c88e82789f9831c5d"
+    },
+    "style.css": {
+      "previous_sha256": "df0587bde0d346d7bf0ba86ffe602e30d8cefc20d5276014a04bf9b540f32f85",
+      "sha256": "c863c08b165dfc36d7da1eb4d92aaa0678a898a2ea9df6d558b8bc6f2dbe4ff2"
+    }
+  },
+  "numeric_model_or_weights_changed": false,
+  "browser_visual_validation": "pending; no connected browser; Chrome launch access denied",
+  "deployment_ready_claimed": false
+}

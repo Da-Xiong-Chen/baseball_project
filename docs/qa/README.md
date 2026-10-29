@@ -2,16 +2,23 @@
 
 這裡收錄每一輪修改的驗收證據（說明、測試紀錄、截圖與 JSON 結果）。
 
-- **只想看結論**：讀[v5 整合驗收](identity-integration-20261025/README.md)；原交件版另見[初審驗收](competition-ready-20261023/README.md)。
+- **只想看結論**：讀[最新網站驗收](ux-context-20261029/README.md)與[整體程式碼審查](code-review-20261029/README.md)；模型基準見[v5 整合驗收](identity-integration-20261025/README.md)；原交件版另見[初審驗收](competition-ready-20261023/README.md)。
 - **想核對某項功能**：依下方分類找對應日期的紀錄。
 - 舊紀錄保留作歷史追溯，數字與畫面以當時版本為準；現行說明見 [README](../../README.md) 與 [技術細節](../技術細節.md)。
 
 ## 最新
 
-最新一輪（2026-10-23）的驗收，代表目前網站與提案的狀態。
+以下依日期列出目前分支的最新證據；不等於全部已合併或部署。10/23 及更早資料保留作歷史對照。
 
 | 日期 | 紀錄 | 重點 |
 |---|---|---|
+| 10-29 | [release-readiness-20261029/README.md](release-readiness-20261029/README.md) | raw-free PR 檢查、HTTP 故障／儲存拒絕／取消操作實測、單截止日真實訓練與中斷續跑 |
+| 10-29 | [review-fixes-20261029/README.md](review-fixes-20261029/README.md) | 修復來源綁定、可重現訓練入口及 starter 布林型別契約；保留原正式權重 |
+| 10-29 | [code-review-20261029/README.md](code-review-20261029/README.md) | 整體程式碼審查、可重現缺陷與文件導覽修正；不以測試通過宣稱零缺陷 |
+| 10-29 | [ux-context-20261029/README.md](ux-context-20261029/README.md) | 前端 206／Python 143、容量表及名單四尺寸實際操作、單日回放驗收 |
+| 10-29 | [ux-refinement-20261029/README.md](ux-refinement-20261029/README.md) | 錯誤欄位定位與鍵盤焦點修正；當時瀏覽器阻礙已由後續 ux-context 驗收補足 |
+| 10-26 | [future-foundation-20261026/README.md](future-foundation-20261026/README.md) | 年度設定、720 場進件、近況試跑及 32 頁審閱稿；非新權重採用 |
+| 10-25 | [identity-integration-20261025/README.md](identity-integration-20261025/README.md) | 來源 ID、九個 v5 模型與同版匯出基準 |
 | 10-23 | [competition-ready-20261023/README.md](competition-ready-20261023/README.md) | 網站與 32 頁初審提案驗收，逐項對照官方六項初審要求；前端、Python、HTTP 回放、數值與 PPT／PDF 檢查全部通過 |
 | 10-23 | [content-closeout-20261023/README.md](content-closeout-20261023/README.md) | 網站收尾：181 項前端測試、452 個回放畫面通過；32 頁簡報逐頁檢查並列出待同步項目 |
 | 10-23 | [navigation-ux-20261023/README.md](navigation-ux-20261023/README.md) | 上方入口改為一般使用者／球隊／單日分析，補強手機點選與非同步切換 |
@@ -20,7 +27,7 @@
 
 ## 模型與數值
 
-v4 模型、回測與網站數值的正確性檢查。
+現行模型基準為 v5，見上方 10/25 整合紀錄。以下列出較早 v4 模型、回測與網站數值檢查，不能當作最新版數值收據。
 
 | 日期 | 紀錄 | 重點 |
 |---|---|---|

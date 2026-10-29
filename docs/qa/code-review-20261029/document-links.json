@@ -1,0 +1,13 @@
+{
+  "checked_documents": [
+    "README.md",
+    "協作指南.md",
+    "docs/技術細節.md",
+    "docs/qa/README.md",
+    "presentations/competition-2026/README.md",
+    "docs/qa/code-review-20261029/README.md"
+  ],
+  "local_links_checked": 184,
+  "external_links_not_checked": 20,
+  "errors": []
+}

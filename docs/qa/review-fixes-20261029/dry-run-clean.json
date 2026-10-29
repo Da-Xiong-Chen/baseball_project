@@ -1,0 +1,21 @@
+{
+  "status": "validated_only",
+  "training_started": false,
+  "source_id": "60e889ba22410e9e8bc0d037a9caf00dba32d77d08200390b17f23802c619bee",
+  "dataset_id": "2a55e92aa95338da8ae9f85f21fed76c4f382fd3c3d8c273b06b48e5b3678f1b",
+  "files": 724,
+  "cutoffs": [
+    "2025-03-01",
+    "2025-04-01",
+    "2025-05-01",
+    "2025-06-01",
+    "2025-07-01",
+    "2025-08-01",
+    "2025-09-01",
+    "2025-10-01",
+    "2026-01-01"
+  ],
+  "fresh_code_copy_without_historical_output": true,
+  "models_created": false,
+  "reports_created": false
+}

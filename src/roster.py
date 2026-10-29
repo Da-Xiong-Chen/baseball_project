@@ -8,6 +8,7 @@ from scipy.optimize import linear_sum_assignment
 
 from load import DATA, load
 from identity import display_name
+from runtime_config import settings
 
 FIELD_POS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 POS_ZH = {"C": "捕手", "1B": "一壘", "2B": "二壘", "3B": "三壘", "SS": "游擊",
@@ -128,7 +129,7 @@ def hitter_pool(cutoff=None):
     boxes = load()[2]
     if cutoff:
         boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
-    year = min(pd.Timestamp(cutoff).year, 2025) if cutoff else 2025
+    year = min(pd.Timestamp(cutoff).year, settings().season) if cutoff else settings().season
     b = boxes[boxes["date"].dt.year == year]
     if b.loc[b["role"] == "B", "PA"].sum() < POOL_MIN_PA:
         b = boxes[boxes["date"].dt.year == year - 1]
@@ -146,7 +147,7 @@ def reliever_pool(cutoff=None):
     boxes = load()[2]
     if cutoff:
         boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
-    year = min(pd.Timestamp(cutoff).year, 2025) if cutoff else 2025
+    year = min(pd.Timestamp(cutoff).year, settings().season) if cutoff else settings().season
     b = boxes[boxes["date"].dt.year == year]
     p = b[b["role"] == "P"]
     g = p.groupby("name").agg(n=("game", "nunique"), st=("order", lambda s: (s == 1).mean()))

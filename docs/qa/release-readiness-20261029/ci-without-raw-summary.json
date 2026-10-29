@@ -1,0 +1,53 @@
+{
+  "raw_data_downloaded": false,
+  "raw_input_required": false,
+  "raw_input_directory_present": false,
+  "require_no_raw": true,
+  "steps": [
+    {
+      "name": "repository",
+      "exit_code": 0
+    },
+    {
+      "name": "site",
+      "exit_code": 0
+    },
+    {
+      "name": "javascript",
+      "exit_code": 0
+    },
+    {
+      "name": "test_runtime_config.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_training_source.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_batch_contract.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_release_site.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_season_intake.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_incremental_intake.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_qa_boundaries.py",
+      "exit_code": 0
+    },
+    {
+      "name": "test_repository_checks.py",
+      "exit_code": 0
+    }
+  ],
+  "passed": true
+}
