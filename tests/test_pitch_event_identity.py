@@ -24,5 +24,8 @@ class PitchEventIdentityTests(unittest.TestCase):
         data=self.records(('B',)*5)
         self.assertEqual(sum(int(a['counts'].sum()) for group in data.values() for a in group),0)
         self.assertEqual(sum(a['excluded']['ambiguous_count'] for group in data.values() for a in group),5)
+    def test_missing_raw_data_is_reported_before_name_lookup(self):
+        with patch('pitch_change.observations',return_value={}),self.assertRaisesRegex(ValueError,'尚未下載 Rebas'):
+            pitch_change.pitch_change.__wrapped__('任一投手',2025,'2025-05-01')
 
 if __name__=='__main__':unittest.main()

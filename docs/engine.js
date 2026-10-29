@@ -241,7 +241,7 @@ const Engine = (() => {
         疲勞: [cur && fatWarn ? fatWarn : "", streak >= 2 ? `已連投 ${streak} 天` : ""].filter(Boolean).join("；") || "-",
         階層式:hRuns.reduce((s,v)=>s+v,0), 機器學習:gRuns.some(v=>v==null) ? null : gRuns.reduce((s,v)=>s+v,0),
         對決明細:details, 比較池人數:pool.length,
-        資料警示:[hand(M.phand[pit])==='U' ? '投手手別未記錄，採雙側平均估計' : '', ...nextBatters.filter(b=>!['L','R','S'].includes(M.bhand[b])).map(b=>'部分打者手別未記錄，採雙側平均估計')].filter(Boolean).join('；'),
+        資料警示:[hand(M.phand[pit])==='U' ? '投手手別未記錄，採雙側平均估計' : '', nextBatters.some(b=>!['L','R','S'].includes(M.bhand[b])) ? '部分打者手別未記錄，採雙側平均估計' : ''].filter(Boolean).join('；'),
       };
     });
     const curRuns = rows[0].預估失分;

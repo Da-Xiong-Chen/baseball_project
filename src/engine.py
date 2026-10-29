@@ -328,7 +328,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
                         階層式=float(sum(h_runs)), 機器學習=float(sum(g_runs)) if ml else None,
                         對決明細=details, 比較池人數=len(pool),
                         資料警示="；".join((["投手手別未記錄，採雙側平均估計"] if pit not in phands.index else []) +
-                                              ["部分打者手別未記錄，採雙側平均估計" for b in nxt if b not in _hands(cutoff)[0].index]),
+                                              (["部分打者手別未記錄，採雙側平均估計"] if any(b not in _hands(cutoff)[0].index for b in nxt) else [])),
                         疲勞="；".join(warn) or "-"))
     df = pd.DataFrame(out)
     cur = df.loc[df["角色"] == "場上", "預估失分"].iat[0]
