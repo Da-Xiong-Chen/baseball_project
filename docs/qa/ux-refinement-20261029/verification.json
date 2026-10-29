@@ -23,5 +23,17 @@
     "docs/lineup.js": "55dee0adbf8dba321314746b8fb06293f2198a9b7f9f0b8c88e82789f9831c5d",
     "docs/style.css": "c863c08b165dfc36d7da1eb4d92aaa0678a898a2ea9df6d558b8bc6f2dbe4ff2"
   },
-  "push_authorized": true
+  "push_authorized": true,
+  "integrated_dependency_commit": "2074e424b89f70384c09a3f66ec90bb92ff39537",
+  "python_pitch_event_identity_tests": {
+    "passed": 3,
+    "failed": 0
+  },
+  "site_check": {
+    "files": 696,
+    "json_files": 681,
+    "bytes": 80496465
+  },
+  "runtime_delta_receipt": "runtime-delta.json",
+  "delivery": "authorized update to existing draft PR #33; browser validation pending"
 }
