@@ -217,6 +217,8 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
     streaks：{投手: 今天之前連續登板天數}；fatigue_d2／fatigue_d3：連投第 2 天／第 3 天以上每打席額外失分值；
     recent_weight：近況權重 0–1。三者皆為使用者設定，預設不影響評估。
     """
+    if starter is not None and type(starter) is not bool:
+        raise ValueError("starter 須為布林值或 null")
     date=date or settings().cutoff
     if starter is None:
         starter = is_starter(pitcher, date)

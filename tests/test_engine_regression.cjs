@@ -46,3 +46,13 @@ test('same exported parameters preserve original calculation formulas across 18 
   fs.mkdirSync(reportDir,{recursive:true});
   fs.writeFileSync(path.join(reportDir,'engine_regression.json'),JSON.stringify({scenarios:fixtures.length,same_parameter_formula_match:true,training_version:after.model().training_version,results},null,2));
 });
+
+test('starter accepts only boolean or omitted/null and preserves explicit reliever semantics',async()=>{
+ const e=await engine(path.join(root,'docs/engine.js'),path.join(root,'docs/data/model.json'));
+ const teams=e.model().teams,bat=teams[0],fld=teams[1],mine=e.model().rosters[bat],opp=e.model().rosters[fld];
+ const body={inning:7,half:'home',outs:1,bases:0,bat_score:1,fld_score:1,pitcher:opp.pitchers[0].name,due:mine.hitters[0].name,due_pos:'DH',bench:[],bat_team:bat,fld_team:fld,next_batters:mine.hitters.slice(0,3).map(p=>p.name),pen:[],pitch_count:110};
+ for(const starter of ['false','true',0,1,[],{},[false]])assert.throws(()=>e.evaluate({...body,starter}),/starter/);
+ for(const starter of [true,false])assert.equal(e.evaluate({...body,starter}).situation.starter,starter);
+ for(const starter of [null,undefined])assert.equal(typeof e.evaluate({...body,starter}).situation.starter,'boolean');
+ const reliever=e.evaluate({...body,starter:false});assert.equal(reliever.bullpen.rows[0].疲勞調整,0);
+});

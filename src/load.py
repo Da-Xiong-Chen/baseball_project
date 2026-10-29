@@ -12,7 +12,7 @@ from identity import source_key, game_rosters, participant_key
 from runtime_config import settings
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.path.join(ROOT, "data")
+DATA = os.path.abspath(os.environ.get("BASEBALL_DATA_ROOT", os.path.join(ROOT, "data")))
 
 # 球種分群：依實際進壘高度（2025 平均 coordY：FF +10、SI -2.5、FC -14、SL -31、CU -30、CH -35、FO -40）
 PITCH_GROUP = {

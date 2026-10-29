@@ -175,6 +175,8 @@ def validate_evaluation(body):
         value = body.get(key)
         if type(value) is not int or value < low or (high is not None and value > high):
             raise ValueError(f'{key} 須為有效範圍內的整數')
+    if body.get('starter') is not None and type(body['starter']) is not bool:
+        raise ValueError('starter 須為布林值或 null')
     pc = body.get('pitch_count')
     if pc is not None and (type(pc) is not int or not 0 <= pc <= 160):
         raise ValueError('本場球數須介於 0 至 160')

@@ -1,0 +1,12 @@
+{
+  "custom_scenarios": 18,
+  "max_numeric_error": 1.199040866595169e-14,
+  "replay_games": 275,
+  "replay_cases": 498,
+  "missing_cases": 0,
+  "stale_snapshots": 0,
+  "schema_version": 2,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
+}
