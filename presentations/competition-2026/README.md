@@ -45,16 +45,16 @@
 
 ## 歷史版本
 
-本資料夾保留製作過程中的舊版，僅供追溯。
+製作過程中的舊版（PPT、PDF、預覽圖與驗證紀錄）都收在 [archive/](archive/)，僅供追溯。
 
 | 日期 | 版本 | 說明 |
 |---|---|---|
 | 10-23 | 32 頁原交件提案 | [submission-20261023/](submission-20261023/README.md) |
-| 10-22 | 32 頁完整複查版 | [audited-20261022/](audited-20261022/README.md) |
-| 10-20 | 32 頁評審精簡版 | [REVISION-20261020-COMPACT.md](REVISION-20261020-COMPACT.md) |
-| 10-20 | 36 頁清晰精簡版 | [REVISION-20261020-CRISP.md](REVISION-20261020-CRISP.md) |
-| 10-20 | 40 頁評審閱讀優化版 | [REVISION-20261020.md](REVISION-20261020.md) |
-| 10-19 | 38 頁截圖優先版 | [REVISION-20261019-SCREENSHOTS.md](REVISION-20261019-SCREENSHOTS.md)、[最終複核](FINAL-REVIEW-20261019.md) |
-| 10-19 | 38 頁圖解整合版 | [REVISION-20261019-VISUAL.md](REVISION-20261019-VISUAL.md) |
-| 10-18 | 22 頁本機優化版 | [REVISION-20261018.md](REVISION-20261018.md) |
-| 10-16 | 22 頁初版 | [ARCHIVE-22-SLIDES.md](ARCHIVE-22-SLIDES.md) |
+| 10-22 | 32 頁完整複查版 | [audited-20261022/](archive/audited-20261022/README.md) |
+| 10-20 | 32 頁評審精簡版 | [REVISION-20261020-COMPACT.md](archive/REVISION-20261020-COMPACT.md) |
+| 10-20 | 36 頁清晰精簡版 | [REVISION-20261020-CRISP.md](archive/REVISION-20261020-CRISP.md) |
+| 10-20 | 40 頁評審閱讀優化版 | [REVISION-20261020.md](archive/REVISION-20261020.md) |
+| 10-19 | 38 頁截圖優先版 | [REVISION-20261019-SCREENSHOTS.md](archive/REVISION-20261019-SCREENSHOTS.md)、[最終複核](archive/FINAL-REVIEW-20261019.md) |
+| 10-19 | 38 頁圖解整合版 | [REVISION-20261019-VISUAL.md](archive/REVISION-20261019-VISUAL.md) |
+| 10-18 | 22 頁本機優化版 | [REVISION-20261018.md](archive/REVISION-20261018.md) |
+| 10-16 | 22 頁初版 | [ARCHIVE-22-SLIDES.md](archive/ARCHIVE-22-SLIDES.md) |
