@@ -21,15 +21,18 @@ sys.path.insert(0, str(ROOT))
 
 RECENT = 30
 SLOTS = ["1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"]
+from runtime_config import settings
 
 
 CANNOT = 1e6     # 不能守的守位
 
 
-def build(rosters, pa, boxes, position_games, can_play, recent=RECENT):
-    b25 = boxes[boxes["date"].dt.year == 2025]
-    pa25 = pa[pa["season"] == 2025]
-    g = position_games(None)
+def build(rosters, pa, boxes, position_games, can_play, recent=RECENT, season=None, cutoff=None):
+    year=season or settings().season
+    cutoff=cutoff or settings().cutoff
+    b25 = boxes[(boxes["date"].dt.year == year)&(boxes.date<cutoff)]
+    pa25 = pa[(pa["season"] == year)&(pa.date<cutoff)]
+    g = position_games(cutoff)
     out = {}
     for team, r in sorted(rosters.items()):
         hitters = {h["name"] for h in r["hitters"]}
@@ -53,7 +56,7 @@ def build(rosters, pa, boxes, position_games, can_play, recent=RECENT):
         # 分數：近期先發 ＋ 0.001 × 全季先發（≤ 0.144，只在近期同分時起作用）＋ 1e-6 × 守位場數（≤ 0.0003）
         score = starts["n"].reindex(names).fillna(0).to_numpy() + 1e-3 * season.reindex(names).fillna(0).to_numpy()
         cost = np.array([[-score[i] if s == "DH" else
-                          (-score[i] - 1e-6 * min(float(g.get((name, s), 0.0)), 300) if can_play(name, s) else CANNOT)
+                          (-score[i] - 1e-6 * min(float(g.get((name, s), 0.0)), 300) if can_play(name, s, cutoff) else CANNOT)
                           for s in SLOTS] for i, name in enumerate(names)])
         ri, ci = linear_sum_assignment(cost)
         if cost[ri, ci].max() >= CANNOT:
@@ -76,7 +79,7 @@ if __name__ == "__main__":
 
     pa, _, boxes = load()
     teams = build(server.rosters(), pa, boxes, position_games, can_play)
-    result = {"season": 2025, "method": f"各隊最後 {RECENT} 場先發打者與先發投手（Rebas 2025 例行賽，ODC-By v1.0）", "teams": teams, **metadata()}
-    (Path(os.environ.get("BASEBALL_STATIC_OUT", ROOT/"docs/data")) / "default-lineups-2025.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    result = {"season": settings().season, "method": f"各隊最後 {RECENT} 場先發打者與先發投手（Rebas {settings().season} 例行賽，ODC-By v1.0）", "teams": teams, **metadata()}
+    (Path(os.environ.get("BASEBALL_STATIC_OUT", ROOT/"docs/data")) / f"default-lineups-{settings().season}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     for t, v in teams.items():
         print(t, v["pitcher"], " ".join(f"{s['name']}({s['pos']})" for s in v["slots"]))

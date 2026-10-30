@@ -1,0 +1,50 @@
+{
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924",
+  "weights": [
+    {
+      "name": "gbt_2025-03_v5.pkl",
+      "sha256": "71d3a2411bbcc451cbb891e99eaecedb0f2e5aa81c58b15bebe8b09642f7ea89",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-04_v5.pkl",
+      "sha256": "3fb8c4e31c075bc15cb8e18de38bc5360e84f28bc3025f36c5dc3fe7f1ae85c7",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-05_v5.pkl",
+      "sha256": "6d07f2539dd9591270c744ecebd43d00c40f6c955325c68fcf48f9434b3a48e2",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-06_v5.pkl",
+      "sha256": "9c95074d695c6e6525bc687cebdfdc135bc06ed439400231967e434a41b6d323",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-07_v5.pkl",
+      "sha256": "9305a44b73b32d27b17da0a8ffd7367061a47bda2bec1c01761569e7ae40d357",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-08_v5.pkl",
+      "sha256": "7760b194eb1649610b5e5ff3760e5b7721f582f8d7098a93c0a1261650b3b012",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-09_v5.pkl",
+      "sha256": "8094ea04ff65fc02843b8bcdccd450e1f39c47e0581a48707d525cd81aa3207a",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_2025-10_v5.pkl",
+      "sha256": "8e4e55b043bc647dec764cff7e4c6ecf234fe71c73f80b819cd54d390f95dfe2",
+      "unchanged": true
+    },
+    {
+      "name": "gbt_full_v5.pkl",
+      "sha256": "2de430cb9b23065e21432ad507cfc4cf0eedcb690d2b59cfd6b2838251ef8932",
+      "unchanged": true
+    }
+  ]
+}

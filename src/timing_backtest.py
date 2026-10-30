@@ -32,13 +32,14 @@ from load import ROOT, load
 from batch_contract import metadata as batch_metadata
 import mlmodel
 from historical_actors import decorate
+from runtime_config import settings
 
 MIN_INNING = 6
 THRESHOLD = 1.0          # 百分點；網站標記與總覽使用
 THRESHOLDS = [0.5, 1.0, 2.0]
 BOOTSTRAP_REPS = 2000
 BOOTSTRAP_SEED = 20261020
-SEASON = 2025
+SEASON = settings().season
 CHUNK = 300              # 每個平行工作的打席數
 
 
@@ -361,7 +362,7 @@ def build_outputs(res, d, reuse_provenance=None):
                      for _, r in g.iterrows()} for gid, g in ok.groupby("game")},
     )
     if reuse_provenance is not None:result['calibration_revision_reuse']=reuse_provenance
-    p = os.path.join(os.environ.get('BASEBALL_STATIC_OUT',os.path.join(ROOT,'docs','data')), 'timing-2025.json')
+    p = os.path.join(os.environ.get('BASEBALL_STATIC_OUT',os.path.join(ROOT,'docs','data')), f'timing-{SEASON}.json')
     with open(p, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
     print(f"輸出 {p}（{os.path.getsize(p) / 1024:.0f} KB）")

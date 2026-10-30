@@ -22,10 +22,11 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from load import ROOT, load, pitches_before
 from ml_compare import add_velocity, apply_tendencies, features, fit_tendencies, prepare
 from model import PITCHES_PER_PA
+from runtime_config import settings
 
 MODEL_DIR = os.environ.get('BASEBALL_MODEL_DIR', os.path.join(ROOT, "models"))
-FULL = "2026-01-01"
-REPLAY_MONTHS = [f"2025-{m:02d}-01" for m in range(3, 11)]
+FULL = settings().cutoff
+REPLAY_MONTHS = list(settings().replay_cutoffs)
 SAMPLE = 150          # 每位投手（對該手打者）抽樣的歷史球數
 MIN_OWN = 40          # 少於此數改用聯盟同投打組合的球
 ENSEMBLE_W = 0.5      # 集成中梯度提升樹的權重
@@ -47,7 +48,7 @@ def recalibrate(previous, pa=None):
     ref = calibration_reference(load()[0] if pa is None else pa, previous.cutoff)
     rows = list(ref[['batter','bhand','pitcher']].itertuples(index=False,name=None))
     raw = previous.sim.values(pd.DataFrame(rows,columns=['batter','bhand','pitcher']))['gbt']
-    hm = fit(previous.cutoff,season=2025 if previous.cutoff==FULL else None)
+    hm = fit(previous.cutoff,season=settings().season if previous.cutoff==FULL else None)
     target = [hm.matchup(*r)['per_pa'] for r in rows]
     result = MLModel(previous.cutoff, previous.sim, float(np.mean(raw)-np.mean(target)))
     result.training_version = TRAINING_VERSION
@@ -164,7 +165,7 @@ def train(cutoff, gbt_options=None):
     ref = calibration_reference(pa, cutoff)
     rows = list(ref[["batter", "bhand", "pitcher"]].itertuples(index=False, name=None))
     g = sim.values(pd.DataFrame(rows, columns=["batter", "bhand", "pitcher"]))["gbt"]
-    hm = fit(cutoff, season=2025 if cutoff == FULL else None)
+    hm = fit(cutoff, season=settings().season if cutoff == FULL else None)
     h = np.array([hm.matchup(b, bh, p)["per_pa"] for b, bh, p in rows])
     model = MLModel(cutoff, sim, float(g.mean() - h.mean()))
     model.training_version = TRAINING_VERSION
@@ -241,10 +242,7 @@ def for_date(date_str):
     """歷史回放：用該日期所屬月份月初截止的模型（時間安全）。"""
     if date_str == FULL:
         return get(FULL)
-    if date_str < REPLAY_MONTHS[0] or date_str >= FULL:
-        raise ValueError("歷史模型僅支援 2025 球季，不能使用較晚模型回補")
-    month = date_str[:7] + "-01"
-    return get(max(REPLAY_MONTHS[0], month))
+    return get(settings().month_for(date_str))
 
 
 if __name__ == "__main__":

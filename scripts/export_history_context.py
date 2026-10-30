@@ -8,9 +8,10 @@ from load import load
 from fatigue import starter_curve
 from identity import labels
 from batch_contract import metadata
-DATE='2025-09-20'
+from runtime_config import settings
+DATE=settings().history_date
 def build(pa,pitches,boxes,date=DATE):
- cutoff=pd.Timestamp(date);prior=boxes[(boxes.date<cutoff)&(boxes.date.dt.year==2025)]
+ cutoff=pd.Timestamp(date);prior=boxes[(boxes.date<cutoff)&(boxes.date.dt.year==cutoff.year)]
  prior=prior.drop_duplicates(['game','team','name','role']);recent=prior[prior.date>=cutoff-pd.Timedelta(days=14)]
  pp=pitches[(pitches.date<cutoff)&(pitches.date>=cutoff-pd.Timedelta(days=14))];past=pa[(pa.date<cutoff)&(pa.date>=cutoff-pd.Timedelta(days=14))]
  teams={}
@@ -26,6 +27,6 @@ def build(pa,pitches,boxes,date=DATE):
   teams.setdefault(team,{'pitchers':[],'hitters':[]})['pitchers' if role=='P' else 'hitters'].append(record)
  return {'date':date,'window_days':14,'teams':teams}
 if __name__=='__main__':
- pa,p,b=load();out=build(pa,p,b);out.update(players=labels(DATE),**metadata());out['fatigue_curve']=starter_curve(DATE);out['source']='Rebas 2025，日期嚴格早於 2025-09-20；先發疲勞曲線以截止日前2024–2025資料估計'
- (Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data'))/'history-context-2025-09-20.json').write_text(json.dumps(out,ensure_ascii=False,allow_nan=False,indent=2)+'\n',encoding='utf-8')
+ pa,p,b=load();out=build(pa,p,b);out.update(players=labels(DATE),**metadata());out['fatigue_curve']=starter_curve(DATE);out['source']=f'Rebas，日期嚴格早於 {DATE}；疲勞曲線使用截止日前資料'
+ (Path(os.environ.get('BASEBALL_STATIC_OUT', ROOT/'docs/data'))/f'history-context-{DATE}.json').write_text(json.dumps(out,ensure_ascii=False,allow_nan=False,indent=2)+'\n',encoding='utf-8')
  print('Exported pregame player context')

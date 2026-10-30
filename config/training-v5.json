@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "training_version": 5,
+  "engine_contract": 5,
+  "seed": 0,
+  "data_seasons": [2024, 2025],
+  "cutoffs": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2026-01-01"],
+  "policy": "isolated candidate training; no automatic adoption or production overwrite"
+}
