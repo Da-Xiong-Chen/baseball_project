@@ -740,3 +740,6 @@
 /scripts/export_fielding_plans.py -text
 
 /docs/data/fielding-plans-2025-09-20.json -text
+
+# Training spec bytes participate in candidate source authority.
+/config/*.json -text

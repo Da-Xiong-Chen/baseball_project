@@ -1,6 +1,13 @@
 /* Local candidate presets; never changes model values or availability rules. */
 (function(root) {
-  const names=['勝投組','敗投組','自訂義群組'], prefix='cpbl-pitcher-groups-v3:';
+  const names=['勝投組','敗投組','自訂義群組'];
+  let prefix='cpbl-pitcher-groups-v3:',runtimeSeason=2025;
+  function setRuntime(config){
+    if(!Number.isInteger(config.season))throw Error('Invalid season');
+    if(runtimeSeason!==config.season)sessions.clear();
+    runtimeSeason=config.season;prefix=runtimeSeason===2025?'cpbl-pitcher-groups-v3:':`cpbl-pitcher-groups-${runtimeSeason}-v3:`;
+  }
+  const legacyPrefix=version=>runtimeSeason===2025?`cpbl-pitcher-groups-v${version}:`:`cpbl-pitcher-groups-${runtimeSeason}-v${version}:`;
   const sessions=new Map();
   const label=n=>typeof PlayerIdentity!=='undefined'?PlayerIdentity.currentName(n):String(n??'');
   const copy=g=>({name:g.name,members:[...g.members]});
@@ -18,7 +25,7 @@
     const raw=storage.getItem(prefix+team);
     if(raw==null)return [];
     const data=JSON.parse(raw);
-    if(data.version!==3||!Array.isArray(data.groups))throw Error('群組格式無效');
+    if(data.version!==3||!Array.isArray(data.groups)||(data.season!=null&&data.season!==runtimeSeason))throw Error('群組格式無效');
     const groups=sanitize(data.groups);
     if(groups.length!==3||!names.every(n=>groups.some(g=>g.name===n)))throw Error('群組格式無效');
     return names.map(n=>migrateGroup(groups.find(g=>g.name===n),team));
@@ -27,13 +34,14 @@
     try {
       const rows=sanitize(groups);
       if(rows.length!==3||!names.every(n=>rows.some(g=>g.name===n)))return false;
-      const data=JSON.stringify({version:3,groups:names.map(n=>rows.find(g=>g.name===n)),selected});
+      const data=JSON.stringify({version:3,season:runtimeSeason,groups:names.map(n=>rows.find(g=>g.name===n)),selected});
       storage.setItem(prefix+team,data);return storage.getItem(prefix+team)===data;
     } catch{return false;}
   }
   const closers={'中信兄弟':'吳俊偉','台鋼雄鷹':'林詩翔','味全龍':'陳冠偉','富邦悍將':'曾峻岳','樂天桃猿':'陳柏豪','統一7-ELEVEn獅':'陳韻文'};
   function defaults(pitchers,team) {
-    const relievers=pitchers.filter(p=>p.role==='後援').slice().sort((a,b)=>Number((b.display_name||b.name)===closers[team])-Number((a.display_name||a.name)===closers[team])||(b.games||0)-(a.games||0)||label(a.name).localeCompare(label(b.name),'zh-Hant'));
+    const closer=runtimeSeason===2025?closers[team]:null;
+    const relievers=pitchers.filter(p=>p.role==='後援').slice().sort((a,b)=>Number((b.display_name||b.name)===closer)-Number((a.display_name||a.name)===closer)||(b.games||0)-(a.games||0)||label(a.name).localeCompare(label(b.name),'zh-Hant'));
     const split=Math.min(3,Math.max(1,relievers.length-1));
     return [{name:names[0],members:relievers.slice(0,split).map(p=>p.name)},{name:names[1],members:relievers.slice(split).map(p=>p.name)},{name:names[2],members:[]}];
   }
@@ -45,7 +53,7 @@
       if(existing.length) {
         const saved=JSON.parse(storage.getItem(prefix+team));
         let preserved=[];
-        try { const older=storage.getItem('cpbl-pitcher-groups-v2:'+team);preserved=sanitize(older?JSON.parse(older).groups:JSON.parse(storage.getItem('cpbl-pitcher-groups-v1:'+team)||'[]')); } catch {}
+        try { const older=storage.getItem(legacyPrefix(2)+team);preserved=sanitize(older?JSON.parse(older).groups:JSON.parse(storage.getItem(legacyPrefix(1)+team)||'[]')); } catch {}
         const migrated=resolveMembers(existing,pitchers),selected=names.includes(saved.selected)?saved.selected:names[0];
         let error='';
         if(migrated.changed||migrated.unresolved.length){
@@ -56,8 +64,8 @@
         if(migrated.unresolved.length)error='有 '+migrated.unresolved.length+' 位舊群組球員無法唯一對應，請核對成員。';
         return {groups:migrated.groups,legacy:resolveMembers(preserved,pitchers).groups,selected,error};
       }
-      const raw=storage.getItem('cpbl-pitcher-groups-v2:'+team), old=raw==null?null:JSON.parse(raw);
-      const legacy=sanitize(old?old.groups:JSON.parse(storage.getItem('cpbl-pitcher-groups-v1:'+team)||'[]')).map(g=>migrateGroup(g,team));
+      const raw=storage.getItem(legacyPrefix(2)+team), old=raw==null?null:JSON.parse(raw);
+      const legacy=sanitize(old?old.groups:JSON.parse(storage.getItem(legacyPrefix(1)+team)||'[]')).map(g=>migrateGroup(g,team));
       const custom=legacy.filter(g=>!names.includes(g.name));
       const chosen=legacy.find(g=>g.name===names[2])||custom.find(g=>g.name===old?.selected)||(custom.length===1?custom[0]:null);
       const originalGroups=fallback.map(g=>copy(legacy.find(o=>o.name===g.name)||(g.name===names[2]&&chosen?{...chosen,name:names[2]}:g)));
@@ -85,7 +93,7 @@
     if(!sessions.has(team))sessions.set(team,{drafts:new Map(),selected:state.selected,applied:null});
     const session=sessions.get(team);
     const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    element.innerHTML=`<label class="f" for="pitcherGroupSelect">投手群組</label><div class="pitcher-group-actions"><select id="pitcherGroupSelect"></select><button type="button" class="link" id="pitcherGroupApply"><svg class="ui-icon" aria-hidden="true"><use href="#icon-apply"/></svg>套用</button></div><details class="pitcher-group-editor"><summary>編輯群組成員</summary><p class="mut">2025 後援範本，非官方分組。</p><div class="checklist group-members" aria-label="群組成員"></div><label class="legacy-import hidden">從舊群組帶入<select aria-label="從舊群組帶入"><option value="">選擇舊群組</option></select></label><div class="pitcher-group-actions"><button type="button" class="link" id="pitcherGroupSave"><svg class="ui-icon" aria-hidden="true"><use href="#icon-save"/></svg>儲存</button><button type="button" class="link" id="pitcherGroupCancel"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clear"/></svg>取消修改</button><span class="draft-state" role="status"></span></div></details><p class="pitcher-group-status" role="status"></p>${availability?'':'<div class="today-availability" aria-live="polite"></div>'}`;
+    element.innerHTML=`<label class="f" for="pitcherGroupSelect">投手群組</label><div class="pitcher-group-actions"><select id="pitcherGroupSelect"></select><button type="button" class="link" id="pitcherGroupApply"><svg class="ui-icon" aria-hidden="true"><use href="#icon-apply"/></svg>套用</button></div><details class="pitcher-group-editor"><summary>編輯群組成員</summary><p class="mut">${runtimeSeason} 後援範本，非官方分組。</p><div class="checklist group-members" aria-label="群組成員"></div><label class="legacy-import hidden">從舊群組帶入<select aria-label="從舊群組帶入"><option value="">選擇舊群組</option></select></label><div class="pitcher-group-actions"><button type="button" class="link" id="pitcherGroupSave"><svg class="ui-icon" aria-hidden="true"><use href="#icon-save"/></svg>儲存</button><button type="button" class="link" id="pitcherGroupCancel"><svg class="ui-icon" aria-hidden="true"><use href="#icon-clear"/></svg>取消修改</button><span class="draft-state" role="status"></span></div></details><p class="pitcher-group-status" role="status"></p>${availability?'':'<div class="today-availability" aria-live="polite"></div>'}`;
     const q=s=>element.querySelector(s),select=q('#pitcherGroupSelect'),status=q('.pitcher-group-status'),availabilityBox=availability||q('.today-availability');
     const boxes=()=>Array.from(list.querySelectorAll('input[type=checkbox]'));
     const group=()=>groups.find(g=>g.name===select.value);
@@ -139,6 +147,6 @@
   if(root.addEventListener)root.addEventListener('beforeunload',e=>{
     if([...sessions.values()].some(s=>s.dirty)){e.preventDefault();e.returnValue='';}
   });
-  root.PitcherGroups={read,write,defaults,load,loadState,membership,mount,names,resolveMembers};
+  root.PitcherGroups={setRuntime,read,write,defaults,load,loadState,membership,mount,names,resolveMembers};
   if(typeof module!=='undefined')module.exports=root.PitcherGroups;
 })(typeof window!=='undefined'?window:globalThis);

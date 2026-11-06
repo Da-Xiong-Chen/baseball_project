@@ -12,6 +12,7 @@ import recent
 
 from roster import POS_ZH, active_roster, assign_positions, defense_check, hitter_pool, positions_of, reliever_pool
 from historical_actors import at_start, game_pitches
+from runtime_config import settings
 
 
 @lru_cache(maxsize=32)
@@ -208,7 +209,7 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
 
 
 def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, due, due_pos,
-                     bench, lineup_positions=None, date="2025-12-31", bat_team=None, fld_team=None,
+                     bench, lineup_positions=None, date=None, bat_team=None, fld_team=None,
                      next_batters=None, pen=None, pitch_count=None, starter=None,
                      streaks=None, fatigue_d2=0.0, fatigue_d3=0.0, recent_weight=0.0):
     """由使用者輸入建立情境（不依賴歷史打席）。
@@ -216,6 +217,9 @@ def custom_situation(inning, half, bat_score, fld_score, bases, outs, pitcher, d
     streaks：{投手: 今天之前連續登板天數}；fatigue_d2／fatigue_d3：連投第 2 天／第 3 天以上每打席額外失分值；
     recent_weight：近況權重 0–1。三者皆為使用者設定，預設不影響評估。
     """
+    if starter is not None and type(starter) is not bool:
+        raise ValueError("starter 須為布林值或 null")
+    date=date or settings().cutoff
     if starter is None:
         starter = is_starter(pitcher, date)
     _, phands = _hands(date)
@@ -236,7 +240,8 @@ def is_starter(pitcher, cutoff=None):
     boxes = load()[2]
     if cutoff:
         boxes = boxes[boxes["date"] < pd.Timestamp(cutoff)]
-    d = boxes[(boxes["role"] == "P") & (boxes["name"] == pitcher) & (boxes["date"].dt.year == 2025)]
+    year=min(pd.Timestamp(cutoff).year,settings().season) if cutoff else settings().season
+    d = boxes[(boxes["role"] == "P") & (boxes["name"] == pitcher) & (boxes["date"].dt.year == year)]
     return bool(len(d)) and (d["order"] == 1).mean() >= 0.5
 
 

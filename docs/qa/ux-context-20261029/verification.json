@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-29",
+  "scope": "separate capacity worksheet from model assessment; invalidate stale capacity results",
+  "cloud_sync_before_edit": {
+    "local_head": "b7677234c4057558f4dec0b21024ce1c41f727dd",
+    "remote_update_branch_head": "b7677234c4057558f4dec0b21024ce1c41f727dd",
+    "ahead": 0,
+    "behind": 0,
+    "main": "a62df2bf1f805e8d2086914eba45bf8e5f6bffe1",
+    "dependency_branch": "2074e424b89f70384c09a3f66ec90bb92ff39537",
+    "dependency_integrated": true,
+    "pr": 33,
+    "draft": true,
+    "merged": false
+  },
+  "tests": {
+    "javascript": {
+      "passed": 206,
+      "failed": 0
+    },
+    "python": {
+      "passed": 143,
+      "failed": 0
+    },
+    "site_files": 696,
+    "site_json_files": 681,
+    "site_bytes": 80496806
+  },
+  "browser": {
+    "status": "tested_local_static",
+    "report": "browser-report.json",
+    "widths": [
+      320,
+      390,
+      1024,
+      1440
+    ],
+    "capacity_and_lineup_overflow": 0,
+    "console_errors": 0,
+    "limitations": [
+      "physical touch not tested",
+      "offline/storage denial/cancel manual simulation not performed",
+      "pending-request isolation tested automatically only"
+    ]
+  },
+  "model_data_and_ppt_modified": false,
+  "release_ready_claimed": false,
+  "changed_runtime_assets": {
+    "docs/app.js": {
+      "previous_sha256": "b14de1b2c8db4611803a6c7f8fa234ed4f43e238e5f07e755142db3ef51d35ab",
+      "sha256": "da730f86a38c89dee128f7b664a65102deacf433845f1953e135ea6c3a6bd2ef"
+    },
+    "docs/bullpen-plan-ui.js": {
+      "previous_sha256": "2c40189fccc37a9933176f82c33f1d519fa1f1435536bda2574a2c2ef7f85b3e",
+      "sha256": "b7c8f4dfd2950f361c41fba42aa38dc3979f6e900bf08d3ef5fe69b7caf6dfe9"
+    },
+    "docs/index.html": {
+      "previous_sha256": "8bef9019619908629bd3196c4f1cd7873a004401c39de31bb3c5088f6722894a",
+      "sha256": "bbcc73143d8cbfeededcae2d557e47dfc0dc473b01ffbc30a5a45c95067e35ef"
+    }
+  },
+  "delivery": "authorized update to existing draft PR #33 after local browser checks",
+  "publication": "PR review only; no merge or deployment"
+}

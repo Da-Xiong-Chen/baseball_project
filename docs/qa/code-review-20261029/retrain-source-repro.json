@@ -1,0 +1,10 @@
+{
+  "case": "raw_changed_checkpoint_reused",
+  "fixture_only": true,
+  "actual_raw_sha_changed": true,
+  "reported_source_id_unchanged": true,
+  "reused": true,
+  "status": "complete",
+  "production_data_modified": false,
+  "training_started": false
+}

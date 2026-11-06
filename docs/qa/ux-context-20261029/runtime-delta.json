@@ -1,0 +1,23 @@
+{
+  "schema": "baseball.ui-runtime-delta.v1",
+  "previous_receipt": "docs/qa/ux-refinement-20261029/runtime-delta.json",
+  "previous_receipt_sha256": "5e4cfcd0f33914792b968f6ee69168ff220a792b353da430842c0b8b0c3f16ec",
+  "base_commit": "b7677234c4057558f4dec0b21024ce1c41f727dd",
+  "changed_files": {
+    "docs/app.js": {
+      "previous_sha256": "b14de1b2c8db4611803a6c7f8fa234ed4f43e238e5f07e755142db3ef51d35ab",
+      "sha256": "da730f86a38c89dee128f7b664a65102deacf433845f1953e135ea6c3a6bd2ef"
+    },
+    "docs/bullpen-plan-ui.js": {
+      "previous_sha256": "2c40189fccc37a9933176f82c33f1d519fa1f1435536bda2574a2c2ef7f85b3e",
+      "sha256": "b7c8f4dfd2950f361c41fba42aa38dc3979f6e900bf08d3ef5fe69b7caf6dfe9"
+    },
+    "docs/index.html": {
+      "previous_sha256": "8bef9019619908629bd3196c4f1cd7873a004401c39de31bb3c5088f6722894a",
+      "sha256": "bbcc73143d8cbfeededcae2d557e47dfc0dc473b01ffbc30a5a45c95067e35ef"
+    }
+  },
+  "browser_report": "browser-report.json",
+  "numeric_model_or_weights_changed": false,
+  "publication": "draft PR only"
+}

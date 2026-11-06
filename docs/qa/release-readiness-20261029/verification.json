@@ -1,0 +1,33 @@
+{
+  "base_commit": "b60a675a825229f5ceb1c83caf12b376b413c5e6",
+  "tests": {
+    "frontend": 208,
+    "fixture_python_without_raw": 45,
+    "full_python": 157
+  },
+  "training_smoke": "training-smoke.json",
+  "browser": "browser-abnormal.json",
+  "raw_free_ci": "ci-without-raw-summary.json",
+  "formal_weights_unchanged": 9,
+  "model_adopted": false,
+  "ppt_changed": false,
+  "github_actions_cloud_status": "not_observed_before_push",
+  "runtime_assets": {
+    "docs/app.js": "ec282d844062592ce8af7ca74357cdb89f54756679fcd97b2b68da3c418b55ee",
+    "docs/lineup.js": "02f15642d7cae2b81bb75a7fbe5e2bd2f3455e91bc0f4aa6f929d4a4b498f94d",
+    "docs/index.html": "2543c151e731e4a351d5604dda767b7b17ef16b7ae226c22c0371de67a59faaa"
+  },
+  "repository_check": {
+    "python_syntax": 101,
+    "javascript_syntax": 11,
+    "local_links": 222,
+    "documents": 10,
+    "errors": []
+  },
+  "site": {
+    "files": 696,
+    "json_files": 681,
+    "bytes": 80497058,
+    "output": null
+  }
+}

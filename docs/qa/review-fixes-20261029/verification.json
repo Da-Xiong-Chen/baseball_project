@@ -1,0 +1,36 @@
+{
+  "base_commit": "0ee4a20446120ba6415104ef9b7d8fd946673d5d",
+  "fixes": [
+    "CR-01",
+    "CR-02",
+    "CR-03"
+  ],
+  "tests": {
+    "python": 153,
+    "javascript": 207,
+    "syntax_python": 98,
+    "syntax_javascript": 11
+  },
+  "site": {
+    "files": 696,
+    "json_files": 681,
+    "bytes": 80496914
+  },
+  "formal_weights_unchanged": 9,
+  "models_retrained": false,
+  "production_data_changed": false,
+  "ppt_changed": false,
+  "browser": "browser.json",
+  "delivery": "existing draft PR; no merge or deployment",
+  "runtime_assets": {
+    "docs/engine.js": {
+      "previous_sha256": "7fae7f3802fb11572c752ff2da8f62e6b478b8c7b84381378953cf4f30598381",
+      "sha256": "2bc91d18e83b32231ce696bdfab1b880a98e3f50ff1458c805f3333a5d27a427"
+    },
+    "docs/index.html": {
+      "previous_sha256": "bbcc73143d8cbfeededcae2d557e47dfc0dc473b01ffbc30a5a45c95067e35ef",
+      "sha256": "739d7f3138fc741d2459fdc6068ee7186ca9a7870672ae86b081d8f2082b89a6"
+    }
+  },
+  "previous_runtime_receipt": "docs/qa/ux-context-20261029/runtime-delta.json"
+}

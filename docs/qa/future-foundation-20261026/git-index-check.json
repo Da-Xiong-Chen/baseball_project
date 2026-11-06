@@ -1,0 +1,313 @@
+{
+  "passed": true,
+  "changed_files": 61,
+  "runtime_files_sha_verified": 696,
+  "forbidden_raw_or_model_files": 0,
+  "files": [
+    {
+      "file": ".gitignore",
+      "bytes": 1913,
+      "git_blob_sha256": "63bf2e10c982423cf71de09f19c1e89f41003bb2595febfc02efd19f33fe2ab6"
+    },
+    {
+      "file": "docs/app.js",
+      "bytes": 125529,
+      "git_blob_sha256": "b14de1b2c8db4611803a6c7f8fa234ed4f43e238e5f07e755142db3ef51d35ab"
+    },
+    {
+      "file": "docs/bullpen-plan-ui.js",
+      "bytes": 3808,
+      "git_blob_sha256": "818b602c9e936d8b01dd1054b2dca178277ab16f826860df1089147f7c912185"
+    },
+    {
+      "file": "docs/bullpen-plan.js",
+      "bytes": 2063,
+      "git_blob_sha256": "da831284cf98205453d6457be8c88317cbceb5b4a081586bf3ab5e132eab42c9"
+    },
+    {
+      "file": "docs/data/model.json",
+      "bytes": 974187,
+      "git_blob_sha256": "61ebd027119745b7213a307d468de69124596b9021354d23d8daeec62f3ef5eb"
+    },
+    {
+      "file": "docs/future-foundation-20261026.md",
+      "bytes": 7017,
+      "git_blob_sha256": "0c98c7594f7328bbf3b71cccfe6f75d87bcdf586a1816598a9861c5c36277e78"
+    },
+    {
+      "file": "docs/future-work-progress.md",
+      "bytes": 9758,
+      "git_blob_sha256": "0c0dbaec6989e8b462c210ff37840cefcaff02d4fdf42974098437e0a9df5476"
+    },
+    {
+      "file": "docs/index.html",
+      "bytes": 25991,
+      "git_blob_sha256": "8ad8f6520ef574be71fceaede391aa3cbe9b05751e777901795fdc36e7b5928b"
+    },
+    {
+      "file": "docs/lineup.js",
+      "bytes": 19135,
+      "git_blob_sha256": "975c0c05bda434edd4cd40977c19b8b069ff5178a70a758d8373421c8da3db28"
+    },
+    {
+      "file": "docs/pitcher-groups.js",
+      "bytes": 14067,
+      "git_blob_sha256": "602b6485f333f98c280b806054d5e4e70bdb4a2b9ae50a6c3c41e2b5115fc11f"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/README.md",
+      "bytes": 1985,
+      "git_blob_sha256": "7a33ebb0cfd6355ac19c18ac5a53d68e9874556b76cc0d732b49003f5513c0eb"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/api-console.json",
+      "bytes": 2,
+      "git_blob_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/capacity-1024.jpg",
+      "bytes": 66606,
+      "git_blob_sha256": "f7752548a7c28e9e2df1c3414e38c9fdea457c4b8e9bc161f99ce6ee9b7f650b"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/capacity-1440.jpg",
+      "bytes": 65162,
+      "git_blob_sha256": "35aa8482b092b91688c4bc2eea0bad7633ba57183cd65b722aa740f1c887579a"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/capacity-320.jpg",
+      "bytes": 28882,
+      "git_blob_sha256": "62735c90910fe3272fdf1bfc31a63f2a2a12f4790a4f1745d316363fb489fb2a"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/capacity-390.jpg",
+      "bytes": 42528,
+      "git_blob_sha256": "56460a0a19d538a24093b72eaa4c7d7b2080906c0545ab60f3f7ddef8ddd6530"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/lineup-desktop.jpg",
+      "bytes": 92057,
+      "git_blob_sha256": "6ac04ce19c41f87c18c0ef8b9b09915b7394834b2547e0c07b765a3bfafa11bf"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/pitching-desktop.jpg",
+      "bytes": 99598,
+      "git_blob_sha256": "0480e80ea53440781f37615726d758db03beb08304f8e023f0ee439b9636ca72"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/replay-desktop.jpg",
+      "bytes": 113937,
+      "git_blob_sha256": "b94483282434aeb26d9e3b2ce0fcb8183bf716118cf9491b07e834b6a2054bf3"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/report.json",
+      "bytes": 3616,
+      "git_blob_sha256": "b32431e0fccca7bba7b28c0d18187f2cc8ab3ef10217d85a2047b4a817637e8b"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/static-console.json",
+      "bytes": 2,
+      "git_blob_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/browser/static-replay.txt",
+      "bytes": 26633,
+      "git_blob_sha256": "723007b72ae6a610525a5a2333531281219303063fb740a7fdba9fa918d31680"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/http-report.json",
+      "bytes": 3649,
+      "git_blob_sha256": "c666211038394ddfe1f4bf0a8a6a4732c808fc858c42dd94de3ebb7ca85767c3"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/intake-receipt.json",
+      "bytes": 258215,
+      "git_blob_sha256": "b11994fa583d5a825bb10e8abbc923b23b838bda7555adf6773b6fbdeac1f3a1"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/js-tests.log",
+      "bytes": 18241,
+      "git_blob_sha256": "de1b57ce323dbebb9f6a98b6c5612a2674d54e402bd415f79c811a5ea3593783"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/ppt-delivery.json",
+      "bytes": 19683,
+      "git_blob_sha256": "8e82a2f23d79fcfe15d4bb1b0e0ec018c6cf42d9234f5ebfa6c3667d2ae41ef6"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/prepush-decisions.json",
+      "bytes": 338,
+      "git_blob_sha256": "bb0895e13f093beac33032d67b5462ac0049543c1c02cd906a7be9e4a01be060"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/prepush-site.log",
+      "bytes": 79,
+      "git_blob_sha256": "eb0f5eb35425c1a86c75f84b9b576164a163bd8314981dbeef5077b84f31b992"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/python-tests.log",
+      "bytes": 243,
+      "git_blob_sha256": "db523cc8f92a8316a96d12d06ba7d92f19a2d46ba827a37ce5fd0ef193681cf1"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/recency-pilot.json",
+      "bytes": 141960,
+      "git_blob_sha256": "bef5705e5da9dd33b2f45761f2d56e10e58d1cd7d3284814b798b24b12bb48e5"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/recency-spec.json",
+      "bytes": 85186,
+      "git_blob_sha256": "af5f3576fbd8177c5d1e3d6ffe2d75ef3eb3fd67ce468a90dae95a991f1688fc"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/release-manifest.json",
+      "bytes": 78688,
+      "git_blob_sha256": "6d9b1584dbb4adaaa127a8f2555ff84470dc8ce6f1130da1bec5e1fca312eccf"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/runtime-export-receipt.json",
+      "bytes": 1039,
+      "git_blob_sha256": "f6e0444a64f7636e73dea87a9ba081756ba4fef7cae195f8d5a516c63064d59b"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/summary-before-browser.json",
+      "bytes": 5757,
+      "git_blob_sha256": "333cb4af0906a0420f61b25032854e1608b86efc0a858c8c2c5e4ad93e42412c"
+    },
+    {
+      "file": "docs/qa/future-foundation-20261026/summary.json",
+      "bytes": 6489,
+      "git_blob_sha256": "594e00ba9fbb8759403e3de6a32008bb93330b326b436a7a981f6054cdb76a1d"
+    },
+    {
+      "file": "docs/style.css",
+      "bytes": 85027,
+      "git_blob_sha256": "df0587bde0d346d7bf0ba86ffe602e30d8cefc20d5276014a04bf9b540f32f85"
+    },
+    {
+      "file": "presentations/competition-2026/README.md",
+      "bytes": 4392,
+      "git_blob_sha256": "c1924d1ea4aa701152fde7b1d80cbd6c9a8d3a89111e12ffed379112d09bffd9"
+    },
+    {
+      "file": "presentations/competition-2026/future-foundation-20261026/一球兩面_臨場用人決策_32頁_20261026_審閱版.pdf",
+      "bytes": 924012,
+      "git_blob_sha256": "c1e75dbaccdecc79b9ce7f2cfd07a743a1eee5d0b9a98a0c0f302c8393f73c0a"
+    },
+    {
+      "file": "presentations/competition-2026/future-foundation-20261026/一球兩面_臨場用人決策_32頁_20261026_審閱版.pptx",
+      "bytes": 2152455,
+      "git_blob_sha256": "8c19f09597bf33a139c5b802f7e17a91aad43f09b56b5a6d8054f340341a5308"
+    },
+    {
+      "file": "scripts/export_default_lineups.py",
+      "bytes": 4918,
+      "git_blob_sha256": "486015d0b5030d49b45fe2a658f419ec73d7d259aa3192eb8fd3086d9f372a5c"
+    },
+    {
+      "file": "scripts/export_fielding_plans.py",
+      "bytes": 2047,
+      "git_blob_sha256": "b54fc5e00d918792ee99cf154e95866900de585dc7da7fb751d0ef967ee74bfc"
+    },
+    {
+      "file": "scripts/export_history_context.py",
+      "bytes": 2724,
+      "git_blob_sha256": "7fe15b00feafdcbf5e7cbb3df24239ef1a3b38428c7eff7d334fe24e4d21839e"
+    },
+    {
+      "file": "scripts/export_history_day.py",
+      "bytes": 3423,
+      "git_blob_sha256": "b0b71c1de744677df327cb23e5aa4cc6eb0205c4b5e0730cc5317c3f6240932a"
+    },
+    {
+      "file": "scripts/export_identity_auxiliary.py",
+      "bytes": 1349,
+      "git_blob_sha256": "5d5e1482b6a099a81e256e57ca776bdcc92fc6bb79741ad74ca6f9388b542337"
+    },
+    {
+      "file": "scripts/export_player_numbers.py",
+      "bytes": 2230,
+      "git_blob_sha256": "348c62d04611c2af38b783ffb907a28e54f5908a99f6c4c4159008a17d5de781"
+    },
+    {
+      "file": "scripts/pilot_ensemble_recency.py",
+      "bytes": 7340,
+      "git_blob_sha256": "6e7b5eb40f1e283a545c4ed128f1c2d8c57c371690cce38f0d98bde0b2d7b1a1"
+    },
+    {
+      "file": "scripts/stage_season_update.py",
+      "bytes": 6144,
+      "git_blob_sha256": "f5405a4cf62223abbcfe08bc59a5c0c476df2805d4cd47451a4c2c2b340c090b"
+    },
+    {
+      "file": "server.py",
+      "bytes": 16564,
+      "git_blob_sha256": "314a56eb6265f9a3b0a0548593c638178c8d647160534423d96a0e9dd0ae6891"
+    },
+    {
+      "file": "src/batch_contract.py",
+      "bytes": 1980,
+      "git_blob_sha256": "186ed5c887acbded8bb9698a84b107f12ebb2aba0fc6342792e9e26db8889c44"
+    },
+    {
+      "file": "src/engine.py",
+      "bytes": 17628,
+      "git_blob_sha256": "7d8c0562d2163b152612f02d5c9852ee9f3e03bba7a395a75000c57c9bd3acb6"
+    },
+    {
+      "file": "src/export_static.py",
+      "bytes": 7737,
+      "git_blob_sha256": "27706f0e4dc104c244b1594414ff492b2a276df209c6810a9ec621aa55e0486f"
+    },
+    {
+      "file": "src/load.py",
+      "bytes": 11944,
+      "git_blob_sha256": "d2ef1859c489136582be382e8d5272a0e8f99c49d2afff010364ad59e57626bd"
+    },
+    {
+      "file": "src/mlmodel.py",
+      "bytes": 12399,
+      "git_blob_sha256": "aff8a3bc0aa57d82c86670b8bd27fefc6c688aa9b2a1af109f7ff891ae8e87c9"
+    },
+    {
+      "file": "src/roster.py",
+      "bytes": 8411,
+      "git_blob_sha256": "5544218b046fdf90d099c2095224021e197c1366ee44e6fe55e27a0dfd35cb09"
+    },
+    {
+      "file": "src/runtime_config.py",
+      "bytes": 3759,
+      "git_blob_sha256": "3f9bdf9bd9f45b5735819bb1d0bace8b97ffdc81694aeae6a226fe3c3ca95225"
+    },
+    {
+      "file": "src/timing_backtest.py",
+      "bytes": 22821,
+      "git_blob_sha256": "acd68309319ffab33d17e9eaaa567afac646fb45c47462db1111e2eab19fdf02"
+    },
+    {
+      "file": "tests/test_bullpen_plan.cjs",
+      "bytes": 1708,
+      "git_blob_sha256": "075eca6005392f806431b5b30f5bf7843d6aa86dd2661a8f03d29f74066a061f"
+    },
+    {
+      "file": "tests/test_bullpen_plan_ui.cjs",
+      "bytes": 1241,
+      "git_blob_sha256": "d8593c32daf1cfc24f4ed7a6c83b359cee06775d4bab7c39aaf16750df02d6bf"
+    },
+    {
+      "file": "tests/test_incremental_intake.py",
+      "bytes": 4022,
+      "git_blob_sha256": "9209532fe34cc99d601ed1d84c6a88074fa5eae8dc3c90d7b92221ae5391b3ec"
+    },
+    {
+      "file": "tests/test_runtime_config.py",
+      "bytes": 1514,
+      "git_blob_sha256": "2bfa355dbd1f8dc542dd702bf9b4b9970a2867425286073b4104fc9e4eeec132"
+    },
+    {
+      "file": "tests/test_runtime_storage.cjs",
+      "bytes": 1178,
+      "git_blob_sha256": "0f2e18cc0c4fc2ad37cc23bd35c35ce6b45aa8f0b47606c20e05f305a4200443"
+    }
+  ]
+}

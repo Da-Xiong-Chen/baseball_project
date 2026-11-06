@@ -1,0 +1,14 @@
+{
+  "controller_pid": 16580,
+  "source_id": "60e889ba22410e9e8bc0d037a9caf00dba32d77d08200390b17f23802c619bee",
+  "max_workers": 1,
+  "threads_per_worker": 2,
+  "status": "failed",
+  "jobs": {
+    "2025-03-01": {
+      "status": "failed",
+      "pid": 31384,
+      "exit_code": 4294967295
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8026/",
+  "mode": "pure static",
+  "date": "2026-10-29",
+  "checks": {
+    "freshReload": true,
+    "starter110PitchAssessmentPassed": true,
+    "starterDisplayedFatigueRuns": 0.196,
+    "reliever110PitchAssessmentPassed": true,
+    "pinchHitAssessmentPassed": true,
+    "consoleWarningsAndErrors": 0
+  },
+  "scope": "Normal user interface inputs after strict starter validation; malformed starter payloads tested by automated contracts",
+  "physicalTouchTested": false
+}

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "runtime_added": {
+    "data_seasons": [
+      2024,
+      2025
+    ],
+    "season": 2025,
+    "cutoff": "2026-01-01",
+    "history_date": "2025-09-20",
+    "replay_cutoffs": [
+      "2025-03-01",
+      "2025-04-01",
+      "2025-05-01",
+      "2025-06-01",
+      "2025-07-01",
+      "2025-08-01",
+      "2025-09-01",
+      "2025-10-01"
+    ],
+    "schema_version": 1,
+    "runtime_id": "0f1c5fc3699f2ca9c55e1920f450d680b47220e1bfa937a6e4216bdb2b3c3993",
+    "assets": {
+      "default_lineups": "data/default-lineups-2025.json",
+      "numbers": "data/player-numbers-2025.json",
+      "history_context": "data/history-context-2025-09-20.json",
+      "fielding_plans": "data/fielding-plans-2025-09-20.json",
+      "timing": "data/timing-2025.json",
+      "day_index": "data/replay/day-2025-09-20/index.json"
+    },
+    "cutoff_inclusive": false
+  },
+  "old_sha256": "353362a001c98c186aabcf37c03592e1864454a8fc126edd2ee70bcfcdabcc22",
+  "new_sha256": "61ebd027119745b7213a307d468de69124596b9021354d23d8daeec62f3ef5eb"
+}

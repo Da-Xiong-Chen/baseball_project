@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-26",
+  "apiUrl": "http://127.0.0.1:8026/",
+  "staticUrl": "http://127.0.0.1:8027/",
+  "status": "tested_core_flows",
+  "capacityCases": [
+    {
+      "case": "shortage",
+      "text": [
+        "尚缺 1 打席容量 · 已涵蓋 8／9 打席陳冠宇：安排 3 打席，剩餘 0朱承洋：安排 5 打席，剩餘 0保留：莊昕諺（容量待確認）、陳柏豪（容量待確認）、蘇俊璋（容量待確認）、賴胤豪（容量待確認）、王志煊（容量待確認）、呂詠臻（容量待確認）、邱駿威（容量待確認）、曾仁和（容量待確認）、舒治浩（容量待確認）、劉昱言（容量待確認）、黃偉晟（容量待確認）、盧冠宇（容量待確認）容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+      ]
+    },
+    {
+      "case": "retired",
+      "text": [
+        "自由選擇球員；已存的球隊名單仍會保留。",
+        "0 出局",
+        "已退場或不可用投手不能排入接續"
+      ]
+    },
+    {
+      "case": "unknown",
+      "text": [
+        "自由選擇球員；已存的球隊名單仍會保留。",
+        "0 出局",
+        "請先確認接續投手剩餘容量"
+      ]
+    },
+    {
+      "case": "duplicate",
+      "text": [
+        "自由選擇球員；已存的球隊名單仍會保留。",
+        "0 出局",
+        "接續順位不可重複。"
+      ]
+    }
+  ],
+  "capacityResponsive": [
+    {
+      "client": 305,
+      "overflow": [],
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "client": 375,
+      "overflow": [],
+      "scroll": 375,
+      "width": 390
+    },
+    {
+      "client": 1009,
+      "overflow": [],
+      "scroll": 1009,
+      "width": 1024
+    },
+    {
+      "client": 1425,
+      "overflow": [],
+      "scroll": 1425,
+      "width": 1440
+    }
+  ],
+  "replayResponsive": [
+    {
+      "client": 305,
+      "scroll": 305,
+      "width": 320
+    },
+    {
+      "client": 375,
+      "scroll": 375,
+      "width": 390
+    },
+    {
+      "client": 1009,
+      "scroll": 1009,
+      "width": 1024
+    },
+    {
+      "client": 1425,
+      "scroll": 1425,
+      "width": 1440
+    }
+  ],
+  "verified": [
+    "general pinch-hit and pitching evaluation",
+    "team batting-order apply and reload persistence; original default restored",
+    "three September 20 games and pitching/hitting review",
+    "prediction then actual substitution then PA outcome disclosure",
+    "historical full comparison in API and static modes",
+    "capacity success 7/7 with 3+4 PA allocation in both modes",
+    "capacity failure cases and roster-change refusal",
+    "capacity collapse/reopen draft preserved after fix",
+    "duplicate next batters rejected and corrected input recalculates",
+    "rapid audience switching returns general evaluation",
+    "keyboard Enter toggle and Tab visible focus",
+    "no NaN/undefined/Infinity or raw player IDs in checked visible results"
+  ],
+  "fix": {
+    "issue": "capacity fields lost on collapse/reopen",
+    "resolved": true,
+    "cacheVersion": "20261026-2",
+    "regressionTest": "tests/test_bullpen_plan_ui.cjs"
+  },
+  "limitations": [
+    "viewport emulation, not physical mobile touch",
+    "lineup responsive retry did not resize target after multi-tab testing; desktop lineup and capacity/replay four-size measurements are recorded separately",
+    "offline/storage denial/cancel not manually simulated in this browser run",
+    "pitching-obligation legality and multi-inning model remain outside capacity worksheet"
+  ],
+  "javascriptTests": 198,
+  "published": false
+}
