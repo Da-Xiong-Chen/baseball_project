@@ -77,6 +77,13 @@ class InputTests(unittest.TestCase):
 
     def test_valid_and_empty_bench(self):validate_evaluation(self.body)
 
+    def test_custom_evaluation_cannot_be_backdated(self):
+        from server import FULL
+        with self.assertRaisesRegex(ValueError, '歷史情境請用回放'):
+            validate_evaluation(dict(self.body, date='2025-04-01'))
+        for date in (None, FULL):
+            self.assertNotIn('date', validate_evaluation(dict(self.body, date=date)))
+
     def test_invalid_input_contract(self):
         for kw in [dict(bat_score=-1),dict(outs=3),dict(bases=8),dict(inning=1.5),dict(pitch_count=161),dict(fld_team='A'),dict(bench=['H']),dict(bench=['unknown']),dict(next_batters=['H','H','I']),dict(pitcher='unknown')]:
             with self.subTest(kw=kw), self.assertRaises(ValueError):validate_evaluation({**self.body,**kw})

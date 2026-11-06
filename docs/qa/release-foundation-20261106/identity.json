@@ -1,0 +1,85 @@
+{
+  "schema": "baseball.identity-continuity-verification.v2",
+  "passed": true,
+  "failure_count": 0,
+  "failures_capped_at_100": [],
+  "comparisons": {
+    "artifact_hashes": 1,
+    "box_observation_rows": 720,
+    "builder_hash": 1,
+    "cutoff_query": 2532,
+    "database_source_manifest": 1,
+    "foreign_keys": 1,
+    "game_rows": 720,
+    "identity_gate": 1,
+    "manifest_file_uniqueness": 1,
+    "measurement_gate": 1,
+    "metadata": 1,
+    "model_gate": 1,
+    "namespace": 1,
+    "no_future_fields": 567,
+    "pa_keys": 720,
+    "pa_rows": 54885,
+    "pitch_keys": 720,
+    "pitch_rows": 206108,
+    "player_registry": 1,
+    "raw_source_hash": 720,
+    "readonly_database_hash": 1,
+    "report_aliases": 1,
+    "report_collisions": 1,
+    "report_counts": 1,
+    "report_cross_team": 1,
+    "report_cross_year": 1,
+    "report_event_participants": 1,
+    "report_measurements": 1,
+    "report_unresolved": 1,
+    "schema": 2,
+    "source_file_selection": 1,
+    "sqlite_integrity": 1,
+    "total_table_rows": 5,
+    "unresolved_count": 1
+  },
+  "counts_reconstructed_from_raw": {
+    "games": 720,
+    "player_box_observations": 22630,
+    "plate_appearances": 54885,
+    "pitch_events": 206108,
+    "source_files": 720,
+    "players": 415
+  },
+  "counts_by_season": {
+    "2024": {
+      "games": 360,
+      "plate_appearances": 27600,
+      "pitch_events": 103620
+    },
+    "2025": {
+      "games": 360,
+      "plate_appearances": 27285,
+      "pitch_events": 102488
+    }
+  },
+  "players_queried": 415,
+  "cutoff_query_cases": 2532,
+  "same_name_groups": 1,
+  "alias_groups": 6,
+  "cross_year_identities": 263,
+  "multiple_team_observation_identities": 17,
+  "event_participant_differences": {
+    "pitcher": 56,
+    "catcher": 26,
+    "batter": 18
+  },
+  "unresolved_identity_observations": 0,
+  "raw_invalid_numeric_measurements_preserved": 4,
+  "strict_measurement_gate_passed": false,
+  "model_ready": false,
+  "artifact_hashes": {
+    "identity.sqlite": "f3bbc96b7e0589542f6bc8cdbe51a24773f683501fb77c3544040d90de31238e",
+    "identity-review.json": "e994c049f6893ba23fb54946fedb00d4cf6dcc15774573b57ac30b327f4bd907",
+    "README.md": "0cfe485b0d1f50e3d87460f9bc37706b32b41eb54d6fb1929596f689423a89dc"
+  },
+  "full_rebuild_compared": false,
+  "verifier_sha256": "36e8ee20476f2c880b2925956efb8402431b37cbbf4ee66f8a04f3469703037a",
+  "elapsed_seconds": 25.547
+}

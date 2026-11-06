@@ -1130,3 +1130,11 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .capacity-body [aria-invalid="true"] { border:2px solid var(--warn,#a14512); outline-offset:3px; }
 .capacity-body [data-output]:not(:empty) { padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--panel); }
 .capacity-body [data-output] p:first-child { margin-top:0; }
+
+.capacity-arm label[hidden] { display:none; }
+.capacity-compare { display:flex; align-items:center; gap:8px; min-height:44px; cursor:pointer; }
+.capacity-compare input { width:20px; height:20px; }
+.capacity-results { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%, 16rem),1fr)); gap:12px; margin-bottom:8px; }
+.capacity-result { border:1px solid var(--line); border-radius:8px; padding:10px 12px; min-width:0; }
+.capacity-result h4 { margin:0 0 6px; }
+.capacity-result p:last-child { margin-bottom:0; }

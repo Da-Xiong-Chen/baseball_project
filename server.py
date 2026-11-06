@@ -170,6 +170,8 @@ def replay_result(pid, decision="ph"):
 def validate_evaluation(body):
     if not isinstance(body, dict):
         raise ValueError('需要情境資料')
+    if body.get('date') not in (None, FULL):
+        raise ValueError('自訂情境使用目前模型日期；歷史情境請用回放')
     for key, low, high in [('inning', 1, 12), ('outs', 0, 2), ('bases', 0, 7),
                            ('bat_score', 0, None), ('fld_score', 0, None)]:
         value = body.get(key)
@@ -184,10 +186,11 @@ def validate_evaluation(body):
         raise ValueError('局別無效')
     r = rosters()
     bat, fld = body.get('bat_team'), body.get('fld_team')
-    if bat not in r or fld not in r or bat == fld:
+    if not isinstance(bat, str) or not isinstance(fld, str) or bat not in r or fld not in r or bat == fld:
         raise ValueError('請選不同的有效球隊')
     # Convert legacy labels only with unique team/role evidence, on a copy.
     body = dict(body)
+    body.pop('date', None)
     def resolve(value,team,role):
         pool=r[team]['hitters' if role=='B' else 'pitchers']
         if not isinstance(value,str): raise ValueError('球員參數須為文字')

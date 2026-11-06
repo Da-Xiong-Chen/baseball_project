@@ -51,6 +51,8 @@ test('starter accepts only boolean or omitted/null and preserves explicit reliev
  const e=await engine(path.join(root,'docs/engine.js'),path.join(root,'docs/data/model.json'));
  const teams=e.model().teams,bat=teams[0],fld=teams[1],mine=e.model().rosters[bat],opp=e.model().rosters[fld];
  const body={inning:7,half:'home',outs:1,bases:0,bat_score:1,fld_score:1,pitcher:opp.pitchers[0].name,due:mine.hitters[0].name,due_pos:'DH',bench:[],bat_team:bat,fld_team:fld,next_batters:mine.hitters.slice(0,3).map(p=>p.name),pen:[],pitch_count:110};
+ assert.throws(()=>e.evaluate({...body,date:'2025-04-01'}),/歷史情境請用回放/);
+ assert.equal(e.evaluate({...body,date:e.model().cutoff}).situation.date,e.model().cutoff);
  for(const starter of ['false','true',0,1,[],{},[false]])assert.throws(()=>e.evaluate({...body,starter}),/starter/);
  for(const starter of [true,false])assert.equal(e.evaluate({...body,starter}).situation.starter,starter);
  for(const starter of [null,undefined])assert.equal(typeof e.evaluate({...body,starter}).situation.starter,'boolean');

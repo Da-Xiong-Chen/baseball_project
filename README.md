@@ -7,18 +7,18 @@
 
 ## 目前版本與最新內容
 
-本分支為 **v5 模型＋2026-10-29 網站操作更新**，包含來源球員 ID、年度設定、增量資料進件及牛棚打席容量表。模型仍使用 2024–2025 資料，沒有採用新的近況權重或多局勝率模型。
+本分支為 **v5 模型＋2026-11-06 牛棚方案比較**，包含來源球員 ID、年度設定、增量資料進件及牛棚兩方案打席容量比較。模型仍使用 2024–2025 資料，沒有採用新的近況權重或多局勝率模型。
 
 | 要找的內容 | 最新入口 |
 |---|---|
-| 網站操作與手機版驗收 | [10/29 容量表、名單與回放驗收](docs/qa/ux-context-20261029/README.md)；該輪前端 206 項、Python 143 項測試通過 |
+| 最新網站、模型與資料驗收 | [11/06 發布驗收與程式碼審查](docs/qa/release-foundation-20261106/README.md) |
 | PR 檢查、異常操作與真實訓練驗收 | [10/29 最新發布前驗收](docs/qa/release-readiness-20261029/README.md) · [CI 執行方式](docs/ci-validation.md) |
 | 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
 | 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
 | 最新簡報工作稿 | [10/26、32 頁審閱版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |
 | 模型與身份基準 | [10/25 v5 整合驗收](docs/qa/identity-integration-20261025/README.md) |
 
-**版本狀態：**上述更新位於 [PR #33](https://github.com/Da-Xiong-Chen/baseball_project/pull/33)，依賴前置 [PR #32](https://github.com/Da-Xiong-Chen/baseball_project/pull/32)；截至本輪核對，仍待維護者合併。線上網站由發布分支決定，不能把本分支截圖當成已部署證據。本機預覽見下方「本機執行」。
+**版本狀態：**這份更新整合 [PR #33](https://github.com/Da-Xiong-Chen/baseball_project/pull/33) 的內容與主分支已完成的 [PR #32](https://github.com/Da-Xiong-Chen/baseball_project/pull/32)。最新上線版本以 GitHub Pages 部署紀錄為準。本機預覽見下方「本機執行」。
 
 | 項目 | 內容 |
 |---|---|

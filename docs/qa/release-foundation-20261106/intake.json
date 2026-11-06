@@ -1,0 +1,18 @@
+{
+  "rehearsal_only": true,
+  "counts": {
+    "added": 1,
+    "corrected": 1,
+    "unchanged": 1,
+    "retained": 717
+  },
+  "correction": "formatting only, original JSON values retained",
+  "original_sha256_verified": 720,
+  "accepted_existing_measurement_issues": 4,
+  "rejections": {
+    "unaccepted_correction": "Source correction needs explicit acceptance: 2025/002.json",
+    "duplicate_game": "Duplicate source game: 2025/001.json",
+    "bad_actor": "Unresolved event pitcher identity: 001.json"
+  },
+  "dataset_id": "29a76498d8cb95def1757744a6bf72df416489cd5f89189050272db14448d50e"
+}
