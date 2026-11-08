@@ -50,12 +50,12 @@ def dump(obj, *path):
 
 
 def export_model():
-    m = fit(server.FULL, season=2025)
-    bh, ph = _hands()
+    m = fit(server.FULL, season=server.settings().season)
+    bh, ph = _hands(server.FULL)
     rosters = server.rosters()
     players = sorted({h["name"] for r in rosters.values() for h in r["hitters"]} | set(m.bat_all.index))
     # 依出賽場數排序的可守位置（捕手另可由逐球捕手紀錄判定）
-    eligible = {n: list(positions_of(n)) + (["C"] if can_play(n, "C") and "C" not in positions_of(n) else [])
+    eligible = {n: list(positions_of(n,server.FULL)) + (["C"] if can_play(n, "C",server.FULL) and "C" not in positions_of(n,server.FULL) else [])
                 for n in players}
     eligible = {n: v for n, v in eligible.items() if v}
     # 名單只保留守位清單（不含原始出賽場數）
@@ -69,7 +69,7 @@ def export_model():
     for (p, h), r in m.mix.iterrows():
         mix.setdefault(p, {})[h] = [r[c] for c in CELLS] + [float(m.mix_n.get((p, h), 0))]
     model = dict(
-        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, **batch_metadata(),
+        cutoff=str(m.cutoff.date()), cells=CELLS, ppa=PITCHES_PER_PA, runtime=server.settings().public(), **batch_metadata(),
         identity_namespace='rebas:CPBL', players=labels(server.FULL), model_phand=m.phand.to_dict(),
         league={f"{a}|{c}": v for (a, c), v in m.league.items()},
         league_mix={f"{a}|{b}": [r[c] for c in CELLS] for (a, b), r in m.league_mix.iterrows()},
@@ -92,7 +92,7 @@ def export_model():
     for p in pitchers:
         ph_ = ph.get(p, "U")
         grid[p] = list(ml.abs_many([(h, bh.get(h, "U") if bh.get(h) != "S" else ("L" if ph_ == "R" else "R" if ph_ == "L" else "U"), p) for h in hitters]))
-    model["pools"] = dict(hitters=hitter_pool(), relievers=reliever_pool())
+    model["pools"] = dict(hitters=hitter_pool(server.FULL), relievers=reliever_pool(server.FULL))
     model["ml"] = dict(w=mlmodel.ENSEMBLE_W, hitters=hitters, grid=grid, ref={p: ml.ref(p) for p in pitchers})
     # 近況偏離（每球得分值）：使用者可設定權重（預設 0），只匯出名單上的球員
     rb, rp = recent.for_model(m)
@@ -104,7 +104,7 @@ def export_model():
 
 def export_replays():
     pa, _, _ = load()
-    ph = pa[(pa["season"] == 2025) & pa["is_ph"]].sort_values("date")
+    ph = pa[(pa["season"] == server.settings().season) & (pa.date<server.FULL) & pa["is_ph"]].sort_values("date")
     games = {}
     for date, day in ph.groupby("date"):
         m = server.model_for(str(date.date()))

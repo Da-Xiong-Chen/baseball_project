@@ -260,6 +260,7 @@ const Engine = (() => {
   /** 與 server.py /api/evaluate 相同的輸入輸出。 */
   function evaluate(b) {
     b={...b};
+    if(b.starter!=null&&typeof b.starter!=='boolean')throw new Error('starter 須為布林值或 null');
     const bat=M.rosters?.[b.bat_team],fld=M.rosters?.[b.fld_team];
     if(!bat||!fld||b.bat_team===b.fld_team)throw new Error('請選不同的有效球隊');
     const resolve=(value,pool)=>{

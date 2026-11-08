@@ -1,0 +1,4824 @@
+{
+  "status": "engineering_pilot_complete",
+  "adopted": false,
+  "active_model_changed": false,
+  "results": [
+    {
+      "configuration": "baseline",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.26037375468024826,
+      "mae": 0.3844558512587123,
+      "mean_error": 0.000293396678756825,
+      "mse_delta": 0.0,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.29646051085951686,
+          "mse_delta": 0.0
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.2640168442076501,
+          "mse_delta": 0.0
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.24598581109204712,
+          "mse_delta": 0.0
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.21190440602024685,
+          "mse_delta": 0.0
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.26073733099584107,
+          "mse_delta": 0.0
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.2780570189264646,
+          "mse_delta": 0.0
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.02193630005380083,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.012959382695318399,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.004100747711492743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:8wMt5"
+          ],
+          "gap_vs_incumbent": 0.027448025477389774,
+          "top_gap": 0.027448025477389774,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.039147045568331554,
+          "top_gap": 0.011082646422533635,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.010942680517378588,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.03686460977657245,
+          "top_gap": 0.02609514436051366,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.018110999576613426,
+          "top_gap": 7.244487787050335e-05,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:FlXMq"
+          ],
+          "gap_vs_incumbent": 0.01532012659528191,
+          "top_gap": 0.01149264989987743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.00907643169041756,
+          "top_gap": 0.00907643169041756,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.048674925575479616,
+          "top_gap": 0.00611672373118112,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.03410442263386399,
+          "top_gap": 0.007585373305370128,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.01756018296326052,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.05929039941255855,
+          "top_gap": 0.005806379306146161,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.018034162297195427,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.02417581024108928,
+          "top_gap": 0.004173968522298191,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02920949600057146,
+          "top_gap": 0.00494270312970399,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:lWSaS"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0031720903223640025,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03736784134472982,
+          "top_gap": 0.0030017619898926456,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.05283342557473377,
+          "top_gap": 0.005834847604853477,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    },
+    {
+      "configuration": "pitcher-90",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.26050080648462187,
+      "mae": 0.38468626378412557,
+      "mean_error": 0.0004546694794890062,
+      "mse_delta": 0.00012705180437358094,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            -2.1555427231379177e-05,
+            0.0002663548771682103
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            -8.367465032939509e-06,
+            0.00026491885385417785
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.29669238937735876,
+          "mse_delta": 0.00023187851784192
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.26420505872055716,
+          "mse_delta": 0.00018821451290700403
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.246014982481055,
+          "mse_delta": 2.9171389007847926e-05
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.21195573213510124,
+          "mse_delta": 5.1326114854413e-05
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.2607814127411715,
+          "mse_delta": 4.408174533043291e-05
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.278265442004455,
+          "mse_delta": 0.00020842307799041207
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.02193630005380083,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.012959382695318399,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.004100747711492743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:8wMt5"
+          ],
+          "gap_vs_incumbent": 0.027448025477389774,
+          "top_gap": 0.027448025477389774,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.039147045568331554,
+          "top_gap": 0.011082646422533635,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.010942680517378588,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.03686460977657245,
+          "top_gap": 0.02609514436051366,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.018110999576613426,
+          "top_gap": 7.244487787050335e-05,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:FlXMq"
+          ],
+          "gap_vs_incumbent": 0.01532012659528191,
+          "top_gap": 0.01149264989987743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.00907643169041756,
+          "top_gap": 0.00907643169041756,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.048674925575479616,
+          "top_gap": 0.00611672373118112,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.03410442263386399,
+          "top_gap": 0.007585373305370128,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.01756018296326052,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.05929039941255855,
+          "top_gap": 0.005806379306146161,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.018034162297195427,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.02417581024108928,
+          "top_gap": 0.004173968522298191,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02920949600057146,
+          "top_gap": 0.00494270312970399,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:lWSaS"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0031720903223640025,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03736784134472982,
+          "top_gap": 0.0030017619898926456,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.05283342557473377,
+          "top_gap": 0.005834847604853477,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    },
+    {
+      "configuration": "pitcher-180",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.2604527478302254,
+      "mae": 0.3846144761529447,
+      "mean_error": 0.00043814776921061844,
+      "mse_delta": 7.899314997708732e-05,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            -1.968723843563367e-05,
+            0.00017410827766775163
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            -8.54140479228876e-06,
+            0.00016965802229350428
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.2966156994672114,
+          "mse_delta": 0.00015518860769458062
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.2641328426036357,
+          "mse_delta": 0.00011599839598555423
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.24599118523502284,
+          "mse_delta": 5.374142975648536e-06
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.21193817365316175,
+          "mse_delta": 3.376763291492374e-05
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.2607669318919654,
+          "mse_delta": 2.96008961243511e-05
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.27818676669223813,
+          "mse_delta": 0.00012974776577352054
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.02193630005380083,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.012959382695318399,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.004100747711492743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:8wMt5"
+          ],
+          "gap_vs_incumbent": 0.027448025477389774,
+          "top_gap": 0.027448025477389774,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.039147045568331554,
+          "top_gap": 0.011082646422533635,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.010942680517378588,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.03686460977657245,
+          "top_gap": 0.02609514436051366,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.018110999576613426,
+          "top_gap": 7.244487787050335e-05,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:FlXMq"
+          ],
+          "gap_vs_incumbent": 0.01532012659528191,
+          "top_gap": 0.01149264989987743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.00907643169041756,
+          "top_gap": 0.00907643169041756,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.048674925575479616,
+          "top_gap": 0.00611672373118112,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.03410442263386399,
+          "top_gap": 0.007585373305370128,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.01756018296326052,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.05929039941255855,
+          "top_gap": 0.005806379306146161,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.018034162297195427,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.02417581024108928,
+          "top_gap": 0.004173968522298191,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02920949600057146,
+          "top_gap": 0.00494270312970399,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:lWSaS"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0031720903223640025,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03736784134472982,
+          "top_gap": 0.0030017619898926456,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.05283342557473377,
+          "top_gap": 0.005834847604853477,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    },
+    {
+      "configuration": "pitcher-365",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.2604186885414509,
+      "mae": 0.38455669444298096,
+      "mean_error": 0.00040464669469546835,
+      "mse_delta": 4.493386120257838e-05,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            -1.3683798565554238e-05,
+            0.00010222646138047103
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            -8.32204545191885e-06,
+            0.00010044523815495899
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.2965567305937911,
+          "mse_delta": 9.621973427430181e-05
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.26408489416146985,
+          "mse_delta": 6.804995381971482e-05
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.2459793865587959,
+          "mse_delta": -6.424533251242178e-06
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.21192334426497628,
+          "mse_delta": 1.8938244729405405e-05
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.2607557899070547,
+          "mse_delta": 1.845891121367792e-05
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.27812983559232296,
+          "mse_delta": 7.281666585837282e-05
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.02193630005380083,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.012959382695318399,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.004100747711492743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:8wMt5"
+          ],
+          "gap_vs_incumbent": 0.027448025477389774,
+          "top_gap": 0.027448025477389774,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.039147045568331554,
+          "top_gap": 0.011082646422533635,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.010942680517378588,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.03686460977657245,
+          "top_gap": 0.02609514436051366,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.018110999576613426,
+          "top_gap": 7.244487787050335e-05,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:FlXMq"
+          ],
+          "gap_vs_incumbent": 0.01532012659528191,
+          "top_gap": 0.01149264989987743,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.00907643169041756,
+          "top_gap": 0.00907643169041756,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.048674925575479616,
+          "top_gap": 0.00611672373118112,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.03410442263386399,
+          "top_gap": 0.007585373305370128,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.01756018296326052,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.05929039941255855,
+          "top_gap": 0.005806379306146161,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.018034162297195427,
+          "top_gap": 0.00342291642301905,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.02417581024108928,
+          "top_gap": 0.004173968522298191,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02920949600057146,
+          "top_gap": 0.00494270312970399,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:lWSaS"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0031720903223640025,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03736784134472982,
+          "top_gap": 0.0030017619898926456,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.05283342557473377,
+          "top_gap": 0.005834847604853477,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    },
+    {
+      "configuration": "batter-90",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.2604659840002845,
+      "mae": 0.38432976278113834,
+      "mean_error": -0.0004820546477905679,
+      "mse_delta": 9.222932003623124e-05,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            -1.9058752833969998e-05,
+            0.0002073783381564143
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            -2.7803890756847678e-05,
+            0.00019977983724632988
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.2964236640744265,
+          "mse_delta": -3.684678509031975e-05
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.26436957270822664,
+          "mse_delta": 0.00035272850057650154
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.2460382531032991,
+          "mse_delta": 5.244201125193041e-05
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.2118613180213012,
+          "mse_delta": -4.308799894561204e-05
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.2608918813516878,
+          "mse_delta": 0.0001545503558467692
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.2781107584444078,
+          "mse_delta": 5.373951794319579e-05
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.015488897764034941,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:C5Lw5"
+          ],
+          "gap_vs_incumbent": 0.018813669924226648,
+          "top_gap": 0.005412042488029685,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0018575771581637486,
+          "top_gap": 0.0018575771581637486,
+          "top1_changed": true,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:VZZgs"
+          ],
+          "gap_vs_incumbent": 0.029964795672987307,
+          "top_gap": 0.023113848553831726,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.03934559284896909,
+          "top_gap": 0.013383705140500857,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.004984355647722087,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.039381379972169984,
+          "top_gap": 0.019647742070747765,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.015323758066304382,
+          "top_gap": 0.003425841922718862,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:P5S6r"
+          ],
+          "gap_vs_incumbent": 0.015031860087265377,
+          "top_gap": 0.012244350175368176,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.008801712509890175,
+          "top_gap": 0.008801712509890175,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.04274368003715822,
+          "top_gap": 0.003484345633441334,
+          "top1_changed": true,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.027518975746836975,
+          "top_gap": 0.0016270484357136308,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.017271916455243994,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.05403208957194733,
+          "top_gap": 0.0016318418896714287,
+          "top1_changed": true,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:rfEOE"
+          ],
+          "gap_vs_incumbent": 0.018885122863488923,
+          "top_gap": 0.0057239751409862705,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.02494130396805836,
+          "top_gap": 0.0017843563473583027,
+          "top1_changed": true,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02238929476759391,
+          "top_gap": 0.00429144202893476,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:iDWQ3"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.006466541279988299,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03711609730940896,
+          "top_gap": 0.002906159516755935,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.04929667088929948,
+          "top_gap": 0.009188244649701843,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    },
+    {
+      "configuration": "batter-180",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.2604129800554118,
+      "mae": 0.38438394692836675,
+      "mean_error": -0.00010959336272933753,
+      "mse_delta": 3.922537516355893e-05,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            -1.949330337296037e-05,
+            0.00010059405489478252
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            -2.0746502044159786e-05,
+            9.445859880076275e-05
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.2964448707000894,
+          "mse_delta": -1.564015942744733e-05
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.2641633758323328,
+          "mse_delta": 0.0001465316246826156
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.24600644589181506,
+          "mse_delta": 2.063479976791723e-05
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.21188262853688752,
+          "mse_delta": -2.17774833593201e-05
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.2607880052196827,
+          "mse_delta": 5.0674223841677835e-05
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.2781012378608263,
+          "mse_delta": 4.421893436171684e-05
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.018991940571416514,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:C5Lw5"
+          ],
+          "gap_vs_incumbent": 0.016834513813333507,
+          "top_gap": 0.005296380259326688,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0008175548441382626,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:VZZgs"
+          ],
+          "gap_vs_incumbent": 0.02926296605376713,
+          "top_gap": 0.026616891361213306,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.04053996193977365,
+          "top_gap": 0.013531699976768626,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0076594876500241035,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:0pBZx"
+          ],
+          "gap_vs_incumbent": 0.03867955035294981,
+          "top_gap": 0.023150784878129344,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.017173183875905846,
+          "top_gap": 0.0013705320787005884,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:FlXMq"
+          ],
+          "gap_vs_incumbent": 0.015332583787176616,
+          "top_gap": 0.012477911514606123,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.009513748573841796,
+          "top_gap": 0.009513748573841796,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.04409045564756564,
+          "top_gap": 0.0004248262916936099,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.030750095290983746,
+          "top_gap": 0.004302180438015647,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.017572640155155236,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.0572853685173112,
+          "top_gap": 0.0027092216949203135,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:rfEOE"
+          ],
+          "gap_vs_incumbent": 0.0196975341789141,
+          "top_gap": 0.005871969977254041,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.024429348962689362,
+          "top_gap": 0.0008907756549437137,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02634998318367838,
+          "top_gap": 0.005010857795118562,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:WeQIm"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.005069805782196176,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03839215786964729,
+          "top_gap": 0.0030058570599513883,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.05212648188031651,
+          "top_gap": 0.0071329348056835724,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    },
+    {
+      "configuration": "batter-365",
+      "pa": 4367,
+      "games": 57,
+      "mse": 0.26038664347198187,
+      "mae": 0.384414042973306,
+      "mean_error": 9.804501586936926e-05,
+      "mse_delta": 1.2888791733563182e-05,
+      "intervals": [
+        {
+          "seed": 20261026,
+          "mse_delta_ci": [
+            -1.9646090882334025e-05,
+            4.471839715984334e-05
+          ]
+        },
+        {
+          "seed": 20261027,
+          "mse_delta_ci": [
+            -2.009672943717015e-05,
+            4.51066181522096e-05
+          ]
+        }
+      ],
+      "teams": [
+        {
+          "team": "中信兄弟",
+          "pa": 704,
+          "mse": 0.296457390420842,
+          "mse_delta": -3.1204386748022826e-06
+        },
+        {
+          "team": "台鋼雄鷹",
+          "pa": 747,
+          "mse": 0.26406028657087693,
+          "mse_delta": 4.344236322676651e-05
+        },
+        {
+          "team": "味全龍",
+          "pa": 774,
+          "mse": 0.24599244907767376,
+          "mse_delta": 6.63798562660109e-06
+        },
+        {
+          "team": "富邦悍將",
+          "pa": 643,
+          "mse": 0.21189557044816118,
+          "mse_delta": -8.83557208567591e-06
+        },
+        {
+          "team": "樂天桃猿",
+          "pa": 712,
+          "mse": 0.26073950604694135,
+          "mse_delta": 2.1750511003039715e-06
+        },
+        {
+          "team": "統一7-ELEVEn獅",
+          "pa": 787,
+          "mse": 0.27808881757016196,
+          "mse_delta": 3.1798643697357775e-05
+        }
+      ],
+      "ranking": [
+        {
+          "pa_id": "2025-070-h022",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.02081077310865195,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02193630005380083
+        },
+        {
+          "pa_id": "2025-071-a020",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:uokqM"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:C5Lw5"
+          ],
+          "gap_vs_incumbent": 0.015150521646980948,
+          "top_gap": 0.004919917096060397,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-072-h019",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:oYqGo"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.0025100124648180944,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004100747711492743
+        },
+        {
+          "pa_id": "2025-073-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:yvoBa"
+          ],
+          "gap_vs_incumbent": 0.02848485415327441,
+          "top_gap": 0.028435723898448742,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.027448025477389774
+        },
+        {
+          "pa_id": "2025-074-a017",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:HEtHO",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:b3UAW",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:iQmL8",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:HEtHO"
+          ],
+          "gap_vs_incumbent": 0.04061121588825652,
+          "top_gap": 0.012943299795705007,
+          "top1_changed": false,
+          "top3_overlap": 0.6666666666666666,
+          "baseline_gap": 0.011082646422533635
+        },
+        {
+          "pa_id": "2025-075-h020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:psHWp",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:uKyUf"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.009351945270703932,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.010942680517378588
+        },
+        {
+          "pa_id": "2025-076-a019",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:pAvtk"
+          ],
+          "gap_vs_incumbent": 0.037901438452457095,
+          "top_gap": 0.024969617415364787,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.02609514436051366
+        },
+        {
+          "pa_id": "2025-077-h023",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:p84Nx",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.018062334567976193,
+          "top_gap": 0.000450706907589353,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 7.244487787050335e-05
+        },
+        {
+          "pa_id": "2025-078-a019",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:SDm7m",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:FlXMq"
+          ],
+          "gap_vs_incumbent": 0.01544054704272423,
+          "top_gap": 0.012105820705261647,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01149264989987743
+        },
+        {
+          "pa_id": "2025-079-h020",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:0fd4d",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:iAcZZ"
+          ],
+          "gap_vs_incumbent": 0.009674717966864341,
+          "top_gap": 0.009674717966864341,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00907643169041756
+        },
+        {
+          "pa_id": "2025-080-a024",
+          "pool": [
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:2HG7r",
+            "rebas:CPBL:8wMt5",
+            "rebas:CPBL:KNmRt",
+            "rebas:CPBL:VZZgs",
+            "rebas:CPBL:ZvyKT",
+            "rebas:CPBL:dFblH",
+            "rebas:CPBL:elqzw",
+            "rebas:CPBL:ldmM0",
+            "rebas:CPBL:nL5L",
+            "rebas:CPBL:nm81R",
+            "rebas:CPBL:pAvtk",
+            "rebas:CPBL:sCX7a",
+            "rebas:CPBL:u6XUJ",
+            "rebas:CPBL:yvoBa"
+          ],
+          "top3": [
+            "rebas:CPBL:yvoBa",
+            "rebas:CPBL:0pBZx",
+            "rebas:CPBL:u6XUJ"
+          ],
+          "gap_vs_incumbent": 0.0468798998145486,
+          "top_gap": 0.00329381667687062,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00611672373118112
+        },
+        {
+          "pa_id": "2025-081-h021",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.03262325118186084,
+          "top_gap": 0.005994638058695472,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.007585373305370128
+        },
+        {
+          "pa_id": "2025-082-a020",
+          "pool": [
+            "rebas:CPBL:2mO1b",
+            "rebas:CPBL:3zbEo",
+            "rebas:CPBL:7TPaU",
+            "rebas:CPBL:8J0xd",
+            "rebas:CPBL:FlXMq",
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:LsMyw",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:P5S6r",
+            "rebas:CPBL:PKNKN",
+            "rebas:CPBL:UVW1k",
+            "rebas:CPBL:Y0UJM",
+            "rebas:CPBL:ZkDCF",
+            "rebas:CPBL:gPoLb",
+            "rebas:CPBL:pCoH1",
+            "rebas:CPBL:w5KG8"
+          ],
+          "top3": [
+            "rebas:CPBL:LlGVK",
+            "rebas:CPBL:Nf4Ac",
+            "rebas:CPBL:Y0UJM"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.01768060341070285,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.01756018296326052
+        },
+        {
+          "pa_id": "2025-083-h019",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:narc8",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi"
+          ],
+          "top3": [
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:puKjJ"
+          ],
+          "gap_vs_incumbent": 0.05947165141014521,
+          "top_gap": 0.0048720978984343605,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005806379306146161
+        },
+        {
+          "pa_id": "2025-085-h019",
+          "pool": [
+            "rebas:CPBL:0uRxO",
+            "rebas:CPBL:42OO1",
+            "rebas:CPBL:8KmAn",
+            "rebas:CPBL:AGbc",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:Dvre5",
+            "rebas:CPBL:IbHQY",
+            "rebas:CPBL:Q4x6M",
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:eChCD",
+            "rebas:CPBL:m1M26",
+            "rebas:CPBL:paNxV",
+            "rebas:CPBL:rfEOE",
+            "rebas:CPBL:yDdjY"
+          ],
+          "top3": [
+            "rebas:CPBL:c3PEk",
+            "rebas:CPBL:C5Lw5",
+            "rebas:CPBL:m1M26"
+          ],
+          "gap_vs_incumbent": 0.01954871668742214,
+          "top_gap": 0.005283569796190421,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00342291642301905
+        },
+        {
+          "pa_id": "2025-086-a022",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:JID82",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:SioVD",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:7m4NU"
+          ],
+          "gap_vs_incumbent": 0.02480004503361973,
+          "top_gap": 0.0025832332756235404,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.004173968522298191
+        },
+        {
+          "pa_id": "2025-087-a019",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:Qznkv",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:jEljN",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku"
+          ],
+          "gap_vs_incumbent": 0.02847409381960608,
+          "top_gap": 0.005361785836583314,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.00494270312970399
+        },
+        {
+          "pa_id": "2025-088-a020",
+          "pool": [
+            "rebas:CPBL:2QmgM",
+            "rebas:CPBL:5PuU",
+            "rebas:CPBL:625kG",
+            "rebas:CPBL:7eWTJ",
+            "rebas:CPBL:7m4NU",
+            "rebas:CPBL:Fnfek",
+            "rebas:CPBL:N6NUc",
+            "rebas:CPBL:NvcWV",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:a45g",
+            "rebas:CPBL:iDWQ3",
+            "rebas:CPBL:lWSaS",
+            "rebas:CPBL:oYqGo",
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:qGUE1",
+            "rebas:CPBL:ukKwI"
+          ],
+          "top3": [
+            "rebas:CPBL:ooOfM",
+            "rebas:CPBL:WeQIm",
+            "rebas:CPBL:lWSaS"
+          ],
+          "gap_vs_incumbent": 0.0,
+          "top_gap": 0.004160894727725812,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0031720903223640025
+        },
+        {
+          "pa_id": "2025-090-a017",
+          "pool": [
+            "rebas:CPBL:00Or0",
+            "rebas:CPBL:1MV0s",
+            "rebas:CPBL:7vTQV",
+            "rebas:CPBL:ElLgX",
+            "rebas:CPBL:IIlEk",
+            "rebas:CPBL:PoOO0",
+            "rebas:CPBL:UeDA6",
+            "rebas:CPBL:WbnjG",
+            "rebas:CPBL:ZtyCx",
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:nNXFY",
+            "rebas:CPBL:oUEbG",
+            "rebas:CPBL:qLpqc",
+            "rebas:CPBL:vdpJ5",
+            "rebas:CPBL:xdLku"
+          ],
+          "top3": [
+            "rebas:CPBL:iAcZZ",
+            "rebas:CPBL:xdLku",
+            "rebas:CPBL:7vTQV"
+          ],
+          "gap_vs_incumbent": 0.03854306298957151,
+          "top_gap": 0.002975533625127591,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.0030017619898926456
+        },
+        {
+          "pa_id": "2025-094-a018",
+          "pool": [
+            "rebas:CPBL:1T6yz",
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:B2um0",
+            "rebas:CPBL:G6U5F",
+            "rebas:CPBL:IYo8c",
+            "rebas:CPBL:KFxfq",
+            "rebas:CPBL:PtuDN",
+            "rebas:CPBL:RCSOc",
+            "rebas:CPBL:STlx2",
+            "rebas:CPBL:TgNKb",
+            "rebas:CPBL:WiffT",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:krwFy",
+            "rebas:CPBL:puKjJ",
+            "rebas:CPBL:uw5wXi",
+            "rebas:CPBL:vxQ8H"
+          ],
+          "top3": [
+            "rebas:CPBL:1juVE",
+            "rebas:CPBL:XuDGV",
+            "rebas:CPBL:PtuDN"
+          ],
+          "gap_vs_incumbent": 0.05339293960203929,
+          "top_gap": 0.0062131096345723405,
+          "top1_changed": false,
+          "top3_overlap": 1.0,
+          "baseline_gap": 0.005834847604853477
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 37.34400000004098,
+  "limitations": [
+    "locked later holdout",
+    "full monthly groups",
+    "calibration",
+    "recommendation and rule thresholds",
+    "new-game sensitivity"
+  ]
+}

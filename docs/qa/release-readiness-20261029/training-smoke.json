@@ -1,0 +1,28 @@
+{
+  "cutoff": "2025-03-01",
+  "controlled_interruption": {
+    "controlled_interruption": true,
+    "worker_pid": 15728,
+    "scope": "isolated single-cutoff smoke test",
+    "formal_models_untouched": true
+  },
+  "interrupted_status": "failed",
+  "resumed_real_training_completed": true,
+  "subsequent_resume_reused_checkpoint": true,
+  "source_id": "60e889ba22410e9e8bc0d037a9caf00dba32d77d08200390b17f23802c619bee",
+  "candidate_sha256": "85726bf0341f27b5e6dcca2f099f6734f64afcd05f37244ef07d801cfda322be",
+  "training_samples": {
+    "pitches": 102838,
+    "first_date": "2024-03-30",
+    "last_date": "2024-10-11",
+    "missing_velocity": 3202,
+    "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+    "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+  },
+  "elapsed_seconds": 64.11,
+  "prediction_queries": 8,
+  "all_candidate_predictions_finite": true,
+  "max_abs_difference_from_active_on_smoke_queries": 0.0,
+  "active_weights_verified_unchanged": 9,
+  "adopted": false
+}

@@ -82,3 +82,27 @@ class InputTests(unittest.TestCase):
             with self.subTest(kw=kw), self.assertRaises(ValueError):validate_evaluation({**self.body,**kw})
 
 if __name__=='__main__':unittest.main()
+
+class StarterContractTests(unittest.TestCase):
+    def test_api_rejects_non_boolean_starter_before_loading_rosters(self):
+        body=dict(inning=7,half='away',outs=1,bases=0,bat_score=0,fld_score=0)
+        for value in ('false','true',0,1,[],{},[False]):
+            with self.subTest(value=value),patch('server.rosters') as rosters:
+                with self.assertRaisesRegex(ValueError,'starter'):validate_evaluation(dict(body,starter=value))
+                rosters.assert_not_called()
+
+    def test_core_custom_situation_rejects_same_invalid_values(self):
+        from engine import custom_situation
+        for value in ('false','true',0,1,[],{},[False]):
+            with self.subTest(value=value),patch('engine._hands') as hands:
+                with self.assertRaisesRegex(ValueError,'starter'):
+                    custom_situation(7,'away',0,0,0,1,'P','B','DH',[],starter=value)
+                hands.assert_not_called()
+
+    def test_api_accepts_booleans_and_optional_null_without_coercion(self):
+        body=dict(inning=7,half='away',outs=1,bases=0,bat_score=0,fld_score=0,
+                  bat_team='A',fld_team='B',due='H',pitcher='P',due_pos='DH',bench=[])
+        rosters={'A':{'hitters':[{'name':'H'}],'pitchers':[]},'B':{'hitters':[],'pitchers':[{'name':'P'}]}}
+        with patch('server.rosters',return_value=rosters):
+            for value in (True,False,None):self.assertIs(validate_evaluation(dict(body,starter=value))['starter'],value)
+            self.assertNotIn('starter',validate_evaluation(body))

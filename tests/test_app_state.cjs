@@ -965,3 +965,14 @@ test('concise recommendation keeps sample and model-disagreement states without 
  assert.match(f.eval('recommendation(cands).text'),/模型排序不同/);
  assert.doesNotMatch(f.eval('recommendation(cands).text'),/已驗證|保證|完整且沒問題/);
 });
+
+test('capacity worksheet edits preserve a displayed comparison and a pending evaluation',async()=>{
+ const f=fixture();f.eval('S.ready=true;S.last={id:"kept"};');
+ f.eval("invalidateCustom({target:{closest:selector=>selector==='#bullpenCapacity'?{}:null}})");assert.equal(f.eval('S.last.id'),'kept');
+ const pending=deferred();f.context.pending=pending.promise;f.eval('S.last=null;renderResult=()=>{};');const job=f.eval("run(()=>pending,'defense')");
+ f.eval("invalidateCustom({target:{closest:selector=>selector==='#bullpenCapacity'?{}:null}})");pending.resolve({id:'fresh'});await job;assert.equal(f.eval('S.last.id'),'fresh');
+});
+test('actual evaluation edits still clear the result and notify the capacity context',()=>{
+ const f=fixture();let changes=0;f.context.control={contextChanged(){changes++}};f.eval('capacityControl=control;S.last={id:"old"};');
+ f.eval("invalidateCustom({target:{id:'myPitcher'}})");assert.equal(f.eval('S.last'),null);assert.equal(changes,1);
+});

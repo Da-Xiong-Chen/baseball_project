@@ -1,0 +1,153 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "path": "api/meta",
+      "status": 200,
+      "seconds": 0.01600000006146729
+    },
+    {
+      "path": "api/evaluate",
+      "status": 200,
+      "seconds": 2.202999999979511
+    },
+    {
+      "path": "api/evaluate",
+      "status": 200,
+      "seconds": 1.5
+    },
+    {
+      "path": "api/evaluate",
+      "status": 200,
+      "seconds": 1.577999999979511
+    },
+    {
+      "path": "api/team?team=%E4%B8%AD%E4%BF%A1%E5%85%84%E5%BC%9F",
+      "status": 200,
+      "seconds": 0.01600000006146729
+    },
+    {
+      "path": "api/team?team=%E5%8F%B0%E9%8B%BC%E9%9B%84%E9%B7%B9",
+      "status": 200,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/team?team=%E5%91%B3%E5%85%A8%E9%BE%8D",
+      "status": 200,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/team?team=%E5%AF%8C%E9%82%A6%E6%82%8D%E5%B0%87",
+      "status": 200,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/team?team=%E6%A8%82%E5%A4%A9%E6%A1%83%E7%8C%BF",
+      "status": 200,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/team?team=%E7%B5%B1%E4%B8%807-ELEVEn%E7%8D%85",
+      "status": 200,
+      "seconds": 0.015999999945051968
+    },
+    {
+      "path": "api/games?team=%E4%B8%AD%E4%BF%A1%E5%85%84%E5%BC%9F",
+      "status": 200,
+      "seconds": 0.10900000005494803
+    },
+    {
+      "path": "api/game?game=2025-340",
+      "status": 200,
+      "seconds": 0.125
+    },
+    {
+      "path": "api/replay?pa=2025-340-a000&decision=ph",
+      "status": 200,
+      "seconds": 4.811999999918044
+    },
+    {
+      "path": "api/replay?pa=2025-340-a000&decision=pen",
+      "status": 200,
+      "seconds": 0.0940000000409782
+    },
+    {
+      "path": "api/game?game=2025-341",
+      "status": 200,
+      "seconds": 0.030999999959021807
+    },
+    {
+      "path": "api/replay?pa=2025-341-a000&decision=ph",
+      "status": 200,
+      "seconds": 1.2349999999860302
+    },
+    {
+      "path": "api/replay?pa=2025-341-a000&decision=pen",
+      "status": 200,
+      "seconds": 0.125
+    },
+    {
+      "path": "api/game?game=2025-342",
+      "status": 200,
+      "seconds": 0.0470000000204891
+    },
+    {
+      "path": "api/replay?pa=2025-342-a000&decision=ph",
+      "status": 200,
+      "seconds": 1.25
+    },
+    {
+      "path": "api/replay?pa=2025-342-a000&decision=pen",
+      "status": 200,
+      "seconds": 0.10900000005494803
+    },
+    {
+      "path": "api/detail?batter=rebas%3ACPBL%3ArfEOE&pitcher=rebas%3ACPBL%3AFEjzB",
+      "status": 200,
+      "seconds": 0.015999999945051968
+    },
+    {
+      "path": "api/pitch-change?pitcher=rebas%3ACPBL%3AFEjzB&season=2025&cutoff=2026-01-01&hand=ALL",
+      "status": 200,
+      "seconds": 2.202999999979511
+    },
+    {
+      "path": "api/pitch-change?pitcher=rebas%3ACPBL%3AFEjzB&season=2025&cutoff=2026-01-01&hand=L",
+      "status": 200,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/pitch-change?pitcher=rebas%3ACPBL%3AFEjzB&season=2025&cutoff=2026-01-01&hand=R",
+      "status": 200,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/evaluate",
+      "status": 400,
+      "seconds": 0.015000000013969839
+    },
+    {
+      "path": "api/evaluate",
+      "status": 400,
+      "seconds": 0.01600000006146729
+    },
+    {
+      "path": "api/evaluate",
+      "status": 400,
+      "seconds": 0.015999999945051968
+    },
+    {
+      "path": "api/evaluate",
+      "status": 400,
+      "seconds": 0.0
+    },
+    {
+      "path": "api/evaluate",
+      "status": 400,
+      "seconds": 0.015000000013969839
+    }
+  ],
+  "browser_tested": false,
+  "runtime_matches_static": true,
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
+}
