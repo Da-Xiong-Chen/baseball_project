@@ -1,0 +1,287 @@
+{
+  "protocol": {
+    "purpose": "exploratory_monthly_replay",
+    "cutoffs": [
+      "2025-03-01",
+      "2025-04-01",
+      "2025-05-01",
+      "2025-06-01",
+      "2025-07-01",
+      "2025-08-01",
+      "2025-09-01",
+      "2025-10-01"
+    ],
+    "variants": {
+      "pitcher": [
+        90,
+        180,
+        365
+      ],
+      "batter": [
+        90,
+        180,
+        365
+      ]
+    },
+    "ensemble_tree_weight": 0.5,
+    "ranking": "first PA from inning 6 per game, prior 10-day pools plus observed incumbent",
+    "minimum_group_pa": 200,
+    "minimum_mse_improvement": 0.0005,
+    "maximum_group_mse_degradation": 0.001,
+    "calibration": "weighted absolute gap across five prediction quantile bins",
+    "small_sample": "either actor has less than 100 prior unweighted pitches",
+    "sensitivity": "range of aggregate MSE deltas when omitting one game",
+    "bootstrap": {
+      "unit": "game within month",
+      "seeds": [
+        20261106,
+        20261107
+      ],
+      "draws": 2000,
+      "familywise_alpha": 0.05,
+      "comparisons": 6
+    },
+    "independent_holdout_available": false,
+    "adoption": false
+  },
+  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924",
+  "months": [
+    {
+      "cutoff": "2025-03-01",
+      "pa": 217,
+      "games": 3
+    },
+    {
+      "cutoff": "2025-04-01",
+      "pa": 4691,
+      "games": 63
+    },
+    {
+      "cutoff": "2025-05-01",
+      "pa": 4367,
+      "games": 57
+    },
+    {
+      "cutoff": "2025-06-01",
+      "pa": 4407,
+      "games": 57
+    },
+    {
+      "cutoff": "2025-07-01",
+      "pa": 3192,
+      "games": 41
+    },
+    {
+      "cutoff": "2025-08-01",
+      "pa": 5015,
+      "games": 67
+    },
+    {
+      "cutoff": "2025-09-01",
+      "pa": 4435,
+      "games": 59
+    },
+    {
+      "cutoff": "2025-10-01",
+      "pa": 961,
+      "games": 13
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "mse": 0.2409619751103356,
+      "mse_delta": 0.0,
+      "calibration_gap": 0.024472874486923375,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        0.0,
+        0.0
+      ],
+      "months_improved": 0,
+      "groups_over_degradation_limit": []
+    },
+    "pitcher-90": {
+      "mse": 0.24100284158776147,
+      "mse_delta": 4.0866477425842e-05,
+      "calibration_gap": 0.024652211672841845,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            -3.824995377566243e-05,
+            0.00011832521640082874
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            -3.8692841561722004e-05,
+            0.00012105858835973268
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        3.497639610997311e-05,
+        4.677446885928638e-05
+      ],
+      "months_improved": 2,
+      "groups_over_degradation_limit": []
+    },
+    "pitcher-180": {
+      "mse": 0.2409766993052927,
+      "mse_delta": 1.4724194957027803e-05,
+      "calibration_gap": 0.023150173570953197,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            -4.025909163029971e-05,
+            6.724042791024343e-05
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            -3.752592512556145e-05,
+            7.124992290811966e-05
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        9.977831640999895e-06,
+        1.9257317712768324e-05
+      ],
+      "months_improved": 3,
+      "groups_over_degradation_limit": []
+    },
+    "pitcher-365": {
+      "mse": 0.24096504337250607,
+      "mse_delta": 3.0682621703900656e-06,
+      "calibration_gap": 0.02427431318725286,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            -3.3123742332465207e-05,
+            3.576902526826782e-05
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            -3.1192077771346684e-05,
+            3.5620667663378585e-05
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        -1.0071045422069094e-06,
+        5.720874260040074e-06
+      ],
+      "months_improved": 4,
+      "groups_over_degradation_limit": []
+    },
+    "batter-90": {
+      "mse": 0.24101706140696436,
+      "mse_delta": 5.508629662873095e-05,
+      "calibration_gap": 0.024083030384646438,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            -7.203289444723965e-08,
+            0.00010740813355073567
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            4.671902612826462e-06,
+            0.00010925113857065246
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        5.190167485509942e-05,
+        5.947919623973086e-05
+      ],
+      "months_improved": 1,
+      "groups_over_degradation_limit": []
+    },
+    "batter-180": {
+      "mse": 0.2409684530975289,
+      "mse_delta": 6.477987193289035e-06,
+      "calibration_gap": 0.023019606172763274,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            -2.7225537354431545e-05,
+            4.003684431938242e-05
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            -2.3641469218717828e-05,
+            4.049081613131667e-05
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        4.6935350443710204e-06,
+        1.0042611960989083e-05
+      ],
+      "months_improved": 5,
+      "groups_over_degradation_limit": []
+    },
+    "batter-365": {
+      "mse": 0.2409539681719449,
+      "mse_delta": -8.006938390709827e-06,
+      "calibration_gap": 0.023443348691730394,
+      "adjusted_game_bootstrap": [
+        {
+          "seed": 20261106,
+          "bounds": [
+            -2.699066580625015e-05,
+            1.1480007541460427e-05
+          ]
+        },
+        {
+          "seed": 20261107,
+          "bounds": [
+            -2.5036594373995912e-05,
+            1.0818708085170539e-05
+          ]
+        }
+      ],
+      "leave_one_game_delta": [
+        -8.881781949880589e-06,
+        -5.757959374357797e-06
+      ],
+      "months_improved": 3,
+      "groups_over_degradation_limit": []
+    }
+  },
+  "adopted": false,
+  "limitations": [
+    "Retrospective seasons already inspected",
+    "Candidate pools inferred from prior appearances",
+    "RE24 error and ranking diagnostics do not estimate actual substitution benefit"
+  ]
+}

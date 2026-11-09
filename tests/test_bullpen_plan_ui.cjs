@@ -16,9 +16,9 @@ function worksheet(pitchers=[{id:'A'},{id:'B'}]){
  const events={},nodes=new Map();let focused=null,key='A';
  const field=(value='')=>({value,attrs:{},textContent:'',innerHTML:'',checkValidity:()=>true,setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]},focus(){focused=this}});
  const q=s=>{if(!nodes.has(s))nodes.set(s,field());return nodes.get(s)};
- const rows=['A','B'].map(id=>{const fields={'[data-status]':field('available'),'[data-capacity]':field(''),'[data-order]':field('')};return {id,fields,querySelector:s=>fields[s]}});
+ const rows=['A','B'].map(id=>{const fields={'[data-status]':field('available'),'[data-capacity]':field(''),'[data-order]':field(''),'[data-order-b]':field('')};return {id,fields,querySelector:s=>fields[s]}});
  const el={open:true,innerHTML:'',querySelector:s=>s==='[data-order]'?rows[0].fields[s]:q(s),querySelectorAll:s=>s==='[data-arm]'?rows:s==='[aria-invalid]'?[...nodes.values(),...rows.flatMap(r=>Object.values(r.fields))].filter(f=>f.attrs['aria-invalid']):[],addEventListener:(n,f)=>events[n]=f};
- const context={window:{},BullpenPlan:require('../docs/bullpen-plan.js')};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../docs/bullpen-plan-ui.js'),'utf8'),context);
+ const context={window:{BullpenPlan:require('../docs/bullpen-plan.js')}};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../docs/bullpen-plan-ui.js'),'utf8'),context);
  const control=context.window.BullpenPlanUI.mount({element:el,label:s=>'投手'+s,snapshot:()=>({key,pitchers})});
  events.toggle();q('[data-target]').value='7';
  return {q,rows,events,el,control,focus:()=>focused,setKey:v=>key=v,run:()=>q('[data-calculate]').onclick()};
@@ -48,4 +48,21 @@ test('a changed bullpen immediately invalidates worksheet results until reimport
  w.control.contextChanged();assert.match(w.q('[data-output]').innerHTML,/容量足夠/);
  w.setKey('B');w.control.contextChanged();assert.match(w.q('[data-output]').textContent,/名單已變更/);assert.equal(w.q('[data-calculate]').disabled,true);
  w.q('[data-refresh]').onclick();assert.equal(w.q('[data-calculate]').disabled,false);assert.equal(w.q('[data-output]').textContent,'');
+});
+
+test('comparison uses shared capacity and independent ranks, then clears both results on edit',()=>{
+ const w=worksheet(), [a,b]=w.rows.map(row=>row.fields);
+ a['[data-capacity]'].value='6'; b['[data-capacity]'].value='3';
+ a['[data-order]'].value='1'; b['[data-order-b]'].value='1';
+ const compare=w.q('[data-compare]'); compare.checked=true; compare.onchange();
+ w.q('[data-target]').value='6'; w.run();
+ const output=w.q('[data-output]');
+ assert.match(output.innerHTML,/方案 A.*容量足夠.*投手A.*保留：投手B/);
+ assert.match(output.innerHTML,/方案 B.*尚缺 3.*投手B.*保留：投手A/);
+ w.events.input({target:b['[data-order-b]']});
+ assert.match(output.textContent,/重新檢查/);
+ b['[data-status]'].value='retired'; w.run();
+ assert.equal(w.focus(),b['[data-status]']); assert.match(output.textContent,/不可接續/);
+ compare.checked=false; compare.onchange(); w.run();
+ assert.match(output.innerHTML,/方案 A.*容量足夠/); assert.doesNotMatch(output.innerHTML,/方案 B/);
 });
