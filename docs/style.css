@@ -1138,3 +1138,15 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .capacity-result { border:1px solid var(--line); border-radius:8px; padding:10px 12px; min-width:0; }
 .capacity-result h4 { margin:0 0 6px; }
 .capacity-result p:last-child { margin-bottom:0; }
+
+/* 首次使用：示範情境入口與長名單收合 */
+.demo-entry { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin-top:20px; }
+.demo-entry p { margin:0; font-size:13px; line-height:1.6; flex:1 1 14rem; }
+.btn-demo { min-height:44px; padding:0 18px; border:1px solid var(--accent); border-radius:4px; background:var(--panel); color:var(--accent); font-size:15px; font-weight:600; cursor:pointer; }
+.btn-demo:hover:not(:disabled) { background:var(--accent); color:var(--on-accent); }
+.btn-demo:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+.btn-demo:disabled { opacity:.5; cursor:wait; }
+.evaluation-table.rows-collapsed tr.more-row { display:none; }
+.rows-toggle { padding:10px 16px; border-top:1px solid var(--line); text-align:center; }
+.rows-toggle button { min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--accent); font-size:14px; cursor:pointer; }
+.rows-toggle button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
