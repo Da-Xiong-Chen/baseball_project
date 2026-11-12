@@ -151,6 +151,15 @@ test('empty bench differs from candidates whose fielding is unconfirmed',()=>{
  const rec=f.eval('recommendation(cands)');assert.match(rec.title,/接守資格尚未確認/);assert.equal(rec.best,undefined);
 });
 
+test('a missing candidate estimate is not presented as a zero difference',()=>{
+ const f=fixture();
+ f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0},
+   {角色:'代打',球員:'Available',守備:'ok',預估勝率:null}];
+ const result=f.eval('recommendation(cands)');
+ assert.match(result.title,/候選差距尚無估計/);
+ assert.doesNotMatch(result.text,/為 0|維持原人選/);
+});
+
 test('API and static reads work without the newer timeout API',async()=>{
   const f=fixture();f.context.AbortSignal={};
   assert.equal(f.eval('Object.keys(timeoutOptions(100)).length'),0);
@@ -356,7 +365,8 @@ test('short assessment notes keep distinct cutoffs, missing metadata and histori
  const f=fixture();f.context.result={view:'replay',method:'集成',model_cutoff:'2025-07-01',ml_cutoff:'2025-06-01'};
  const html=f.eval('assessmentNotes(result)');
  assert.match(html,/2025-07-01/);assert.match(html,/2025-06-01/);assert.match(html,/不含截止日/);
- assert.match(html,/歷史名單與守位可能為推估/);assert.match(html,/不是完整預測區間/);
+ assert.match(html,/歷史名單與守位可能為推估/);assert.match(html,/階層式模型的估計誤差/);
+ assert.match(html,/得分期望的變化，可以為負/);
  assert.match(f.eval('assessmentNotes({})'),/逐球資料截止：未記錄/);
  assert.match(f.eval('assessmentNotes({method:"階層式"})'),/逐球資料截止：未使用/);
  const same=f.eval('assessmentNotes({model_cutoff:"2025-07-01",ml_cutoff:"2025-07-01"})');
