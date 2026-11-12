@@ -78,15 +78,15 @@ def ranking(model, cases):
     return ranks
 
 
-def month(pa, pitches, cutoff):
+def month(pa, pitches, cutoff, *, frozen_tree=None):
     start = pd.Timestamp(cutoff)
     sample = pa[(pa.date >= start) & (pa.date < start + pd.offsets.MonthBegin())]
     sample = sample.dropna(subset=['RE24', 'batter', 'bhand', 'pitcher']).sort_values(['date', 'game', 'seq', 'pa_id'])
     if sample.empty or sample.pa_id.duplicated().any():
         raise ValueError(f'Invalid target population: {cutoff}')
     base = fit(cutoff)
-    tree = mlmodel.get(cutoff)
-    if tree.cutoff != cutoff:
+    tree = mlmodel.get(cutoff) if frozen_tree is None else frozen_tree
+    if (frozen_tree is None and tree.cutoff != cutoff) or tree.cutoff > cutoff:
         raise ValueError(f'Wrong cutoff: {cutoff}')
     triples = list(sample[['batter', 'bhand', 'pitcher']].itertuples(index=False, name=None))
     keys = list(dict.fromkeys(triples))

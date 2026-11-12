@@ -131,10 +131,20 @@ async function fetchTimed(url, options = {}, ms = 30000) {
 }
 const activeBatchId=()=>Engine.model()?.batch_id||S.batch_id;
 function batchMismatch(){const error=new Error('資料與模型批次不同，請重新載入完整版本');error.code='BATCH_MISMATCH';return error;}
-async function json(url, {reload=false}={}) {
+async function json(url, {reload=false, replayBatch, validate}={}) {
   if(reload)delete cache[url];
   if (!cache[url]) {
-    const request=fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).then(data=>{const identity=typeof Engine!=='undefined'?activeBatchId():S.batch_id;const bound=/data\/(?:model-evaluation|timing-\d{4}|default-lineups-\d{4}|history-context-\d{4}-\d{2}-\d{2}|fielding-plans-\d{4}-\d{2}-\d{2}|player-numbers-\d{4}|cpbl-players)\.json$/.test(url);if(identity&&((data?.batch_id&&data.batch_id!==identity)||(bound&&data?.batch_id!==identity)))throw batchMismatch();return data;}).catch(e => { if(cache[url]===request)delete cache[url]; throw e; });
+    const request=fetchTimed(url, {cache:"no-cache"}).then((r) => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.json(); }).then(data=>{
+      if (replayBatch !== undefined) {
+        if (replayBatch !== null && data?.batch_id !== replayBatch) throw batchMismatch();
+      } else {
+        const identity=typeof Engine!=='undefined'?activeBatchId():S.batch_id;
+        const bound=/data\/(?:model-evaluation|timing-\d{4}|default-lineups-\d{4}|history-context-\d{4}-\d{2}-\d{2}|fielding-plans-\d{4}-\d{2}-\d{2}|player-numbers-\d{4}|cpbl-players)\.json$/.test(url);
+        if(identity&&((data?.batch_id&&data.batch_id!==identity)||(bound&&data?.batch_id!==identity)))throw batchMismatch();
+      }
+      if(validate)validate(data);
+      return data;
+    }).catch(e => { if(cache[url]===request)delete cache[url]; throw e; });
     cache[url]=request;
   }
   return cache[url];
@@ -147,28 +157,25 @@ async function staticApi(path, body) {
     case "team": return M.rosters[q("team")];
     case "games": {
       const t = q("team");
-      return (await json("data/replay/games.json")).filter((g) => g.away === t || g.home === t);
+      return (await historyReplayIndex()).schedule.filter(g => g.away === t || g.home === t);
     }
     case "game": {
-      const g=await json(`data/replay/${q("game")}.json`);
-      if(M.batch_id&&g.batch_id!==M.batch_id)throw batchMismatch();
+      const id=q("game"), index=await historyReplayIndex();
+      if(!Object.hasOwn(index.games,id))throw Error('此場比賽不在回放日');
+      const g=await historyJSON(id+'.json');
+      if(g.date!==HISTORY_DATE||g.game!==id)throw batchMismatch();
       return g.pas.map(p=>({...p,batter_display:g.players?.[p.start_batter||p.batter],pitcher_display:g.players?.[p.start_pitcher||p.pitcher],
         final_batter_display:g.players?.[p.batter],final_pitcher_display:g.players?.[p.pitcher]}));
     }
     case "replay": {
-      const pa = q("pa"), gid = pa.split("-").slice(0, 2).join("-");
+      const pa = q("pa");
       const index=await historyReplayIndex();
-      if(index.files[pa]){
-        const bundle=await json(`data/replay/day-${HISTORY_DATE}/${index.files[pa]}`);
-        if(bundle.date!==HISTORY_DATE||bundle.pa_id!==pa)throw new Error('回放資料與打席不一致');
-        const decision=q('decision')==='pen'?'pen':'ph',r=decision==='pen'?(bundle.pen||bundle.ph):bundle.ph;
-        if(M.training_version&&(r.training_version!==M.training_version||r.engine_contract!==M.engine_contract||r.batch_id!==M.batch_id))throw batchMismatch();
-        return {...r,replay_context:{...r.replay_context,decision}};
-      }
-      const r = (await json(`data/replay/${gid}.json`)).results[pa];
-      if (!r) throw new Error("此打席完整評估尚未匯出");
-      if(M.training_version&&(r.training_version!==M.training_version||r.engine_contract!==M.engine_contract||r.batch_id!==M.batch_id))throw batchMismatch();
-      return r;
+      if(!Object.hasOwn(index.files,pa))throw Error('此打席不在回放日');
+      const bundle=await historyJSON(index.files[pa]);
+      if(bundle.date!==HISTORY_DATE||bundle.pa_id!==pa)throw batchMismatch();
+      const decision=q('decision')==='pen'?'pen':'ph',r=decision==='pen'?(bundle.pen||bundle.ph):bundle.ph;
+      if(r.batch_id!==index.batch_id||r.ml_cutoff!==index.ml_cutoff||r.model_cutoff!==HISTORY_DATE)throw batchMismatch();
+      return {...r,replay_context:{...r.replay_context,decision}};
     }
     case "evaluate": return Engine.evaluate(body);
     case "detail": {
@@ -182,7 +189,8 @@ async function staticApi(path, body) {
 }
 
 async function api(path, body) {
-  if (STATIC) return staticApi(path, body);
+  const route=path.split('?')[0];
+  if (STATIC || ['api/games','api/game','api/replay'].includes(route) || (route==='api/detail'&&S.last?.view==='replay')) return staticApi(path, body);
   const res = await fetchTimed(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {}, 120000);
   const j = await res.json();
   if (!res.ok || j.error) throw new Error(j.error || res.statusText);
@@ -369,13 +377,12 @@ async function init() {
   S.teams = meta.teams;S.batch_id=meta.batch_id;
   if(meta.runtime){
     if(!Number.isInteger(meta.runtime.season)||!/^\d{4}-\d{2}-\d{2}$/.test(meta.runtime.history_date))throw Error('年度設定無效');
-    runtime=meta.runtime;HISTORY_DATE=runtime.history_date;
+    runtime=meta.runtime;
   }
   if(typeof LineupBoard!=='undefined'&&LineupBoard.setRuntime)LineupBoard.setRuntime(runtime);
   if(typeof PitcherGroups!=='undefined'&&PitcherGroups.setRuntime)PitcherGroups.setRuntime(runtime);
   const dayLabel=HISTORY_DATE.replaceAll('-','/');
   $('#reviewTitle').textContent=`${dayLabel} 單日分析`;
-  $$('.review-heading .eyebrow').forEach(el=>el.textContent=`DAY REVIEW / ${runtime.season}`);
   $$('[data-runtime-date]').forEach(el=>el.textContent=dayLabel);
   $('#lineupSeasonNote').textContent=`預設為 ${runtime.season} 最後 30 場最常先發的球員；名單不會跨裝置同步。`;
   $$('input[placeholder="姓名或 2025 背號…"]').forEach(el=>el.placeholder=`姓名或 ${runtime.season} 背號…`);
@@ -430,7 +437,7 @@ function syncEntryNavigation(){
   functions.setAttribute('aria-label',audienceMode==='team'?'球隊功能':'一般使用者功能');
   const first=functions.querySelector(`[data-page="${audienceMode==='team'?'lineup':'evaluation'}"]`);
   if(first&&functions.firstElementChild!==first)functions.prepend(first);
-  if(review)$('#audienceStatus').textContent=`${HISTORY_DATE.replaceAll('-','/')} 歷史分析；不受一般使用者、球隊名單或今日設定影響。`;
+  if(review)$('#audienceStatus').textContent='比較當日調度與賽前模型提示。';
 }
 async function selectAudienceEntry(entry){
   if(!['general','team','review'].includes(entry))return;
@@ -461,13 +468,21 @@ function ownLineup() { return currentPage()==='review'?null:audienceMode==='team
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name)&&!c?.unavailable?.includes(name); }
 const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lineupTitle","跳到場上名單"], review:["#reviewTitle","跳到當日總覽"], replay:["#workspace","跳到選擇比賽"]};
 /* 「模型回測」頁分成賽季總覽（#reviewPage）與逐打席回放（沿用評估頁版面的回放模式） */
-let HISTORY_DATE="2025-09-20";
+const HISTORY_DATE="2026-10-04";
+const historySeason=Number(HISTORY_DATE.slice(0,4));
+const historyRoot=`data/replay/day-${HISTORY_DATE}/`;
 let backtestSub = "season";
 let featureGeneration=0,loadedReplayTeam='';
 async function historyReplayIndex(){
-  const d=await json(`data/replay/day-${HISTORY_DATE}/index.json`);
-  if(d.schema_version!==1||d.date!==HISTORY_DATE||!d.files||!d.games||(activeBatchId()&&d.batch_id!==activeBatchId()))throw new Error('單日回放索引無效');
-  return d;
+  return json(historyRoot+'index.json',{replayBatch:null,validate(d){
+    if(d?.schema_version!==1||d.date!==HISTORY_DATE||d.season!==historySeason||!d.files||!d.games||
+       !Array.isArray(d.schedule)||!d.batch_id||d.model_cutoff!==HISTORY_DATE||
+       !/^\d{4}-\d{2}-\d{2}$/.test(d.ml_cutoff)||d.ml_cutoff>=d.model_cutoff)throw Error('單日回放索引無效');
+  }});
+}
+async function historyJSON(file,{reload=false}={}){
+  const {batch_id}=await historyReplayIndex();
+  return json(historyRoot+file,{reload,replayBatch:batch_id});
 }
 async function refreshHistoryDay(){
   await Promise.all([renderReview(),loadHistoricalPitchers(),loadHistoryContext()]);
@@ -492,7 +507,6 @@ async function showFeaturePage(page, sub) {
   $('#backtestBar').hidden=page!=='review';
   $('#historyDayContent').hidden=false;
   $('#reviewPage').setAttribute('aria-labelledby','reviewTitle');
-  $('#backtestBar > p').textContent=`${HISTORY_DATE.replaceAll('-','/')} · 只用賽前資料`;
   $$('#backtestSeg button').forEach(b=>b.classList.toggle('on',b.dataset.sub===backtestSub));syncPressed();
   $('.matchday-intro').hidden=page!=='evaluation';$('.mobile-jump').hidden=!main;
   $('.mobile-jump a[href="#workspace"]').textContent=replay?'選擇比賽':'情境設定';
@@ -603,10 +617,15 @@ function bindStatic() {
   $$("#roleSeg button").forEach((b) => b.onclick = () => { S.starter = b.dataset.r === "1"; renderRole(); });
   $("#pitchCount").oninput = renderRole;
   $("#rpTeam").onchange = ()=>{historyDisclosure.reset();$('#reviewTeam').value=$('#rpTeam').value;loadGames();};
-  $("#onlyPhGames").onchange = renderGames;
   $("#lateOnly").onchange = renderPAs;
   $("#showSuggest").onchange = renderPAs;
   $("#onlyChanges").onchange = renderPAs;
+  $("#replayReset").onclick = () => {
+    $("#lateOnly").checked = false;
+    $("#onlyChanges").checked = false;
+    $("#showSuggest").checked = true;
+    renderPAs();
+  };
 }
 
 /* 預設球數：先發依已完成局數估算（每局約 15 球，上限 105；1 局 0 球、7 局 90 球），後援 15 球 */
@@ -908,7 +927,7 @@ async function run(fn, view) {
 let timingData = null;
 async function loadTiming() {
   if (timingData === null) {
-    try { const d = await json(runtimeAsset('timing',`data/timing-${runtime.season}.json`),{reload:true}); timingData = d.schema_version===2 && d.training_version===5 && d.engine_contract===5 && d.batch_id===activeBatchId() && d.season === runtime.season && d.games ? d : false; }
+    try { const d=await historyJSON('timing.json',{reload:true});timingData=d.schema_version===2&&d.date===HISTORY_DATE&&d.season===historySeason&&d.games?d:false; }
     catch { timingData = false; }  // 沒有時機資料時，回放照常使用
   }
   return timingData;
@@ -973,7 +992,7 @@ async function loadHistoryContext(){
  if(historySelectionKey&&!player.disabled&&player.value)historySelections.set(historySelectionKey,player.value);
  const key=JSON.stringify([$('#reviewTeam').value,historyRole]);
  const token=++historyContextGeneration;player.disabled=true;
- try{historyContext=await json(runtimeAsset('history_context',`data/history-context-${HISTORY_DATE}.json`));if(token!==historyContextGeneration)return;if(historyContext.date!==HISTORY_DATE)throw Error('date');if(typeof PlayerIdentity!=='undefined'&&currentPage()==='review')PlayerIdentity.setContext(historyContext.players||{});
+ try{historyContext=await historyJSON('context.json');if(token!==historyContextGeneration)return;if(historyContext.date!==HISTORY_DATE)throw Error('date');if(typeof PlayerIdentity!=='undefined'&&currentPage()==='review')PlayerIdentity.setContext(historyContext.players||{});
  const list=[...(historyContext.teams[$('#reviewTeam').value]?.[historyRole]||[])].sort((a,b)=>b.games14-a.games14||b.last_date.localeCompare(a.last_date));
  player.innerHTML=list.map(p=>`<option value="${esc(p.name)}">${N(p.name)}</option>`).join('');
  const saved=historySelections.get(key);player.value=list.some(p=>p.name===saved)?saved:(list[0]?.name||'');
@@ -998,44 +1017,59 @@ async function renderReview(){
   box.innerHTML='<p role="status">載入當日比賽…</p>';
   try{
     await loadTiming();
-    const games=(await json('data/replay/games.json')).filter(g=>g.date===HISTORY_DATE&&(g.away===name||g.home===name));
-    const data=await Promise.all(games.map(async g=>({g,replay:await json(`data/replay/${g.game}.json`)})));
+    const index=await historyReplayIndex();
+    const games=index.schedule.filter(g=>g.away===name||g.home===name);
+    const data=await Promise.all(games.map(async g=>({g,replay:await historyJSON(g.game+'.json')})));
     if(token!==historyReviewGeneration)return;
+    $('#historyMethodScope').textContent=`${index.schedule.length} 場、${index.pa_count} 個打席。6 局起，估計差達 1 個百分點才顯示換人提示。逐球模型截止於 ${index.ml_cutoff.replaceAll('-','/')} 前。`;
     if(typeof PlayerIdentity!=='undefined'&&currentPage()==='review')PlayerIdentity.setContext(data[0]?.replay.players||historyContext?.players||{});
-    box.innerHTML=data.map(({g,replay})=>{const marked=timingData?.games?.[g.game]||{},pas=replay.pas,late=pas.filter(p=>p.inning>=6),changes=pitcherChanges(pas),actualPh=late.filter(p=>p.bat_team===name&&p.is_ph).length;
-      const actualPen=late.filter(p=>p.fld_team===name&&changes.has(p.pa_id)).length;
-      const suggestedPh=late.filter(p=>p.bat_team===name&&marked[p.pa_id]?.[3]>=1).length,suggestedPen=late.filter(p=>p.fld_team===name&&marked[p.pa_id]?.[0]>=1).length;
-      return `<article class="card"><div class="card-h"><h3>${esc(g.away)} vs ${esc(g.home)}</h3></div><div class="card-b"><p>依打席順序比較系統提示與實際代打／換投。</p><div data-decision-timeline="${esc(g.game)}"></div><p class="mut">${pas.length} 打席可回放；6 局起顯示換人提示。</p><details data-history-score="${esc(g.game)}" ${historyDisclosure.scores.has(g.game)?'open':''}><summary>揭示賽後比分</summary><p>${g.away_score}：${g.home_score}（客：主）</p></details><div class="history-actions"><button class="link" type="button" data-history-game="${esc(g.game)}">查看當日打席</button><a href="https://www.cpbl.com.tw/box?gameSno=${Number(g.game.split('-')[1])}&kindCode=A&year=${runtime.season}" target="_blank" rel="noopener noreferrer">官方紀錄 ↗</a></div></div></article>`;
+    box.innerHTML=data.map(({g,replay})=>{
+      return `<article class="card"><div class="card-h replay-match-heading"><div><h3>${esc(g.away)} vs ${esc(g.home)}</h3><p class="mut">${replay.pas.length} 個打席 · 6 局起顯示換人提示</p></div><button class="btn-primary" type="button" data-history-game="${esc(g.game)}">查看當日打席 →</button></div><div class="card-b"><div data-decision-timeline="${esc(g.game)}"></div><div class="history-actions"><details data-history-score="${esc(g.game)}" ${historyDisclosure.scores.has(g.game)?'open':''}><summary>揭示賽後比分</summary><p>${g.away_score}：${g.home_score}（客：主）</p></details><a href="https://www.cpbl.com.tw/box?gameSno=${Number(g.game.split('-')[1])}&kindCode=A&year=${historySeason}" target="_blank" rel="noopener noreferrer">官方紀錄 ↗</a></div></div></article>`;
     }).join('')||'<p>此隊當日無收錄比賽。</p>';
     if(!timingData)box.insertAdjacentHTML('beforeend','<p class="mut" role="status">系統建議標記暫時無法載入；實際紀錄仍可查看。</p><button type="button" id="timingRetry">重新載入建議</button>');
     if($('#timingRetry'))$('#timingRetry').onclick=()=>{timingData=null;renderReview();};
     $$('[data-history-score]').forEach(d=>d.ontoggle=()=>{if(d.open)historyDisclosure.scores.add(d.dataset.historyScore);else historyDisclosure.scores.delete(d.dataset.historyScore);if(S.games.length)renderGames();});
-    $$('[data-history-game]').forEach(b=>b.onclick=async()=>{await showFeaturePage('review','replay');$('#rpTeam').value=name;await loadGames();await loadGame(b.dataset.historyGame);});
+    $$('[data-history-game]').forEach(b=>b.onclick=async()=>{
+      await showFeaturePage('review','replay');
+      if(S.mode!=='replay')return;
+      if(S.game!==b.dataset.historyGame||!S.pas)await loadGame(b.dataset.historyGame,{scroll:false});
+      if(S.mode==='replay')$('#replayPaTitle').focus();
+    });
     if(typeof BacktestView!=='undefined')for(const {g,replay} of data){
       const element=$(`[data-decision-timeline="${g.game}"]`);
       BacktestView.timeline({element,disclosure:pa=>historyDisclosure.select(pa),setDisclosure:(part,open,pa)=>historyDisclosure.setFor(pa,part,open),pas:replay.pas,marks:timingData?.games?.[g.game],team:name,
-        open:async(pa,kind)=>{await showFeaturePage('review','replay');await loadGames();await loadGame(g.game);
-          S.pa=pa;S.tab=kind;renderPAs();await run(()=>api(`api/replay?pa=${pa}&decision=${kind}`),'replay');}});
+        open:async(pa,kind)=>{
+          await showFeaturePage('review','replay');
+          if(S.mode!=='replay')return;
+          if(S.game!==g.game||!S.pas)await loadGame(g.game,{scroll:false});
+          if(S.mode!=='replay'||S.game!==g.game||!S.pas)return;
+          $('#lateOnly').checked=false;$('#onlyChanges').checked=false;
+          S.pa=pa;S.tab=kind;renderPAs();
+          await run(()=>api(`api/replay?pa=${pa}&decision=${kind}`),'replay');
+        }});
     }
   }catch{if(token===historyReviewGeneration)box.innerHTML='<p role="alert">當日資料載入失敗。</p><button id="historyRetry" type="button">重新載入</button>';if($('#historyRetry'))$('#historyRetry').onclick=renderReview;}
 }
 let historyPitchGeneration=0,historyPitchTeam='';
 const historyPitchSelections=new Map();
+async function replayPitchChange(options){
+  const index=await historyReplayIndex();
+  return PitchChange.staticResult({...options,root:historyRoot+'pitch/',batchId:index.batch_id});
+}
 function mountHistoricalPitch(){
   const pitcher=$('#historyPitcher').value;if(!pitcher)return;
   if(historyPitchTeam)historyPitchSelections.set(historyPitchTeam,pitcher);
-  PitchChange.mount({element:$('#historyPitchChange'),pitcher,cutoff:HISTORY_DATE,season:runtime.season,hand:'ALL',fetcher:STATIC?PitchChange.staticResult:o=>api(`api/pitch-change?${new URLSearchParams(o)}`)});
+  PitchChange.mount({element:$('#historyPitchChange'),pitcher,cutoff:HISTORY_DATE,season:historySeason,hand:'ALL',fetcher:replayPitchChange});
 }
 async function loadHistoricalPitchers(){
   const token=++historyPitchGeneration,name=$('#reviewTeam').value;
   if(historyPitchTeam&&!$('#historyPitcher').disabled&&$('#historyPitcher').value)historyPitchSelections.set(historyPitchTeam,$('#historyPitcher').value);
   $('#historyPitcher').disabled=true;$('#historyPitchChange').innerHTML='<p role="status">載入投手…</p>';
   try{
-    const [r,context]=await Promise.all([team(name),json(runtimeAsset('history_context',`data/history-context-${HISTORY_DATE}.json`))]);
+    const context=await historyJSON('context.json');
     if(token!==historyPitchGeneration)return;
     if(context.date!==HISTORY_DATE)throw new Error('歷史日期不一致');
-    const prior=new Set((context.teams[name]?.pitchers||[]).map(p=>p.name));
-    const names=[...new Set([...r.pitchers.filter(p=>prior.has(p.name)).map(p=>p.name),...prior])];
+    const names=(context.teams[name]?.pitchers||[]).map(p=>p.name);
     $('#historyPitcher').innerHTML=names.map(n=>`<option value="${esc(n)}">${N(n)}</option>`).join('');
     const saved=historyPitchSelections.get(name);$('#historyPitcher').value=names.includes(saved)?saved:(names[0]||'');historyPitchTeam=name;
     $('#historyPitcher').disabled=!names.length;
@@ -1044,35 +1078,13 @@ async function loadHistoricalPitchers(){
   catch{if(token!==historyPitchGeneration)return;$('#historyPitchChange').innerHTML='<p role="alert">投手名單載入失敗。</p><button type="button" id="historyPitchRetry">重新載入</button>';$('#historyPitchRetry').onclick=loadHistoricalPitchers;}
 }
 
-async function openReplayPA(pa, kind) {
-  const gid = pa.split("-").slice(0, 2).join("-");
-  const item = Object.values(timingData.by_team).flatMap(t => [...(t.divergent?.pen || []), ...(t.divergent?.ph || [])]).find(x => x.pa === pa);
-  await showFeaturePage("review", "replay");
-  $("#rpTeam").value = $("#reviewTeam").value;
-  await loadGames();
-  if(STATIC&&!S.games.some(g=>g.game===gid)){const note=$('#replayNote');note.textContent='線上版未收錄這場比賽；請選其他比賽，或使用本機完整版。';note.hidden=false;$('#paList').innerHTML='<p>請從比賽列表選擇已收錄的場次。</p>';return;}
-  if (!S.games.find(g => g.game === gid)?.ph && $("#onlyPhGames").checked) { $("#onlyPhGames").checked = false; renderGames(); }
-  await loadGame(gid);
-  const note = $("#replayNote");
-  if (!S.pas) { note.textContent = "線上版沒有收錄這場比賽的打席資料；請用本機版查看。"; note.hidden = false; return; }
-  if (item && item.inning < 7) $("#lateOnly").checked = false;
-  $("#onlyChanges").checked = false; $("#showSuggest").checked = true;
-  S.tab = kind === "pen" ? "pen" : "ph";
-  renderPAs();
-  const btn = $(`#paList [data-p="${pa}"]`);
-  if (!btn) return;
-  btn.scrollIntoView({block: "center"});
-    if (btn.disabled) { note.textContent = "這個打席的完整評估尚未匯出，請改選其他打席。"; note.hidden = false; btn.classList.add("on"); return; }
-  note.hidden = true;
-  btn.click();
-}
-
 /* ---------------- 逐打席回放（模型回測） ---------------- */
 async function loadGames() {
   const token = ++gamesGeneration;
   ++gameGeneration;
   clearResult();
   S.games = []; S.pas = null; S.game = null; S.pa = null;
+  $("#replayCount").textContent = '';
   $("#paList").innerHTML = '<p>先選一場比賽</p>';
   $("#gameList").innerHTML = `<div class="empty" style="padding:24px"><span class="loading"></span></div>`;
   try {
@@ -1083,19 +1095,17 @@ async function loadGames() {
     loadedReplayTeam=selectedTeam;
   } catch (e) { if (token === gamesGeneration) listError('#gameList', '比賽列表載入失敗。', loadGames); return; }
   renderGames();
+  if(S.games.length===1)await loadGame(S.games[0].game,{scroll:false});
 }
 function renderGames() {
-  const only = $("#onlyPhGames").checked;
-  const gs = S.games.filter((g) => !only || g.ph > 0);
-  $("#gameList").innerHTML = gs.map((g) => `
+  $("#gameList").innerHTML = S.games.map((g) => `
     <button type="button" class="item ${S.game === g.game ? "on" : ""}" data-g="${g.game}" aria-pressed="${S.game === g.game}">
-      <span class="num mut" style="font-size:12px">${g.date.slice(5)}</span>
       <span>${esc(g.away)} ${historyDisclosure.scores.has(g.game)?`<b class="num">${g.away_score} : ${g.home_score}</b>`:'vs'} ${esc(g.home)}</span>
       ${g.ph ? `<span class="chip tag-ph" style="margin-left:auto">代打 ${g.ph}</span>` : ""}
     </button>`).join("") || `<div class="empty" style="padding:24px">沒有符合的比賽</div>`;
   $$("#gameList .item").forEach((el) => el.onclick = () => loadGame(el.dataset.g));
 }
-async function loadGame(gid) {
+async function loadGame(gid,{scroll=true}={}) {
   const token = ++gameGeneration;
   $("#replayNote").hidden = true;
   clearResult();
@@ -1104,17 +1114,17 @@ async function loadGame(gid) {
   renderGames();
   $("#paList").innerHTML = `<div class="empty" style="padding:24px"><span class="loading"></span></div>`;
   try {
-    const [pas,index,datedContext] = await Promise.all([api(`api/game?game=${gid}`),STATIC?historyReplayIndex():Promise.resolve(null),json(runtimeAsset('history_context',`data/history-context-${HISTORY_DATE}.json`))]);
+    const [pas,index,datedContext] = await Promise.all([api(`api/game?game=${gid}`),historyReplayIndex(),historyJSON('context.json')]);
     if (token !== gameGeneration) return;
     if(datedContext.date!==HISTORY_DATE)throw Error('Historical player date mismatch');
     S.pas = pas;
     S.replayPlayers = {...datedContext.players,...Object.fromEntries(pas.flatMap(p=>[
       [p.start_batter||p.batter,p.batter_display],[p.start_pitcher||p.pitcher,p.pitcher_display],
       [p.batter,p.final_batter_display],[p.pitcher,p.final_pitcher_display]]).filter(([id,label])=>id&&label))};
-    S.replayAvailable=index?new Set(index.games[gid]||[]):null;
+    S.replayAvailable=new Set(index.games[gid]||[]);
   } catch (e) { if (token === gameGeneration) listError('#paList', '打席列表載入失敗。', () => loadGame(gid)); return; }
   renderPAs();
-  if (motion()?.narrow()) $("#paList").closest(".card").scrollIntoView({block: "start"});
+  if (scroll && S.mode==='replay' && motion()?.narrow()) $("#paList").closest(".card").scrollIntoView({block: "start"});
 }
 function pitcherChanges(pas){
   const last={},changes=new Set();
@@ -1123,7 +1133,7 @@ function pitcherChanges(pas){
 }
 function renderPAs() {
   if (!S.pas) return;
-  if(typeof PlayerIdentity!=='undefined')PlayerIdentity.setContext(S.replayPlayers||{});
+  if(typeof PlayerIdentity!=='undefined'&&S.mode==='replay')PlayerIdentity.setContext(S.replayPlayers||{});
   const late = $("#lateOnly").checked, showSuggest = $("#showSuggest").checked, onlyChanges = $("#onlyChanges").checked;
   let html = "", lastKey = "";
   // 實際換投：與同一防守隊上一打席的投手不同（第一個打席除外）
@@ -1134,14 +1144,17 @@ function renderPAs() {
     const tm = timingFor(p.pa_id);
     return p.is_ph || penChanged.has(p.pa_id) || (showSuggest && (tm?.penSug || tm?.phSug));
   };
-  for (const p of S.pas.filter(visible)) {
+  const visiblePAs=S.pas.filter(visible);
+  $("#replayCount").textContent=`顯示 ${visiblePAs.length}／${S.pas.length} 個打席`;
+  $("#replayReset").hidden=!(late||onlyChanges||!showSuggest);
+  for (const p of visiblePAs) {
     const tm = showSuggest ? timingFor(p.pa_id) : null;
     const key = `${p.inning}-${p.half}`;
     if (key !== lastKey) {
       html += `<div class="inning-h">${p.inning} 局${p.half === "away" ? "上" : "下"}・${esc(p.bat_team)} 攻擊</div>`;
       lastKey = key;
     }
-    const off = STATIC && !S.replayAvailable?.has(p.pa_id);
+    const off = S.replayAvailable && !S.replayAvailable.has(p.pa_id);
     html += `<button type="button" class="item ${S.pa === p.pa_id ? "on" : ""} ${off ? "off" : ""}" data-p="${p.pa_id}" aria-pressed="${S.pa === p.pa_id}" ${off ? 'disabled title="此打席完整評估尚未匯出"' : ""}>
       <span class="chip num">${p.outs} 出・${BASES[p.bases]}</span>
       <span>${N(p.start_batter||p.batter)}</span>
@@ -1173,8 +1186,7 @@ function switchTab(t) {
 function bindMotion() {
   $(".result-return").addEventListener("click", e => {
     if (S.mode !== "replay") return;
-    const btn = S.pa && $(`#paList [data-p="${S.pa}"]`);
-    if (!btn) return;
+    const btn = (S.pa && $(`#paList [data-p="${S.pa}"]`)) || $('#replayPaTitle');
     e.preventDefault(); btn.scrollIntoView({block: "center"}); btn.focus({preventScroll: true});
   });
 }
@@ -1337,7 +1349,7 @@ function assessmentNotes(R) {
   const dates=cutoff!=='未記錄'&&ml===cutoff?`資料截止：${esc(cutoff)}`:`能力資料截止：${esc(cutoff)}；逐球資料截止：${esc(ml)}`;
   return `<p>分數是相對排名，不是成功機率。</p>
     <details class="assessment-notes"><summary>資料與評估依據</summary><ul>
-        <li><b>資料範圍：</b>2024–2025；${dates}（不含截止日）。</li>
+        <li><b>資料範圍：</b>${R.view==='replay'?'2024–2026':'2024–2025'}；${dates}（不含截止日）。</li>
     <li><b>圖表限制：</b>細線不是完整預測區間；失分價值為估計。</li>
     <li><b>上場資格：</b>${R.view==='replay'?'歷史名單與守位可能為推估':'今日名單需人工確認'}；核對登錄、退場與 DH。</li>
     </ul></details>`;
@@ -1347,7 +1359,7 @@ async function mountFieldingPlans(R,pa,tab=S.tab||'ph'){
   if(box&&tab!=='ph'){box.innerHTML='';return;}
   if(!box||R.view!=='replay'||!pa||R.candidates.some(c=>c['角色']==='代打'&&['ok','warn'].includes(c['守備'])))return;
   try{
-    const data=await json(runtimeAsset('fielding_plans',`data/fielding-plans-${HISTORY_DATE}.json`));
+    const data=await historyJSON('fielding-plans.json');
     if(box!==$('#fieldingPlans')||S.last!==R||S.pa!==pa||(S.tab||'ph')!==tab)return;
     if(data.schema_version!==1||data.date!==HISTORY_DATE||data.status!=='conditional_only')throw Error('schema');
     const plans=Object.values(data.plans[pa]||{}).filter(p=>p.requires_confirmation===true&&R.candidates.some(c=>c['角色']==='代打'&&c['球員']===p.incoming));
@@ -1577,9 +1589,7 @@ let detailGeneration = 0;
 function mountPitchChange(pitcher, hand = "ALL") {
   if(S.last?.view!=='replay'){if($("#pitchChange"))$("#pitchChange").innerHTML='';return;}
   const cutoff = String(S.last.view === 'replay' ? S.last.situation.date : S.last.model_cutoff).slice(0, 10);
-  const season = S.last.view === "replay" ? Number(cutoff.slice(0, 4)) : runtime.season;
-  PitchChange.mount({element: $("#pitchChange"), pitcher, cutoff, season, hand,
-    fetcher: STATIC ? PitchChange.staticResult : (o) => api(`api/pitch-change?${new URLSearchParams(o)}`)});
+  PitchChange.mount({element: $("#pitchChange"), pitcher, cutoff, season:historySeason, hand, fetcher:replayPitchChange});
 }
 async function showDetail(batter, pitcher, tr, updateComparison = true) {
   const token = ++detailGeneration;

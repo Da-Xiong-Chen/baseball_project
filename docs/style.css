@@ -1138,3 +1138,25 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .capacity-result { border:1px solid var(--line); border-radius:8px; padding:10px 12px; min-width:0; }
 .capacity-result h4 { margin:0 0 6px; }
 .capacity-result p:last-child { margin-bottom:0; }
+
+.replay-match-heading { align-items:center; gap:12px 20px; }
+.replay-match-heading p { margin:4px 0 0; font-size:.875rem; }
+.replay-match-heading .btn-primary { width:auto; margin-inline-start:auto; border-radius:8px; }
+.replay-match-heading button, #replayReset, .history-actions summary { min-height:44px; }
+.history-actions summary { display:list-item; padding-block:10px; cursor:pointer; }
+.replay-filters { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:6px; }
+.replay-filters .toggle { min-height:44px; margin:0; padding:8px; border:1px solid var(--line); border-radius:8px; }
+.replay-filters .toggle:has(:checked) { color:var(--accent); background:var(--panel-2); }
+.replay-filter-status { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:44px; margin-block:6px; color:var(--muted); font-size:.875rem; }
+#replayReset { padding:6px 10px; }
+#gameList { margin-top:10px; }
+#paList { max-height:clamp(250px,50vh,500px); scrollbar-gutter:stable; }
+#replayPanel .item { min-height:44px; flex-wrap:wrap; }
+.bt-kind button,.bt-groups button,.bt-event,.bt-decision button { min-height:44px; }
+:is(#replayPanel,#reviewPage,#backtestBar) :is(button,select,summary,a,input):focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+@media (max-width:600px) {
+  .replay-match-heading .btn-primary { width:100%; margin-inline-start:0; }
+  .replay-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .replay-filters .toggle:last-child { grid-column:1/-1; }
+  #paList { max-height:min(55vh,420px); }
+}

@@ -83,14 +83,62 @@ def inspect_site(site):
         manifest=read_json(index)
         if manifest.get('schema_version')!=1 or manifest.get('pa_count')!=len(manifest.get('files',{})):
             raise ValueError(f'Invalid daily replay index: {index}')
+        if 'schedule' in manifest:
+            batch=manifest['batch_id']
+            day=manifest['date']
+            if (index.parent.name!='day-'+day or manifest['season']!=int(day[:4])
+                    or manifest['model_cutoff']!=day
+                    or not manifest['training_last_date']<manifest['ml_cutoff']<day
+                    or not manifest['calibration_last_date']<manifest['ml_cutoff']):
+                raise ValueError(f'Daily replay has inconsistent cutoffs: {index}')
+
+            def day_asset(filename):
+                target=local_asset(site, str((index.parent / filename).relative_to(site)))
+                payload=read_json(target)
+                if payload.get('batch_id')!=batch:
+                    raise ValueError(f'Mixed daily replay batch: {target}')
+                return payload
+
+            ids={g['game'] for g in manifest['schedule'] if g['date']==manifest['date']}
+            if ids!=set(manifest['games']) or len(ids)!=len(manifest['schedule']):
+                raise ValueError(f'Daily schedule and index disagree: {index}')
+            indexed_ids=[pid for game in manifest['games'].values() for pid in game]
+            if len(indexed_ids)!=len(manifest['files']) or set(indexed_ids)!=set(manifest['files']):
+                raise ValueError(f'Daily PA coverage disagrees: {index}')
+            for game in sorted(ids):
+                payload=day_asset(game+'.json')
+                if payload['date']!=manifest['date'] or [r['pa_id'] for r in payload['pas']]!=manifest['games'][game]:
+                    raise ValueError(f'Daily game and index disagree: {game}')
+            supporting={name:day_asset(name) for name in ('context.json','timing.json','fielding-plans.json')}
+            for name, payload in supporting.items():
+                if payload['date']!=day:
+                    raise ValueError(f'Daily asset has wrong date: {name}')
+            if supporting['fielding-plans.json']['replay_index_sha256']!=hashlib.sha256(index.read_bytes()).hexdigest():
+                raise ValueError(f'Daily fielding plans are for a different index: {index}')
+            timing=supporting['timing.json']
+            if timing['season']!=manifest['season'] or set(timing['games'])!=ids:
+                raise ValueError(f'Daily timing coverage disagrees: {index}')
+            pitch=day_asset('pitch/index.json')
+            if pitch['season']!=manifest['season']:
+                raise ValueError(f'Daily pitch index has wrong season: {index}')
+            for filename in pitch['pitchers'].values():
+                for snap in day_asset('pitch/'+filename)['snapshots']:
+                    if snap['effective_from']!=manifest['date']:
+                        raise ValueError(f'Daily pitch cutoff disagrees: {filename}')
         for pid,filename in manifest['files'].items():
             target=local_asset(site,str((index.parent / filename).relative_to(site)))
             bundle=read_json(target)
             if bundle.get('pa_id')!=pid or bundle.get('date')!=manifest.get('date'):
                 raise ValueError(f'Daily replay identity mismatch: {pid}')
+            if bundle.get('batch_id')!=manifest.get('batch_id'):
+                raise ValueError(f'Daily replay batch mismatch: {pid}')
             for result in [bundle.get('ph'),bundle.get('pen')]:
                 if result is not None and not (result['ml_cutoff']<=result['model_cutoff']<=bundle['date']):
                     raise ValueError(f'Daily replay future data: {pid}')
+                if result is not None and 'schedule' in manifest and (
+                        result.get('batch_id')!=batch or result['ml_cutoff']!=manifest['ml_cutoff']
+                        or result['model_cutoff']!=manifest['model_cutoff']):
+                    raise ValueError(f'Daily replay decision disagrees with the index: {pid}')
             if hashlib.sha256(target.read_bytes()).hexdigest()!=manifest.get('sha256',{}).get(pid):
                 raise ValueError(f'Daily replay checksum mismatch: {pid}')
     for index in (site / 'data/pitch-change').glob('*/index.json'):
