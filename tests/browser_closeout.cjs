@@ -93,6 +93,12 @@ async function lineup(context) {
 }
 
 async function historical(page) {
+  await page.goto(base);
+  await page.locator("#evalBtn:enabled").waitFor();
+  await page.getByRole("button", {name:"單日分析",exact:true}).press("Enter");
+  await page.getByRole("button", {name:"逐打席回放",exact:true}).press("Enter");
+  await page.getByRole("heading", {name:"先選一個打席"}).waitFor();
+  assert.equal(await page.locator("#customEmptyGuide").isVisible(),false);
   await page.goto(replay);
   const result = page.locator('#resultBody[data-replay-decision=pen]');
   await result.waitFor();

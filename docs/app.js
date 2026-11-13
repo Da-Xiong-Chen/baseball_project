@@ -754,6 +754,8 @@ function setMode(m) {
   syncPressed();
   $("#customPanel").classList.toggle("hidden", m !== "custom");
   $("#replayPanel").classList.toggle("hidden", m !== "replay");
+  $("#customEmptyGuide").hidden = m === "replay";
+  $("#replayEmptyGuide").hidden = m !== "replay";
   if (m === "replay") loadTiming().then(renderPAs);
   // 手機看完回放結果時回到打席列表，而不是表單最上方
   $(".result-return").innerHTML = m === "replay" ? '回到打席列表 <span aria-hidden="true">↑</span>' : '調整情境 <span aria-hidden="true">↑</span>';

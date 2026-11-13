@@ -229,9 +229,15 @@
     <div class="card empty" id="emptyState">
       <span class="eyebrow">對決準備</span>
       <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M32 56 L56 32 L32 8 L8 32 Z"/><circle cx="32" cy="32" r="5"/></svg>
-      <h2>這個打席，誰適合上場？</h2>
-      <p>選好球隊、投打人選與局面，按「評估」比較。</p>
-      <div class="desk-guide"><span><b>01</b> 設定局面</span><span><b>02</b> 比較人選</span><span><b>03</b> 查看配球</span></div>
+      <div id="customEmptyGuide">
+        <h2>這個打席，誰適合上場？</h2>
+        <p>選好球隊、投打人選與局面，按「評估」比較。</p>
+        <div class="desk-guide"><span><b>01</b> 設定局面</span><span><b>02</b> 比較人選</span><span><b>03</b> 查看配球</span></div>
+      </div>
+      <div id="replayEmptyGuide" hidden>
+        <h2>先選一個打席</h2>
+        <p>選球隊與比賽，再點選打席。先看事前評估，再揭示實際調度與打席結果。</p>
+      </div>
     </div>
     <div id="resultBody" class="hidden"></div>
   </section>
@@ -258,6 +264,6 @@
 <script src="backtest.js?v=20261112-replay-navigation"></script>
 <script src="bullpen-plan.js?v=20261026-1"></script>
 <script src="bullpen-plan-ui.js?v=20261106-compare"></script>
-<script src="app.js?v=20261113-scoreboard"></script>
+<script src="app.js?v=20261113-replay-guide"></script>
 </body>
 </html>
