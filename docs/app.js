@@ -293,6 +293,25 @@ async function applySituation(sit, quiet = false) {
   renderState(); syncScoreControls(); refreshAutoPitchCount(); invalidateCustom();
   if (!quiet) presetStatus('已載入預設。');
 }
+/* 示範情境：README 的實際例子，讓第一次使用者不必自行設定就能看到一組有差距的比較 */
+const DEMO = { view: 'offense', myTeam: '統一7-ELEVEn獅', oppTeam: '富邦悍將', inning: 8, half: 'away', outs: 1, bases: 2,
+  myScore: 1, oppScore: 2, pitcher: '魔力藍', batter: '林佳緯' };
+function selectByLabel(id, label) {
+  const select = $(id), option = [...select.options].find(o => o.textContent.trim().startsWith(label));
+  if (!option) return false;
+  if (select.value !== option.value) { select.value = option.value; select.dispatchEvent(new Event('change', { bubbles: true })); }
+  return true;
+}
+async function loadDemo() {
+  if (!S.ready || currentPage() !== 'evaluation') return;
+  const status = $('#demoStatus');
+  if (audienceMode !== 'general') { await selectAudienceEntry('general'); if (audienceMode !== 'general' || currentPage() !== 'evaluation') return; }
+  await applySituation(DEMO, true);
+  if (!S.ready || $('#myTeam').value !== DEMO.myTeam || $('#oppTeam').value !== DEMO.oppTeam) { status.textContent = '示範情境需要的球隊資料無法載入，請自行設定局面。'; return; }
+  if (!selectByLabel('#oppPitcher', DEMO.pitcher) || !selectByLabel('#dueBatter', DEMO.batter)) { status.textContent = '示範情境的球員不在目前名單，已帶入局面，請自行選擇投打人選。'; return; }
+  if (!selectByLabel('#duePos', POS.DH)) return;
+  await evaluateCustom();
+}
 function clearSituation() {
   S.inning = 1; S.half = 'away'; S.outs = 0; S.bases = 0;
   $('#myScore').value = 0; $('#oppScore').value = 0;
@@ -697,6 +716,7 @@ function bindStatic() {
   $('#fatigueLevel').onchange = setFatigueLevel;
   $('#presetSave').onclick = saveSituation;
   $('#presetLoad').onclick = () => applySituation(readPrefs().situation);
+  $('#demoBtn').onclick = loadDemo;
   $('#presetClear').onclick = clearSituation;
   $("#myPitcher").onchange = syncRole;
   $$("#roleSeg button").forEach((b) => b.onclick = () => { S.starter = b.dataset.r === "1"; renderRole(); });
@@ -835,7 +855,7 @@ async function refreshCustom() {
     if(typeof PitcherGroups!=='undefined')groupControl=PitcherGroups.mount({element:$('#pitcherGroups'),list:$('#penList'),availability:$('#penAvailability'),team:myName,pitchers:my.pitchers,current:()=>$('#myPitcher').value,unavailable:()=>[...(ownLineup()?.slots.map(s=>s.name)||[]),...(ownLineup()?.unavailable||[])],changed:()=>invalidateCustom()});
   }
   syncOwnLineup();autoPos();renderBench();renderPenVisibility();
-  loadedTeams={my:myName,opp:oppName};S.ready=true;$('#evalBtn').disabled=false;
+  loadedTeams={my:myName,opp:oppName};S.ready=true;$('#evalBtn').disabled=false;if($('#demoBtn'))$('#demoBtn').disabled=false;
 
 }
 function renderPenVisibility(searching=false) {
@@ -1673,6 +1693,7 @@ function renderResult(preserveTabs = false) {
   bindComparison(R,activeTab);
   mountFieldingPlans(R,S.pa,activeTab);
   bindTableComparison(R,activeTab);
+  bindRowsToggle(R);
   bindMixSwitch();
   mountPitchChange(R.situation.pitcher);
   $('#matchupReturn').onclick=event=>{
@@ -1733,13 +1754,38 @@ function dbar(v, err, scale) {
     <div class="err" style="left:${e1}px;width:${Math.max(1, e2 - e1)}px"></div></div>`;
 }
 
+/* 長名單預設只列基準、估計較佳、已選入比較者與前 ROW_LIMIT 名；其餘收合，使用者可展開 */
+const ROW_LIMIT = 5, expandedRows = new WeakMap();
+function visibleRows(R, tab, names, pinned) {
+  const chosen = comparisonNames(R, tab);
+  // 基準固定排在第一列，因此前 ROW_LIMIT 名候選是索引 1..ROW_LIMIT
+  return names.map((name, i) => i <= ROW_LIMIT || pinned[i] || chosen.has(name));
+}
+function rowsCollapsed(R, tab, keep) { return keep.includes(false) && !expandedRows.get(R)?.has(tab); }
+function rowsToggle(R, tab, keep, unit) {
+  const hidden = keep.filter(k => !k).length;
+  if (!hidden) return "";
+  const open = !rowsCollapsed(R, tab, keep);
+  return `<div class="rows-toggle"><button type="button" data-rows-toggle="${tab}" data-hidden="${hidden}" data-unit="${unit}" aria-expanded="${open}">${open ? `只看前 ${ROW_LIMIT} 名` : `顯示其餘 ${hidden} ${unit}`}</button></div>`;
+}
+function bindRowsToggle(R) {
+  $$('[data-rows-toggle]').forEach(button => button.onclick = () => {
+    const tab = button.dataset.rowsToggle, tabs = expandedRows.get(R) || new Set(), open = !tabs.has(tab);
+    if (open) tabs.add(tab); else tabs.delete(tab);
+    expandedRows.set(R, tabs);
+    button.closest('.tbl-wrap').querySelector('.evaluation-table').classList.toggle('rows-collapsed', !open);
+    button.setAttribute('aria-expanded', String(open));
+    button.textContent = open ? `只看前 ${ROW_LIMIT} 名` : `顯示其餘 ${button.dataset.hidden} ${button.dataset.unit}`;
+  });
+}
 function phTable(R) {
   const c = R.candidates;
   const scale = Math.max(0.3, ...c.map((x) => x["相對現任"]).filter(Number.isFinite).map(Math.abs));
-  const rows = c.map((x) => {
+  const keep = visibleRows(R, "ph", c.map(x => x["球員"]), c.map(x => x["角色"] === "現任" || x["球員"] === S.bestName));
+  const rows = c.map((x, i) => {
     const cur = x["角色"] === "現任", best = x["球員"] === S.bestName;
     const d = x["守備"];
-    return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""}">
+    return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""} ${keep[i] ? "" : "more-row"}">
       <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${cur?'':comparisonCircle(R,"ph",x["球員"])}${officialPlayerLink(x["球員"])} ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}${rowDetailButton(x["球員"])}
         <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div>${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比較池百分位`)}</td>
@@ -1747,7 +1793,7 @@ function phTable(R) {
       <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : d === "unknown" ? "?" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>
     </tr>`;
   }).join("");
-  return `<div class="card-b" style="padding-bottom:0">${scoreLegend(c.find(x => x["角色"] === "現任"), "球員")}</div><table class="t evaluation-table"><thead><tr><th>球員</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<div class="card-b" style="padding-bottom:0">${scoreLegend(c.find(x => x["角色"] === "現任"), "球員")}</div><table class="t evaluation-table${rowsCollapsed(R, "ph", keep) ? " rows-collapsed" : ""}"><thead><tr><th>球員</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>守備檢查</th></tr></thead><tbody>${rows}</tbody></table>${rowsToggle(R, "ph", keep, "人")}`;
 }
 
 function rowDetailButton(name) {
@@ -1757,10 +1803,11 @@ function rowDetailButton(name) {
 function penTable(R) {
   const rows = R.bullpen.rows;
   const scale = Math.max(0.5, ...rows.map((x) => x["守方勝率增減"]).filter(Number.isFinite).map(Math.abs));
+  const keep = visibleRows(R, "pen", rows.map(x => x["投手"]), rows.map(x => x["角色"] === "場上"));
   const body = rows.map((x, i) => {
     const cur = x["角色"] === "場上";
     const best = !cur && i === 1 && x["守方勝率增減"] > 0;
-    return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""}">
+    return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""} ${keep[i] ? "" : "more-row"}">
       <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${cur?'':comparisonCircle(R,"pen",x["投手"])}${officialPlayerLink(x["投手"])} ${handChip(x["投"] || "U")}${best ? `<span class="best">估計較佳</span>` : ""}${rowDetailButton(x["投手"])}
         <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div>${reasonsHtml(pitcherReasons(x, R))}${mobileRowDetails(x,true)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位')}</td>
@@ -1768,7 +1815,7 @@ function penTable(R) {
       <td class="evaluation-warning">${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
   }).join("");
   return `<div class="card-b mut" style="font-size:12px;padding-bottom:0">打者：${R.bullpen.next.map(N).join("、")}<div style="margin-top:6px">${scoreLegend(R.bullpen.rows.find(x => x["角色"] === "場上"), "投手")}</div></div>
-    <table class="t evaluation-table"><caption class="sr-only">固定 ${R.bullpen.next.length} 個打席比較。</caption><thead><tr><th>投手</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>疲勞／警示</th></tr></thead><tbody>${body}</tbody></table>`;
+    <table class="t evaluation-table${rowsCollapsed(R, "pen", keep) ? " rows-collapsed" : ""}"><caption class="sr-only">固定 ${R.bullpen.next.length} 個打席比較。</caption><thead><tr><th>投手</th><th title="比較池百分位；不是成功機率">價值分數</th><th>勝率變化（相對現任）</th><th>疲勞／警示</th></tr></thead><tbody>${body}</tbody></table>${rowsToggle(R, "pen", keep, "位投手")}`;
 }
 
 function mixCard(R) {
