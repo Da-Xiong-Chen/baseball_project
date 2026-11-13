@@ -15,7 +15,7 @@
 | PR 檢查、異常操作與真實訓練驗收 | [10/29 最新發布前驗收](docs/qa/release-readiness-20261029/README.md) · [CI 執行方式](docs/ci-validation.md) |
 | 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
 | 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
-| 最新簡報工作稿 | [11/12、32 頁回放版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |
+| 最新簡報工作稿 | [11/13、34 頁案例與規劃版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |
 | 模型與身份基準 | [10/25 v5 整合驗收](docs/qa/identity-integration-20261025/README.md) |
 
 **版本狀態：**這份更新整合 [PR #33](https://github.com/Da-Xiong-Chen/baseball_project/pull/33) 的內容與主分支已完成的 [PR #32](https://github.com/Da-Xiong-Chen/baseball_project/pull/32)。最新上線版本以 GitHub Pages 部署紀錄為準。本機預覽見下方「本機執行」。
@@ -24,7 +24,7 @@
 |---|---|
 | 競賽 | 2026 野革盃 台灣棒球數據黑客松 |
 | 隊名／成員 | 一球兩面｜蘇櫟、陳信安 |
-| 參賽簡報 | [最新 32 頁工作稿（PPT／PDF）與原交件版](presentations/competition-2026/README.md) |
+| 參賽簡報 | [最新 34 頁工作稿（PPT／PDF）與原交件版](presentations/competition-2026/README.md) |
 | 資料 | 2024–2026 中職一軍例行賽逐球紀錄（Rebas Open Data）與歷年守位 |
 
 ![代打評估：8 局上統一 1:2 落後、一出局二壘有人，左投魔力藍對上左打林佳緯，系統比較板凳候選，胡金龍估計較有利](assets/readme/evaluation.png)
@@ -53,8 +53,8 @@
 | 作品實際能做什麼 | 打開[線上網站](https://da-xiong-chen.github.io/baseball_project/)，選「一般使用者」→「代打評估」→ 按「評估」 |
 | 系統的建議和教練實際調度差在哪 | 在本機預覽上方選「單日分析」，看 2026/10/04 三場比賽逐打席的系統提示與實際調度 |
 | 方法和數據 | 本頁[方法](#方法)與[驗證結果](#驗證結果)；完整說明見 [docs/技術細節.md](docs/技術細節.md) |
-| 驗證是否確實 | [最新網站驗收](docs/qa/ux-context-20261029/README.md)、[整體程式審查](docs/qa/code-review-20261029/README.md)、[v5 整合驗收](docs/qa/identity-integration-20261025/README.md)、[全部測試與驗收索引](docs/qa/README.md) |
-| 提案內容 | [32 頁參賽簡報](presentations/competition-2026/README.md) |
+| 驗證是否確實 | [11/12 單日回放驗收](docs/qa/replay-20261112/README.md)、[整體程式審查](docs/qa/code-review-20261029/README.md)、[v5 整合驗收](docs/qa/identity-integration-20261025/README.md)、[全部測試與驗收索引](docs/qa/README.md) |
+| 提案內容 | [34 頁參賽簡報](presentations/competition-2026/README.md) |
 
 **我們的四個重點：**
 
@@ -137,7 +137,7 @@
 
 - **名單與守位是推估的**：網站沒有官方當日登錄、傷病與退場資料，可用名單與守位由過去出賽推估，實際使用前需人工確認。
 - **只看接下來三棒**：換投評估不考慮投手後續還能投幾局，也不是整場最適的牛棚安排。
-- **資料到 2025 年**：模型與球員資料為 2024–2025 年，不是 2026 即時能力。年度設定、增量進件與打席容量表已有工具；新年度正式模型與多局牛棚策略仍待資料及驗證。
+- **資料年度依入口而異**：自訂評估使用 2024–2025 v5 批次。2026/10/04 單日回放使用該場賽前資料，逐球模型截止於 2026/10/01 前。完整 2026 球季候選目前用於離線驗證。
 - **尚未納入**：代跑、守備好壞（目前只判斷能不能守）。
 
 ## 本機執行
@@ -188,7 +188,7 @@ node --test tests/*.cjs                  # 前端測試（需 Node.js）
 
 | 資料 | 來源 | 授權 |
 |---|---|---|
-| 2024–2025 逐球、打席、WPA、RE24 | [Rebas Open Data](https://github.com/rebas-tw/rebas.tw-open-data) | ODC-By v1.0 |
+| 2024–2026 逐球、打席、WPA、RE24 | [Rebas Open Data](https://github.com/rebas-tw/rebas.tw-open-data) | ODC-By v1.0 |
 | 2022–2024 歷年守位 | [ldkrsi/cpbl-opendata](https://github.com/ldkrsi/cpbl-opendata) | MIT |
 | 2025 守位與球員資料 | 中華職棒官網 | 僅供本競賽分析，著作權歸中華職棒 |
 

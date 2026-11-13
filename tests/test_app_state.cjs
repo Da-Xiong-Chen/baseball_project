@@ -12,7 +12,7 @@ function fixture() {
     return nodes.get(key);
   };
   const context = {document:{querySelector:node,querySelectorAll:()=>[]}, location:{href:'http://localhost/'}, console, URL, URLSearchParams, AbortSignal,
-    window:{matchMedia:()=>({matches:false}),scrollTo(){}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
+    window:{matchMedia:()=>({matches:false}),scrollTo(){},history:{pushState(_state,_title,url){context.location.href=url.href;}}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
     PitchChange:{mount:o=>context.lastMount=o,staticResult:()=>{}},fetch:async()=>({ok:true,json:async()=>({})})};
   let code = fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
   code = code.slice(0,code.lastIndexOf('init().catch'));
@@ -20,6 +20,27 @@ function fixture() {
   return {context,node,eval:s=>vm.runInContext(s,context)};
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
+
+test('replay links include only public coordinates and preserve existing non-replay anchors on ordinary visits',()=>{
+  const f=fixture();
+  f.context.location.href='https://example.com/project/#candidateCompare';
+  assert.equal(f.eval('replayLocation()'),null);
+  assert.equal(f.eval("replayURL('2026-251','2026-251-a000','pen').href"),
+    'https://example.com/project/?replay=2026-10-04&game=2026-251&pa=2026-251-a000&decision=pen');
+  f.eval("updateReplayURL('2026-251','2026-251-a000','pen')");
+  assert.equal(f.eval('replayLocation().pa'),'2026-251-a000');
+  f.eval('updateReplayURL()');
+  assert.equal(f.context.location.href,'https://example.com/project/');
+});
+
+test('replay neighbors skip filtered and unavailable PAs even when the selection is filtered out',()=>{
+  const f=fixture();
+  f.eval("S.pas=['a','b','c','d','e'].map(pa_id=>({pa_id}));S.pa='c';S.replayAvailable=new Set(['a','c','e']);");
+  assert.deepEqual(JSON.parse(f.eval('JSON.stringify(replayNeighbors(S.pas.filter(p=>p.pa_id!==S.pa)))')),
+    {previous:'a',next:'e',position:3,included:false});
+  f.eval("S.pa='e'");
+  assert.equal(f.eval('replayNeighbors(S.pas).next'),undefined);
+});
 
 test('unknown and historical hands never generate an unsupported platoon explanation',()=>{
  const f=fixture();f.eval("S.roster={X:{hitters:[{name:'B',hand:'R'}]}};");
@@ -872,6 +893,11 @@ test('all 18 real-model custom scenarios render both assessment views with finit
   assert.match(html,/id="candidateCompare"/);assert.doesNotMatch(html.replace(/<[^>]+>/g,''),/rebas:CPBL:/);assert.doesNotMatch(html,/評估未完成|NaN|Infinity|undefined|[−-]0\.0+(?!\d)/);
   f.eval("audienceMode='general';renderResult()");const general=f.node('#resultBody').innerHTML;
   f.eval("audienceMode='team';renderResult()");assert.equal(f.node('#resultBody').innerHTML,general,'Both audiences must use identical result layout and numeric presentation');
+  for(const [batScore,fieldScore,ended] of [[0,1,false],[1,0,true],[0,0,false]]){
+   f.eval(`Object.assign(S.last.situation,{inning:9,half:'home',bat_score:${batScore},fld_score:${fieldScore}});renderResult()`);
+   assert.equal(f.node('#resultBody').innerHTML.includes('此情境主隊已領先'),ended);
+  }
+
  }
 });
 
@@ -889,7 +915,7 @@ test('model validation retry refetches a schema-invalid JSON response instead of
 
 test('retrying unavailable timing markers replaces a cached invalid response',async()=>{
  const f=fixture();let requests=0;f.eval("historyReplayIndex=async()=>({batch_id:'expected'})");
- f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{}:{schema_version:2,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'expected',date:'2026-10-04',season:2026,games:{}}});
+ f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{}:{schema_version:2,training_version:5,engine_contract:5,identity_namespace:'rebas:CPBL',batch_id:'expected',date:'2026-10-04',season:2026,threshold:1,games:{}}});
  assert.equal(await f.eval('loadTiming()'),false);
  assert.ok(await f.eval('timingData=null;loadTiming()'));
  assert.equal(requests,2);

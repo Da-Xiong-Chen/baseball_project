@@ -6,8 +6,8 @@ test('incomplete, cross-team and unsupported two-way configurations cannot be ap
 
 test('malformed draft and confirmed state are rejected',()=>{const c=config(),s={version:1,season:2025,draft:c,confirmed:{}};assert.equal(L.validState(s),false);s.confirmed=c;assert.equal(L.validState(s),true);s.draft={};assert.equal(L.validState(s),false);});
 const fs=require('node:fs');const vm=require('node:vm');
-function uiFixture(storageMode='ok',loadTeam=async()=>roster){
- const values=new Map(),nodes=new Map(),listeners={};
+function uiFixture(storageMode='ok',loadTeam=async()=>roster,values=new Map()){
+ const nodes=new Map(),listeners={};
  const node=id=>{if(!nodes.has(id)){const events={};nodes.set(id,{value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},classList:{add(){},toggle(){}},setAttribute(){},focus(){},showModal(){this.open=true;},close(){this.open=false;for(const fn of events.close||[])fn();events.close=[];},addEventListener(type,fn){(events[type]??=[]).push(fn);},dispatch(type,event){for(const fn of events[type]||[])fn(event);}});}return nodes.get(id);};
  const attrs=new Set(),element={querySelector:node,querySelectorAll:()=>[],setAttribute:a=>attrs.add(a),removeAttribute:a=>attrs.delete(a),hasAttribute:a=>attrs.has(a),addEventListener:(name,fn)=>listeners[name]=fn};
  const storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>{if(storageMode==='throw')throw Error('denied');if(storageMode!=='silent')values.set(k,v);},removeItem:k=>values.delete(k)};
@@ -20,6 +20,27 @@ async function fillUI(f){await f.api.selectTeam('A');for(let i=0;i<9;i++)f.pick(
 test('UI draft is isolated until apply, and confirmed configuration persists by team',async()=>{const f=uiFixture();await fillUI(f);assert.equal(f.api.current('A'),null);await f.node('#lineupApply').onclick();assert.equal(f.api.current('A').slots.length,9);assert.equal(f.api.current('B'),null);const stored=JSON.parse([...f.values.values()][0]);assert.equal(stored.confirmed.pitcher,'P0');assert.equal(f.applied.length,1);});
 test('storage refusal still permits session configuration and never reports saved',async()=>{for(const mode of ['throw','silent']){const f=uiFixture(mode);await fillUI(f);await f.node('#lineupApply').onclick();assert.ok(f.api.current('A'));assert.match(f.node('#lineupMessage').textContent,/無法保存/);}});
 test('malformed saved data remains preserved during editing and applying',async()=>{const f=uiFixture();f.values.set('cpbl-lineup-2025-v1:A','broken');await fillUI(f);await f.node('#lineupApply').onclick();assert.equal(f.values.get('cpbl-lineup-2025-v1:A'),'broken');assert.match(f.node('#lineupMessage').textContent,/無法保存/);});
+
+test('editing in a stale tab preserves the newer saved draft and confirmed lineup',async()=>{
+ const first=uiFixture();
+ await fillUI(first);
+ await first.node('#lineupApply').onclick();
+ const second=uiFixture('ok',async()=>roster,first.values);
+ await second.api.selectTeam('A');
+ first.pick(0,'H9');
+ await first.node('#lineupApply').onclick();
+ const key='cpbl-lineup-2025-v1:A', latest=first.values.get(key);
+ second.pick(1,'H10');
+ assert.match(second.node('#lineupMessage').textContent,/另一個分頁/);
+ await second.node('#lineupApply').onclick();
+ assert.equal(first.values.get(key),latest);
+ assert.equal(second.api.current('A').slots[1].name,'H10');
+ assert.match(second.node('#lineupMessage').textContent,/另一個分頁/);
+ const reopened=uiFixture('ok',async()=>roster,first.values);
+ await reopened.api.selectTeam('A');
+ assert.equal(reopened.api.current('A').slots[0].name,'H9');
+ assert.equal(reopened.api.current('A').slots[1].name,'H1');
+});
 
 test('field selection exchanges positions for on-field players while retaining their batting order',()=>{const c=config(),names=c.slots.map(s=>s.name),pos=c.slots.map(s=>s.pos);L.assignPlayer(c,0,'H1',true);assert.deepEqual(c.slots.map(s=>s.name),names);assert.equal(c.slots[0].pos,pos[1]);assert.equal(c.slots[1].pos,pos[0]);assert.deepEqual(L.validate(c,roster),[]);});
 test('batting-row selection swaps duplicate names instead of producing duplicate lineup entries',()=>{const c=config();L.assignPlayer(c,0,'H1');assert.equal(c.slots[0].name,'H1');assert.equal(c.slots[1].name,'H0');assert.deepEqual(L.validate(c,roster),[]);});

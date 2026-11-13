@@ -23,6 +23,15 @@ python scripts/run_ci.py
 
 ## 異常瀏覽器測試
 
+換打、換投、兩分頁名單保存和回放有共用的瀏覽器驗收腳本。先依 [README](../README.md) 啟動靜態站或 API，再用已安裝 Playwright 的 Node 環境執行：
+
+```powershell
+$env:BASEBALL_QA_URL = 'http://127.0.0.1:8042/'
+node tests/browser_closeout.cjs
+```
+
+`BASEBALL_QA_BROWSER=webkit` 可測 WebKit。若 Playwright 套件在其他路徑，用 `PLAYWRIGHT_PACKAGE` 指定；若以現有 Chrome 執行，可用 `BASEBALL_QA_EXECUTABLE` 指定執行檔。腳本使用新的瀏覽器環境，會在同一環境開兩個分頁測名單，測完即關閉。WebKit 測試與 Safari 實機測試分開記錄。
+
 僅本機可用的故障測試站：
 
 ```bash
@@ -32,3 +41,9 @@ python tests/browser_fault_server.py --port 8030
 控制頁 `http://127.0.0.1:8030/__qa__/controls` 可模擬模型／回放 HTTP 503 與延遲，再以同站網站操作恢復。`/__qa__/storage-denied` 在不允許同源的 sandbox iframe 內載入網站，讓瀏覽器真的拒絕 localStorage；不是修改使用者瀏覽器權限或假造應用程式回傳。測試站只綁 127.0.0.1，不複製到 docs 或公開部署。
 
 本輪狀態與證據見 [發布前驗收](qa/release-readiness-20261029/README.md)。
+
+## 發布與回復核對
+
+1. 審查時記錄提交 SHA、PR 檢查、單日回放批次 ID、逐球模型截止日。用 `python scripts/prepare_site.py --output output/<新發布目錄>` 產生含逐檔 SHA-256 的發布清單。
+2. 維護者合併並部署後，在公開站以新瀏覽器環境和保有舊快取的環境測試。先比對 HTML 中的 CSS／JS 版本，再查回放索引、個別打席、舊連結和簡報下載。確認公開 HTML 來自合併版本後，才記錄部署通過。
+3. 若錯版，先核對 Pages 部署 SHA 和公開 HTML。HTML 正確時比較新舊瀏覽器，若乾淨環境也失敗，查回放索引及資料檔的 HTTP 狀態、批次和雜湊。將受影響網址、最後可用版本與測試結果交給維護者，依其流程回復整批資產。

@@ -10,7 +10,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_TESTS = ['test_runtime_config.py', 'test_training_source.py', 'test_batch_contract.py',
     'test_release_site.py', 'test_season_intake.py', 'test_incremental_intake.py', 'test_qa_boundaries.py',
-    'test_repository_checks.py', 'test_pitching_change_rules.py', 'test_bullpen_simulation.py']
+    'test_repository_checks.py', 'test_pitching_change_rules.py', 'test_bullpen_simulation.py',
+    'test_2026_model_improvements.py']
 
 
 def main():
