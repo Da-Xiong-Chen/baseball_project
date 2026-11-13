@@ -12,6 +12,7 @@
 
 | 日期 | 紀錄 | 重點 |
 |---|---|---|
+| 11-13 | [2024–2026 投打模型實驗](model-horizons-20261113/README.md) | 逐月重訓、RE24 混合模型、三棒失分同樣本比較與採用決定 |
 | 11-06 | [發布驗收與程式碼審查](release-foundation-20261106/README.md) | 分支整合、牛棚雙方案、使用者驗收、跨年進件與全季近況回測 |
 | 10-29 | [release-readiness-20261029/README.md](release-readiness-20261029/README.md) | raw-free PR 檢查、HTTP 故障／儲存拒絕／取消操作實測、單截止日真實訓練與中斷續跑 |
 | 10-29 | [review-fixes-20261029/README.md](review-fixes-20261029/README.md) | 修復來源綁定、可重現訓練入口及 starter 布林型別契約；保留原正式權重 |

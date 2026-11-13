@@ -6,12 +6,30 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from evaluate_half_inning_2026 import forecasts, np, pd
+from evaluate_matchup_horizons_2026 import propagate
+from evaluate_matchup_blend_validation_2026 import tuned_weight
 from evaluate_pa_outcomes_2026 import gain_values, game_result
 from evaluate_pitcher_workload_2026 import prior_load
 from train_2026_chronological import samples
 
 
 class ModelImprovements(unittest.TestCase):
+    def test_three_batter_distribution_stops_at_third_out(self):
+        kernel = np.zeros((2,25,25,5))
+        kernel[:,np.arange(25),np.arange(25),0] = 1
+        kernel[0,16,16,0] = 0
+        kernel[0,16,24,1] = 1
+        kernel[1,0,0,0] = 0
+        kernel[1,0,0,1] = 1
+        pmf = propagate(np.array([16,0]),[kernel]*3)
+        np.testing.assert_array_equal(pmf.argmax(axis=1),[1,3])
+        np.testing.assert_array_equal(pmf.max(axis=1),[1,1])
+
+    def test_blend_weight_selection_uses_only_supplied_rows(self):
+        early = pd.DataFrame({'chronological_prediction':[0.,0.],
+                              'players_prediction':[1.,1.], 'RE24':[.3,.3]})
+        self.assertAlmostEqual(tuned_weight(early), .3)
+
     def test_absorption_and_zero_probability_after_two_outs(self):
         counts = [Counter({(24, 0): 1}) for _ in range(24)]
         counts[16] = Counter({(24, 0): 3, (17, 1): 1})

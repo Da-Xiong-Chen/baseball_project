@@ -16,6 +16,7 @@
 | 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
 | 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
 | 最新簡報工作稿 | [11/13、34 頁案例與規劃版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |
+| 最新模型實驗 | [2024–2026 打席與三棒失分比較](docs/qa/model-horizons-20261113/README.md) |
 | 模型與身份基準 | [10/25 v5 整合驗收](docs/qa/identity-integration-20261025/README.md) |
 
 **版本狀態：**這份更新整合 [PR #33](https://github.com/Da-Xiong-Chen/baseball_project/pull/33) 的內容與主分支已完成的 [PR #32](https://github.com/Da-Xiong-Chen/baseball_project/pull/32)。最新上線版本以 GitHub Pages 部署紀錄為準。本機預覽見下方「本機執行」。
