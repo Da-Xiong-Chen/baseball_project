@@ -976,3 +976,37 @@ test('actual evaluation edits still clear the result and notify the capacity con
  const f=fixture();let changes=0;f.context.control={contextChanged(){changes++}};f.eval('capacityControl=control;S.last={id:"old"};');
  f.eval("invalidateCustom({target:{id:'myPitcher'}})");assert.equal(f.eval('S.last'),null);assert.equal(changes,1);
 });
+
+function longHitterResult(count){
+ const row=(i)=>({角色:i?'代打':'現任',球員:'H'+i,相對現任:i?(count-i)/100:0,預估勝率:-.5,樣本球數:200,可信度:"中",價值分數:50,守備:'ok',守備說明:'目前守捕手'});
+ return {situation:{pitcher:'P'},candidates:Array.from({length:count},(_, i)=>row(i))};
+}
+test('long candidate tables show the incumbent and top five, and keep the rest behind a toggle',()=>{
+ const f=fixture();f.context.result=longHitterResult(9);
+ const html=f.eval('phTable(result)');
+ assert.equal((html.match(/more-row"/g)||[]).length,3);assert.match(html,/evaluation-table rows-collapsed"/);
+ assert.match(html,/data-rows-toggle="ph"[^>]*aria-expanded="false">顯示其餘 3 人</);
+ assert.equal((html.match(/<tr data-batter=/g)||[]).length,9,'collapsed rows stay in the table for comparison and search');
+});
+test('a candidate chosen for comparison stays visible beyond the top five',()=>{
+ const f=fixture();f.context.result=longHitterResult(9);
+ f.eval('comparisonNames(result,"ph").add("H8")');
+ const html=f.eval('phTable(result)');
+ assert.equal((html.match(/more-row"/g)||[]).length,2);assert.doesNotMatch(html,/data-batter="H8" class="[^"]*more-row/);
+});
+test('short candidate tables have no toggle and expanded state survives a re-render',()=>{
+ const f=fixture();f.context.short=longHitterResult(6);
+ const html=f.eval('phTable(short)');
+ assert.doesNotMatch(html,/more-row"|rows-collapsed|data-rows-toggle/);
+ f.context.result=longHitterResult(9);f.eval('expandedRows.set(result,new Set(["ph"]))');
+ const open=f.eval('phTable(result)');
+ assert.doesNotMatch(open,/rows-collapsed/);assert.match(open,/aria-expanded="true">只看前 5 名</);
+});
+test('demo scenario names a matchup that exists in the published model data',()=>{
+ const f=fixture(),demo=JSON.parse(f.eval('JSON.stringify(DEMO)'));
+ const model=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model.json'),'utf8'));
+ assert.ok(model.rosters[demo.myTeam]&&model.rosters[demo.oppTeam]);
+ const labels=team=>[...model.rosters[team].hitters,...model.rosters[team].pitchers].map(p=>model.players[p.name]||p.name);
+ assert.ok(labels(demo.oppTeam).includes(demo.pitcher));assert.ok(labels(demo.myTeam).includes(demo.batter));
+ assert.match(fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8'),/id="demoBtn"/);
+});
