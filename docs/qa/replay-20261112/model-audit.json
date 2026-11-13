@@ -1,0 +1,25 @@
+{
+  "cutoff": "2026-10-01",
+  "games": 12,
+  "pa": 923,
+  "first_date": "2026-10-01",
+  "last_date": "2026-10-06",
+  "metrics": {
+    "preseason_tree": {
+      "mse": 0.21257307312189283,
+      "mae": 0.3642468692705359,
+      "mean_signed_error": 0.01663097681296585
+    },
+    "october_tree": {
+      "mse": 0.21202810730322902,
+      "mae": 0.36344849077410235,
+      "mean_signed_error": 0.015024659388592597
+    }
+  },
+  "paired_mse_delta": -0.0005449658186638059,
+  "exploratory_game_bootstrap_95": [
+    -0.0014772137754869175,
+    0.0002647459099581558
+  ],
+  "scope": "Both use the same October-cutoff hierarchy, unchanged blend and October RE24 observations. Small October subset; descriptive check, not a promotion gate."
+}

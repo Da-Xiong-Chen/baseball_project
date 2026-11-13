@@ -1,0 +1,59 @@
+{
+  "all": {
+    "pa": 9050,
+    "games": 360,
+    "state_mean_mse": 0.20910417206523146,
+    "context_mse": 0.20909291568256858,
+    "direct_mse": 0.2102945014751147,
+    "context_ord_rps": 0.12993872563260447,
+    "actors_ord_rps": 0.1306422323302644,
+    "context_ord_brier": 0.09020405582052937,
+    "actors_ord_brier": 0.0907721071061281,
+    "direct_minus_context_ci": [
+      -0.0003356574008643248,
+      0.0028093751848846647
+    ],
+    "actors_minus_context_rps_ci": [
+      -0.00021350738747786713,
+      0.00171082759263796
+    ]
+  },
+  "actual_replacement": {
+    "pa": 1595,
+    "games": 358,
+    "state_mean_mse": 0.2070634054577554,
+    "context_mse": 0.20951462856623698,
+    "direct_mse": 0.2137476015529904,
+    "context_ord_rps": 0.11775259672130994,
+    "actors_ord_rps": 0.11895835288510859,
+    "context_ord_brier": 0.07271053084575063,
+    "actors_ord_brier": 0.07336620149746371,
+    "direct_minus_context_ci": [
+      0.0013730514564167502,
+      0.00704606104154012
+    ],
+    "actors_minus_context_rps_ci": [
+      -0.0003247427359877936,
+      0.002698107805109942
+    ]
+  },
+  "late_close": {
+    "pa": 1453,
+    "games": 155,
+    "state_mean_mse": 0.2130632661116468,
+    "context_mse": 0.20701342883800716,
+    "direct_mse": 0.2089451634631394,
+    "context_ord_rps": 0.13618310230981767,
+    "actors_ord_rps": 0.13732285225564683,
+    "context_ord_brier": 0.09885451451597115,
+    "actors_ord_brier": 0.0995464823993733,
+    "direct_minus_context_ci": [
+      -0.002017740215093926,
+      0.006003630450068813
+    ],
+    "actors_minus_context_rps_ci": [
+      -0.0013386396284000017,
+      0.0037171972362919775
+    ]
+  }
+}

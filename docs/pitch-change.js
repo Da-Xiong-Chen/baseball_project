@@ -20,13 +20,12 @@ window.PitchChange = (() => {
     }).catch(e => { requests.delete(url); throw e; }));
     return requests.get(url);
   }
-  async function staticResult({pitcher, season, cutoff, hand}) {
+  async function staticResult({pitcher, season, cutoff, hand, root = `data/pitch-change/${season}/`, batchId = typeof Engine!=='undefined'?Engine.model()?.batch_id:null}) {
     if (!['ALL','L','R'].includes(hand)) throw new Error('左右打參數無效');
     if (!/^\d{4}-\d{2}-\d{2}$/.test(cutoff) || Number.isNaN(Date.parse(cutoff)) || new Date(cutoff).toISOString().slice(0,10) !== cutoff) throw new Error('截止日期無效');
-    const root = `data/pitch-change/${season}/`;
     const index = await read(root + "index.json");
-    if (index.schema_version !== 2 || index.training_version !== 5 || index.engine_contract !== 5) throw new Error("配球資料版本不相容，請重新載入");
-    if(typeof Engine!=='undefined'&&Engine.model()?.batch_id&&index.batch_id!==Engine.model().batch_id)throw new Error('配球與模型批次不同，請重新載入完整版本');
+    if (index.schema_version !== 2 || index.training_version !== 5 || index.engine_contract !== 5 || index.season!==season) throw new Error("配球資料版本不相容，請重新載入");
+    if(batchId&&index.batch_id!==batchId)throw new Error('配球與模型批次不同，請重新載入完整版本');
     const key = index.pitchers[pitcher];
     if (!key) throw new Error("此投手在所選球季沒有配球資料");
     const file = await read(root + key);

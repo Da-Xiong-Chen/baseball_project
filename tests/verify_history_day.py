@@ -9,12 +9,16 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 import server
 from batch_contract import metadata as batch_metadata
 from load import load
+from runtime_config import settings
 
 
 def main():
-    root = Path(os.environ.get("BASEBALL_STATIC_OUT",ROOT/"docs/data")) / "replay/day-2025-09-20"
+    data_root = Path(os.environ.get("BASEBALL_STATIC_OUT",ROOT/"docs/data"))
+    root = data_root / "replay" / ('day-'+settings().history_date)
     index = json.loads((root / "index.json").read_text(encoding="utf8"))
-    timing = json.loads((Path(os.environ.get("BASEBALL_STATIC_OUT",ROOT/"docs/data")) / "timing-2025.json").read_text(encoding="utf8"))
+    fixed_snapshot = 'schedule' in index
+    timing_path = root/'timing.json' if fixed_snapshot else data_root/f'timing-{settings().season}.json'
+    timing = json.loads(timing_path.read_text(encoding="utf8"))
     max_error, results, marks = 0.0, 0, 0
     mismatches = []
     for n, (pid, filename) in enumerate(index["files"].items(), 1):
@@ -36,8 +40,17 @@ def main():
             if marker:
                 rows = [r for r in expected["bullpen"]["rows"] if r["角色"] == "牛棚"] if decision == "pen" else [r for r in expected["candidates"] if r["角色"] == "代打" and r["守備"] in ("ok", "warn")]
                 value = rows[0]["守方勝率增減" if decision == "pen" else "相對現任"] if rows else None
-                stored = marker[0 if decision == "pen" else 3]
-                if (value is None) != (stored is None) or (value is not None and abs(value - stored) > .011):
+                offset = 0 if decision == "pen" else 3
+                stored = marker[offset]
+                limit = 1e-9 if fixed_snapshot else .011
+                mismatch = (value is None) != (stored is None)
+                if value is not None and stored is not None:
+                    mismatch |= abs(value - stored) > limit
+                    if fixed_snapshot:
+                        candidate = rows[0]['投手' if decision == 'pen' else '球員']
+                        threshold = timing['threshold']
+                        mismatch |= candidate != marker[offset+1] or (value >= threshold) != (stored >= threshold)
+                if mismatch:
                     mismatches.append(dict(pa=pid, decision=decision, computed=value, marker=stored))
                 marks += 1
             results += 1

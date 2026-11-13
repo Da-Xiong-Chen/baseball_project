@@ -1,0 +1,14 @@
+{
+  "cutoff": "2026-09-01",
+  "scope": "Ranking agreement, no correctness labels. Identical estimated eligible pool per role. New three-batter run scores do not include fatigue adjustment.",
+  "summary": {
+    "ph": {
+      "n": 10,
+      "top1_changed_from_v5": 4
+    },
+    "pen": {
+      "n": 12,
+      "top1_changed_from_v5": 7
+    }
+  }
+}

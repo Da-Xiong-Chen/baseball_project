@@ -46,17 +46,17 @@ const BacktestView = (() => {
     }
     return groups;
   }
-  function timeline({element,pas,marks,team,open,disclosure=()=>({}),setDisclosure=()=>{}}){
+  function timeline({element,pas,marks,team,open,threshold=1,disclosure=()=>({}),setDisclosure=()=>{}}){
     let kind='pen', filter='all', selected=null;
     function render(){
-      const rows=decisions(pas,marks,team,kind).map((r,index)=>({...r,index})),groups=cells(rows);
+      const rows=decisions(pas,marks,team,kind,threshold).map((r,index)=>({...r,index})),groups=cells(rows);
       rows.forEach((r,i)=>{r.firstPrompt=r.suggested&&(!rows[i-1]?.suggested||rows[i-1].incumbent!==r.incumbent);});
-      const labels={both:'有提示、有換人',system:'只有系統提示',actual:'只有實際換人',neither:'無提示、未換人',unknown:'資料不足／不可評估',outside:'六局前：示範範圍'};
+      const labels={both:'有提示、有換人',system:'只有系統提示',actual:'只有實際換人',neither:'無提示、未換人',unknown:'資料不足／不可評估',outside:'六局前：提示窗外'};
       const visible=filter==='all'?rows.filter(r=>r.actual||r.suggested):groups[filter];
       const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+sign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span>${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
       element.innerHTML=`<div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
         <div class="bt-groups" aria-label="依決策打席分類">${Object.entries(labels).map(([key,label])=>`<button type="button" data-bt-filter="${key}" aria-pressed="${filter===key}">${label}<strong>${groups[key].length}</strong></button>`).join('')}<button type="button" data-bt-filter="all" aria-pressed="${filter==='all'}">所有提示／調度</button></div>
-        <p class="mut">數量單位：打席。同時換人不表示雙方選了同一位；首次提示限目前觀測窗。</p>
+        <p class="mut">此處計算所選球隊的攻方或守方打席。逐打席清單包含全場。</p>
         <div class="bt-lanes" aria-hidden="true"><span>決策時點</span><span>原人選</span><span>系統提示軌</span><span>實際調度軌</span></div>
         <div class="bt-timeline" aria-label="依時間排列的決策">${visible.length?promptRuns(visible).map(run=>run.length===1?event(run[0]):`<details class="bt-prompt-run"><summary>${run[0].pa.inning}局起 · ${N(run[0].incumbent)}連續 ${run.length} 打席提示（未實際換人）</summary>${run.map(event).join('')}</details>`).join(''):'<p>此分類沒有收錄打席。</p>'}</div>
         <div class="bt-decision" aria-live="polite"></div>`;

@@ -57,7 +57,7 @@
     if(!states.has(t)){
       let s={version:2,season:runtimeSeason,draft:empty(),confirmed:null};
       let raw=null;
-      try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:parsed.version,season:runtimeSeason,draft:parsed.draft,confirmed:parsed.confirmed||null,legacyRaw:raw};}}
+      try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:parsed.version,season:runtimeSeason,draft:parsed.draft,confirmed:parsed.confirmed||null,legacyRaw:raw};}s.savedRaw=raw;}
       catch{s.storageError=true;}
       const draftMigrated=typeof PlayerIdentity==='undefined'&&migrateIdentity(s.draft,t),confirmedMigrated=typeof PlayerIdentity==='undefined'&&migrateIdentity(s.confirmed,t);
       s.identityMigrated=draftMigrated||confirmedMigrated;
@@ -80,15 +80,27 @@
   }
   function persist(){
     const s=get(teamName);
-    if(s.storageError){message('本次可用；舊資料無法讀取，未覆寫瀏覽器記錄。');return false;}
-    try{const raw=JSON.stringify({version:2,season:runtimeSeason,draft:s.draft,confirmed:s.confirmed});localStorage.setItem(key(teamName),raw);if(localStorage.getItem(key(teamName))!==raw)throw Error('not saved');return true;}
-    catch{message('本次可用，但無法保存到瀏覽器。');return false;}
+    if(s.storageError)return 'unavailable';
+    try{
+      const storageKey=key(teamName);
+      const raw=JSON.stringify({version:2,season:runtimeSeason,draft:s.draft,confirmed:s.confirmed});
+      const latest=localStorage.getItem(storageKey);
+      if(latest!==s.savedRaw&&latest!==raw)return 'conflict';
+      if(latest!==raw)localStorage.setItem(storageKey,raw);
+      if(localStorage.getItem(storageKey)!==raw)return 'unavailable';
+      s.savedRaw=raw;
+      return 'saved';
+    }catch{return 'unavailable';}
+  }
+  function saveMessage(result,success,unavailable){
+    if(result==='conflict')return '另一個分頁已更新名單。本分頁的變更僅保留在目前頁面，重新整理可讀取已保存的名單。';
+    return result==='saved'?success:unavailable;
   }
   function current(t){const s=get(t);return s.confirmed&&(typeof PlayerIdentity==='undefined'||s.identityChecked)?clone(s.confirmed):null;}
   /* 改為不使用場上名單：保留草稿，評估頁回到可選所有球員 */
   function release(t){const s=get(t);if(!s.confirmed)return;s.confirmed=null;const prev=teamName;teamName=t;persist();teamName=prev;if(t===teamName&&options)render();}
   function message(text,error=false){q('#lineupMessage').textContent=text;q('#lineupMessage').setAttribute('role',error?'alert':'status');}
-  function draftChanged(){delete get(teamName).isDefault;const saved=persist();render();message(saved?'草稿已保存；按「套用配置」更新評估頁。':'草稿保留在本次頁面，無法保存到瀏覽器；按「套用配置」更新評估頁。');}
+  function draftChanged(){delete get(teamName).isDefault;const saved=persist();render();message(saveMessage(saved,'草稿已保存；按「套用配置」更新評估頁。','草稿保留在本次頁面，無法保存到瀏覽器；按「套用配置」更新評估頁。'));return saved;}
   function resetSwap(){swapMode=null;swapFirst=null;swapUndo=null;}
   function focusSlot(i,mode){const c=get(teamName).draft;q(mode==='field'?`[data-field="${c.slots[i].pos}"]`:`[data-pick="${i}"]`)?.focus();}
   function swapSelect(i){
@@ -97,7 +109,7 @@
     if(swapFirst===null){swapFirst=i;render();focusSlot(i,swapMode);return;}
     const before=clone(c),a=swapFirst,names=label(c.slots[a].name)+'與'+label(c.slots[i].name);
     if(!swapPlayers(c,a,i,swapMode))return;
-    const mode=swapMode;swapUndo=before;swapFirst=null;swapMode=null;draftChanged();[a,i].forEach(n=>q(mode==='field'?`[data-field="${c.slots[n].pos}"]`:`[data-pick="${n}"]`)?.classList.add('swap-updated'));focusSlot(i,mode);message(names+'已互換'+(mode==='order'?'棒次':'守位')+'；套用後更新評估。');
+    const mode=swapMode;swapUndo=before;swapFirst=null;swapMode=null;const saved=draftChanged();[a,i].forEach(n=>q(mode==='field'?`[data-field="${c.slots[n].pos}"]`:`[data-pick="${n}"]`)?.classList.add('swap-updated'));focusSlot(i,mode);if(saved==='saved')message(names+'已互換'+(mode==='order'?'棒次':'守位')+'；套用後更新評估。');
   }
   function renderSwap(){
     ['field','order'].forEach(mode=>{const b=q(mode==='field'?'#lineupSwapField':'#lineupSwapOrder');b.setAttribute('aria-pressed',String(swapMode===mode));});
@@ -154,7 +166,7 @@
     options=o;
     ['field','order'].forEach(mode=>q(mode==='field'?'#lineupSwapField':'#lineupSwapOrder').onclick=()=>{if(options.element.hasAttribute('aria-busy'))return;swapMode=swapMode===mode?null:mode;swapFirst=null;render();});
     q('#lineupSwapCancel').onclick=()=>{swapMode=null;swapFirst=null;render();};
-    q('#lineupSwapUndo').onclick=()=>{if(options.element.hasAttribute('aria-busy')||!swapUndo)return;get(teamName).draft=swapUndo;resetSwap();draftChanged();message('已復原上一次互換；套用後更新評估。');};
+    q('#lineupSwapUndo').onclick=()=>{if(options.element.hasAttribute('aria-busy')||!swapUndo)return;get(teamName).draft=swapUndo;resetSwap();if(draftChanged()==='saved')message('已復原上一次互換；套用後更新評估。');};
     q('#lineupTeam').innerHTML=o.teams.map(t=>`<option>${esc(t)}</option>`).join('');
     q('#lineupTeam').onchange=e=>selectTeam(e.target.value);
     q('#lineupSearch').oninput=pickerRender;
@@ -177,7 +189,7 @@
       // 保存套用狀態，重新整理後仍維持依場上名單評估
       const saved=persist();
       // 與開啟網站時相同：換回預設先發投手時依角色帶入預設球數（先發 90／後援 15），不歸零
-      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});message(saved?'已恢復預設名單並套用。':'已恢復預設並套用；本次可用，但無法保存到瀏覽器。');
+      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});message(saveMessage(saved,'已恢復預設名單並套用。','已恢復預設並套用；本次可用，但無法保存到瀏覽器。'));
     };
     q('#lineupApply').onclick=async()=>{
       const s=get(teamName),errors=validate(s.draft,roster);
@@ -185,7 +197,7 @@
       const old=s.confirmed,pitcherChanged=!old||old.pitcher!==s.draft.pitcher;
       resetSwap();delete s.isDefault;s.confirmed=clone(s.draft);const saved=persist();render();
       await o.applied(teamName,{pitcherSelected:pitcherChanged,resetPitchCount:pitcherChanged});
-      message(saved?'配置已套用並保存。':'配置已套用；本次可用，但無法保存到瀏覽器。');
+      message(saveMessage(saved,'配置已套用並保存。','配置已套用；本次可用，但無法保存到瀏覽器。'));
     };
   }
   /* 預設名單：{team:{slots,pitcher,games}}；只在此瀏覽器沒有保存記錄時帶入。 */

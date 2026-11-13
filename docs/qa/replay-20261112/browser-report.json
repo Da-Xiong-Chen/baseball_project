@@ -1,0 +1,29 @@
+[
+  {
+    "width": 1440,
+    "teams": 6,
+    "visibleLate": 35,
+    "allPlateAppearances": 85,
+    "overflow": 0,
+    "pageErrors": [],
+    "failedData": []
+  },
+  {
+    "width": 390,
+    "teams": 6,
+    "visibleLate": 32,
+    "allPlateAppearances": 76,
+    "overflow": 0,
+    "pageErrors": [],
+    "failedData": []
+  },
+  {
+    "width": 320,
+    "teams": 6,
+    "visibleLate": 32,
+    "allPlateAppearances": 76,
+    "overflow": 0,
+    "pageErrors": [],
+    "failedData": []
+  }
+]

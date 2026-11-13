@@ -27,6 +27,32 @@ test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
 });
 test('a fixed day file is fetched on demand rather than preloading all decisions',()=>{
  const app=fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
- assert.match(app,/day-\$\{HISTORY_DATE\}\/\$\{index.files\[pa\]\}/);
+ assert.match(app,/historyJSON\(index.files\[pa\]\)/);
  assert.doesNotMatch(app,/Promise\.all\(Object\.values\(index.files\)/);
+});
+test('2026 day publishes complete cutoff-safe game, decision and pitching snapshots',()=>{
+ const dir=path.join(__dirname,'../docs/data/replay/day-2026-10-04');
+ const read=f=>JSON.parse(fs.readFileSync(path.join(dir,f),'utf8'));
+ const day=read('index.json'),timing=read('timing.json'),pitch=read('pitch/index.json');
+ assert.equal(day.pa_count,235);assert.equal(day.pitcher_changes,30);assert.equal(day.schedule.length,3);
+ assert.equal(new Set(day.schedule.flatMap(g=>[g.away,g.home])).size,6);
+ assert.ok(day.training_last_date<day.ml_cutoff&&day.calibration_last_date<day.ml_cutoff&&day.ml_cutoff<day.date);
+ assert.equal(timing.batch_id,day.batch_id);
+ for(const game of day.schedule){
+  const data=read(game.game+'.json'),previous={};
+  assert.deepEqual(data.pas.map(p=>p.pa_id),day.games[game.game]);
+  for(const pa of data.pas){
+   const bundle=read(day.files[pa.pa_id]),incoming=pa.start_pitcher||pa.pitcher;
+   const incumbent=previous[pa.fld_team]||incoming;previous[pa.fld_team]=pa.pitcher;
+   assert.equal(bundle.batch_id,day.batch_id);
+   assert.equal(bundle.ph.situation.pitcher,incoming);
+   assert.equal(Boolean(bundle.pen),incumbent!==incoming);
+   if(bundle.pen)assert.equal(bundle.pen.situation.pitcher,incumbent);
+   for(const result of [bundle.ph,bundle.pen].filter(Boolean)){
+    assert.equal(result.ml_cutoff,day.ml_cutoff);assert.equal(result.model_cutoff,day.date);
+    assert.ok(pitch.pitchers[result.situation.pitcher]);
+   }
+   assert.equal(Boolean(timing.games[game.game][pa.pa_id]),pa.inning>=6);
+  }
+ }
 });
