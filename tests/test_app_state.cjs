@@ -739,7 +739,7 @@ test('day-analysis entry keeps primary navigation available without applying the
  const f=entryFixture();f.eval('audienceMode="team";applyOwnLineup=async()=>{throw Error("history must remain independent")};');
  await f.eval("selectAudienceEntry('review')");
  assert.equal(f.eval('currentPage()'),'review');assert.equal(f.node('.feature-nav').hidden,true);
- assert.equal(f.node('.audience-control').hidden,false);assert.match(f.node('#audienceStatus').textContent,/賽前模型提示/);
+ assert.equal(f.node('.audience-control').hidden,false);assert.equal(f.node('#audienceStatus').textContent,'','day analysis has its own heading; no duplicate status sentence');
  assert.equal(f.eval('audienceMode'),'team');
 });
 
@@ -1014,7 +1014,7 @@ test('concise recommendation keeps sample and model-disagreement states without 
  const f=fixture();
  f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,階層式:0,機器學習:0,樣本球數:1000},
  {角色:'代打',球員:'Next',守備:'ok',預估勝率:2,階層式:2,機器學習:2,樣本球數:10}];
- assert.match(f.eval('recommendation(cands).title'),/候選比較：Next/);
+ assert.match(f.eval('recommendation(cands).title'),/^Next 代打　\+2\.00 百分點$/);
  assert.match(f.eval('recommendation(cands).text'),/樣本有限/);
  f.context.cands[1].機器學習=-1;
  assert.match(f.eval('recommendation(cands).text'),/模型排序不同/);
@@ -1082,4 +1082,11 @@ test('play results use CPBL scoring terms instead of a generic out or other resu
  const f=fixture();
  for(const [code,label] of [['GIDP','雙殺打'],['SF','高飛犧牲打'],['SH','犧牲短打'],['E','失誤上壘'],['IBB','故意四壞球'],['uBB','四壞球'],['FO','飛球出局'],['GO','滾地球出局']])assert.equal(f.eval(`resultLabel('${code}')`),label);
  assert.equal(f.eval("resultLabel('ID')"),'其他結果');assert.equal(f.eval("resultLabel('')"),'未提供');
+});
+test('scoreboard keeps the away team on the left in both halves and marks the batting side',()=>{
+ const f=fixture();
+ const top=f.eval("scoreboardTeams({half:'away',bat_team:'A',bat_score:4,fld_team:'H',fld_score:3})");
+ const bottom=f.eval("scoreboardTeams({half:'home',bat_team:'H',bat_score:3,fld_team:'A',fld_score:4})");
+ for(const html of [top,bottom])assert.ok(html.indexOf('>A')<html.indexOf('>H'),'away team first');
+ assert.match(top,/at-bat"><div class="t">A<span class="sb-bat">攻/);assert.match(bottom,/at-bat"><div class="t">H<span class="sb-bat">攻/);
 });

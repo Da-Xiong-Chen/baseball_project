@@ -463,7 +463,7 @@ function syncEntryNavigation(){
   functions.setAttribute('aria-label',audienceMode==='team'?'球隊功能':'一般使用者功能');
   const first=functions.querySelector(`[data-page="${audienceMode==='team'?'lineup':'evaluation'}"]`);
   if(first&&functions.firstElementChild!==first)functions.prepend(first);
-  if(review)$('#audienceStatus').textContent='比較當日調度與賽前模型提示。';
+  if(review)$('#audienceStatus').textContent='';
 }
 async function selectAudienceEntry(entry){
   if(!['general','team','review'].includes(entry))return;
@@ -673,7 +673,7 @@ function syncOwnLineup() {
   }
   $('#duePos').disabled=!!c;$('#myPitcher').disabled=!!c;$('#duePosLock').hidden=!c;$('#myPitcherLock').hidden=!c;
   $('#lineupSummary').innerHTML=lineupSelectionSummary(c);
-  $('#audienceStatus').textContent=audienceMode==='team'?(c?'依已套用的場上名單評估。':'請先完成九棒、守位與投手，再套用配置。'):'自由選擇球員；已存的球隊名單仍會保留。';
+  $('#audienceStatus').textContent=audienceMode==='team'?(c?'依已套用的場上名單評估。':'請先完成九棒、守位與投手，再套用配置。'):'';
   const editLineup=$('#lineupSummary [data-page]');if(editLineup)editLineup.onclick=()=>showFeaturePage('lineup');
   S.bench.forEach(n=>{if(!benchEligible(n))S.bench.delete(n);});
   groupControl?.refresh();
@@ -1538,6 +1538,14 @@ function comparisonPanel(R, selected, tab) {
     ${chart}<div class="compare-grid">${choices.length ? choices.map(card).join('') : rows.length>1?'<p>選擇候選加入比較。</p>':'<p>沒有其他已確認可用人選，目前只能評估現任。</p>'}</div></div></div>`;
 }
 const SUGGEST_GAP = 1;
+/* 記分板依棒球慣例固定客隊在左、主隊在右，以「攻」標示目前進攻方，不隨上下半局交換位置 */
+function scoreboardTeams(s) {
+  const awayBats=s.half!=='home';
+  const team=(name,score,batting,fallback)=>`<div class="sb-team${batting?' at-bat':''}"><div class="t">${esc(name||fallback)}${batting?'<span class="sb-bat">攻</span>':''}</div><div class="s num">${score}</div></div>`;
+  return awayBats
+    ? team(s.bat_team,s.bat_score,true,'進攻方')+'<div class="sb-vs">:</div>'+team(s.fld_team,s.fld_score,false,'防守方')
+    : team(s.fld_team,s.fld_score,false,'防守方')+'<div class="sb-vs">:</div>'+team(s.bat_team,s.bat_score,true,'進攻方');
+}
 function recommendation(cands) {
   const cur = cands.find((c) => c["角色"] === "現任");
   const bench = cands.filter((c) => c["角色"] === "代打");
@@ -1559,8 +1567,8 @@ function recommendation(cands) {
     (best["階層式"] - cur["階層式"]) * (best["機器學習"] - cur["機器學習"]) <= 0;
   const low = best["樣本球數"] < 500 || cur["樣本球數"] < 500 || !!best['資料警示'] || !!cur['資料警示'];
   return {kind:best["守備"] === "warn" ? "warn" : "neutral", best:best["球員"],
-    title:`候選比較：${best["球員"]}`,
-    text:`比 ${cur["球員"]} ${sign(diff)} 百分點。${disagree ? "模型排序不同。" : low ? "樣本有限。" : ""}${def}`};
+    title:`${best["球員"]} 代打　${sign(diff)} 百分點`,
+    text:`相對 ${cur["球員"]} 續打。${disagree ? "模型排序不同。" : low ? "樣本有限。" : ""}${def}`};
 }
 
 function assessmentNotes(R) {
@@ -1615,9 +1623,7 @@ function renderResult(preserveTabs = false) {
       <div class="sb-top">
       <div class="sb-inning num">${s.inning}<small>局${halfZh}</small></div>
       <div class="sb-score">
-        <div class="sb-team"><div class="t">${esc(s.bat_team || "進攻方")}</div><div class="s num">${s.bat_score}</div></div>
-        <div class="sb-vs">:</div>
-        <div class="sb-team"><div class="t">${esc(s.fld_team || "防守方")}</div><div class="s num">${s.fld_score}</div></div>
+        ${scoreboardTeams(s)}
       </div>
       </div><div class="sb-context">
       <div class="sb-mini">${miniDiamond(s.bases)}<div><div class="outs-ro">${outs}</div><div class="mut" style="font-size:12px;margin-top:2px">${s.outs} 出局・${BASES[s.bases]}</div></div></div>
@@ -1648,8 +1654,8 @@ function renderResult(preserveTabs = false) {
     } else if (best && best["守方勝率增減"] > 0 && best["守方勝率增減"] < SUGGEST_GAP) {
       html += `<div class="reco neutral" style="border-top:1px solid var(--line)"><div class="ic">=</div><div><h3>續用 ${N(s.pitcher)} 投球</h3><p>最佳候選 ${N(best["投手"])} 相對現任 ${deltaLabel(best["守方勝率增減"])}，未達 ${SUGGEST_GAP} 個百分點的提示門檻。${earlyNote}${fat}</p></div></div>`;
     } else if (best && best["守方勝率增減"] > 0) {
-      html += `<div class="reco" style="border-top:1px solid var(--line)"><div class="ic">↻</div><div><h3>可考慮換上 ${N(best["投手"])}</h3>
-        <p>${reasonText(pitcherReasons(best, R)) ? `主要原因：${esc(reasonText(pitcherReasons(best, R)))}。` : ''}對接下來 ${R.bullpen.next.length} 棒，比場上投手多 ${sign(best["守方勝率增減"])} 百分點。${earlyNote}${fat}${best["疲勞"] !== "-" ? `　警示 ${N(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
+      html += `<div class="reco" style="border-top:1px solid var(--line)"><div class="ic">↻</div><div><h3>換上 ${N(best["投手"])}　${sign(best["守方勝率增減"])} 百分點</h3>
+        <p>相對 ${N(s.pitcher)} 續投，估計接下來 ${R.bullpen.next.length} 棒。${reasonText(pitcherReasons(best, R)) ? `${esc(reasonText(pitcherReasons(best, R)))}。` : ''}${earlyNote}${fat}${best["疲勞"] !== "-" ? `　警示 ${N(best["投手"])}：${esc(best["疲勞"])}` : ""}</p></div></div>`;
     } else {
       const title=best?`續用 ${N(s.pitcher)} 投球`:bullpen.length?'候選差距尚無估計':'沒有可比較的牛棚投手';
       const note=best?'牛棚沒有估計更好的人選。':bullpen.length?'可查看投手樣本與配球。':view==='replay'?'當時的賽前紀錄未提供可比較人選。':'請勾選可用的牛棚投手。';
@@ -1664,7 +1670,6 @@ function renderResult(preserveTabs = false) {
     const context=R.replay_context,actualPitcher=a.pitcher||context?.actual_pitcher||s.pitcher;
     const bench = R.candidates.filter((c) => c["角色"] === "代打");
     const rank = bench.findIndex((c) => c["球員"] === a.batter) + 1;
-    if(context)html+=`<p class="situation-note">${activeTab==='pen'?`換投前比較：以 ${N(s.pitcher)} 若續投為基準。`:`代打前比較：面對此打席投手 ${N(s.pitcher)}。`}</p>`;
     html += `<details class="replay-disclosure" data-reveal-action ${disclosure.action?'open':''}><summary>揭示實際調度</summary><div class="actual"><span class="mut">實際發生：</span>
       <span>${activeTab==='pen'?`${context?.pitcher_changed?'換上':'續投'} <b>${N(actualPitcher)}</b>`:a.is_ph ? `換上 <b>${N(a.batter)}</b> 代打${rank ? `（系統排名第 ${rank} / ${bench.length}）` : ""}` : `<b>${N(a.batter)}</b> 續打`}</span>
       </div><details data-reveal-outcome ${disclosure.outcome?'open':''}><summary>揭示這個打席的結果</summary><div class="actual"><span>${activeTab==='pen'?N(a.batter)+'：':''}結果 <b>${esc(resultLabel(a.result))}</b></span><span>該打席攻方 WPA <b class="${cls(a.WPA, 0)}">${Number.isFinite(a.WPA)?sign(a.WPA*100,2)+' 百分點':'未提供'}</b></span></div>`;

@@ -1214,7 +1214,6 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
   --sys: #a5b4fc; --sys-soft: #1e2547; --act: #fdba74; --act-soft: #3b2414; --step-idle: #2a2c33; --card-shadow: none;
 }
 body { background: var(--page-bg); }
-header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--brand-navy) 0 40%,var(--brand-clay) 40% 70%,var(--brand-grass) 70%); pointer-events:none; }
 .card { box-shadow: var(--card-shadow); }
 
 /* 三個入口各自的識別色 */
@@ -1222,7 +1221,6 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 #audienceSeg button[data-entry="team"] { --entry: var(--entry-team); }
 #audienceSeg button[data-entry="review"] { --entry: var(--entry-review); }
 #audienceSeg button.on { color: var(--entry); box-shadow: inset 0 -3px var(--entry); }
-#audienceSeg button::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--entry); flex:none; opacity:.85; }
 
 /* 打席清單：標籤顏色、可點提示 */
 .tag-sys { background:var(--sys-soft); color:var(--sys); box-shadow:inset 0 0 0 1px var(--sys); }
@@ -1259,7 +1257,6 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 .bt-event[aria-pressed="true"] { border-color:var(--entry-review) !important; background:var(--act-soft) !important; }
 .replay-match-heading h3 { margin:0; }
 @media (prefers-reduced-motion:reduce) { #paList .item, .replay-disclosure summary::before { transition:none; } }
-@media (max-width:520px) { #audienceSeg button::before { display:none; } }
 .bt-event > span:first-child { font-weight:700; }
 .bt-event .bt-prompt { color:var(--muted); }
 .bt-event .bt-prompt.is-sys { color:var(--sys); font-weight:700; }
@@ -1282,3 +1279,10 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 .bt-groups button { display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:4px 12px; border-radius:999px; font-size:13px; }
 .bt-groups button strong { display:inline; font-size:13px; }
 @media (max-width:600px) { .bt-groups button { flex:0 1 auto; } .replay-filters { display:flex; } .replay-filters .toggle:last-child { grid-column:auto; } }
+/* 去裝飾：結論只靠左側色線區分，不加圖示；資料範圍一行帶過 */
+.reco .ic { display:none; }
+.matchday-intro { padding-top:16px; padding-bottom:0; }
+.data-scope { margin:0; color:var(--muted); font-size:13px; }
+#audienceStatus:empty { display:none; }
+#emptyState h2 { font-size:18px; }
+.sb-bat { display:inline-block; margin-left:6px; padding:0 5px; border-radius:3px; background:var(--scoreboard-text); color:var(--scoreboard-bg); font-size:11px; font-weight:700; vertical-align:middle; }
