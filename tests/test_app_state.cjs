@@ -1065,3 +1065,11 @@ test('demo scenario names a matchup that exists in the published model data',()=
  assert.ok(labels(demo.oppTeam).includes(demo.pitcher));assert.ok(labels(demo.myTeam).includes(demo.batter));
  assert.match(fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8'),/id="demoBtn"/);
 });
+test('demo picks the due batter when a saved lineup labels options by batting order',()=>{
+ const f=fixture(),select=f.node('#dueBatter');let changed=0;f.context.Event=class{constructor(type){this.type=type;}};
+ select.dispatchEvent=()=>{changed++;};
+ select.options=[{textContent:'第 1 棒 · 陳傑憲',value:'a'},{textContent:'第 2 棒 · 林佳緯',value:'b'},{textContent:'胡金龍（右打）',value:'c'}];
+ assert.equal(f.eval("selectByLabel('#dueBatter','林佳緯')"),true);assert.equal(select.value,'b');assert.equal(changed,1);
+ assert.equal(f.eval("selectByLabel('#dueBatter','胡金龍')"),true);assert.equal(select.value,'c');
+ assert.equal(f.eval("selectByLabel('#dueBatter','棒')"),false);
+});

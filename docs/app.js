@@ -296,8 +296,10 @@ async function applySituation(sit, quiet = false) {
 /* 示範情境：README 的實際例子，讓第一次使用者不必自行設定就能看到一組有差距的比較 */
 const DEMO = { view: 'offense', myTeam: '統一7-ELEVEn獅', oppTeam: '富邦悍將', inning: 8, half: 'away', outs: 1, bases: 2,
   myScore: 1, oppScore: 2, pitcher: '魔力藍', batter: '林佳緯' };
+/* 套用球隊名單後打者選項會是「第 N 棒 · 姓名」，比對前先去掉棒次前綴 */
+const optionName = text => text.trim().replace(/^第\s*\d+\s*棒\s*·\s*/, '');
 function selectByLabel(id, label) {
-  const select = $(id), option = [...select.options].find(o => o.textContent.trim().startsWith(label));
+  const select = $(id), option = [...select.options].find(o => optionName(o.textContent).startsWith(label));
   if (!option) return false;
   if (select.value !== option.value) { select.value = option.value; select.dispatchEvent(new Event('change', { bubbles: true })); }
   return true;
