@@ -81,14 +81,14 @@ test('incomplete optional diagnostics fail before any model conclusion is displa
 });
 
 test('complete release diagnostics render with finite values',async()=>{
- const report=JSON.parse(require('node:fs').readFileSync(require('node:path').join(process.env.BASEBALL_STATIC_OUT||require('node:path').join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
+ const report=JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname,'fixtures/model-evaluation-v5-2025.json'),'utf8'));
  const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
  await B.validation(el,async()=>report,report.batch_id);
  assert.match(el.innerHTML,/bt-verdict/);assert.match(el.innerHTML,/MSE/);assert.doesNotMatch(el.innerHTML,/NaN|undefined/);
 });
 
 test('an older validation response cannot replace the latest success or error',async()=>{
- const good=JSON.parse(require('node:fs').readFileSync(require('node:path').join(process.env.BASEBALL_STATIC_OUT||require('node:path').join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
+ const good=JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname,'fixtures/model-evaluation-v5-2025.json'),'utf8'));
  for(const staleSuccess of [false,true]){
   let resolve,reject;const pending=new Promise((a,b)=>{resolve=a;reject=b});
   const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};

@@ -158,13 +158,13 @@ python -m http.server 8000 --bind 127.0.0.1 --directory docs
 
 ```bash
 python -m pip install -r requirements.txt
-python download_data.py      # 下載 Rebas 逐球資料與 ldkrsi 守位資料
-python server.py             # 開啟 http://127.0.0.1:8000（Windows 也可雙擊「啟動系統.bat」）
+python download_data.py      # 下載 Rebas 2024–2026 逐球資料、ldkrsi 守位，並整理 2026 守位
+python start_server.py       # 開啟 http://127.0.0.1:8000（Windows 也可雙擊「啟動系統.bat」）
 ```
 
-本機 API 版目前仍使用原 v5 批次（2024–2025 訓練、2025 名單）；2026 球季的自訂評估以靜態網站為準。
+`start_server.py` 使用與網站相同的 2026 球季批次（`models/2026/`）；直接執行 `python server.py` 則是原 v5（2024–2025）批次，供重現舊驗收使用。
 
-訓練好的 v5 模型及批次描述（`models/active-batch.json`）已隨專案提供，執行現有功能不需要重新訓練。重訓請使用[候選模型訓練指南](docs/training-v5.md)，先固定來源並執行 dry-run；輸出保留在 output/，不直接覆寫正式模型。測試指令：
+訓練好的模型已隨專案提供：2026 球季批次在 `models/2026/`，原 v5 批次為 `models/active-batch.json`，執行現有功能不需要重新訓練。重訓請使用[候選模型訓練指南](docs/training-v5.md)，先固定來源並執行 dry-run；輸出保留在 output/，不直接覆寫正式模型。測試指令：
 
 ```bash
 python -m unittest discover -s tests     # Python 測試

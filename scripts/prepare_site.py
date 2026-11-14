@@ -77,7 +77,9 @@ def inspect_site(site):
         read_json(path)
     assets.update(data)
     # Check dynamic replay and pitch-change references, not just the HTML shell.
-    for game in read_json(site / 'data/replay/games.json'):
+    # 舊版整季回放清單只在存在時檢查；網站目前只發布單日回放（day-*）
+    games = site / 'data/replay/games.json'
+    for game in (read_json(games) if games.exists() else []):
         local_asset(site, f'data/replay/{game["game"]}.json')
     for index in (site / 'data/replay').glob('day-*/index.json'):
         manifest=read_json(index)
@@ -144,6 +146,8 @@ def inspect_site(site):
     for index in (site / 'data/pitch-change').glob('*/index.json'):
         for filename in read_json(index)['pitchers'].values():
             local_asset(site, str((index.parent / filename).relative_to(site)))
+    if not any((site / 'data/replay').glob('day-*/index.json')):
+        raise ValueError('No daily replay index found')
     for path in assets:
         if not path.is_file() or path.is_symlink():
             raise ValueError(f'Not a regular release file: {path}')

@@ -28,7 +28,8 @@ class ReleaseSiteTest(unittest.TestCase):
         relative = {p.relative_to(release.ROOT / 'docs').as_posix() for p in files}
         self.assertIn('licenses/ldkrsi-MIT.txt', relative)
         self.assertIn('data/model.json', relative)
-        self.assertIn('data/replay/games.json', relative)
+        self.assertIn('data/replay/day-2026-10-04/index.json', relative)
+        self.assertFalse(any(p.startswith(('data/pitch-change/', 'data/replay/2025-')) or '2025' in p.split('/')[-1] for p in relative), '前端只發布 2026 資料')
         self.assertFalse(any(p.startswith('qa/') or p.endswith(('.csv', '.pkl')) for p in relative))
 
     def test_missing_index_reference_and_duplicate_id_block_release(self):

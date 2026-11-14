@@ -1,13 +1,15 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..');
+// 網站配球資料只發布 2026/10/04 賽前快照
+const PITCH=path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'replay/day-2026-10-04/pitch');
 function pitchModule(){
  const c={window:{}};
  const source=fs.readFileSync(path.join(root,'docs/pitch-change.js'),'utf8').replace('return {mount, staticResult};','return {mount, staticResult, render};');
  vm.runInNewContext(source,c);return c.window.PitchChange;
 }
 function pitchPayload(){
- const index=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'pitch-change/2025/index.json'),'utf8'));
- const file=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'pitch-change/2025',Object.values(index.pitchers)[0]),'utf8'));
+ const index=JSON.parse(fs.readFileSync(path.join(PITCH,'index.json'),'utf8'));
+ const file=JSON.parse(fs.readFileSync(path.join(PITCH,Object.values(index.pitchers)[0]),'utf8'));
  return structuredClone(file.snapshots.at(-1).hands.ALL);
 }
 test('pitch percentages retain small changes without signed zero or nonfinite text',()=>{
@@ -23,7 +25,7 @@ test('pitch percentages retain small changes without signed zero or nonfinite te
 });
 
 test('every released pitch snapshot renders without nonfinite numbers or signed zero',()=>{
- const api=pitchModule(),folder=path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'pitch-change/2025');
+ const api=pitchModule(),folder=PITCH;
  const index=JSON.parse(fs.readFileSync(path.join(folder,'index.json'),'utf8'));let snapshots=0,rows=0;
  for(const name of Object.values(index.pitchers)){
   const file=JSON.parse(fs.readFileSync(path.join(folder,name),'utf8'));
@@ -35,7 +37,7 @@ test('every released pitch snapshot renders without nonfinite numbers or signed 
    assert.match(raw,/未調整球數，不作變化判定|沒有可用配球紀錄/);
   }
  }
- assert.ok(snapshots>9000);assert.equal(rows,39420);
+ assert.equal(snapshots,525);assert.equal(rows,2100);
 });
 
 test('raw pitch view uses observed proportions and never reuses adjusted intervals or claims',()=>{
@@ -50,7 +52,7 @@ test('raw pitch view uses observed proportions and never reuses adjusted interva
 });
 
 test('validation distinguishes absolute MSE difference from relative improvement',async()=>{
- const B=require('../docs/backtest.js'),report=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(root,'docs/data'),'model-evaluation.json'),'utf8'));
+ const B=require('../docs/backtest.js'),report=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/model-evaluation-v5-2025.json'),'utf8'));
  const el={innerHTML:'',querySelector:()=>({insertAdjacentHTML(){}}),querySelectorAll:()=>[],insertAdjacentHTML(pos,html){this.innerHTML+=html;}};
  await B.validation(el,async()=>report,report.batch_id);
  assert.match(el.innerHTML,/MSE 差值（基準－模型）/);assert.match(el.innerHTML,/誤差減少 <b>0\.19%/);

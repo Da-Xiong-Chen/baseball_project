@@ -1,10 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const root=path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'replay'),day='2025-09-20',dir=path.join(root,'day-'+day);
+const root=path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'replay'),day='2026-10-04',dir=path.join(root,'day-'+day);
 const index=JSON.parse(fs.readFileSync(path.join(dir,'index.json'),'utf8'));
 test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
  let count=0,changed=0;
  for(const [game,ids] of Object.entries(index.games)){
-  const pas=JSON.parse(fs.readFileSync(path.join(root,game+'.json'),'utf8')).pas;
+  const pas=JSON.parse(fs.readFileSync(path.join(dir,game+'.json'),'utf8')).pas;
   assert.deepEqual(new Set(ids),new Set(pas.map(p=>p.pa_id)));
   const prev={};
   for(const pa of pas){
@@ -23,7 +23,7 @@ test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
    count++;
   }
  }
- assert.equal(count,226);assert.equal(changed,19);assert.equal(index.pa_count,count);assert.equal(index.pitcher_changes,changed);
+ assert.equal(count,235);assert.equal(changed,30);assert.equal(index.pa_count,count);assert.equal(index.pitcher_changes,changed);
 });
 test('a fixed day file is fetched on demand rather than preloading all decisions',()=>{
  const app=fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');

@@ -214,7 +214,8 @@ const Engine = (() => {
     });
     const base = out[0].預估勝率;
     out.forEach((r) => (r.相對現任 = r.預估勝率 - base));
-    const rest = out.slice(1).sort((a, b) => b.預估勝率 - a.預估勝率);
+    // 數值差距小於 1e-12 視為同分，依球員 ID 排序，讓網站與 Python 的同分順序一致
+    const rest = out.slice(1).sort((a, b) => (Math.round(b.預估勝率 * 1e12) - Math.round(a.預估勝率 * 1e12)) || (a.球員 < b.球員 ? -1 : a.球員 > b.球員 ? 1 : 0));
     return { rows: [out[0], ...rest], slope };
   }
   function evaluateBullpen(row, nextBatters, pen, pc, starter, opts = {}) {
@@ -246,7 +247,7 @@ const Engine = (() => {
     });
     const curRuns = rows[0].預估失分;
     rows.forEach((r) => (r.守方勝率增減 = -(r.預估失分 - curRuns) * slope * 100));
-    return [rows[0], ...rows.slice(1).sort((a, b) => a.預估失分 - b.預估失分)];
+    return [rows[0], ...rows.slice(1).sort((a, b) => (Math.round(a.預估失分 * 1e12) - Math.round(b.預估失分 * 1e12)) || (a.投手 < b.投手 ? -1 : a.投手 > b.投手 ? 1 : 0))];
   }
   function pitchMixPayload(pitcher) {
     const res = {};

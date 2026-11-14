@@ -835,7 +835,7 @@ test('API mode obtains the batch identity from meta without loading static Engin
 });
 
 test('conditional fielding plan appears separately and never changes the original candidate or suggestion',async()=>{
- const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/fielding-plans-2025-09-20.json'),'utf8'));
+ const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/day-2026-10-04/fielding-plans.json'),'utf8'));
  const pa=Object.keys(data.plans)[0],incoming=Object.keys(data.plans[pa])[0];
  const r={view:'replay',candidates:[{角色:'現任',球員:'Current'},{角色:'代打',球員:incoming,守備:'unknown'}]};
  f.context.r=r;f.context.planData=data;f.context.pa=pa;
@@ -861,7 +861,7 @@ test('numeric cards preserve missing samples, valid score bounds and safe chart 
 });
 
 test('switching to pitching hides fielding plans and rejects late pinch-hit plan success or failure',async()=>{
- const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/fielding-plans-2025-09-20.json'),'utf8'));
+ const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/day-2026-10-04/fielding-plans.json'),'utf8'));
  const pa=Object.keys(data.plans)[0],incoming=Object.keys(data.plans[pa])[0];
  f.context.r={view:'replay',candidates:[{角色:'代打',球員:incoming,守備:'unknown'}]};f.context.pa=pa;
  for(const fails of [false,true]){
@@ -902,7 +902,7 @@ test('all 18 real-model custom scenarios render both assessment views with finit
 });
 
 test('model validation retry refetches a schema-invalid JSON response instead of reusing it forever',async()=>{
- const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
+ const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/model-evaluation-v5-2025.json'),'utf8'));
  let requests=0;f.context.Engine.model=()=>({batch_id:good.batch_id});
  f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{batch_id:good.batch_id}:good});
  const control={insertAdjacentHTML(){}};
