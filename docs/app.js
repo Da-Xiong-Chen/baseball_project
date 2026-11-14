@@ -11,7 +11,7 @@ const GROUPS = ["速球", "滑卡", "曲球", "低落"];
 const GROUP_COLOR = { 速球: "#d9534f", 滑卡: "#e0a03a", 曲球: "#4a7fd0", 低落: "#3f9a6b" };
 let officialPlayers = {};
 let playerNumbers2025 = {};
-let runtime={season:2025,history_date:"2025-09-20"};
+let runtime={season:2026,history_date:"2026-10-04"};
 const runtimeAsset=(key,fallback)=>runtime.assets?.[key]||fallback;
 function matchesPlayerSearch(name,team,query) {
   const q=String(query||'').normalize('NFKC').trim();
@@ -409,7 +409,8 @@ async function init() {
   $('#reviewTitle').textContent=`${dayLabel} 單日分析`;
   $$('[data-runtime-date]').forEach(el=>el.textContent=dayLabel);
   $('#lineupSeasonNote').textContent=`預設為 ${runtime.season} 最後 30 場最常先發的球員；名單不會跨裝置同步。`;
-  $$('input[placeholder="姓名或 2025 背號…"]').forEach(el=>el.placeholder=`姓名或 ${runtime.season} 背號…`);
+  $$('#benchFilter,#penFilter,#lineupSearch').forEach(el=>el.placeholder=`姓名或 ${runtime.season} 背號…`);
+  const seasons=runtime.data_seasons||[];if($('#dataScope')&&seasons.length)$('#dataScope').textContent=`中職一軍 ${runtime.season} 球季 · 模型以 ${seasons[0]}–${seasons.at(-1)} 逐球資料訓練`;
   try { const numbers=await json(runtimeAsset('numbers',`data/player-numbers-${runtime.season}.json`));if(numbers.season===runtime.season&&numbers.teams)playerNumbers2025=numbers.teams; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
   try { officialPlayers=(await json('data/cpbl-players.json')).players||{}; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
   try { const d=await json(runtimeAsset('default_lineups',`data/default-lineups-${runtime.season}.json`));if(d.season===runtime.season&&typeof LineupBoard!=='undefined')LineupBoard.setDefaults(d.teams); } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
@@ -1359,7 +1360,7 @@ function renderPAs() {
     }
     const off = S.replayAvailable && !S.replayAvailable.has(p.pa_id);
     html += `<button type="button" class="item ${S.pa === p.pa_id ? "on" : ""} ${off ? "off" : ""}" data-p="${p.pa_id}" aria-pressed="${S.pa === p.pa_id}" ${off ? 'disabled title="此打席完整評估尚未匯出"' : ""}>
-      <span class="chip num">${p.outs} 出・${BASES[p.bases]}</span>
+      <span class="pa-state" role="img" aria-label="${p.outs} 出局・${BASES[p.bases]}">${miniDiamond(p.bases)}<span class="pa-outs" aria-hidden="true">${[1,2].map(i=>`<i class="${i<=p.outs?'on':''}"></i>`).join('')}</span></span>
       <span>${N(p.start_batter||p.batter)}</span>
       ${p.is_ph ? `<span class="chip tag-ph" data-replay-kind="ph">實際代打</span>` : ""}
       ${penChanged.has(p.pa_id) ? `<span class="chip tag-ph" data-replay-kind="pen">實際換投</span>` : ""}
@@ -1577,7 +1578,7 @@ function assessmentNotes(R) {
   const dates=cutoff!=='未記錄'&&ml===cutoff?`資料截止：${esc(cutoff)}`:`能力資料截止：${esc(cutoff)}；逐球資料截止：${esc(ml)}`;
   return `<p>分數是相對排名，不是成功機率。</p>
     <details class="assessment-notes"><summary>資料與評估依據</summary><ul>
-        <li><b>資料範圍：</b>${R.view==='replay'?'2024–2026':'2024–2025'}；${dates}（不含截止日）。</li>
+        <li><b>資料範圍：</b>${(runtime.data_seasons||[]).length?`${runtime.data_seasons[0]}–${runtime.data_seasons.at(-1)}`:'2024–2026'}；${dates}（不含截止日）。</li>
     <li><b>失分價值：</b>衡量得分期望的變化，可以為負。圖表細線只呈現階層式模型的估計誤差。</li>
     <li><b>上場資格：</b>${R.view==='replay'?'歷史名單與守位可能為推估':'今日名單需人工確認'}；核對登錄、退場與 DH。</li>
     </ul></details>`;
@@ -1815,7 +1816,7 @@ function phTable(R) {
     const d = x["守備"];
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""} ${keep[i] ? "" : "more-row"}">
       <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${cur?'':comparisonCircle(R,"ph",x["球員"])}${officialPlayerLink(x["球員"])} ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}${rowDetailButton(x["球員"])}
-        <div class="parts">${(x["可守"] || "-").split(",").map((p) => POS[p] || p).join("・")}</div>${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
+        <div class="parts">${x["可守"] && x["可守"] !== "-" ? x["可守"].split(",").map((p) => POS[p] || p).join("・") : "無守位紀錄（限 DH）"}</div>${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比較池百分位`)}</td>
       <td class="evaluation-value"><span class="mobile-value-label">相對現任</span><div class="vcell"><span class="vnum num ${cls(cur?0:x['相對現任'],.02)}">${cur?'基準':deltaMarkup(x['相對現任'])}</span>${dbar(cur?0:x['相對現任'],0,scale)}</div></td>
       <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : d === "unknown" ? "?" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>

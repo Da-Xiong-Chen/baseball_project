@@ -1,0 +1,46 @@
+{
+  "context": {
+    "training_version": 5,
+    "engine_contract": 5,
+    "runtime_id": "aa41ed6258a992f837349abbb08ab2189d0b3e1d2f5abfe44c4b70fda7cf3597",
+    "input_id": "8374e442821251b39afbc996f2d5e665a2c3bb3df1e7cfe2397dec545b5987a3",
+    "models": [
+      {
+        "name": "gbt_full_v5.pkl",
+        "cutoff": "2027-01-01",
+        "sha256": "d8f160b492c8187d554e71c9200d21d56ccc519e03521e93cbdd539b6e0a2032"
+      }
+    ],
+    "batch_id": "ce4f4627585377e8864f92bf850fe6dc17f0335ee657c960afcce2edfa5ce26f"
+  },
+  "seasons": {
+    "2024": {
+      "games": 360,
+      "pa": 27600
+    },
+    "2025": {
+      "games": 360,
+      "pa": 27285
+    },
+    "2026": {
+      "games": 360,
+      "pa": 27268
+    }
+  },
+  "training_samples": {
+    "pitches": 299492,
+    "first_date": "2024-03-30",
+    "last_date": "2026-10-06",
+    "missing_velocity": 11321,
+    "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+    "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+  },
+  "calibration_dates": [
+    "2026-09-25",
+    "2026-10-06"
+  ],
+  "teams": 6,
+  "hitters": 181,
+  "pitchers": 174,
+  "export_sha256": "c79345f18c965b8a205701ab1428c2aaaa4ab393a08bb63b637efaffa3283d16"
+}

@@ -2,7 +2,7 @@
 
 這裡收錄每一輪修改的驗收證據（說明、測試紀錄、截圖與 JSON 結果）。
 
-- **只想看結論**：讀[最新網站驗收與程式碼審查](release-foundation-20261106/README.md)；模型基準見[v5 整合驗收](identity-integration-20261025/README.md)；原交件版另見[初審驗收](competition-ready-20261023/README.md)。
+- **只想看結論**：讀[11/14 改用 2026 球季資料](data-2026-20261114/README.md)與[網站驗收與程式碼審查](release-foundation-20261106/README.md)；模型基準見[v5 整合驗收](identity-integration-20261025/README.md)；原交件版另見[初審驗收](competition-ready-20261023/README.md)。
 - **想核對某項功能**：依下方分類找對應日期的紀錄。
 - 舊紀錄保留作歷史追溯，數字與畫面以當時版本為準；現行說明見 [README](../../README.md) 與 [技術細節](../技術細節.md)。
 
@@ -12,6 +12,7 @@
 
 | 日期 | 紀錄 | 重點 |
 |---|---|---|
+| 11-14 | [前端改用 2026 球季資料](data-2026-20261114/README.md) | 三季進件、2026 守位、2024–2026 重訓批次、2026 背號與預設先發、Python／JS 54 情境一致 |
 | 11-13 | [2024–2026 投打模型實驗](model-horizons-20261113/README.md) | 逐月重訓、RE24 混合模型、三棒失分同樣本比較與採用決定 |
 | 11-06 | [發布驗收與程式碼審查](release-foundation-20261106/README.md) | 分支整合、牛棚雙方案、使用者驗收、跨年進件與全季近況回測 |
 | 10-29 | [release-readiness-20261029/README.md](release-readiness-20261029/README.md) | raw-free PR 檢查、HTTP 故障／儲存拒絕／取消操作實測、單截止日真實訓練與中斷續跑 |

@@ -1,49 +1,49 @@
 {
-  "season": 2025,
-  "method": "各隊最後 30 場先發打者與先發投手（Rebas 2025 例行賽，ODC-By v1.0）",
+  "season": 2026,
+  "method": "各隊最後 30 場先發打者與先發投手（Rebas 2026 例行賽，ODC-By v1.0）",
   "teams": {
     "中信兄弟": {
       "slots": [
         {
-          "name": "rebas:CPBL:C5Lw5",
+          "name": "rebas:CPBL:8JvUf",
           "pos": "3B"
         },
         {
-          "name": "rebas:CPBL:42OO1",
+          "name": "rebas:CPBL:IbHQY",
           "pos": "DH"
+        },
+        {
+          "name": "rebas:CPBL:b3UAW",
+          "pos": "LF"
+        },
+        {
+          "name": "rebas:CPBL:C5Lw5",
+          "pos": "1B"
         },
         {
           "name": "rebas:CPBL:yDdjY",
           "pos": "CF"
         },
         {
-          "name": "rebas:CPBL:eChCD",
-          "pos": "RF"
-        },
-        {
-          "name": "rebas:CPBL:c3PEk",
-          "pos": "1B"
-        },
-        {
-          "name": "rebas:CPBL:0uRxO",
-          "pos": "LF"
-        },
-        {
           "name": "rebas:CPBL:rfEOE",
           "pos": "SS"
+        },
+        {
+          "name": "rebas:CPBL:eChCD",
+          "pos": "RF"
         },
         {
           "name": "rebas:CPBL:Dvre5",
           "pos": "2B"
         },
         {
-          "name": "rebas:CPBL:P4Fe3",
+          "name": "rebas:CPBL:paNxV",
           "pos": "C"
         }
       ],
-      "pitcher": "rebas:CPBL:nyxoS",
+      "pitcher": "rebas:CPBL:PtGe1",
       "games": 30,
-      "through": "2025-10-05"
+      "through": "2026-09-30"
     },
     "台鋼雄鷹": {
       "slots": [
@@ -56,43 +56,51 @@
           "pos": "SS"
         },
         {
+          "name": "rebas:CPBL:XuDGV",
+          "pos": "1B"
+        },
+        {
           "name": "rebas:CPBL:ojwr3",
           "pos": "3B"
         },
         {
-          "name": "rebas:CPBL:XuDGV",
-          "pos": "DH"
+          "name": "rebas:CPBL:ICJNX",
+          "pos": "CF"
         },
         {
-          "name": "rebas:CPBL:puKjJ",
-          "pos": "C"
+          "name": "rebas:CPBL:w2poZ",
+          "pos": "2B"
         },
         {
           "name": "rebas:CPBL:1juVE",
           "pos": "LF"
         },
         {
-          "name": "rebas:CPBL:zpOzg",
-          "pos": "1B"
+          "name": "rebas:CPBL:krwFy",
+          "pos": "DH"
         },
         {
-          "name": "rebas:CPBL:PtuDN",
-          "pos": "CF"
-        },
-        {
-          "name": "rebas:CPBL:B2um0",
-          "pos": "2B"
+          "name": "rebas:CPBL:c5JFr",
+          "pos": "C"
         }
       ],
       "pitcher": "rebas:CPBL:mxPQL",
       "games": 30,
-      "through": "2025-10-03"
+      "through": "2026-10-02"
     },
     "味全龍": {
       "slots": [
         {
           "name": "rebas:CPBL:KNmRt",
           "pos": "CF"
+        },
+        {
+          "name": "rebas:CPBL:dFblH",
+          "pos": "SS"
+        },
+        {
+          "name": "rebas:CPBL:8wMt5",
+          "pos": "3B"
         },
         {
           "name": "rebas:CPBL:u6XUJ",
@@ -107,38 +115,30 @@
           "pos": "1B"
         },
         {
+          "name": "rebas:CPBL:pAvtk",
+          "pos": "RF"
+        },
+        {
           "name": "rebas:CPBL:yvoBa",
           "pos": "LF"
         },
         {
-          "name": "rebas:CPBL:8wMt5",
-          "pos": "3B"
-        },
-        {
-          "name": "rebas:CPBL:dFblH",
-          "pos": "SS"
-        },
-        {
           "name": "rebas:CPBL:nm81R",
           "pos": "C"
-        },
-        {
-          "name": "rebas:CPBL:ldmM0",
-          "pos": "RF"
         }
       ],
-      "pitcher": "rebas:CPBL:KPTzi",
+      "pitcher": "rebas:CPBL:fDihN",
       "games": 30,
-      "through": "2025-09-28"
+      "through": "2026-10-02"
     },
     "富邦悍將": {
       "slots": [
         {
-          "name": "rebas:CPBL:SioVD",
-          "pos": "SS"
+          "name": "rebas:CPBL:5PuU",
+          "pos": "RF"
         },
         {
-          "name": "rebas:CPBL:psHWp",
+          "name": "rebas:CPBL:SioVD",
           "pos": "2B"
         },
         {
@@ -146,93 +146,89 @@
           "pos": "DH"
         },
         {
-          "name": "rebas:CPBL:iDWQ3",
-          "pos": "1B"
+          "name": "rebas:CPBL:ooOfM",
+          "pos": "CF"
         },
         {
           "name": "rebas:CPBL:a45g",
           "pos": "3B"
         },
         {
-          "name": "rebas:CPBL:lWSaS",
+          "name": "rebas:CPBL:iDWQ3",
+          "pos": "1B"
+        },
+        {
+          "name": "rebas:CPBL:tm0Z",
           "pos": "LF"
+        },
+        {
+          "name": "rebas:CPBL:N6NUc",
+          "pos": "SS"
         },
         {
           "name": "rebas:CPBL:NvcWV",
           "pos": "C"
-        },
-        {
-          "name": "rebas:CPBL:zGfee",
-          "pos": "CF"
-        },
-        {
-          "name": "rebas:CPBL:5PuU",
-          "pos": "RF"
         }
       ],
-      "pitcher": "rebas:CPBL:QRk3",
+      "pitcher": "rebas:CPBL:v1Pw4",
       "games": 30,
-      "through": "2025-10-04"
+      "through": "2026-10-06"
     },
     "樂天桃猿": {
       "slots": [
         {
-          "name": "rebas:CPBL:RJzVu",
-          "pos": "2B"
-        },
-        {
-          "name": "rebas:CPBL:xdLku",
+          "name": "rebas:CPBL:FKiD8",
           "pos": "LF"
         },
         {
-          "name": "rebas:CPBL:ElLgX",
-          "pos": "1B"
-        },
-        {
-          "name": "rebas:CPBL:ZtyCx",
-          "pos": "RF"
+          "name": "rebas:CPBL:UeDA6",
+          "pos": "CF"
         },
         {
           "name": "rebas:CPBL:7vTQV",
           "pos": "DH"
         },
         {
+          "name": "rebas:CPBL:0fd4d",
+          "pos": "1B"
+        },
+        {
+          "name": "rebas:CPBL:WbnjG",
+          "pos": "RF"
+        },
+        {
           "name": "rebas:CPBL:xZBmj",
           "pos": "3B"
         },
         {
-          "name": "rebas:CPBL:PoOO0",
-          "pos": "C"
+          "name": "rebas:CPBL:vdpJ5",
+          "pos": "2B"
         },
         {
-          "name": "rebas:CPBL:vdpJ5",
+          "name": "rebas:CPBL:1MV0s",
           "pos": "SS"
         },
         {
-          "name": "rebas:CPBL:UeDA6",
-          "pos": "CF"
+          "name": "rebas:CPBL:IIlEk",
+          "pos": "C"
         }
       ],
-      "pitcher": "rebas:CPBL:fDihN",
+      "pitcher": "rebas:CPBL:a5fxm",
       "games": 30,
-      "through": "2025-10-06"
+      "through": "2026-10-06"
     },
     "統一7-ELEVEn獅": {
       "slots": [
         {
-          "name": "rebas:CPBL:LlGVK",
-          "pos": "CF"
-        },
-        {
-          "name": "rebas:CPBL:7TPaU",
-          "pos": "DH"
-        },
-        {
-          "name": "rebas:CPBL:Ifqha",
+          "name": "rebas:CPBL:Nf4Ac",
           "pos": "RF"
         },
         {
-          "name": "rebas:CPBL:PKNKN",
+          "name": "rebas:CPBL:54TAw",
+          "pos": "CF"
+        },
+        {
+          "name": "rebas:CPBL:LlGVK",
           "pos": "LF"
         },
         {
@@ -244,11 +240,15 @@
           "pos": "1B"
         },
         {
+          "name": "rebas:CPBL:BMBs8",
+          "pos": "DH"
+        },
+        {
           "name": "rebas:CPBL:gPoLb",
           "pos": "SS"
         },
         {
-          "name": "rebas:CPBL:ZkDCF",
+          "name": "rebas:CPBL:w5KG8",
           "pos": "C"
         },
         {
@@ -256,12 +256,12 @@
           "pos": "2B"
         }
       ],
-      "pitcher": "rebas:CPBL:Fdxmu",
+      "pitcher": "rebas:CPBL:CvkZv",
       "games": 30,
-      "through": "2025-10-06"
+      "through": "2026-10-01"
     }
   },
   "training_version": 5,
   "engine_contract": 5,
-  "batch_id": "310a2e1936d7edd021af3016ac1d6058cf22042854450ec7578eefc29695c924"
+  "batch_id": "ce4f4627585377e8864f92bf850fe6dc17f0335ee657c960afcce2edfa5ce26f"
 }

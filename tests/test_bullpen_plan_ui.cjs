@@ -66,3 +66,8 @@ test('comparison uses shared capacity and independent ranks, then clears both re
  compare.checked=false; compare.onchange(); w.run();
  assert.match(output.innerHTML,/方案 A.*容量足夠/); assert.doesNotMatch(output.innerHTML,/方案 B/);
 });
+test('reserve list names pitchers with known capacity and merges the unconfirmed ones',()=>{
+ const w=worksheet(), [a,b]=w.rows.map(row=>row.fields);
+ a['[data-capacity]'].value='6'; a['[data-order]'].value='1'; w.q('[data-target]').value='3'; w.run();
+ assert.match(w.q('[data-output]').innerHTML,/保留：另 1 人容量待確認/);assert.doesNotMatch(w.q('[data-output]').innerHTML,/投手B（容量待確認）/);
+});

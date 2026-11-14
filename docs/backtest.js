@@ -48,6 +48,17 @@ const BacktestView = (() => {
     }
     return groups;
   }
+  /* 局數對照圖：同一列看出系統建議與實際換人落在哪幾局 */
+  function strip(rows){
+    const last=Math.max(9,...rows.map(r=>r.pa.inning));
+    const cell=(inning,lane)=>{
+      const hits=rows.filter(r=>r.pa.inning===inning&&(lane==='sys'?r.suggested:r.actual));
+      return `<td>${hits.map(r=>`<button type="button" class="bt-mark ${lane}" data-bt-jump="${esc(r.pa.pa_id)}" title="${r.pa.inning}局${r.pa.half==='away'?'上':'下'} ${r.pa.outs}出局 ${N(r.incumbent||'')}" aria-label="${r.pa.inning}局${r.pa.half==='away'?'上':'下'} ${r.pa.outs}出局，${lane==='sys'?'系統建議':'實際換人'}"></button>`).join('')}</td>`;
+    };
+    const innings=Array.from({length:last},(_,i)=>i+1);
+    return `<div class="bt-strip-wrap"><table class="bt-strip"><caption class="sr-only">各局系統建議與實際換人</caption><thead><tr><th scope="col"></th>${innings.map(i=>`<th scope="col" class="${i>=6?'late':''}">${i}</th>`).join('')}</tr></thead>`+
+      `<tbody><tr><th scope="row">系統建議</th>${innings.map(i=>cell(i,'sys')).join('')}</tr><tr><th scope="row">實際換人</th>${innings.map(i=>cell(i,'act')).join('')}</tr></tbody></table></div>`;
+  }
   function timeline({element,pas,marks,team,open,threshold=1,disclosure=()=>({}),setDisclosure=()=>{}}){
     let kind='pen', filter='all', selected=null;
     function render(){
@@ -55,14 +66,21 @@ const BacktestView = (() => {
       rows.forEach((r,i)=>{r.firstPrompt=r.suggested&&(!rows[i-1]?.suggested||rows[i-1].incumbent!==r.incumbent);});
       const labels={both:'有建議、有換人',system:'只有建議',actual:'只有換人',neither:'無建議、未換人',unknown:'無法評估',outside:'6 局前'};
       const visible=filter==='all'?rows.filter(r=>r.actual||r.suggested):groups[filter];
-      const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt${r.suggested?' is-sys':''}">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+gainSign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span>${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
+      const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt${r.suggested?' is-sys':''}">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+gainSign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span class="${r.actual?'is-act':''}">${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
       element.innerHTML=`<div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
         <div class="bt-groups" aria-label="依決策打席分類">${Object.entries(labels).map(([key,label])=>`<button type="button" data-bt-filter="${key}" aria-pressed="${filter===key}">${label}<strong>${groups[key].length}</strong></button>`).join('')}<button type="button" data-bt-filter="all" aria-pressed="${filter==='all'}">全部</button></div>
+        ${strip(rows)}
         <div class="bt-lanes" aria-hidden="true"><span>時點</span><span>原人選</span><span>系統建議</span><span>實際調度</span></div>
         <div class="bt-timeline" aria-label="依時間排列的決策">${visible.length?promptRuns(visible).map(run=>run.length===1?event(run[0]):`<details class="bt-prompt-run"><summary>${run[0].pa.inning}局起 · ${N(run[0].incumbent)}連續 ${run.length} 打席提示（未實際換人）</summary>${run.map(event).join('')}</details>`).join(''):'<p>此分類沒有收錄打席。</p>'}</div>
         <div class="bt-decision" aria-live="polite"></div>`;
       element.querySelectorAll('[data-bt-kind]').forEach(b=>b.onclick=()=>{kind=b.dataset.btKind;filter='all';selected=null;render();});
       element.querySelectorAll('[data-bt-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.btFilter;selected=null;render();});
+      element.querySelectorAll('[data-bt-jump]').forEach(b=>b.onclick=()=>{
+        let target=element.querySelector(`[data-bt-pa="${b.dataset.btJump}"]`);
+        if(!target){filter='all';render();target=element.querySelector(`[data-bt-pa="${b.dataset.btJump}"]`);}
+        target?.closest('details')?.setAttribute('open','');
+        target?.click();target?.scrollIntoView?.({block:'center'});
+      });
       element.querySelectorAll('[data-bt-pa]').forEach(b=>b.onclick=()=>{
         selected=b.dataset.btPa; const r=rows.find(r=>r.pa.pa_id===selected),p=r.pa;
         element.querySelectorAll('[data-bt-pa]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
@@ -125,6 +143,6 @@ const BacktestView = (() => {
     }
     render('time_check');
   }
-  return {decisions,cells,promptRuns,timeline,validation,relativeReduction};
+  return {decisions,cells,promptRuns,strip,timeline,validation,relativeReduction};
 })();
 if(typeof module!=='undefined')module.exports=BacktestView;

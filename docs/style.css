@@ -1286,3 +1286,26 @@ body { background: var(--page-bg); }
 #audienceStatus:empty { display:none; }
 #emptyState h2 { font-size:18px; }
 .sb-bat { display:inline-block; margin-left:6px; padding:0 5px; border-radius:3px; background:var(--scoreboard-text); color:var(--scoreboard-bg); font-size:11px; font-weight:700; vertical-align:middle; }
+/* 圖形化：打席清單的壘況菱形與出局燈；當日總覽的局數對照圖 */
+.pa-state { display:inline-flex; align-items:center; gap:4px; flex:none; }
+.pa-state svg { width:28px; height:24px; }
+.pa-outs { display:inline-flex; gap:3px; }
+.pa-outs i { width:7px; height:7px; border-radius:50%; border:1.5px solid var(--muted); }
+.pa-outs i.on { background:var(--neg); border-color:var(--neg); }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.bt-strip-wrap { overflow-x:auto; margin:4px 0 12px; }
+.bt-strip { border-collapse:collapse; width:100%; min-width:420px; font-size:12px; table-layout:fixed; }
+.bt-strip th:first-child { width:5.5em; }
+.bt-strip th { padding:4px 2px; color:var(--muted); font-weight:600; text-align:center; }
+.bt-strip thead th.late { color:var(--text); }
+.bt-strip tbody th { width:5.5em; text-align:left; white-space:nowrap; padding-right:8px; }
+.bt-strip td { height:34px; text-align:center; border-left:1px solid var(--line); vertical-align:middle; }
+.bt-strip tbody tr + tr td { border-top:1px solid var(--line); }
+.bt-mark { width:14px; height:14px; min-height:0 !important; margin:2px; padding:0 !important; border-radius:50% !important; border:0 !important; cursor:pointer; vertical-align:middle; }
+.bt-mark.sys { background:transparent !important; box-shadow:inset 0 0 0 2.5px var(--sys); }
+.bt-mark.act { background:var(--entry-review) !important; }
+.bt-mark:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+@media (pointer:coarse) { .bt-mark { width:22px; height:22px; } }
+.bt-prompt-run > .bt-event { width:100%; margin-top:6px; }
+.bt-event .is-act { color:var(--entry-review); font-weight:700; }
+@media (max-width:420px) { .scoreboard .sb-team .t { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:11px; line-height:1.3; white-space:nowrap; } .sb-bat { margin-left:0; } }
