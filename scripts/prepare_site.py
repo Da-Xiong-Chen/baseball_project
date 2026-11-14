@@ -146,8 +146,8 @@ def inspect_site(site):
     for index in (site / 'data/pitch-change').glob('*/index.json'):
         for filename in read_json(index)['pitchers'].values():
             local_asset(site, str((index.parent / filename).relative_to(site)))
-    if not any((site / 'data/replay').glob('day-*/index.json')):
-        raise ValueError('No daily replay index found')
+    if not games.exists() and not any((site / 'data/replay').glob('day-*/index.json')):
+        raise ValueError('No replay index found')
     for path in assets:
         if not path.is_file() or path.is_symlink():
             raise ValueError(f'Not a regular release file: {path}')
