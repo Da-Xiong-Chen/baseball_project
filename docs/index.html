@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 <script src="theme.js?v=20261025-v5-id1"></script>
-<link rel="stylesheet" href="style.css?v=20261114-ui2">
+<link rel="stylesheet" href="style.css?v=20261114-ui3">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -56,7 +56,6 @@
 <div id="backtestBar" class="backtest-bar" hidden>
   <p class="mut"><time datetime="2026-10-04">2026/10/04</time> · 例行賽回放</p>
   <div class="seg" id="backtestSeg" aria-label="單日分析內容"><button type="button" data-sub="season" class="on">當日總覽</button><button type="button" data-sub="replay">逐打席回放</button></div>
-  <ol class="review-steps" id="reviewSteps" aria-label="單日分析步驟"><li data-step="1"><b>1</b><span>選球隊與比賽</span></li><li data-step="2"><b>2</b><span>點一個打席</span></li><li data-step="3"><b>3</b><span>看系統事前建議</span></li><li data-step="4"><b>4</b><span>揭示實際調度與結果</span></li></ol>
 </div>
 <section id="lineupPage" class="lineup-page" hidden aria-labelledby="lineupTitle">
   <div class="lineup-heading"><div><p class="eyebrow">MY TEAM / LINEUP</p><h2 id="lineupTitle" tabindex="-1">我方場上名單</h2><p class="mut">安排守位與九棒。</p></div><div><label class="f" for="lineupTeam">配置球隊</label><select id="lineupTeam"></select></div></div>
@@ -224,13 +223,12 @@
         <div class="card-b">
           <div class="replay-filters" role="group" aria-label="打席篩選">
             <label class="toggle"><input type="checkbox" id="lateOnly" checked> 6 局起</label>
-            <label class="toggle"><input type="checkbox" id="showSuggest" checked> 顯示系統提示</label>
-            <label class="toggle"><input type="checkbox" id="onlyChanges"> 只看換人或提示</label>
+            <label class="toggle"><input type="checkbox" id="onlyChanges"> 只看換人與建議</label>
+            <label class="toggle" hidden><input type="checkbox" id="showSuggest" checked> 顯示系統建議</label>
           </div>
           <div class="replay-filter-status"><span id="replayCount" role="status"></span><button type="button" id="replayReset" hidden>顯示全部</button></div>
           <p id="replayLinkStatus" class="mut replay-note" role="status" hidden></p>
           <p id="replayNote" class="mut replay-note" role="status" hidden></p>
-          <p class="replay-legend" id="replayLegend"><span><span class="chip tag-sys">系統：換投</span> 系統事前建議換人</span><span><span class="chip tag-ph">換投</span> 教練實際換人</span><span class="replay-legend-tip">點任一列，查看當時的比較</span></p>
           <div class="list" id="paList"><div class="empty">先選一場比賽</div></div>
         </div>
       </div>
@@ -250,9 +248,8 @@
       </div>
       <div id="replayEmptyGuide" hidden>
         <h2>先選一個打席</h2>
-        <p>選球隊與比賽，再點選打席。先看事前評估，再揭示實際調度與打席結果。</p>
-        <ol class="replay-guide-steps"><li>左側清單中，有<span class="chip tag-sys">系統</span>標記的打席，是系統事前建議換人的時點。</li><li>點選打席後，先看系統當時的人選比較。</li><li>再依序展開「揭示實際調度」與「揭示這個打席的結果」。</li></ol>
-        <button type="button" class="btn-demo" id="replayFirstSuggest" disabled>直接看第一個系統提示</button><p class="mut" id="replayFirstStatus" role="status"></p>
+        <p>點選打席，先看賽前的人選比較，再揭示實際調度與結果。</p>
+        <button type="button" class="btn-demo" id="replayFirstSuggest" disabled>看第一個建議換人的打席</button><p class="mut" id="replayFirstStatus" role="status"></p>
       </div>
     </div>
     <div id="resultBody" class="hidden"></div>
@@ -277,9 +274,9 @@
 <script src="pitcher-groups.js?v=20261026-runtime1"></script>
 <script src="motion.js?v=20261023-motion1"></script>
 <script src="lineup.js?v=20261112-storage-guard"></script>
-<script src="backtest.js?v=20261114-ui2"></script>
+<script src="backtest.js?v=20261114-ui3"></script>
 <script src="bullpen-plan.js?v=20261026-1"></script>
 <script src="bullpen-plan-ui.js?v=20261106-compare"></script>
-<script src="app.js?v=20261114-ui2"></script>
+<script src="app.js?v=20261114-ui3"></script>
 </body>
 </html>

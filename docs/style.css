@@ -1224,23 +1224,7 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 #audienceSeg button.on { color: var(--entry); box-shadow: inset 0 -3px var(--entry); }
 #audienceSeg button::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--entry); flex:none; opacity:.85; }
 
-/* 單日分析：步驟條 */
-.backtest-bar { row-gap: 10px; }
-.review-steps { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; flex:1 1 100%; counter-reset:none; }
-.review-steps li { display:flex; align-items:center; gap:8px; min-height:44px; padding:6px 10px; border-radius:10px; background:var(--panel); border:1px solid var(--line); color:var(--muted); font-size:13px; line-height:1.4; }
-.review-steps li b { display:inline-grid; place-items:center; flex:none; width:24px; height:24px; border-radius:50%; background:var(--step-idle); color:var(--text); font-size:12px; }
-.review-steps li.done { color:var(--text); }
-.review-steps li.done b { background:var(--brand-grass); color:#fff; }
-.review-steps li.current { border-color:var(--entry-review); background:var(--act-soft); color:var(--text); font-weight:700; }
-.review-steps li.current b { background:var(--entry-review); color:#fff; }
-:root[data-theme="dark"] .review-steps li.done b, :root[data-theme="dark"] .review-steps li.current b { color:#111214; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .review-steps li.done b, :root:not([data-theme="light"]) .review-steps li.current b { color:#111214; } }
-@media (max-width:600px) {
-  .review-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .review-steps li { font-size:12px; padding:6px 8px; }
-}
-
-/* 打席清單：標籤顏色、可點提示、圖例 */
+/* 打席清單：標籤顏色、可點提示 */
 .tag-sys { background:var(--sys-soft); color:var(--sys); box-shadow:inset 0 0 0 1px var(--sys); }
 .tag-ph { background:var(--act-soft); color:var(--act); }
 #paList .item { position:relative; padding-right:28px; transition:background-color 150ms var(--ease-ui); }
@@ -1248,15 +1232,10 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 #paList .item:has(.tag-sys) { box-shadow:inset 3px 0 0 var(--sys); }
 #paList .item.on { box-shadow:inset 3px 0 0 var(--entry-review); background:var(--act-soft); }
 #paList .inning-h { font-weight:700; color:var(--text); }
-.replay-legend { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:4px 0 8px; font-size:12px; color:var(--muted); }
-.replay-legend > span { display:inline-flex; align-items:center; gap:4px; }
-.replay-legend-tip { color:var(--text); font-weight:600; }
 #gameList .item { font-weight:600; }
 #gameList .item.on { box-shadow:inset 3px 0 0 var(--entry-review); }
 
-/* 回放空狀態引導 */
-.replay-guide-steps { text-align:left; max-width:30rem; margin:14px auto; padding-left:1.4em; line-height:1.7; font-size:14px; }
-.replay-guide-steps li + li { margin-top:4px; }
+/* 回放空狀態 */
 #replayEmptyGuide .btn-demo { margin-top:6px; }
 #replayFirstStatus:not(:empty) { margin-top:8px; font-size:13px; }
 
@@ -1272,8 +1251,7 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 .replay-disclosure[open] > summary, .replay-disclosure details[open] > summary { background:var(--panel); }
 .replay-disclosure .actual { padding:10px 4px 0; }
 
-/* 當日總覽：說明與時間軸 */
-.bt-help { margin:8px 0 0; padding:10px 12px; border-radius:10px; background:var(--sys-soft); color:var(--text); font-size:13px; line-height:1.6; }
+/* 當日總覽：時間軸 */
 .bt-groups button[aria-pressed="true"] strong { color:inherit; }
 .bt-event { position:relative; padding-right:28px !important; }
 .bt-event::after { content:"›"; position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:18px; }
@@ -1285,3 +1263,21 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 .bt-event .bt-prompt { color:var(--muted); }
 .bt-event .bt-prompt.is-sys { color:var(--sys); font-weight:700; }
 @media (max-width:600px) { .bt-event { grid-template-columns:1fr; gap:2px; } .bt-groups button { word-break:keep-all; font-size:13px; } }
+/* 精簡：篩選、打席導覽、分類改成一列，不用卡片堆疊 */
+.toggle[hidden] { display:none !important; }
+.replay-filters { display:flex; flex-wrap:wrap; gap:6px; }
+.replay-filters .toggle { min-height:36px; padding:4px 12px; border-radius:999px; font-size:13px; }
+.replay-filters .toggle:has(:checked) { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+.replay-filter-status { min-height:36px; margin-block:4px; font-size:13px; }
+#replayReset { min-height:36px; padding:0 4px; border:0; background:none; color:var(--accent); text-decoration:underline; cursor:pointer; }
+.replay-pa-navigation { display:flex; align-items:center; gap:4px 8px; flex-wrap:wrap; padding:8px 12px; }
+.replay-pa-navigation p { margin:0; min-width:4.5em; text-align:center; color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; }
+.replay-pa-navigation button { min-height:36px; padding:0 10px; border:0; border-radius:6px; background:none; color:var(--accent); font-size:14px; cursor:pointer; }
+.replay-pa-navigation button:disabled { color:var(--muted); opacity:.5; cursor:default; }
+.replay-pa-navigation .replay-share { margin-left:auto; font-size:13px; }
+.replay-pa-navigation input { flex-basis:100%; }
+#replayShareStatus:not(:empty) { flex-basis:100%; margin:0; text-align:right; font-size:12px; }
+.bt-groups { gap:6px; }
+.bt-groups button { display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:4px 12px; border-radius:999px; font-size:13px; }
+.bt-groups button strong { display:inline; font-size:13px; }
+@media (max-width:600px) { .bt-groups button { flex:0 1 auto; } .replay-filters { display:flex; } .replay-filters .toggle:last-child { grid-column:auto; } }

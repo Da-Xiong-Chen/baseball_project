@@ -8,7 +8,8 @@ const BacktestView = (() => {
   const sign=v=>signed(v,3);
   const metric=v=>Number.isFinite(v)?v.toFixed(6):'—';
   const metricSign=v=>signed(v,6);
-  const outcome=v=>({SO:'三振',BB:'保送',uBB:'保送',iBB:'故意四壞',HBP:'觸身球','1B':'一壘安打','2B':'二壘安打','3B':'三壘安打',HR:'全壘打',GO:'滾地出局',FO:'出局',AO:'飛球出局',FC:'野手選擇'}[v]||v||'未提供');
+  const outcome=v=>({SO:'三振',BB:'四壞球',uBB:'四壞球',iBB:'故意四壞球',IBB:'故意四壞球',HBP:'觸身球','1B':'一壘安打','2B':'二壘安打','3B':'三壘安打',HR:'全壘打',GO:'滾地球出局',FO:'飛球出局',AO:'出局',FC:'野手選擇',
+    GIDP:'雙殺打',E:'失誤上壘',SF:'高飛犧牲打',SF_E:'高飛犧牲打（失誤）',SH:'犧牲短打',SH_E:'犧牲短打（失誤上壘）',SH_FC:'犧牲短打（野手選擇）'}[v]||(v?'其他結果':'未提供'));
   const relativeReduction=row=>Number.isFinite(row?.baseline_mse)&&Number.isFinite(row?.mse_reduction)&&row.baseline_mse>0?100*row.mse_reduction/row.baseline_mse:null;
   function intervalMark(row,extent){
     const span=extent*2,place=v=>100*(v+extent)/span;
@@ -54,7 +55,7 @@ const BacktestView = (() => {
       const labels={both:'有提示、有換人',system:'只有系統提示',actual:'只有實際換人',neither:'無提示、未換人',unknown:'資料不足／不可評估',outside:'六局前：提示窗外'};
       const visible=filter==='all'?rows.filter(r=>r.actual||r.suggested):groups[filter];
       const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt${r.suggested?' is-sys':''}">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+sign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span>${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
-      element.innerHTML=`<p class="bt-help">先選「換投回顧」或「換打回顧」，再點分類篩選；點下方時間軸任一列，看當時系統建議，再自行揭示實際調度與結果。</p><div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
+      element.innerHTML=`<div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
         <div class="bt-groups" aria-label="依決策打席分類">${Object.entries(labels).map(([key,label])=>`<button type="button" data-bt-filter="${key}" aria-pressed="${filter===key}">${label}<strong>${groups[key].length}</strong></button>`).join('')}<button type="button" data-bt-filter="all" aria-pressed="${filter==='all'}">所有提示／調度</button></div>
         <p class="mut">此處計算所選球隊的攻方或守方打席。逐打席清單包含全場。</p>
         <div class="bt-lanes" aria-hidden="true"><span>決策時點</span><span>原人選</span><span>系統提示軌</span><span>實際調度軌</span></div>

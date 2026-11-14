@@ -1075,6 +1075,11 @@ test('demo picks the due batter when a saved lineup labels options by batting or
 });
 test('replay shortcut explains when the current list has no system suggestion',()=>{
  const f=fixture();f.eval('openFirstSuggestion()');
- assert.match(f.node('#replayFirstStatus').textContent,/沒有系統提示/);
+ assert.match(f.node('#replayFirstStatus').textContent,/沒有建議換人/);
  f.eval('syncReviewSteps()');assert.equal(f.node('#replayFirstSuggest').disabled,true);assert.equal(f.node('#replayFirstStatus').textContent,'');
+});
+test('play results use CPBL scoring terms instead of a generic out or other result',()=>{
+ const f=fixture();
+ for(const [code,label] of [['GIDP','雙殺打'],['SF','高飛犧牲打'],['SH','犧牲短打'],['E','失誤上壘'],['IBB','故意四壞球'],['uBB','四壞球'],['FO','飛球出局'],['GO','滾地球出局']])assert.equal(f.eval(`resultLabel('${code}')`),label);
+ assert.equal(f.eval("resultLabel('ID')"),'其他結果');assert.equal(f.eval("resultLabel('')"),'未提供');
 });

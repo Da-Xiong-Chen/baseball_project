@@ -28,7 +28,9 @@ function officialPlayerLink(name) {
   const url = direct ? `https://www.cpbl.com.tw/team/person?acnt=${ids[0]}` : `https://stats.cpbl.com.tw/players?playerName=${encodeURIComponent(playerText(name).replace(/〔.*〕$/, ''))}`;
   return `<a class="player-official" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${N(name)}：CPBL ${direct ? '官方球員資料' : '官方球員搜尋'}（另開分頁）">${N(name)}</a>`;
 }
-const RESULT_LABELS={SO:'三振',BB:'保送',uBB:'保送',iBB:'保送',HBP:'觸身球','1B':'一壘安打','2B':'二壘安打','3B':'三壘安打',HR:'全壘打',FC:'野手選擇',FO:'出局',GO:'出局',AO:'出局'};
+/* 中職紀錄用語；未列出的代碼顯示為其他結果，不自行猜測 */
+const RESULT_LABELS={SO:'三振',BB:'四壞球',uBB:'四壞球',iBB:'故意四壞球',IBB:'故意四壞球',HBP:'觸身球','1B':'一壘安打','2B':'二壘安打','3B':'三壘安打',HR:'全壘打',
+  FC:'野手選擇',FO:'飛球出局',GO:'滾地球出局',AO:'出局',GIDP:'雙殺打',E:'失誤上壘',SF:'高飛犧牲打',SF_E:'高飛犧牲打（失誤）',SH:'犧牲短打',SH_E:'犧牲短打（失誤上壘）',SH_FC:'犧牲短打（野手選擇）'};
 const resultLabel=code=>RESULT_LABELS[code]||(code?'其他結果':'未提供');
 const BASES = { 0: "無人", 1: "一壘", 2: "二壘", 3: "一二壘", 4: "三壘", 5: "一三壘", 6: "二三壘", 7: "滿壘" };
 
@@ -532,12 +534,9 @@ async function refreshHistoryDay(){
   await Promise.all([renderReview(),loadHistoricalPitchers(),loadHistoryContext()]);
 }
 function currentPage() { return !$("#lineupPage").hidden ? "lineup" : (!$("#reviewPage").hidden || S.mode === "replay") ? "review" : "evaluation"; }
-/* 單日分析步驟條：依目前子頁、選取的打席與揭示狀態標示進度 */
+/* 回放捷徑按鈕：有打席清單時才可用，清單變動時清掉舊訊息 */
 function syncReviewSteps() {
-  const steps=$('#reviewSteps');if(!steps)return;
   const replay=backtestSub==='replay'&&S.mode==='replay';
-  const current=!replay?1:!S.pa?2:historyDisclosure.pa===S.pa&&historyDisclosure.action?4:3;
-  steps.querySelectorAll('li').forEach(li=>{const n=+li.dataset.step;li.classList.toggle('done',n<current);li.classList.toggle('current',n===current);if(n===current)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});
   const first=$('#replayFirstSuggest');if(first)first.disabled=!replay||!S.pas;
   const status=$('#replayFirstStatus');if(status)status.textContent='';
 }
@@ -545,7 +544,7 @@ function syncReviewSteps() {
 function openFirstSuggestion() {
   const row=$$('#paList .item:not(.off)').find(el=>el.querySelector('.tag-sys'));
   const status=$('#replayFirstStatus');
-  if(!row){if(status)status.textContent='目前清單沒有系統提示的打席，可改選其他比賽或按「顯示全部」。';return;}
+  if(!row){if(status)status.textContent='這場目前的清單沒有建議換人的打席。';return;}
   if(status)status.textContent='';
   row.scrollIntoView({block:'center'});
   return row.querySelector('.tag-sys').click();
@@ -1304,7 +1303,7 @@ function replayNeighbors(visiblePAs) {
 function syncReplayNavigation(visiblePAs) {
   if (!S.pa || !$('#replayPaNavigation')) return;
   const {previous,next,position,included}=replayNeighbors(visiblePAs);
-  $('#replayPaPosition').textContent=`第 ${position}／${S.pas.length} 個打席${included?'':' · 不在目前篩選內'}`;
+  $('#replayPaPosition').textContent=`${position}／${S.pas.length}${included?'':'（不在篩選內）'}`;
   for (const [selector,id] of [['#replayPrevious',previous],['#replayNext',next]]) {
     const button=$(selector);
     button.disabled=!id;
@@ -1349,7 +1348,7 @@ function renderPAs() {
   const penChanged = pitcherChanges(S.pas);
   const visiblePAs=visibleReplayPAs(penChanged);
   const showSuggest=$("#showSuggest").checked;
-  $("#replayCount").textContent=`顯示 ${visiblePAs.length}／${S.pas.length} 個打席`;
+  $("#replayCount").textContent=`${visiblePAs.length}／${S.pas.length} 個打席`;
   $("#replayReset").hidden=!($("#lateOnly").checked||$("#onlyChanges").checked||!showSuggest);
   for (const p of visiblePAs) {
     const tm = showSuggest && p.inning>=6 ? timingFor(p.pa_id) : null;
@@ -1362,10 +1361,10 @@ function renderPAs() {
     html += `<button type="button" class="item ${S.pa === p.pa_id ? "on" : ""} ${off ? "off" : ""}" data-p="${p.pa_id}" aria-pressed="${S.pa === p.pa_id}" ${off ? 'disabled title="此打席完整評估尚未匯出"' : ""}>
       <span class="chip num">${p.outs} 出・${BASES[p.bases]}</span>
       <span>${N(p.start_batter||p.batter)}</span>
-      ${p.is_ph ? `<span class="chip tag-ph" data-replay-kind="ph">代打</span>` : ""}
-      ${penChanged.has(p.pa_id) ? `<span class="chip tag-ph" data-replay-kind="pen">換投</span>` : ""}
-      ${tm?.penSug ? `<span class="chip tag-sys" data-replay-kind="pen" title="系統建議換上 ${N(tm.penBest)}（${sign(tm.penGain)} 百分點）">系統：換投</span>` : ""}
-      ${tm?.phSug ? `<span class="chip tag-sys" data-replay-kind="ph" title="系統建議 ${N(tm.phBest)} 代打（${sign(tm.phGain)} 百分點）">系統：代打</span>` : ""}
+      ${p.is_ph ? `<span class="chip tag-ph" data-replay-kind="ph">實際代打</span>` : ""}
+      ${penChanged.has(p.pa_id) ? `<span class="chip tag-ph" data-replay-kind="pen">實際換投</span>` : ""}
+      ${tm?.penSug ? `<span class="chip tag-sys" data-replay-kind="pen" title="系統建議換上 ${N(tm.penBest)}（${sign(tm.penGain)} 百分點）">建議換投</span>` : ""}
+      ${tm?.phSug ? `<span class="chip tag-sys" data-replay-kind="ph" title="系統建議 ${N(tm.phBest)} 代打（${sign(tm.phGain)} 百分點）">建議代打</span>` : ""}
       <span class="mut" style="margin-left:auto;font-size:12px">${historyDisclosure.pa===p.pa_id&&historyDisclosure.outcome?esc(resultLabel(p.result)):'結果未揭示'}</span></button>`;
   }
   $("#paList").innerHTML = html || '<p class="empty">目前篩選沒有符合的打席，可選「顯示全部」。</p>';
@@ -1605,10 +1604,10 @@ function renderResult(preserveTabs = false) {
   let html = `
   <div class="card">
     ${view==='replay'&&S.pas?.length?`<div class="replay-pa-navigation" id="replayPaNavigation">
+      <button type="button" id="replayPrevious" aria-label="上一打席">‹ 上一打席</button>
       <p id="replayPaPosition" tabindex="-1" role="status"></p>
-      <div class="replay-pa-actions"><button type="button" id="replayPrevious">← 上一打席</button>
-      <button type="button" id="replayNext">下一打席 →</button>
-      <button type="button" id="replayShare">複製打席連結</button></div>
+      <button type="button" id="replayNext" aria-label="下一打席">下一打席 ›</button>
+      <button type="button" id="replayShare" class="replay-share">複製連結</button>
       <input id="replayShareURL" aria-label="打席分享連結" readonly hidden>
       <span id="replayShareStatus" role="status"></span>
     </div>`:''}
