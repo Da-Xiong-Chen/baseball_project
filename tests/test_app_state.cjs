@@ -1090,3 +1090,14 @@ test('scoreboard keeps the away team on the left in both halves and marks the ba
  for(const html of [top,bottom])assert.ok(html.indexOf('>A')<html.indexOf('>H'),'away team first');
  assert.match(top,/at-bat"><div class="t">A<span class="sb-bat">攻/);assert.match(bottom,/at-bat"><div class="t">H<span class="sb-bat">攻/);
 });
+test('player notes show season lines and head-to-head counts only for custom evaluations',()=>{
+ const f=fixture();
+ f.context.notes={season:2026,data_seasons:[2024,2025,2026],batting:{B:[10,40,35,10,2,1,3,4,1,0,8]},pitching:{P:[20,0,95,30,12,10,40,140]},h2h:{B:{P:[7,2,1,1,0,3]},C:{P:[3,1,0,0,0,1]}}};
+ f.eval('playerNotes=notes');
+ const ph=f.eval("playerNotesHtml({view:'offense',situation:{pitcher:'P'}},{球員:'B'},'ph')");
+ assert.match(ph,/2026 打擊率 \.286・上壘率 \.375・長打率 \.657・3 轟・40 打席/);assert.match(ph,/7 打席 2 安 1 轟 1 四死 3 三振/);
+ const pen=f.eval("playerNotesHtml({view:'defense',bullpen:{next:['B','C','D']}},{投手:'P'},'pen')");
+ assert.match(pen,/防禦率 3\.41・31\.2 局・40 三振・20 場/);assert.match(pen,/對這 3 棒：10 打席 3 安 1 轟 1 四死 4 三振/);
+ assert.match(f.eval("playerNotesHtml({view:'offense',situation:{pitcher:'Z'}},{球員:'B'},'ph')"),/無對戰紀錄/);
+ assert.equal(f.eval("playerNotesHtml({view:'replay',situation:{pitcher:'P'}},{球員:'B'},'ph')"),'');
+});

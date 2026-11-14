@@ -1309,3 +1309,15 @@ body { background: var(--page-bg); }
 .bt-prompt-run > .bt-event { width:100%; margin-top:6px; }
 .bt-event .is-act { color:var(--entry-review); font-weight:700; }
 @media (max-width:420px) { .scoreboard .sb-team .t { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:11px; line-height:1.3; white-space:nowrap; } .sb-bat { margin-left:0; } }
+/* 球員附註：當季成績與對戰紀錄 */
+.player-notes { display:flex; flex-wrap:wrap; gap:2px 12px; margin:4px 0 2px; font-size:12px; line-height:1.5; color:var(--muted); font-variant-numeric:tabular-nums; }
+.player-notes span + span::before { content:""; }
+/* 最小字級 12px：守位、分數等級、守備標記、攻方標記 */
+.evaluation-table .parts, .score-badge small, .evaluation-table small, .def .d, .sb-bat { font-size:12px; }
+.parts, #resultBody small, .best, .prefs-body .mut, .history-background .mut { font-size:12px; }
+.chip, .role, .best, .legend, .heat .hh, .heat .c .w, .breakdown small, .score-legend, .score small, .candidate-chart-key, .candidate-chart-row small, .brand small, .next-matchup-row .num small, .prefs-row p.mut, .checklist select.streak, .range-ends { font-size:12px; }
+@media (max-width:420px) { .scoreboard .sb-team .t { font-size:12px; } }
+/* 窄螢幕標題：拆成兩行時不留行尾豎線 */
+@media (max-width:420px) { .brand h1 .brand-sep { display:none; } .brand h1 .brand-tail { display:block; font-size:13px; font-weight:600; color:var(--muted); } }
+@media (max-width:420px) { .brand small { display:none; } }
+.brand h1 .brand-sep { margin:0 .25em; }

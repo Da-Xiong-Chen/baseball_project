@@ -413,6 +413,7 @@ async function init() {
   const seasons=runtime.data_seasons||[];if($('#dataScope')&&seasons.length)$('#dataScope').textContent=`中職一軍 ${runtime.season} 球季 · 模型以 ${seasons[0]}–${seasons.at(-1)} 逐球資料訓練`;
   try { const numbers=await json(runtimeAsset('numbers',`data/player-numbers-${runtime.season}.json`));if(numbers.season===runtime.season&&numbers.teams)playerNumbers2025=numbers.teams; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
   try { officialPlayers=(await json('data/cpbl-players.json')).players||{}; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
+  try { const notes=await json(`data/player-notes-${runtime.season}.json`);if(notes.season===runtime.season)playerNotes=notes; } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
   try { const d=await json(runtimeAsset('default_lineups',`data/default-lineups-${runtime.season}.json`));if(d.season===runtime.season&&typeof LineupBoard!=='undefined')LineupBoard.setDefaults(d.teams); } catch(e) { if(e.code==='BATCH_MISMATCH')throw e; }
 
   if(typeof PlayerIdentity!=='undefined')PlayerIdentity.setRegistry(meta.players||{});
@@ -1807,6 +1808,44 @@ function bindRowsToggle(R) {
     button.textContent = open ? `只看前 ${ROW_LIMIT} 名` : `顯示其餘 ${button.dataset.hidden} ${button.dataset.unit}`;
   });
 }
+/* 球員附註：當季成績與歷年投打對戰（描述性紀錄，不進入估計與排序；單日回放不顯示，避免看到賽後資料） */
+let playerNotes = null;
+const noteRate = v => Number.isFinite(v) ? v.toFixed(3).replace(/^0/, '') : '—';
+const inningsText = outs => `${Math.floor(outs / 3)}${outs % 3 ? '.' + (outs % 3) : ''}`;
+function batterSeasonNote(id) {
+  const r = playerNotes?.batting?.[id];
+  if (!r || !r[1]) return '';
+  const [, PA, AB, H, D, T, HR, BB, HBP, SF] = r;
+  const avg = AB ? H / AB : NaN, obp = (AB + BB + HBP + SF) ? (H + BB + HBP) / (AB + BB + HBP + SF) : NaN, slg = AB ? (H + D + 2 * T + 3 * HR) / AB : NaN;
+  return `${playerNotes.season} 打擊率 ${noteRate(avg)}・上壘率 ${noteRate(obp)}・長打率 ${noteRate(slg)}・${HR} 轟・${PA} 打席`;
+}
+function pitcherSeasonNote(id) {
+  const r = playerNotes?.pitching?.[id];
+  if (!r || !r[2]) return '';
+  const [G, , outs, , ER, , SO] = r;
+  return `${playerNotes.season} 防禦率 ${(ER * 27 / outs).toFixed(2)}・${inningsText(outs)} 局・${SO} 三振・${G} 場`;
+}
+function matchupSum(batters, pitcher) {
+  const sum = [0, 0, 0, 0, 0, 0];
+  for (const b of batters) (playerNotes?.h2h?.[b]?.[pitcher] || []).forEach((v, i) => { sum[i] += v; });
+  return sum;
+}
+function matchupText([PA, H, HR, BB, HBP, SO]) {
+  if (!PA) return '無對戰紀錄';
+  return `${PA} 打席 ${H} 安${HR ? ` ${HR} 轟` : ''}${BB + HBP ? ` ${BB + HBP} 四死` : ''} ${SO} 三振`;
+}
+function playerNotesHtml(R, x, kind) {
+  if (!playerNotes || R.view === 'replay') return '';
+  const span = playerNotes.data_seasons?.length ? `${playerNotes.data_seasons[0]}–${playerNotes.data_seasons.at(-1)}` : '';
+  if (kind === 'ph') {
+    const season = batterSeasonNote(x['球員']);
+    const vs = matchupText(matchupSum([x['球員']], R.situation.pitcher));
+    return `<div class="player-notes">${season ? `<span>${esc(season)}</span>` : ''}<span title="${span} 例行賽對戰">對 ${N(R.situation.pitcher)}：${esc(vs)}</span></div>`;
+  }
+  const season = pitcherSeasonNote(x['投手']);
+  const vs = matchupText(matchupSum(R.bullpen.next, x['投手']));
+  return `<div class="player-notes">${season ? `<span>${esc(season)}</span>` : ''}<span title="${span} 例行賽對戰">對這 ${R.bullpen.next.length} 棒：${esc(vs)}</span></div>`;
+}
 function phTable(R) {
   const c = R.candidates;
   const scale = Math.max(0.3, ...c.map((x) => x["相對現任"]).filter(Number.isFinite).map(Math.abs));
@@ -1816,7 +1855,7 @@ function phTable(R) {
     const d = x["守備"];
     return `<tr data-batter="${esc(x["球員"])}" class="${cur ? "cur" : ""} ${best ? "best-row" : ""} ${keep[i] ? "" : "more-row"}">
       <td class="ncell"><span class="role">${cur ? "現任" : "代打"}</span>${cur?'':comparisonCircle(R,"ph",x["球員"])}${officialPlayerLink(x["球員"])} ${handChip(x["打擊"])}${best ? `<span class="best">估計較佳</span>` : ""}${rowDetailButton(x["球員"])}
-        <div class="parts">${x["可守"] && x["可守"] !== "-" ? x["可守"].split(",").map((p) => POS[p] || p).join("・") : "無守位紀錄（限 DH）"}</div>${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
+        <div class="parts">${x["可守"] && x["可守"] !== "-" ? x["可守"].split(",").map((p) => POS[p] || p).join("・") : "無守位紀錄（限 DH）"}</div>${playerNotesHtml(R, x, "ph")}${reasonsHtml(batterReasons(x, R))}${mobileRowDetails(x,false)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], `面對 ${R.situation.pitcher} 的比較池百分位`)}</td>
       <td class="evaluation-value"><span class="mobile-value-label">相對現任</span><div class="vcell"><span class="vnum num ${cls(cur?0:x['相對現任'],.02)}">${cur?'基準':deltaMarkup(x['相對現任'])}</span>${dbar(cur?0:x['相對現任'],0,scale)}</div></td>
       <td class="evaluation-warning"><div class="def"><span class="d ${d}">${d === "ok" ? "✓" : d === "warn" ? "!" : d === "unknown" ? "?" : "✕"}</span><span>${fieldingMessage(x,cur)}</span></div></td>
@@ -1838,7 +1877,7 @@ function penTable(R) {
     const best = !cur && i === 1 && x["守方勝率增減"] > 0;
     return `<tr data-pitcher="${esc(x["投手"])}" class="${cur ? "cur" : ""} ${keep[i] ? "" : "more-row"}">
       <td class="ncell" title="樣本 ${x["樣本球數"]} 球"><span class="role">${cur ? "場上" : "牛棚"}</span>${cur?'':comparisonCircle(R,"pen",x["投手"])}${officialPlayerLink(x["投手"])} ${handChip(x["投"] || "U")}${best ? `<span class="best">估計較佳</span>` : ""}${rowDetailButton(x["投手"])}
-        <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div>${reasonsHtml(pitcherReasons(x, R))}${mobileRowDetails(x,true)}</td>
+        <div class="parts">${cur ? `本場已投 ${x["用球數"] ?? "—"} 球` : "未登板"}</div>${playerNotesHtml(R, x, "pen")}${reasonsHtml(pitcherReasons(x, R))}${mobileRowDetails(x,true)}</td>
       <td class="evaluation-score">${scoreBadge(x["價值分數"], '對上後續打者的比較池百分位')}</td>
       <td class="evaluation-value"><span class="mobile-value-label">${cur?'現任基準 · 0 百分點':'相對現任'}</span><div class="vcell"><span class="vnum num ${cls(x["守方勝率增減"], 0.02)}">${cur ? "基準" : deltaMarkup(x["守方勝率增減"])}</span>${dbar(x["守方勝率增減"], 0, scale)}</div></td>
       <td class="evaluation-warning">${x["疲勞"] === "-" ? `<span class="mut">—</span>` : `<span class="chip c-中">${esc(x["疲勞"])}</span>`}</td></tr>`;
