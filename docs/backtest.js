@@ -6,9 +6,11 @@ const BacktestView = (() => {
   const num=v=>Number.isFinite(v)?v.toFixed(4):'—';
   const signed=(v,d)=>!Number.isFinite(v)?'—':v!==0&&Math.abs(v)<10**-d?`${v>0?'增加':'減少'}不到 ${(10**-d).toFixed(d)}`:(v>0?'+':'')+(v===0?0:v).toFixed(d);
   const sign=v=>signed(v,3);
+  const gainSign=v=>signed(v,2);
   const metric=v=>Number.isFinite(v)?v.toFixed(6):'—';
   const metricSign=v=>signed(v,6);
-  const outcome=v=>({SO:'三振',BB:'保送',uBB:'保送',iBB:'故意四壞',HBP:'觸身球','1B':'一壘安打','2B':'二壘安打','3B':'三壘安打',HR:'全壘打',GO:'滾地出局',FO:'出局',AO:'飛球出局',FC:'野手選擇'}[v]||v||'未提供');
+  const outcome=v=>({SO:'三振',BB:'四壞球',uBB:'四壞球',iBB:'故意四壞球',IBB:'故意四壞球',HBP:'觸身球','1B':'一壘安打','2B':'二壘安打','3B':'三壘安打',HR:'全壘打',GO:'滾地球出局',FO:'飛球出局',AO:'出局',FC:'野手選擇',
+    GIDP:'雙殺打',E:'失誤上壘',SF:'高飛犧牲打',SF_E:'高飛犧牲打（失誤）',SH:'犧牲短打',SH_E:'犧牲短打（失誤上壘）',SH_FC:'犧牲短打（野手選擇）'}[v]||(v?'其他結果':'未提供'));
   const relativeReduction=row=>Number.isFinite(row?.baseline_mse)&&Number.isFinite(row?.mse_reduction)&&row.baseline_mse>0?100*row.mse_reduction/row.baseline_mse:null;
   function intervalMark(row,extent){
     const span=extent*2,place=v=>100*(v+extent)/span;
@@ -27,7 +29,7 @@ const BacktestView = (() => {
                  gain:eligible?gain:null,suggested:eligible&&gain>=threshold,
                  incumbent:kind==='pen'?(raw?.[2]||previous||null):(raw?.[5]||(!p.is_ph?p.batter:null)),
                  best:raw?.[kind==='pen'?1:4]||null,eligible,
-                 reason:p.inning<6?'六局前，研究範圍外':!eligible?'缺少可比較候選／估計':'可評估'});
+                 reason:p.inning<6?'6 局前不提示':!eligible?'缺少可比較人選':'可評估'});
     }
     return rows;
   }
@@ -46,31 +48,49 @@ const BacktestView = (() => {
     }
     return groups;
   }
+  /* 局數對照圖：同一列看出系統建議與實際換人落在哪幾局 */
+  function strip(rows){
+    const last=Math.max(9,...rows.map(r=>r.pa.inning));
+    const cell=(inning,lane)=>{
+      const hits=rows.filter(r=>r.pa.inning===inning&&(lane==='sys'?r.suggested:r.actual));
+      return `<td>${hits.map(r=>`<button type="button" class="bt-mark ${lane}" data-bt-jump="${esc(r.pa.pa_id)}" title="${r.pa.inning}局${r.pa.half==='away'?'上':'下'} ${r.pa.outs}出局 ${N(r.incumbent||'')}" aria-label="${r.pa.inning}局${r.pa.half==='away'?'上':'下'} ${r.pa.outs}出局，${lane==='sys'?'系統建議':'實際換人'}"></button>`).join('')}</td>`;
+    };
+    const innings=Array.from({length:last},(_,i)=>i+1);
+    return `<div class="bt-strip-wrap"><table class="bt-strip"><caption class="sr-only">各局系統建議與實際換人</caption><thead><tr><th scope="col"></th>${innings.map(i=>`<th scope="col" class="${i>=6?'late':''}">${i}</th>`).join('')}</tr></thead>`+
+      `<tbody><tr><th scope="row">系統建議</th>${innings.map(i=>cell(i,'sys')).join('')}</tr><tr><th scope="row">實際換人</th>${innings.map(i=>cell(i,'act')).join('')}</tr></tbody></table></div>`;
+  }
   function timeline({element,pas,marks,team,open,threshold=1,disclosure=()=>({}),setDisclosure=()=>{}}){
     let kind='pen', filter='all', selected=null;
     function render(){
       const rows=decisions(pas,marks,team,kind,threshold).map((r,index)=>({...r,index})),groups=cells(rows);
       rows.forEach((r,i)=>{r.firstPrompt=r.suggested&&(!rows[i-1]?.suggested||rows[i-1].incumbent!==r.incumbent);});
-      const labels={both:'有提示、有換人',system:'只有系統提示',actual:'只有實際換人',neither:'無提示、未換人',unknown:'資料不足／不可評估',outside:'六局前：提示窗外'};
+      const labels={both:'有建議、有換人',system:'只有建議',actual:'只有換人',neither:'無建議、未換人',unknown:'無法評估',outside:'6 局前'};
       const visible=filter==='all'?rows.filter(r=>r.actual||r.suggested):groups[filter];
-      const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+sign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span>${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
+      const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt${r.suggested?' is-sys':''}">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+gainSign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span class="${r.actual?'is-act':''}">${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
       element.innerHTML=`<div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
-        <div class="bt-groups" aria-label="依決策打席分類">${Object.entries(labels).map(([key,label])=>`<button type="button" data-bt-filter="${key}" aria-pressed="${filter===key}">${label}<strong>${groups[key].length}</strong></button>`).join('')}<button type="button" data-bt-filter="all" aria-pressed="${filter==='all'}">所有提示／調度</button></div>
-        <p class="mut">此處計算所選球隊的攻方或守方打席。逐打席清單包含全場。</p>
-        <div class="bt-lanes" aria-hidden="true"><span>決策時點</span><span>原人選</span><span>系統提示軌</span><span>實際調度軌</span></div>
+        <div class="bt-groups" aria-label="依決策打席分類">${Object.entries(labels).map(([key,label])=>`<button type="button" data-bt-filter="${key}" aria-pressed="${filter===key}">${label}<strong>${groups[key].length}</strong></button>`).join('')}<button type="button" data-bt-filter="all" aria-pressed="${filter==='all'}">全部</button></div>
+        ${strip(rows)}
+        <div class="bt-lanes" aria-hidden="true"><span>時點</span><span>原人選</span><span>系統建議</span><span>實際調度</span></div>
         <div class="bt-timeline" aria-label="依時間排列的決策">${visible.length?promptRuns(visible).map(run=>run.length===1?event(run[0]):`<details class="bt-prompt-run"><summary>${run[0].pa.inning}局起 · ${N(run[0].incumbent)}連續 ${run.length} 打席提示（未實際換人）</summary>${run.map(event).join('')}</details>`).join(''):'<p>此分類沒有收錄打席。</p>'}</div>
         <div class="bt-decision" aria-live="polite"></div>`;
       element.querySelectorAll('[data-bt-kind]').forEach(b=>b.onclick=()=>{kind=b.dataset.btKind;filter='all';selected=null;render();});
       element.querySelectorAll('[data-bt-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.btFilter;selected=null;render();});
+      element.querySelectorAll('[data-bt-jump]').forEach(b=>b.onclick=()=>{
+        let target=element.querySelector(`[data-bt-pa="${b.dataset.btJump}"]`);
+        if(!target){filter='all';render();target=element.querySelector(`[data-bt-pa="${b.dataset.btJump}"]`);}
+        target?.closest('details')?.setAttribute('open','');
+        target?.click();target?.scrollIntoView?.({block:'center'});
+      });
       element.querySelectorAll('[data-bt-pa]').forEach(b=>b.onclick=()=>{
         selected=b.dataset.btPa; const r=rows.find(r=>r.pa.pa_id===selected),p=r.pa;
         element.querySelectorAll('[data-bt-pa]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
         const detail=element.querySelector('.bt-decision'),selectedPid=selected,state=disclosure(selectedPid);
-        detail.innerHTML=`<h4>決策前 · ${p.inning}局${p.half==='away'?'上':'下'} ${p.bat_score}：${p.fld_score}（攻：守）</h4><p>${N(r.incumbent||'原人選未知')} ${r.best?'與 '+N(r.best)+' 比較':'尚無可評估候選'} · ${r.gain===null?esc(r.reason):'估計相對差 '+sign(r.gain)+' 百分點'}</p><button type="button" data-bt-open>查看當時完整人選比較</button><details data-bt-action ${state.action?'open':''}><summary>揭示實際調度</summary><p>${r.actual?'實際換上 '+N(kind==='pen'?(p.start_pitcher||p.pitcher):(p.start_batter||p.batter)):'實際續留原人選'}</p><details data-bt-outcome ${state.outcome?'open':''}><summary>揭示這個打席的結果</summary><p>${esc(outcome(p.result))} · 攻方 WPA ${sign(Number.isFinite(p.WPA)?p.WPA*100:null)} 百分點</p>${p.mid_pa_actor_change?'<p class="mut">打席中另有換人，結果不歸為原人選的完整打席。</p>':''}<p class="mut">未發生的另一選擇結果仍未知。</p></details></details>`;
+        detail.innerHTML=`<h4>決策前 · ${p.inning}局${p.half==='away'?'上':'下'} ${p.bat_score}：${p.fld_score}（攻：守）</h4><p>${N(r.incumbent||'原人選未知')} ${r.best?'與 '+N(r.best)+' 比較':'尚無可評估候選'} · ${r.gain===null?esc(r.reason):'估計相對差 '+gainSign(r.gain)+' 百分點'}</p><button type="button" data-bt-open>查看當時完整人選比較</button><details data-bt-action ${state.action?'open':''}><summary>揭示實際調度</summary><p>${r.actual?'實際換上 '+N(kind==='pen'?(p.start_pitcher||p.pitcher):(p.start_batter||p.batter)):'實際續留原人選'}</p><details data-bt-outcome ${state.outcome?'open':''}><summary>揭示這個打席的結果</summary><p>${esc(outcome(p.result))} · 攻方 WPA ${sign(Number.isFinite(p.WPA)?p.WPA*100:null)} 百分點</p>${p.mid_pa_actor_change?'<p class="mut">打席中另有換人，結果不歸為原人選的完整打席。</p>':''}<p class="mut">未發生的另一選擇結果仍未知。</p></details></details>`;
         const action=detail.querySelector('[data-bt-action]'),outcomeDetails=detail.querySelector('[data-bt-outcome]');
         action.ontoggle=()=>{setDisclosure('action',action.open,selectedPid);if(!action.open)outcomeDetails.open=false;};
         outcomeDetails.ontoggle=()=>setDisclosure('outcome',outcomeDetails.open,selectedPid);
         detail.querySelector('[data-bt-open]').onclick=()=>open(selected,kind);
+        if(typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(max-width:600px)').matches)detail.scrollIntoView?.({block:'start'});
       });
     }
     render();
@@ -123,6 +143,6 @@ const BacktestView = (() => {
     }
     render('time_check');
   }
-  return {decisions,cells,promptRuns,timeline,validation,relativeReduction};
+  return {decisions,cells,promptRuns,strip,timeline,validation,relativeReduction};
 })();
 if(typeof module!=='undefined')module.exports=BacktestView;

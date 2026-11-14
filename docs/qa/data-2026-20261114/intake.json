@@ -1,0 +1,46 @@
+{
+  "schema": "baseball.dataset.v1",
+  "seasons": [
+    2024,
+    2025,
+    2026
+  ],
+  "dataset_id": "b97836edcec31156b491aa275c44246131498bb856b7ee0e6465dc1c924dc207",
+  "raw_values_unchanged": true,
+  "event_actor_identity_checked": true,
+  "models_validated": false,
+  "registration_verified": false,
+  "files": 1080,
+  "changes": {
+    "added": 360,
+    "corrected": 0,
+    "unchanged": 0,
+    "retained": 720
+  },
+  "accepted_measurement_issues": [
+    {
+      "file": "2024/264.json",
+      "issue": "invalid_pitch_velocity"
+    },
+    {
+      "file": "2024/267.json",
+      "issue": "invalid_pitch_velocity"
+    },
+    {
+      "file": "2025/184.json",
+      "issue": "invalid_pitch_velocity"
+    },
+    {
+      "file": "2025/323.json",
+      "issue": "invalid_pitch_velocity"
+    },
+    {
+      "file": "2026/182.json",
+      "issue": "invalid_pitch_velocity"
+    },
+    {
+      "file": "2026/182.json",
+      "issue": "invalid_pitch_velocity"
+    }
+  ]
+}

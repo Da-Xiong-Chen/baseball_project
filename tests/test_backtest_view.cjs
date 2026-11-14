@@ -113,3 +113,11 @@ test('timeline PA opens details, formats outcome and forwards disclosure to full
  outcome.open=true;outcome.ontoggle();assert.deepEqual(changes,[['outcome',true,'p']]);
  openButton.onclick();assert.deepEqual(opened,['p','pen']);
 });
+test('inning strip places system prompts and actual changes in their innings and links to the PA',()=>{
+ const rows=B.decisions([pa('1',6,'P'),pa('2',7,'Q')],{'1':[2,'X','P']},'A','pen');
+ const html=B.strip(rows);
+ const cells=html.split('<tr>').slice(2).map(r=>r.split('<td>').slice(1));
+ assert.match(cells[0][5],/bt-mark sys" data-bt-jump="1"/);assert.doesNotMatch(cells[0][6],/bt-mark/);
+ assert.match(cells[1][6],/bt-mark act" data-bt-jump="2"/);assert.doesNotMatch(cells[1][5],/bt-mark/);
+ assert.equal((html.match(/<th scope="col"/g)||[]).length,10,'blank corner plus innings 1–9');
+});

@@ -121,8 +121,11 @@
       const used = result.allocations.filter(player => player.used);
       const allocation = used.length ? `<ol>${used.map(player =>
         `<li>${escapeHtml(label(player.id))}：安排 ${player.assigned} 打席，剩餘 ${player.remaining}</li>`).join('')}</ol>` : '';
-      const reserve = result.reserve.map(player => `${escapeHtml(label(player.id))}（${player.remaining === null ?
-        '容量待確認' : player.remaining + ' 打席'}）`).join('、') || '無';
+      // 有填容量的保留投手逐一列出；尚未確認容量的合併成一句，避免整串「容量待確認」
+      const known = result.reserve.filter(player => player.remaining !== null);
+      const pending = result.reserve.length - known.length;
+      const reserve = [...known.map(player => `${escapeHtml(label(player.id))}（${player.remaining} 打席）`),
+        ...(pending ? [`另 ${pending} 人容量待確認`] : [])].join('、') || '無';
       return `<section class="capacity-result"><h4>${title}</h4><p><strong>${status}</strong> · 已涵蓋 ${result.covered}／${result.target} 打席</p>${allocation}<p>保留：${reserve}</p></section>`;
     }
 

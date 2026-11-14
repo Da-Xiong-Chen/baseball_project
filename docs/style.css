@@ -1192,3 +1192,120 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .rows-toggle { padding:10px 16px; border-top:1px solid var(--line); text-align:center; }
 .rows-toggle button { min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--accent); font-size:14px; cursor:pointer; }
 .rows-toggle button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+
+/* ---------- 11/14 介面配色與單日分析引導 ---------- */
+:root {
+  --page-bg: #f4f6fb;
+  --brand-navy: #172554; --brand-clay: #c2410c; --brand-grass: #15803d;
+  --entry-general: #1e40af; --entry-team: #15803d; --entry-review: #b45309;
+  --sys: #1d4ed8; --sys-soft: #e0e7ff; --act: #9a3412; --act-soft: #ffedd5;
+  --step-idle: #e2e8f0; --card-shadow: 0 1px 2px rgba(15,23,42,.06), 0 4px 14px rgba(15,23,42,.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page-bg: #000000; --brand-navy: #8bbcff; --brand-clay: #fb923c; --brand-grass: #4ade80;
+    --entry-general: #8bbcff; --entry-team: #4ade80; --entry-review: #fbbf24;
+    --sys: #a5b4fc; --sys-soft: #1e2547; --act: #fdba74; --act-soft: #3b2414; --step-idle: #2a2c33; --card-shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --page-bg: #000000; --brand-navy: #8bbcff; --brand-clay: #fb923c; --brand-grass: #4ade80;
+  --entry-general: #8bbcff; --entry-team: #4ade80; --entry-review: #fbbf24;
+  --sys: #a5b4fc; --sys-soft: #1e2547; --act: #fdba74; --act-soft: #3b2414; --step-idle: #2a2c33; --card-shadow: none;
+}
+body { background: var(--page-bg); }
+.card { box-shadow: var(--card-shadow); }
+
+/* 三個入口各自的識別色 */
+#audienceSeg button[data-entry="general"] { --entry: var(--entry-general); }
+#audienceSeg button[data-entry="team"] { --entry: var(--entry-team); }
+#audienceSeg button[data-entry="review"] { --entry: var(--entry-review); }
+#audienceSeg button.on { color: var(--entry); box-shadow: inset 0 -3px var(--entry); }
+
+/* 打席清單：標籤顏色、可點提示 */
+.tag-sys { background:var(--sys-soft); color:var(--sys); box-shadow:inset 0 0 0 1px var(--sys); }
+.tag-ph { background:var(--act-soft); color:var(--act); }
+#paList .item { position:relative; padding-right:28px; transition:background-color 150ms var(--ease-ui); }
+#paList .item:not(.off)::after { content:"›"; position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:18px; line-height:1; }
+#paList .item:has(.tag-sys) { box-shadow:inset 3px 0 0 var(--sys); }
+#paList .item.on { box-shadow:inset 3px 0 0 var(--entry-review); background:var(--act-soft); }
+#paList .inning-h { font-weight:700; color:var(--text); }
+#gameList .item { font-weight:600; }
+#gameList .item.on { box-shadow:inset 3px 0 0 var(--entry-review); }
+
+/* 回放空狀態 */
+#replayEmptyGuide .btn-demo { margin-top:6px; }
+#replayFirstStatus:not(:empty) { margin-top:8px; font-size:13px; }
+
+/* 揭示：做成明確可按的步驟 */
+.replay-disclosure, .replay-disclosure details { margin-top:10px; }
+.replay-disclosure > summary, .replay-disclosure details > summary, .bt-decision details > summary {
+  display:flex; align-items:center; gap:8px; min-height:44px; padding:8px 14px; border-radius:10px; cursor:pointer; list-style:none;
+  border:1px solid var(--line); background:var(--panel); color:var(--accent); font-weight:700;
+}
+.replay-disclosure summary::-webkit-details-marker, .bt-decision details > summary::-webkit-details-marker { display:none; }
+.replay-disclosure > summary::before, .replay-disclosure details > summary::before, .bt-decision details > summary::before { content:"▸"; transition:transform 150ms var(--ease-ui); }
+.replay-disclosure[open] > summary::before, .replay-disclosure details[open] > summary::before, .bt-decision details[open] > summary::before { transform:rotate(90deg); }
+.replay-disclosure[open] > summary, .replay-disclosure details[open] > summary { color:var(--text); }
+.replay-disclosure { margin:12px 16px; padding:0; border:0; }
+.replay-disclosure .actual { padding:10px 4px 0; }
+
+/* 當日總覽：時間軸 */
+.bt-groups button[aria-pressed="true"] strong { color:inherit; }
+.bt-event { position:relative; padding-right:28px !important; }
+.bt-event::after { content:"›"; position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:18px; }
+.bt-event[aria-pressed="true"] { border-color:var(--entry-review) !important; background:var(--act-soft) !important; }
+.replay-match-heading h3 { margin:0; }
+@media (prefers-reduced-motion:reduce) { #paList .item, .replay-disclosure summary::before { transition:none; } }
+.bt-event > span:first-child { font-weight:700; }
+.bt-event .bt-prompt { color:var(--muted); }
+.bt-event .bt-prompt.is-sys { color:var(--sys); font-weight:700; }
+@media (max-width:600px) { .bt-event { grid-template-columns:1fr; gap:2px; } .bt-groups button { word-break:keep-all; font-size:13px; } }
+/* 精簡：篩選、打席導覽、分類改成一列，不用卡片堆疊 */
+.toggle[hidden] { display:none !important; }
+.replay-filters { display:flex; flex-wrap:wrap; gap:6px; }
+.replay-filters .toggle { min-height:36px; padding:4px 12px; border-radius:999px; font-size:13px; }
+.replay-filters .toggle:has(:checked) { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+.replay-filter-status { min-height:36px; margin-block:4px; font-size:13px; }
+#replayReset { min-height:36px; padding:0 4px; border:0; background:none; color:var(--accent); text-decoration:underline; cursor:pointer; }
+.replay-pa-navigation { display:flex; align-items:center; gap:4px 8px; flex-wrap:wrap; padding:8px 12px; }
+.replay-pa-navigation p { margin:0; min-width:4.5em; text-align:center; color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; }
+.replay-pa-navigation button { min-height:36px; padding:0 10px; border:0; border-radius:6px; background:none; color:var(--accent); font-size:14px; cursor:pointer; }
+.replay-pa-navigation button:disabled { color:var(--muted); opacity:.5; cursor:default; }
+.replay-pa-navigation .replay-share { margin-left:auto; font-size:13px; }
+.replay-pa-navigation input { flex-basis:100%; }
+#replayShareStatus:not(:empty) { flex-basis:100%; margin:0; text-align:right; font-size:12px; }
+.bt-groups { gap:6px; }
+.bt-groups button { display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:4px 12px; border-radius:999px; font-size:13px; }
+.bt-groups button strong { display:inline; font-size:13px; }
+@media (max-width:600px) { .bt-groups button { flex:0 1 auto; } .replay-filters { display:flex; } .replay-filters .toggle:last-child { grid-column:auto; } }
+/* 去裝飾：結論只靠左側色線區分，不加圖示；資料範圍一行帶過 */
+.reco .ic { display:none; }
+.matchday-intro { padding-top:16px; padding-bottom:0; }
+.data-scope { margin:0; color:var(--muted); font-size:13px; }
+#audienceStatus:empty { display:none; }
+#emptyState h2 { font-size:18px; }
+.sb-bat { display:inline-block; margin-left:6px; padding:0 5px; border-radius:3px; background:var(--scoreboard-text); color:var(--scoreboard-bg); font-size:11px; font-weight:700; vertical-align:middle; }
+/* 圖形化：打席清單的壘況菱形與出局燈；當日總覽的局數對照圖 */
+.pa-state { display:inline-flex; align-items:center; gap:4px; flex:none; }
+.pa-state svg { width:28px; height:24px; }
+.pa-outs { display:inline-flex; gap:3px; }
+.pa-outs i { width:7px; height:7px; border-radius:50%; border:1.5px solid var(--muted); }
+.pa-outs i.on { background:var(--neg); border-color:var(--neg); }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.bt-strip-wrap { overflow-x:auto; margin:4px 0 12px; }
+.bt-strip { border-collapse:collapse; width:100%; min-width:420px; font-size:12px; table-layout:fixed; }
+.bt-strip th:first-child { width:5.5em; }
+.bt-strip th { padding:4px 2px; color:var(--muted); font-weight:600; text-align:center; }
+.bt-strip thead th.late { color:var(--text); }
+.bt-strip tbody th { width:5.5em; text-align:left; white-space:nowrap; padding-right:8px; }
+.bt-strip td { height:34px; text-align:center; border-left:1px solid var(--line); vertical-align:middle; }
+.bt-strip tbody tr + tr td { border-top:1px solid var(--line); }
+.bt-mark { width:14px; height:14px; min-height:0 !important; margin:2px; padding:0 !important; border-radius:50% !important; border:0 !important; cursor:pointer; vertical-align:middle; }
+.bt-mark.sys { background:transparent !important; box-shadow:inset 0 0 0 2.5px var(--sys); }
+.bt-mark.act { background:var(--entry-review) !important; }
+.bt-mark:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+@media (pointer:coarse) { .bt-mark { width:22px; height:22px; } }
+.bt-prompt-run > .bt-event { width:100%; margin-top:6px; }
+.bt-event .is-act { color:var(--entry-review); font-weight:700; }
+@media (max-width:420px) { .scoreboard .sb-team .t { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:11px; line-height:1.3; white-space:nowrap; } .sb-bat { margin-left:0; } }
