@@ -1243,12 +1243,13 @@ header::after { content:""; position:absolute; inset:0 0 auto 0; height:3px; bac
 .replay-disclosure, .replay-disclosure details { margin-top:10px; }
 .replay-disclosure > summary, .replay-disclosure details > summary, .bt-decision details > summary {
   display:flex; align-items:center; gap:8px; min-height:44px; padding:8px 14px; border-radius:10px; cursor:pointer; list-style:none;
-  border:1px solid var(--entry-review); background:var(--act-soft); color:var(--act); font-weight:700;
+  border:1px solid var(--line); background:var(--panel); color:var(--accent); font-weight:700;
 }
 .replay-disclosure summary::-webkit-details-marker, .bt-decision details > summary::-webkit-details-marker { display:none; }
 .replay-disclosure > summary::before, .replay-disclosure details > summary::before, .bt-decision details > summary::before { content:"▸"; transition:transform 150ms var(--ease-ui); }
 .replay-disclosure[open] > summary::before, .replay-disclosure details[open] > summary::before, .bt-decision details[open] > summary::before { transform:rotate(90deg); }
-.replay-disclosure[open] > summary, .replay-disclosure details[open] > summary { background:var(--panel); }
+.replay-disclosure[open] > summary, .replay-disclosure details[open] > summary { color:var(--text); }
+.replay-disclosure { margin:12px 16px; padding:0; border:0; }
 .replay-disclosure .actual { padding:10px 4px 0; }
 
 /* 當日總覽：時間軸 */

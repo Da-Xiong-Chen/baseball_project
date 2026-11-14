@@ -1365,7 +1365,7 @@ function renderPAs() {
       ${penChanged.has(p.pa_id) ? `<span class="chip tag-ph" data-replay-kind="pen">實際換投</span>` : ""}
       ${tm?.penSug ? `<span class="chip tag-sys" data-replay-kind="pen" title="系統建議換上 ${N(tm.penBest)}（${sign(tm.penGain)} 百分點）">建議換投</span>` : ""}
       ${tm?.phSug ? `<span class="chip tag-sys" data-replay-kind="ph" title="系統建議 ${N(tm.phBest)} 代打（${sign(tm.phGain)} 百分點）">建議代打</span>` : ""}
-      <span class="mut" style="margin-left:auto;font-size:12px">${historyDisclosure.pa===p.pa_id&&historyDisclosure.outcome?esc(resultLabel(p.result)):'結果未揭示'}</span></button>`;
+      ${historyDisclosure.pa===p.pa_id&&historyDisclosure.outcome?`<span class="mut" style="margin-left:auto;font-size:12px">${esc(resultLabel(p.result))}</span>`:''}</button>`;
   }
   $("#paList").innerHTML = html || '<p class="empty">目前篩選沒有符合的打席，可選「顯示全部」。</p>';
   $$("#paList .item:not(.off)").forEach((el) => el.onclick = event => {
