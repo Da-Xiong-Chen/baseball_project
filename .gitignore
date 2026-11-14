@@ -10,6 +10,7 @@ models/*
 !models/gbt_*_v2.pkl
 !models/gbt_*_v3.pkl
 .qa-venv/
+.venv/
 .qa-reproduction/
 output/decision_v2/pre-sync-*.zip
 output/decision_v2/pre-sync-*.patch
