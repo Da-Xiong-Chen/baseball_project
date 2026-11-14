@@ -91,6 +91,7 @@ function clearResult() {
   $('.mobile-jump a[href="#result"]').hidden = true;
   $("#evalBtn").disabled = !S.ready;
   $("#evalBtn").innerHTML = uiIcon("compare") + "評估";
+  syncReviewSteps();
 }
 function invalidateCustom(event) {
   capacityControl?.contextChanged();
@@ -531,6 +532,24 @@ async function refreshHistoryDay(){
   await Promise.all([renderReview(),loadHistoricalPitchers(),loadHistoryContext()]);
 }
 function currentPage() { return !$("#lineupPage").hidden ? "lineup" : (!$("#reviewPage").hidden || S.mode === "replay") ? "review" : "evaluation"; }
+/* 單日分析步驟條：依目前子頁、選取的打席與揭示狀態標示進度 */
+function syncReviewSteps() {
+  const steps=$('#reviewSteps');if(!steps)return;
+  const replay=backtestSub==='replay'&&S.mode==='replay';
+  const current=!replay?1:!S.pa?2:historyDisclosure.pa===S.pa&&historyDisclosure.action?4:3;
+  steps.querySelectorAll('li').forEach(li=>{const n=+li.dataset.step;li.classList.toggle('done',n<current);li.classList.toggle('current',n===current);if(n===current)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});
+  const first=$('#replayFirstSuggest');if(first)first.disabled=!replay||!S.pas;
+  const status=$('#replayFirstStatus');if(status)status.textContent='';
+}
+/* 回放引導：直接開啟目前清單中第一個有系統提示的打席 */
+function openFirstSuggestion() {
+  const row=$$('#paList .item:not(.off)').find(el=>el.querySelector('.tag-sys'));
+  const status=$('#replayFirstStatus');
+  if(!row){if(status)status.textContent='目前清單沒有系統提示的打席，可改選其他比賽或按「顯示全部」。';return;}
+  if(status)status.textContent='';
+  row.scrollIntoView({block:'center'});
+  return row.querySelector('.tag-sys').click();
+}
 async function showFeaturePage(page, sub, {fromLocation=false} = {}) {
   if(typeof PlayerIdentity!=='undefined')PlayerIdentity.setContext(page==='review'?(historyContext?.players||{}):null);
   const navigation=++featureGeneration;
@@ -562,6 +581,7 @@ async function showFeaturePage(page, sub, {fromLocation=false} = {}) {
   if(page==='evaluation'&&!S.ready)await refreshCustom();
   if(replay&&loadedReplayTeam!==$('#rpTeam').value)await loadGames();
   if(navigation!==featureGeneration)return;
+  syncReviewSteps();
   window.scrollTo({top:0,behavior:'auto'});
 }
 let replayLocationGeneration=0;
@@ -719,6 +739,7 @@ function bindStatic() {
   $('#presetSave').onclick = saveSituation;
   $('#presetLoad').onclick = () => applySituation(readPrefs().situation);
   $('#demoBtn').onclick = loadDemo;
+  $('#replayFirstSuggest').onclick = openFirstSuggestion;
   $('#presetClear').onclick = clearSituation;
   $("#myPitcher").onchange = syncRole;
   $$("#roleSeg button").forEach((b) => b.onclick = () => { S.starter = b.dataset.r === "1"; renderRole(); });
@@ -1354,6 +1375,7 @@ function renderPAs() {
     return selectReplayPA(pa,requested||(p?.is_ph?'ph':penChanged.has(pa)?'pen':S.tab||'ph'),{focusRow:true});
   });
   syncReplayNavigation(visiblePAs);
+  syncReviewSteps();
 }
 
 /* ---------------- 結果呈現 ---------------- */
@@ -1681,7 +1703,7 @@ function renderResult(preserveTabs = false) {
     $('#replayShare').onclick=copyReplayLink;
   }
   const action=$('[data-reveal-action]'),outcome=$('[data-reveal-outcome]'),disclosurePa=S.pa;
-  if(action)action.ontoggle=()=>{if(historyDisclosure.pa!==disclosurePa)return;historyDisclosure.set('action',action.open);if(!action.open&&outcome)outcome.open=false;};
+  if(action)action.ontoggle=()=>{if(historyDisclosure.pa!==disclosurePa)return;historyDisclosure.set('action',action.open);if(!action.open&&outcome)outcome.open=false;syncReviewSteps();};
   if(outcome)outcome.ontoggle=()=>{if(historyDisclosure.pa!==disclosurePa)return;historyDisclosure.set('outcome',outcome.open);renderPAs();};
   if (retainedTabs) {
     $('#resultBody .tabs').replaceWith(retainedTabs);

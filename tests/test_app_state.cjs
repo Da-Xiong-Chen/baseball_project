@@ -1073,3 +1073,8 @@ test('demo picks the due batter when a saved lineup labels options by batting or
  assert.equal(f.eval("selectByLabel('#dueBatter','胡金龍')"),true);assert.equal(select.value,'c');
  assert.equal(f.eval("selectByLabel('#dueBatter','棒')"),false);
 });
+test('replay shortcut explains when the current list has no system suggestion',()=>{
+ const f=fixture();f.eval('openFirstSuggestion()');
+ assert.match(f.node('#replayFirstStatus').textContent,/沒有系統提示/);
+ f.eval('syncReviewSteps()');assert.equal(f.node('#replayFirstSuggest').disabled,true);assert.equal(f.node('#replayFirstStatus').textContent,'');
+});

@@ -53,8 +53,8 @@ const BacktestView = (() => {
       rows.forEach((r,i)=>{r.firstPrompt=r.suggested&&(!rows[i-1]?.suggested||rows[i-1].incumbent!==r.incumbent);});
       const labels={both:'有提示、有換人',system:'只有系統提示',actual:'只有實際換人',neither:'無提示、未換人',unknown:'資料不足／不可評估',outside:'六局前：提示窗外'};
       const visible=filter==='all'?rows.filter(r=>r.actual||r.suggested):groups[filter];
-      const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+sign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span>${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
-      element.innerHTML=`<div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
+      const event=r=>`<button type="button" class="bt-event" data-bt-pa="${esc(r.pa.pa_id)}" aria-pressed="${selected===r.pa.pa_id}"><span>${r.pa.inning}局${r.pa.half==='away'?'上':'下'} · ${r.pa.outs}出局</span><span>${N(r.incumbent||'原人選未知')}</span><span class="bt-prompt${r.suggested?' is-sys':''}">${r.suggested?'◇ '+(r.firstPrompt?'本段首次提示 ':'持續提示 ')+sign(r.gain)+' 百分點':r.eligible?'— 未達門檻':esc(r.reason)}</span><span>${r.actual?'● 實際換人':'○ 實際未換'}</span></button>`;
+      element.innerHTML=`<p class="bt-help">先選「換投回顧」或「換打回顧」，再點分類篩選；點下方時間軸任一列，看當時系統建議，再自行揭示實際調度與結果。</p><div class="bt-kind"><button type="button" data-bt-kind="pen" aria-pressed="${kind==='pen'}">換投回顧</button><button type="button" data-bt-kind="ph" aria-pressed="${kind==='ph'}">換打回顧</button></div>
         <div class="bt-groups" aria-label="依決策打席分類">${Object.entries(labels).map(([key,label])=>`<button type="button" data-bt-filter="${key}" aria-pressed="${filter===key}">${label}<strong>${groups[key].length}</strong></button>`).join('')}<button type="button" data-bt-filter="all" aria-pressed="${filter==='all'}">所有提示／調度</button></div>
         <p class="mut">此處計算所選球隊的攻方或守方打席。逐打席清單包含全場。</p>
         <div class="bt-lanes" aria-hidden="true"><span>決策時點</span><span>原人選</span><span>系統提示軌</span><span>實際調度軌</span></div>
@@ -71,6 +71,7 @@ const BacktestView = (() => {
         action.ontoggle=()=>{setDisclosure('action',action.open,selectedPid);if(!action.open)outcomeDetails.open=false;};
         outcomeDetails.ontoggle=()=>setDisclosure('outcome',outcomeDetails.open,selectedPid);
         detail.querySelector('[data-bt-open]').onclick=()=>open(selected,kind);
+        if(typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(max-width:600px)').matches)detail.scrollIntoView?.({block:'start'});
       });
     }
     render();
