@@ -11,11 +11,11 @@
 
 | 要找的內容 | 最新入口 |
 |---|---|
-| 最新網站、模型與資料驗收 | [11/14 改用 2026 球季資料](docs/qa/data-2026-20261114/README.md) · [11/12 回放、模型與瀏覽器驗收](docs/qa/replay-20261112/README.md) · [11/06 牛棚方案比較](docs/qa/release-foundation-20261106/README.md) |
+| 最新網站、模型與資料驗收 | [11/15 季中迭代](docs/qa/season-iteration-2026/README.md) · [11/14 改用 2026 球季資料](docs/qa/data-2026-20261114/README.md) · [11/12 回放、模型與瀏覽器驗收](docs/qa/replay-20261112/README.md) · [11/06 牛棚方案比較](docs/qa/release-foundation-20261106/README.md) |
 | PR 檢查、異常操作與真實訓練驗收 | [10/29 最新發布前驗收](docs/qa/release-readiness-20261029/README.md) · [CI 執行方式](docs/ci-validation.md) |
 | 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
 | 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
-| 最新簡報工作稿 | [11/15、35 頁 2026 球季版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |
+| 最新簡報工作稿 | [11/15、38 頁 2026 球季版 PPT／PDF](presentations/competition-2026/README.md#最新工作稿)；原交件版另外保留 |
 | 最新模型實驗 | [2024–2026 打席與三棒失分比較](docs/qa/model-horizons-20261113/README.md) |
 | 模型與身份基準 | [10/25 v5 整合驗收](docs/qa/identity-integration-20261025/README.md) |
 
@@ -25,7 +25,7 @@
 |---|---|
 | 競賽 | 2026 野革盃 台灣棒球數據黑客松 |
 | 隊名／成員 | 一球兩面｜蘇櫟、陳信安 |
-| 參賽簡報 | [最新 35 頁工作稿（PPT／PDF）與原交件版](presentations/competition-2026/README.md) |
+| 參賽簡報 | [最新 38 頁工作稿（PPT／PDF）與原交件版](presentations/competition-2026/README.md) |
 | 資料 | 2024–2026 中職一軍例行賽逐球紀錄（Rebas Open Data）與歷年守位 |
 
 ![代打評估：8 局上統一 1:2 落後、一出局二壘有人，左投魔力藍對上左打林佳緯，系統比較板凳候選，最佳候選陳鏞基未達提示門檻](assets/readme/evaluation.png)
@@ -55,7 +55,7 @@
 | 系統的建議和教練實際調度差在哪 | 選「單日分析」→「逐打席回放」，選球隊與比賽後點選打席，再揭示實際調度及結果 |
 | 方法和數據 | 本頁[方法](#方法)與[驗證結果](#驗證結果)；完整說明見 [docs/技術細節.md](docs/技術細節.md) |
 | 驗證是否確實 | [11/12 單日回放驗收](docs/qa/replay-20261112/README.md)、[整體程式審查](docs/qa/code-review-20261029/README.md)、[v5 整合驗收](docs/qa/identity-integration-20261025/README.md)、[全部測試與驗收索引](docs/qa/README.md) |
-| 提案內容 | [35 頁參賽簡報](presentations/competition-2026/README.md) |
+| 提案內容 | [38 頁參賽簡報](presentations/competition-2026/README.md) |
 
 **我們的四個重點：**
 
@@ -138,6 +138,7 @@
 | 預測誤差 | v5 方法（2024–2025 訓練）在 2025 年 9–10 月（5,396 打席）的得分預測誤差比聯盟基準低 0.19%，但 95% 區間跨零 | **尚不能確認優於基準**；不是全新未見資料的驗證。網站現行批次沿用同一方法、改用 2024–2026 訓練，沒有另外的留出驗證 |
 | 2026 離線模型 | 27,257 個相同打席上，時間順序集成與結果機率各半混合，RE24 MSE 由 0.226118 降到 0.225626 | 混合模型留作候選，實際換投後三棒排序沿用正式模型。[完整研究與重跑方式](docs/qa/model-horizons-20261113/README.md) |
 | 換投時機 | 2025 年第 6 局起 11,868 個可評估換投決策點中，實際續投且有提示的 1,912 打席，進攻方 RE24 比未提示的 7,769 打席平均高 **+0.040 分**（依比賽重抽樣 95% 區間 +0.014 至 +0.064） | 觀察性的風險差異，**不能證明換投就會改善結果**；打席中換人不混入原投手的結果 |
+| 季中迭代 | 2026 例行賽 24 週、88,179 球，每週以當時資料重建、預測下一週：近期加權（半衰期 30／60 天）都沒有更準，打者 30 天顯著變差（95% 區間 −0.358 至 −0.037） | 網站維持不加權；每週重跑 `scripts/season_iteration.py` 即可再檢查。[完整紀錄](docs/qa/season-iteration-2026/README.md) |
 | 數值一致性 | 2026 球季批次 54 組自訂情境、1,962 個數值一致；2026 固定單日 235 打席的 470 組攻守比較一致；v5（2024–2025）時期另核對 18 組自訂情境與 275 場／498 組代打回放 | 這些是不同驗收母體，皆不是準確率；[單日重算](docs/qa/replay-20261112/history-day-parity.json) · [自訂與舊回放](docs/qa/code-review-20261029/numeric-parity.json) |
 | 系統測試 | 完整資料掃描、Python／JavaScript 同情境對照，以及桌面、320／390px 瀏覽器操作分開驗收；本輪紀錄見下方連結 | 數值一致、操作可完成，不等同調度效益已證實 |
 
