@@ -1,0 +1,77 @@
+{
+  "totals": {
+    "games": 360,
+    "pa_records": 27268,
+    "complete_opening_fielding": 27265,
+    "event_fielding_arrays": 183,
+    "pinch_hit_records": 561,
+    "not_observed_in_opening_nine": 164,
+    "no_following_defensive_half": 156,
+    "observed_in_opening_nine": 238,
+    "uncertain_pinch_hit_actor": 2,
+    "incomplete_opening_snapshot": 1
+  },
+  "opening_positions": {
+    "C": 37,
+    "RF": 35,
+    "3B": 26,
+    "2B": 30,
+    "LF": 40,
+    "1B": 34,
+    "CF": 27,
+    "SS": 9
+  },
+  "first_observed_position_in_following_half": {
+    "C": 37,
+    "RF": 35,
+    "3B": 26,
+    "2B": 30,
+    "LF": 41,
+    "1B": 34,
+    "CF": 27,
+    "SS": 9
+  },
+  "examples": {
+    "C": {
+      "game": "005",
+      "batting_side": "away",
+      "pa_index": 25
+    },
+    "RF": {
+      "game": "006",
+      "batting_side": "home",
+      "pa_index": 26
+    },
+    "3B": {
+      "game": "010",
+      "batting_side": "away",
+      "pa_index": 32
+    },
+    "2B": {
+      "game": "014",
+      "batting_side": "away",
+      "pa_index": 37
+    },
+    "LF": {
+      "game": "014",
+      "batting_side": "away",
+      "pa_index": 38
+    },
+    "1B": {
+      "game": "022",
+      "batting_side": "away",
+      "pa_index": 44
+    },
+    "CF": {
+      "game": "038",
+      "batting_side": "home",
+      "pa_index": 27
+    },
+    "SS": {
+      "game": "054",
+      "batting_side": "home",
+      "pa_index": 19
+    }
+  },
+  "scope": "Observed following defensive half only. Absence from the field is not DH status or ineligibility."
+}

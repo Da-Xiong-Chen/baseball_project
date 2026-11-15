@@ -69,3 +69,5 @@ IMPLEMENTATION_CLOSEOUT.md
 # Local PR-check reports, not public deliverables.
 output/ci-validation/
 output/release-foundation-20261106/
+output/timing-2026/
+output/website-roadmap/

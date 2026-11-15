@@ -1356,3 +1356,49 @@ body { background: var(--page-bg); }
   .bt-strip td { height:auto; min-height:30px; padding:3px 0; line-height:1; }
   .bt-mark { margin:1px; }
 }
+
+/* Shared matchday surfaces */
+:root { --matchday-line:#dacbb7; }
+:root[data-theme="light"] { --bg:#f8f6f2; --page-bg:#f8f6f2; --panel:#fff; --panel-2:#f3f1ec; }
+:root[data-theme="dark"] { --matchday-line:#47454a; }
+.brand svg { flex-shrink:0; }
+.scoreboard { border-bottom:3px solid var(--clay); }
+.scoreboard .sb-team .s { font-family:ui-monospace,Consolas,monospace; font-weight:700; letter-spacing:-.035em; font-variant-numeric:tabular-nums; }
+.scoreboard .sb-team .t { white-space:normal; overflow-wrap:anywhere; }
+.replay-date-control { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; min-width:0; }
+.replay-date-control label { font-size:13px; font-weight:700; }
+.replay-date-control select { width:auto; min-width:145px; max-width:100%; background:var(--panel); padding-inline:10px; font-variant-numeric:tabular-nums; }
+#replayFeatured:not([hidden]) { display:inline-flex; align-items:center; color:var(--accent); }
+#replayDateStatus:empty { display:none; }
+.quick-candidates { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.decision-fast-read { padding:16px; border-top:1px solid var(--matchday-line); }
+.decision-fast-read h2 { margin:0 0 9px; font-size:16px; }
+.quick-candidate { display:flex; flex-direction:column; gap:5px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--panel-2); min-width:0; }
+.quick-candidate :is(span,small) { color:var(--muted); }
+.quick-candidate strong { overflow-wrap:anywhere; font-size:16px; }
+.quick-candidate strong.fielding-label { display:block; font-size:inherit; }
+.quick-candidate small > span { display:block; }
+.quick-plan-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; }
+.quick-plan-actions button { background:var(--panel); }
+.lineup-backup { margin:12px 0; color:var(--muted); }
+.lineup-backup summary,.substitution-history summary { min-height:44px; padding:10px 0; cursor:pointer; }
+.lineup-backup label { display:block; margin-top:12px; font-weight:600; }
+.lineup-backup input { max-width:100%; margin:8px 0; }
+.lineup-backup button { min-height:44px; }
+.substitution-history ol { padding-inline-start:24px; }
+.player-notes-disclosure summary { width:fit-content; min-height:44px; padding-block:10px; color:var(--accent); cursor:pointer; font-size:13px; }
+.pinch-hit-preview { margin-top:4px; }
+.pinch-hit-preview summary { width:fit-content; min-height:44px; padding-block:10px; color:var(--accent); cursor:pointer; font-size:13px; }
+.pinch-hit-preview p { margin:4px 0; }
+.replay-extra-filters { margin-top:8px; padding:0 10px 8px; border:1px solid var(--line); border-radius:8px; }
+.replay-extra-filters summary { min-height:44px; padding-block:10px; cursor:pointer; color:var(--accent); }
+.replay-extra-filters :is(select,input) { width:100%; margin-bottom:8px; }
+@media (max-width:620px) {
+  .quick-candidates { grid-template-columns:1fr; }
+  .quick-candidate { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:5px 10px; }
+  .quick-candidate > :is(small,.quick-plan-actions) { grid-column:1 / -1; }
+  .quick-candidate > strong { grid-column:1; grid-row:2; }
+  .quick-candidate > div:not(.quick-plan-actions) { grid-column:2; grid-row:2; text-align:end; }
+  .decision-fast-read { padding:12px; }
+  .scoreboard .lev { margin-top:0; }
+}

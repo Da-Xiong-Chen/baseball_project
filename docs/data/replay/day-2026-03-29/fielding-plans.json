@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "223830461b06fcfe15c2d61e8b59691066f9ed339def2dafa7d526f185dd4eb6",
+  "date": "2026-03-29",
+  "status": "conditional_only",
+  "source": "2023–2024 ldkrsi fielding history; cutoff-safe catcher pitch history",
+  "replay_index_sha256": "3b57fefb92a29b26ee09cad9535cc899a568923d0d5c9d6166a875adfcc332f6",
+  "counts": {
+    "unknown_pas": 186,
+    "unknown_late_pas": 80,
+    "pas_with_plan": 0,
+    "late_pas_with_plan": 0,
+    "candidate_plans": 0
+  },
+  "plans": {}
+}

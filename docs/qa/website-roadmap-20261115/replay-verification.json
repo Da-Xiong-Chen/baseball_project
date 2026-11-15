@@ -1,0 +1,218 @@
+{
+  "days": 8,
+  "games": 24,
+  "pa": 1873,
+  "views": 3746,
+  "timing_views": 1692,
+  "max_abs_difference": 5.329070518200751e-15,
+  "per_date": {
+    "2026-03-29": {
+      "parity": {
+        "pa_count": 225,
+        "evaluated_views": 450,
+        "max_numeric_error": 4.6629367034256575e-15,
+        "timing_views_checked": 190,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-03-29",
+        "ml_cutoff": "2026-03-01"
+      },
+      "roster": {
+        "hitter_appeared": 67,
+        "hitter_estimated": 22,
+        "hitter_appeared_and_estimated": 20,
+        "hitter_appeared_missing_from_estimate": 47,
+        "pitcher_appeared": 21,
+        "pitcher_estimated": 9,
+        "pitcher_appeared_and_estimated": 1,
+        "pitcher_appeared_missing_from_estimate": 20,
+        "pa": 225,
+        "mid_pa_actor_changes": 0,
+        "actors_with_historical_aliases": 44,
+        "actors_with_historical_team_changes": 34,
+        "bullpen_candidate_checks": 41
+      }
+    },
+    "2026-04-01": {
+      "parity": {
+        "pa_count": 229,
+        "evaluated_views": 458,
+        "max_numeric_error": 4.884981308350689e-15,
+        "timing_views_checked": 206,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-04-01",
+        "ml_cutoff": "2026-04-01"
+      },
+      "roster": {
+        "hitter_appeared": 71,
+        "hitter_estimated": 79,
+        "hitter_appeared_and_estimated": 62,
+        "hitter_appeared_missing_from_estimate": 9,
+        "pitcher_appeared": 26,
+        "pitcher_estimated": 44,
+        "pitcher_appeared_and_estimated": 18,
+        "pitcher_appeared_missing_from_estimate": 8,
+        "pa": 229,
+        "mid_pa_actor_changes": 1,
+        "actors_with_historical_aliases": 2,
+        "actors_with_historical_team_changes": 112,
+        "bullpen_candidate_checks": 169
+      }
+    },
+    "2026-05-15": {
+      "parity": {
+        "pa_count": 219,
+        "evaluated_views": 438,
+        "max_numeric_error": 5.10702591327572e-15,
+        "timing_views_checked": 202,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-05-15",
+        "ml_cutoff": "2026-05-01"
+      },
+      "roster": {
+        "hitter_appeared": 69,
+        "hitter_estimated": 98,
+        "hitter_appeared_and_estimated": 68,
+        "hitter_appeared_missing_from_estimate": 1,
+        "pitcher_appeared": 17,
+        "pitcher_estimated": 52,
+        "pitcher_appeared_and_estimated": 17,
+        "pitcher_appeared_missing_from_estimate": 0,
+        "pa": 219,
+        "mid_pa_actor_changes": 0,
+        "actors_with_historical_aliases": 50,
+        "actors_with_historical_team_changes": 220,
+        "bullpen_candidate_checks": 132
+      }
+    },
+    "2026-06-13": {
+      "parity": {
+        "pa_count": 261,
+        "evaluated_views": 522,
+        "max_numeric_error": 5.329070518200751e-15,
+        "timing_views_checked": 270,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-06-13",
+        "ml_cutoff": "2026-06-01"
+      },
+      "roster": {
+        "hitter_appeared": 76,
+        "hitter_estimated": 96,
+        "hitter_appeared_and_estimated": 75,
+        "hitter_appeared_missing_from_estimate": 1,
+        "pitcher_appeared": 25,
+        "pitcher_estimated": 50,
+        "pitcher_appeared_and_estimated": 22,
+        "pitcher_appeared_missing_from_estimate": 3,
+        "pa": 261,
+        "mid_pa_actor_changes": 0,
+        "actors_with_historical_aliases": 116,
+        "actors_with_historical_team_changes": 296,
+        "bullpen_candidate_checks": 145
+      }
+    },
+    "2026-07-29": {
+      "parity": {
+        "pa_count": 249,
+        "evaluated_views": 498,
+        "max_numeric_error": 4.884981308350689e-15,
+        "timing_views_checked": 218,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-07-29",
+        "ml_cutoff": "2026-07-01"
+      },
+      "roster": {
+        "hitter_appeared": 71,
+        "hitter_estimated": 98,
+        "hitter_appeared_and_estimated": 69,
+        "hitter_appeared_missing_from_estimate": 2,
+        "pitcher_appeared": 24,
+        "pitcher_estimated": 53,
+        "pitcher_appeared_and_estimated": 20,
+        "pitcher_appeared_missing_from_estimate": 4,
+        "pa": 249,
+        "mid_pa_actor_changes": 0,
+        "actors_with_historical_aliases": 6,
+        "actors_with_historical_team_changes": 154,
+        "bullpen_candidate_checks": 182
+      }
+    },
+    "2026-08-14": {
+      "parity": {
+        "pa_count": 230,
+        "evaluated_views": 460,
+        "max_numeric_error": 4.884981308350689e-15,
+        "timing_views_checked": 220,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-08-14",
+        "ml_cutoff": "2026-08-01"
+      },
+      "roster": {
+        "hitter_appeared": 74,
+        "hitter_estimated": 93,
+        "hitter_appeared_and_estimated": 71,
+        "hitter_appeared_missing_from_estimate": 3,
+        "pitcher_appeared": 17,
+        "pitcher_estimated": 53,
+        "pitcher_appeared_and_estimated": 15,
+        "pitcher_appeared_missing_from_estimate": 2,
+        "pa": 230,
+        "mid_pa_actor_changes": 1,
+        "actors_with_historical_aliases": 106,
+        "actors_with_historical_team_changes": 248,
+        "bullpen_candidate_checks": 132
+      }
+    },
+    "2026-09-20": {
+      "parity": {
+        "pa_count": 225,
+        "evaluated_views": 450,
+        "max_numeric_error": 5.10702591327572e-15,
+        "timing_views_checked": 190,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-09-20",
+        "ml_cutoff": "2026-09-01"
+      },
+      "roster": {
+        "hitter_appeared": 70,
+        "hitter_estimated": 98,
+        "hitter_appeared_and_estimated": 70,
+        "hitter_appeared_missing_from_estimate": 0,
+        "pitcher_appeared": 20,
+        "pitcher_estimated": 60,
+        "pitcher_appeared_and_estimated": 18,
+        "pitcher_appeared_missing_from_estimate": 2,
+        "pa": 225,
+        "mid_pa_actor_changes": 1,
+        "actors_with_historical_aliases": 0,
+        "actors_with_historical_team_changes": 107,
+        "bullpen_candidate_checks": 170
+      }
+    },
+    "2026-10-04": {
+      "parity": {
+        "pa_count": 235,
+        "evaluated_views": 470,
+        "max_numeric_error": 4.884981308350689e-15,
+        "timing_views_checked": 196,
+        "timing_mismatches": [],
+        "model_cutoff": "2026-10-04",
+        "ml_cutoff": "2026-10-01"
+      },
+      "roster": {
+        "hitter_appeared": 74,
+        "hitter_estimated": 103,
+        "hitter_appeared_and_estimated": 64,
+        "hitter_appeared_missing_from_estimate": 10,
+        "pitcher_appeared": 30,
+        "pitcher_estimated": 58,
+        "pitcher_appeared_and_estimated": 19,
+        "pitcher_appeared_missing_from_estimate": 11,
+        "pa": 235,
+        "mid_pa_actor_changes": 0,
+        "actors_with_historical_aliases": 6,
+        "actors_with_historical_team_changes": 70,
+        "bullpen_candidate_checks": 243
+      }
+    }
+  }
+}

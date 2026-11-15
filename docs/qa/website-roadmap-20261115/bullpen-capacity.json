@@ -1,0 +1,809 @@
+{
+  "capacity_policy": "Hypothetical: base 5 PA, minus 1 per 10 pitches yesterday and per 20 the day before; unavailable at 30 yesterday.",
+  "scope": "Prior game workload and historical observed demand. Capacity accounting only. No win estimate or legal certification.",
+  "cases": [
+    {
+      "game": "2026-034",
+      "date": "2026-04-12",
+      "fielding_team": "樂天桃猿",
+      "source": "historical consecutive dates and observed innings 7–8 demand",
+      "target": 15,
+      "pitchers": [
+        {
+          "id": "rebas:CPBL:n6fv0",
+          "pitches_d_minus_1_2_3": [
+            17,
+            11,
+            0
+          ],
+          "remaining": 4,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:8QSUU",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:RUZfJ",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:znpvb",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        }
+      ],
+      "orders": {
+        "limited": [
+          "rebas:CPBL:n6fv0"
+        ],
+        "alternate": [
+          "rebas:CPBL:8QSUU",
+          "rebas:CPBL:RUZfJ",
+          "rebas:CPBL:znpvb",
+          "rebas:CPBL:n6fv0"
+        ]
+      },
+      "results": {
+        "limited": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 15,
+          "covered": 4,
+          "uncovered": 11,
+          "complete": false,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:n6fv0",
+              "assigned": 4,
+              "remaining": 0,
+              "used": true
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:8QSUU",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:RUZfJ",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:znpvb",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        },
+        "alternate": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 15,
+          "covered": 15,
+          "uncovered": 0,
+          "complete": true,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:8QSUU",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:RUZfJ",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:znpvb",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:n6fv0",
+              "assigned": 0,
+              "remaining": 4,
+              "used": false
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:n6fv0",
+              "remaining": 4
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        }
+      }
+    },
+    {
+      "game": "2026-042",
+      "date": "2026-04-17",
+      "fielding_team": "統一7-ELEVEn獅",
+      "source": "historical consecutive dates and observed innings 7–8 demand",
+      "target": 6,
+      "pitchers": [
+        {
+          "id": "rebas:CPBL:Qmj7D",
+          "pitches_d_minus_1_2_3": [
+            4,
+            11,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:8tDFK",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:FQ5fV",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:Osr68",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        }
+      ],
+      "orders": {
+        "limited": [
+          "rebas:CPBL:Qmj7D"
+        ],
+        "alternate": [
+          "rebas:CPBL:8tDFK",
+          "rebas:CPBL:FQ5fV",
+          "rebas:CPBL:Osr68",
+          "rebas:CPBL:Qmj7D"
+        ]
+      },
+      "results": {
+        "limited": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 6,
+          "covered": 5,
+          "uncovered": 1,
+          "complete": false,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:8tDFK",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:FQ5fV",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:Osr68",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        },
+        "alternate": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 6,
+          "covered": 6,
+          "uncovered": 0,
+          "complete": true,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:8tDFK",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:FQ5fV",
+              "assigned": 1,
+              "remaining": 4,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:Osr68",
+              "assigned": 0,
+              "remaining": 5,
+              "used": false
+            },
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "assigned": 0,
+              "remaining": 5,
+              "used": false
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:Osr68",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        }
+      }
+    },
+    {
+      "game": "2026-062",
+      "date": "2026-04-26",
+      "fielding_team": "統一7-ELEVEn獅",
+      "source": "historical consecutive dates and observed innings 7–8 demand",
+      "target": 10,
+      "pitchers": [
+        {
+          "id": "rebas:CPBL:Qmj7D",
+          "pitches_d_minus_1_2_3": [
+            14,
+            12,
+            0
+          ],
+          "remaining": 4,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:FQ5fV",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:YG0gn",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:gMO3e",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        }
+      ],
+      "orders": {
+        "limited": [
+          "rebas:CPBL:Qmj7D"
+        ],
+        "alternate": [
+          "rebas:CPBL:FQ5fV",
+          "rebas:CPBL:YG0gn",
+          "rebas:CPBL:gMO3e",
+          "rebas:CPBL:Qmj7D"
+        ]
+      },
+      "results": {
+        "limited": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 10,
+          "covered": 4,
+          "uncovered": 6,
+          "complete": false,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "assigned": 4,
+              "remaining": 0,
+              "used": true
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:FQ5fV",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:YG0gn",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:gMO3e",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        },
+        "alternate": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 10,
+          "covered": 10,
+          "uncovered": 0,
+          "complete": true,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:FQ5fV",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:YG0gn",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:gMO3e",
+              "assigned": 0,
+              "remaining": 5,
+              "used": false
+            },
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "assigned": 0,
+              "remaining": 4,
+              "used": false
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "remaining": 4
+            },
+            {
+              "id": "rebas:CPBL:gMO3e",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        }
+      }
+    },
+    {
+      "game": "2026-078",
+      "date": "2026-05-03",
+      "fielding_team": "統一7-ELEVEn獅",
+      "source": "historical consecutive dates and observed innings 7–8 demand",
+      "target": 7,
+      "pitchers": [
+        {
+          "id": "rebas:CPBL:Qmj7D",
+          "pitches_d_minus_1_2_3": [
+            14,
+            18,
+            0
+          ],
+          "remaining": 4,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:FQ5fV",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:Osr68",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:YG0gn",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        }
+      ],
+      "orders": {
+        "limited": [
+          "rebas:CPBL:Qmj7D"
+        ],
+        "alternate": [
+          "rebas:CPBL:FQ5fV",
+          "rebas:CPBL:Osr68",
+          "rebas:CPBL:YG0gn",
+          "rebas:CPBL:Qmj7D"
+        ]
+      },
+      "results": {
+        "limited": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 7,
+          "covered": 4,
+          "uncovered": 3,
+          "complete": false,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "assigned": 4,
+              "remaining": 0,
+              "used": true
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:FQ5fV",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:Osr68",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:YG0gn",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        },
+        "alternate": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 7,
+          "covered": 7,
+          "uncovered": 0,
+          "complete": true,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:FQ5fV",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:Osr68",
+              "assigned": 2,
+              "remaining": 3,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:YG0gn",
+              "assigned": 0,
+              "remaining": 5,
+              "used": false
+            },
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "assigned": 0,
+              "remaining": 4,
+              "used": false
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:Qmj7D",
+              "remaining": 4
+            },
+            {
+              "id": "rebas:CPBL:YG0gn",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        }
+      }
+    },
+    {
+      "game": "2026-093",
+      "date": "2026-05-10",
+      "fielding_team": "台鋼雄鷹",
+      "source": "historical consecutive dates and observed innings 7–8 demand",
+      "target": 6,
+      "pitchers": [
+        {
+          "id": "rebas:CPBL:OZ4Ny",
+          "pitches_d_minus_1_2_3": [
+            16,
+            1,
+            0
+          ],
+          "remaining": 4,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:FEjzB",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:FTjP8",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:GMcZW",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        }
+      ],
+      "orders": {
+        "limited": [
+          "rebas:CPBL:OZ4Ny"
+        ],
+        "alternate": [
+          "rebas:CPBL:FEjzB",
+          "rebas:CPBL:FTjP8",
+          "rebas:CPBL:GMcZW",
+          "rebas:CPBL:OZ4Ny"
+        ]
+      },
+      "results": {
+        "limited": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 6,
+          "covered": 4,
+          "uncovered": 2,
+          "complete": false,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:OZ4Ny",
+              "assigned": 4,
+              "remaining": 0,
+              "used": true
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:FEjzB",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:FTjP8",
+              "remaining": 5
+            },
+            {
+              "id": "rebas:CPBL:GMcZW",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        },
+        "alternate": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 6,
+          "covered": 6,
+          "uncovered": 0,
+          "complete": true,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:FEjzB",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:FTjP8",
+              "assigned": 1,
+              "remaining": 4,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:GMcZW",
+              "assigned": 0,
+              "remaining": 5,
+              "used": false
+            },
+            {
+              "id": "rebas:CPBL:OZ4Ny",
+              "assigned": 0,
+              "remaining": 4,
+              "used": false
+            }
+          ],
+          "reserve": [
+            {
+              "id": "rebas:CPBL:OZ4Ny",
+              "remaining": 4
+            },
+            {
+              "id": "rebas:CPBL:GMcZW",
+              "remaining": 5
+            }
+          ],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        }
+      }
+    },
+    {
+      "game": "2026-034",
+      "date": "2026-04-12",
+      "fielding_team": "樂天桃猿",
+      "source": "synthetic second-game capacity applied to a historical demand",
+      "target": 15,
+      "pitchers": [
+        {
+          "id": "rebas:CPBL:n6fv0",
+          "pitches_d_minus_1_2_3": [
+            17,
+            11,
+            0
+          ],
+          "remaining": 4,
+          "available": true,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:8QSUU",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 0,
+          "available": false,
+          "retired": false
+        },
+        {
+          "id": "rebas:CPBL:RUZfJ",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": true
+        },
+        {
+          "id": "rebas:CPBL:znpvb",
+          "pitches_d_minus_1_2_3": [
+            0,
+            0,
+            0
+          ],
+          "remaining": 5,
+          "available": true,
+          "retired": false
+        }
+      ],
+      "orders": {
+        "unavailable": [
+          "rebas:CPBL:8QSUU"
+        ],
+        "retired": [
+          "rebas:CPBL:RUZfJ"
+        ],
+        "alternate": [
+          "rebas:CPBL:n6fv0",
+          "rebas:CPBL:znpvb"
+        ]
+      },
+      "results": {
+        "unavailable": {
+          "rejected": "已退場或不可用投手不能排入接續"
+        },
+        "retired": {
+          "rejected": "已退場或不可用投手不能排入接續"
+        },
+        "alternate": {
+          "schema_version": 1,
+          "unit": "PA",
+          "target": 15,
+          "covered": 9,
+          "uncovered": 6,
+          "complete": false,
+          "allocations": [
+            {
+              "id": "rebas:CPBL:n6fv0",
+              "assigned": 4,
+              "remaining": 0,
+              "used": true
+            },
+            {
+              "id": "rebas:CPBL:znpvb",
+              "assigned": 5,
+              "remaining": 0,
+              "used": true
+            }
+          ],
+          "reserve": [],
+          "assumption": "容量由使用者確認；僅核算打席容量，不驗證換投義務或推估勝率。"
+        }
+      }
+    }
+  ]
+}

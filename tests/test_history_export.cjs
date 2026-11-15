@@ -27,8 +27,27 @@ test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
 });
 test('a fixed day file is fetched on demand rather than preloading all decisions',()=>{
  const app=fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
- assert.match(app,/historyJSON\(index.files\[pa\]\)/);
+ assert.match(app,/historyJSON\(index.files\[pa\],\{date\}\)/);
  assert.doesNotMatch(app,/Promise\.all\(Object\.values\(index.files\)/);
+});
+test('replay dates are uniquely indexed, use a date-specific batch and include a cutoff-day game',()=>{
+ const released=path.join(__dirname,'../docs/data/replay');
+ const read=p=>JSON.parse(fs.readFileSync(path.join(released,p),'utf8'));
+ const {days,default_date}=read('dates.json');
+ assert.equal(default_date,day);
+ assert.equal(days.length,8);
+ assert.equal(new Set(days.map(row=>row.batch_id)).size,days.length);
+ for(const row of days){
+  const dir='day-'+row.date, data=read(dir+'/index.json');
+  assert.equal(data.batch_id,row.batch_id);
+  assert.equal(data.pa_count,row.pa);
+  assert.equal(data.schedule.length,row.games);
+  assert.ok(data.games[row.case.game].includes(row.case.pa));
+  assert.ok(data.training_last_date<data.ml_cutoff && data.ml_cutoff<=row.date);
+  assert.equal(read(dir+'/'+data.files[row.case.pa]).batch_id,row.batch_id);
+ }
+ const first=read('day-2026-04-01/index.json');
+ assert.equal(first.ml_cutoff,first.date);
 });
 test('2026 day publishes complete cutoff-safe game, decision and pitching snapshots',()=>{
  const dir=path.join(__dirname,'../docs/data/replay/day-2026-10-04');

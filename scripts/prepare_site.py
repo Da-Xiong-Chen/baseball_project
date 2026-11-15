@@ -81,7 +81,24 @@ def inspect_site(site):
     games = site / 'data/replay/games.json'
     for game in (read_json(games) if games.exists() else []):
         local_asset(site, f'data/replay/{game["game"]}.json')
-    for index in (site / 'data/replay').glob('day-*/index.json'):
+    day_indexes = {p.parent.name.removeprefix('day-'): p for p in (site / 'data/replay').glob('day-*/index.json')}
+    catalog = site / 'data/replay/dates.json'
+    if catalog.exists():
+        listing = read_json(catalog)
+        dates = [row['date'] for row in listing['days']]
+        if (listing['schema_version'] != 1 or len(set(dates)) != len(dates)
+                or listing['default_date'] not in dates or set(dates) != set(day_indexes)):
+            raise ValueError('Replay date catalog disagrees with released days')
+        for row in listing['days']:
+            manifest = read_json(day_indexes[row['date']])
+            if (row['games'] != len(manifest['games']) or row['pa'] != manifest['pa_count']
+                    or row['batch_id'] != manifest['batch_id']):
+                raise ValueError(f"Replay date catalog metadata disagrees: {row['date']}")
+            case = row.get('case')
+            if case and (case['decision'] not in ('ph','pen')
+                         or case['pa'] not in manifest['games'].get(case['game'], [])):
+                raise ValueError(f"Replay featured case is unavailable: {row['date']}")
+    for index in day_indexes.values():
         manifest=read_json(index)
         if manifest.get('schema_version')!=1 or manifest.get('pa_count')!=len(manifest.get('files',{})):
             raise ValueError(f'Invalid daily replay index: {index}')
@@ -90,7 +107,8 @@ def inspect_site(site):
             day=manifest['date']
             if (index.parent.name!='day-'+day or manifest['season']!=int(day[:4])
                     or manifest['model_cutoff']!=day
-                    or not manifest['training_last_date']<manifest['ml_cutoff']<day
+                    or manifest['ml_cutoff']!=day[:7]+'-01'
+                    or not manifest['training_last_date']<manifest['ml_cutoff']<=day
                     or not manifest['calibration_last_date']<manifest['ml_cutoff']):
                 raise ValueError(f'Daily replay has inconsistent cutoffs: {index}')
 

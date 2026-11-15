@@ -1,0 +1,1246 @@
+{
+  "schema_version": 1,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "a33374179343d12a692f67154adcf0d98713725deffc30caf08294575db336a9",
+  "date": "2026-04-01",
+  "status": "conditional_only",
+  "source": "2023–2024 ldkrsi fielding history; cutoff-safe catcher pitch history",
+  "replay_index_sha256": "980953a4189a5784e591de35da712d4c6f326f2266fa78c94da4c297ccf75737",
+  "counts": {
+    "unknown_pas": 63,
+    "unknown_late_pas": 29,
+    "pas_with_plan": 33,
+    "late_pas_with_plan": 14,
+    "candidate_plans": 74
+  },
+  "plans": {
+    "2026-008-a004": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          },
+          {
+            "player": "rebas:CPBL:dFblH",
+            "from_position": "SS",
+            "to_position": "3B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-h006": {
+      "rebas:CPBL:0uRxO": {
+        "incoming": "rebas:CPBL:0uRxO",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:eChCD",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:42OO1",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a008": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a013": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          },
+          {
+            "player": "rebas:CPBL:dFblH",
+            "from_position": "SS",
+            "to_position": "3B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-h015": {
+      "rebas:CPBL:0uRxO": {
+        "incoming": "rebas:CPBL:0uRxO",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:eChCD",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:42OO1",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a017": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-h024": {
+      "rebas:CPBL:0uRxO": {
+        "incoming": "rebas:CPBL:0uRxO",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:eChCD",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:42OO1",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a022": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          },
+          {
+            "player": "rebas:CPBL:dFblH",
+            "from_position": "SS",
+            "to_position": "3B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a026": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a031": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          },
+          {
+            "player": "rebas:CPBL:dFblH",
+            "from_position": "SS",
+            "to_position": "3B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-h033": {
+      "rebas:CPBL:0uRxO": {
+        "incoming": "rebas:CPBL:0uRxO",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:eChCD",
+            "from_position": "RF",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:42OO1",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-008-a035": {
+      "rebas:CPBL:u6XUJ": {
+        "incoming": "rebas:CPBL:u6XUJ",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:2HG7r",
+            "from_position": "2B",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:elqzw",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-a003": {
+      "rebas:CPBL:IYo8c": {
+        "incoming": "rebas:CPBL:IYo8c",
+        "incoming_position": "3B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:ojwr3",
+            "from_position": "3B",
+            "to_position": "2B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:PtuDN",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h000": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h001": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-a012": {
+      "rebas:CPBL:IYo8c": {
+        "incoming": "rebas:CPBL:IYo8c",
+        "incoming_position": "3B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:ojwr3",
+            "from_position": "3B",
+            "to_position": "2B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:PtuDN",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h008": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "CF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h009": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h010": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-a021": {
+      "rebas:CPBL:IYo8c": {
+        "incoming": "rebas:CPBL:IYo8c",
+        "incoming_position": "3B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:ojwr3",
+            "from_position": "3B",
+            "to_position": "2B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:PtuDN",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h017": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "CF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h018": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h019": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h026": {
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "CF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "CF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h027": {
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h028": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:ubS2f": {
+        "incoming": "rebas:CPBL:ubS2f",
+        "incoming_position": "2B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:vdpJ5",
+            "from_position": "2B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:svO50": {
+        "incoming": "rebas:CPBL:svO50",
+        "incoming_position": "1B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:xdLku",
+            "from_position": "LF",
+            "to_position": "RF"
+          },
+          {
+            "player": "rebas:CPBL:00Or0",
+            "from_position": "SS",
+            "to_position": "LF"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-a030": {
+      "rebas:CPBL:IYo8c": {
+        "incoming": "rebas:CPBL:IYo8c",
+        "incoming_position": "3B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:ojwr3",
+            "from_position": "3B",
+            "to_position": "2B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:PtuDN",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-h036": {
+      "rebas:CPBL:xZBmj": {
+        "incoming": "rebas:CPBL:xZBmj",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          },
+          {
+            "player": "rebas:CPBL:svO50",
+            "from_position": "SS",
+            "to_position": "1B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:1MV0s": {
+        "incoming": "rebas:CPBL:1MV0s",
+        "incoming_position": "SS",
+        "moves": [
+          {
+            "player": "rebas:CPBL:WbnjG",
+            "from_position": "1B",
+            "to_position": "LF"
+          },
+          {
+            "player": "rebas:CPBL:svO50",
+            "from_position": "SS",
+            "to_position": "1B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:7vTQV",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-009-a039": {
+      "rebas:CPBL:IYo8c": {
+        "incoming": "rebas:CPBL:IYo8c",
+        "incoming_position": "3B",
+        "moves": [
+          {
+            "player": "rebas:CPBL:ojwr3",
+            "from_position": "3B",
+            "to_position": "2B"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:PtuDN",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-010-a006": {
+      "rebas:CPBL:7eWTJ": {
+        "incoming": "rebas:CPBL:7eWTJ",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:zGfee": {
+        "incoming": "rebas:CPBL:zGfee",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:5PuU": {
+        "incoming": "rebas:CPBL:5PuU",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-010-a015": {
+      "rebas:CPBL:7eWTJ": {
+        "incoming": "rebas:CPBL:7eWTJ",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:zGfee": {
+        "incoming": "rebas:CPBL:zGfee",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:5PuU": {
+        "incoming": "rebas:CPBL:5PuU",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-010-a024": {
+      "rebas:CPBL:7eWTJ": {
+        "incoming": "rebas:CPBL:7eWTJ",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:zGfee": {
+        "incoming": "rebas:CPBL:zGfee",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:5PuU": {
+        "incoming": "rebas:CPBL:5PuU",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    },
+    "2026-010-a034": {
+      "rebas:CPBL:7eWTJ": {
+        "incoming": "rebas:CPBL:7eWTJ",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      },
+      "rebas:CPBL:5PuU": {
+        "incoming": "rebas:CPBL:5PuU",
+        "incoming_position": "RF",
+        "moves": [
+          {
+            "player": "rebas:CPBL:OqNVW",
+            "from_position": "RF",
+            "to_position": "SS"
+          }
+        ],
+        "retained_dh": "rebas:CPBL:UjHMh",
+        "cutoff": "2026-04-01",
+        "requires_confirmation": true
+      }
+    }
+  }
+}
