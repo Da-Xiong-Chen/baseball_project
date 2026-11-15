@@ -1101,3 +1101,10 @@ test('player notes show season lines and head-to-head counts only for custom eva
  assert.match(f.eval("playerNotesHtml({view:'offense',situation:{pitcher:'Z'}},{球員:'B'},'ph')"),/無對戰紀錄/);
  assert.equal(f.eval("playerNotesHtml({view:'replay',situation:{pitcher:'P'}},{球員:'B'},'ph')"),'');
 });
+test('custom result rows offer a substitution button that replay rows never show',()=>{
+ const f=fixture();
+ assert.match(f.eval("applyButton({view:'offense'},'B','ph',true)"),/class="row-apply is-primary" data-apply-sub="B" data-apply-kind="ph"/);
+ assert.match(f.eval("applyButton({view:'defense'},'P','pen',false)"),/class="row-apply" data-apply-sub="P" data-apply-kind="pen"/);
+ assert.equal(f.eval("applyButton({view:'replay'},'B','ph',true)"),'');
+ assert.equal(f.eval("substitutionNoteHtml({view:'replay'})"),'');
+});

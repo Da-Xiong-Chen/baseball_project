@@ -203,7 +203,32 @@
   /* 預設名單：{team:{slots,pitcher,games}}；只在此瀏覽器沒有保存記錄時帶入。 */
   function setDefaults(map){defaults={};defaultsMeta={};Object.entries(map||{}).forEach(([t,v])=>{const c={slots:v.slots.map(x=>({name:x.name,pos:x.pos})),pitcher:v.pitcher};if(c.slots.length===9&&c.slots.every(x=>POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9){defaults[t]=c;defaultsMeta[t]={games:v.games,through:v.through};}});states.forEach((s,t)=>{if(!s.confirmed&&defaults[t]&&!s.storageError&&(s.isDefault||!s.draft.pitcher)){s.draft=clone(defaults[t]);s.isDefault=true;}});}
   function defaultFor(t){return defaults[t]?clone(defaults[t]):null;}
+  /* 換人：kind 為 'ph'（代打承接原棒次與守位）或 'pen'（換投）；被換下的球員記為已退場。回傳復原用的快照。 */
+  function substitute(t,{kind,out,incoming}){
+    const s=get(t);if(!s.confirmed||!out||!incoming||out===incoming)return null;
+    const c=s.confirmed;
+    if(kind==='pen'?c.pitcher!==out:!c.slots.some(x=>x.name===out))return null;
+    if(c.pitcher===incoming||c.slots.some(x=>x.name===incoming)||(c.unavailable||[]).includes(incoming))return null;
+    const snapshot={draft:clone(s.draft),confirmed:clone(s.confirmed),isDefault:!!s.isDefault};
+    const apply=config=>{
+      if(kind==='pen'){if(config.pitcher===out)config.pitcher=incoming;}
+      else{const slot=config.slots.find(x=>x.name===out);if(slot)slot.name=incoming;}
+      config.unavailable=[...new Set([...(config.unavailable||[]),out])].filter(n=>n!==incoming&&n!==config.pitcher&&!config.slots.some(x=>x.name===n));
+    };
+    const synced=JSON.stringify(s.draft)===JSON.stringify(s.confirmed);
+    apply(c);if(synced)s.draft=clone(c);else apply(s.draft);
+    delete s.isDefault;
+    const prev=teamName;teamName=t;const saved=persist();teamName=prev;
+    if(t===teamName&&options&&roster)render();
+    return {snapshot,saved};
+  }
+  function restore(t,snapshot){
+    const s=get(t);if(!snapshot)return;
+    s.draft=clone(snapshot.draft);s.confirmed=clone(snapshot.confirmed);if(snapshot.isDefault)s.isDefault=true;else delete s.isDefault;
+    const prev=teamName;teamName=t;persist();teamName=prev;
+    if(t===teamName&&options&&roster)render();
+  }
   function cancelSwap(){swapMode=null;swapFirst=null;if(options&&roster)render();}
-  const api={setRuntime,release,setDefaults,defaultFor,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity};
+  const api={setRuntime,release,setDefaults,defaultFor,substitute,restore,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LineupBoard=api;
 })(typeof window!=='undefined'?window:globalThis);
