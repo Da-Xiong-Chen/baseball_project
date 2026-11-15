@@ -1216,7 +1216,10 @@ async function loadHistoricalPitchers(){
     if(token!==historyPitchGeneration)return;
     if(context.date!==HISTORY_DATE)throw new Error('歷史日期不一致');
     const names=(context.teams[name]?.pitchers||[]).map(p=>p.name);
-    $('#historyPitcher').innerHTML=names.map(n=>`<option value="${esc(n)}">${N(n)}</option>`).join('');
+    // 選單在當日名單對照載入後才顯示名字，避免出現「未有姓名紀錄的球員」
+    if(typeof PlayerIdentity!=='undefined'&&currentPage()==='review')PlayerIdentity.setContext(context.players||{});
+    const label=n=>esc(context.players?.[n]||playerText(n));
+    $('#historyPitcher').innerHTML=names.map(n=>`<option value="${esc(n)}">${label(n)}</option>`).join('');
     const saved=historyPitchSelections.get(name);$('#historyPitcher').value=names.includes(saved)?saved:(names[0]||'');historyPitchTeam=name;
     $('#historyPitcher').disabled=!names.length;
     if(names.length)mountHistoricalPitch();else $('#historyPitchChange').innerHTML='<p>當日前沒有投手配球紀錄。</p>';

@@ -1335,3 +1335,24 @@ body { background: var(--page-bg); }
 .sub-undo { border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--accent); min-height:36px; font-size:12px; cursor:pointer; padding:4px 10px; }
 #penList label.is-exited { opacity:.5; text-decoration:line-through; }
 @media (max-width:640px) { .row-apply { margin-inline-start:4px; } .substitution-note { padding:10px 12px; } }
+/* 對決明細：寬螢幕時球路卡與對決卡並排，不留空白欄 */
+@media (min-width:1001px) {
+  #matchupDetails { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start; }
+  #matchupDetails > .matchup-navigation { grid-column:1 / -1; }
+  #matchupDetails > #pitchArsenal { grid-column:1; grid-row:2; }
+  #matchupDetails > .detail-grid { display:contents; }
+  #matchupDetails #detail { grid-column:2; grid-row:2; }
+  #matchupDetails #pitchChange { grid-column:1 / -1; grid-row:3; }
+  #pitchArsenal .arsenal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .candidate-chart-row { grid-template-columns:128px minmax(70px,1fr) 102px; }
+  .candidate-chart-key { margin-left:136px; }
+}
+#pitchChange:empty { display:none; }
+/* 手機：局數對照圖 1–9 局全部放得下，標記可換行 */
+@media (max-width:600px) {
+  .bt-strip { min-width:0; }
+  .bt-strip th:first-child, .bt-strip tbody th { width:4.6em; padding-right:4px; white-space:nowrap; }
+  .bt-strip th { padding:4px 0; }
+  .bt-strip td { height:auto; min-height:30px; padding:3px 0; line-height:1; }
+  .bt-mark { margin:1px; }
+}
