@@ -38,9 +38,12 @@
       storage.setItem(prefix+team,data);return storage.getItem(prefix+team)===data;
     } catch{return false;}
   }
-  const closers={'中信兄弟':'吳俊偉','台鋼雄鷹':'林詩翔','味全龍':'陳冠偉','富邦悍將':'曾峻岳','樂天桃猿':'陳柏豪','統一7-ELEVEn獅':'陳韻文'};
+  // 預設群組的終結者排序：2025 取自官方紀錄；2026 由逐場資料推估（贏球、終場分差 3 分內、由該後援投完比賽最多者），
+  // 樂天前兩名同為 18 場，不指定。
+  const closersBySeason={2025:{'中信兄弟':'吳俊偉','台鋼雄鷹':'林詩翔','味全龍':'陳冠偉','富邦悍將':'曾峻岳','樂天桃猿':'陳柏豪','統一7-ELEVEn獅':'陳韻文'},
+    2026:{'中信兄弟':'李振昌','台鋼雄鷹':'林詩翔','味全龍':'林凱威','富邦悍將':'曾峻岳','統一7-ELEVEn獅':'鍾允華'}};
   function defaults(pitchers,team) {
-    const closer=runtimeSeason===2025?closers[team]:null;
+    const closer=closersBySeason[runtimeSeason]?.[team]||null;
     const relievers=pitchers.filter(p=>p.role==='後援').slice().sort((a,b)=>Number((b.display_name||b.name)===closer)-Number((a.display_name||a.name)===closer)||(b.games||0)-(a.games||0)||label(a.name).localeCompare(label(b.name),'zh-Hant'));
     const split=Math.min(3,Math.max(1,relievers.length-1));
     return [{name:names[0],members:relievers.slice(0,split).map(p=>p.name)},{name:names[1],members:relievers.slice(split).map(p=>p.name)},{name:names[2],members:[]}];

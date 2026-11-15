@@ -1,0 +1,10 @@
+{
+  "season": 2026,
+  "games": 360,
+  "pa_records": 27268,
+  "opening_arrays": 27268,
+  "unresolved_observations": 0,
+  "rows": 515,
+  "scope": "Distinct games observed at each defensive position; excludes DH and does not measure defensive opportunities.",
+  "source": "https://github.com/rebas-tw/rebas.tw-open-data/releases/tag/v0.1.1-2026"
+}

@@ -28,14 +28,17 @@ class FieldingPlanTests(unittest.TestCase):
     def test_exported_plans_reproduce_from_prior_evidence_without_changing_eligibility(self):
         root=Path(__file__).resolve().parents[1]
         from engine import situation
-        data=json.loads((Path(os.environ.get('BASEBALL_STATIC_OUT',root/'docs/data'))/'fielding-plans-2025-09-20.json').read_text(encoding='utf8'))
-        day=Path(os.environ.get('BASEBALL_STATIC_OUT',root/'docs/data'))/'replay/day-2025-09-20';index=json.loads((day/'index.json').read_text(encoding='utf8'))
+        from runtime_config import settings
+        date=settings().history_date
+        day=Path(os.environ.get('BASEBALL_STATIC_OUT',root/'docs/data'))/f'replay/day-{date}'
+        if not (day/'fielding-plans.json').exists():self.skipTest(f'{date} 單日回放未隨網站發布；網站只發布 2026/10/04')
+        data=json.loads((day/'fielding-plans.json').read_text(encoding='utf8'));index=json.loads((day/'index.json').read_text(encoding='utf8'))
         self.assertEqual(hashlib.sha256((day/'index.json').read_bytes()).hexdigest(),data['replay_index_sha256'])
         self.assertEqual(len(data['plans']),data['counts']['pas_with_plan']);self.assertGreater(len(data['plans']),0)
         for pid,choices in data['plans'].items():
             s=situation(pid);r=json.loads((day/index['files'][pid]).read_text(encoding='utf8'))['ph']
             for name,p in choices.items():
-                self.assertEqual(p,fielding_rearrangement(s['positions'],s['due'],name,'2025-09-20'))
+                self.assertEqual(p,fielding_rearrangement(s['positions'],s['due'],name,date))
                 self.assertEqual(next(x for x in r['candidates'] if x['球員']==name)['守備'],'unknown')
 
 if __name__=='__main__':unittest.main()

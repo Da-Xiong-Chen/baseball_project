@@ -204,7 +204,10 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
     df = pd.DataFrame(out)
     base = df.loc[df["角色"] == "現任", "預估勝率"].iat[0]
     df["相對現任"] = df["預估勝率"] - base
-    df = pd.concat([df[df["角色"] == "現任"], df[df["角色"] == "代打"].sort_values("預估勝率", ascending=False)])
+    # 數值差距小於 1e-12 視為同分，依球員 ID 排序，與網站 engine.js 一致
+    bench = df[df["角色"] == "代打"]
+    bench = bench.assign(_k=(bench["預估勝率"] * 1e12).round()).sort_values(["_k", "球員"], ascending=[False, True], kind="mergesort").drop(columns="_k")
+    df = pd.concat([df[df["角色"] == "現任"], bench])
     return df.reset_index(drop=True), slope, m
 
 
@@ -335,5 +338,7 @@ def evaluate_bullpen(sit, n_next=3, model=None, ml=None, scores=True):
     df = pd.DataFrame(out)
     cur = df.loc[df["角色"] == "場上", "預估失分"].iat[0]
     df["守方勝率增減"] = -(df["預估失分"] - cur) * slope * 100
-    df = pd.concat([df[df["角色"] == "場上"], df[df["角色"] == "牛棚"].sort_values("預估失分")])
+    pen = df[df["角色"] == "牛棚"]
+    pen = pen.assign(_k=(pen["預估失分"] * 1e12).round()).sort_values(["_k", "投手"], kind="mergesort").drop(columns="_k")
+    df = pd.concat([df[df["角色"] == "場上"], pen])
     return df.reset_index(drop=True), nxt

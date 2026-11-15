@@ -1,10 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const root=path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'replay'),day='2025-09-20',dir=path.join(root,'day-'+day);
+const root=path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'replay'),day='2026-10-04',dir=path.join(root,'day-'+day);
 const index=JSON.parse(fs.readFileSync(path.join(dir,'index.json'),'utf8'));
 test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
  let count=0,changed=0;
  for(const [game,ids] of Object.entries(index.games)){
-  const pas=JSON.parse(fs.readFileSync(path.join(root,game+'.json'),'utf8')).pas;
+  const pas=JSON.parse(fs.readFileSync(path.join(dir,game+'.json'),'utf8')).pas;
   assert.deepEqual(new Set(ids),new Set(pas.map(p=>p.pa_id)));
   const prev={};
   for(const pa of pas){
@@ -23,12 +23,31 @@ test('fixed day exports every PA once and hashes every lazy-loaded file',()=>{
    count++;
   }
  }
- assert.equal(count,226);assert.equal(changed,19);assert.equal(index.pa_count,count);assert.equal(index.pitcher_changes,changed);
+ assert.equal(count,235);assert.equal(changed,30);assert.equal(index.pa_count,count);assert.equal(index.pitcher_changes,changed);
 });
 test('a fixed day file is fetched on demand rather than preloading all decisions',()=>{
  const app=fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
- assert.match(app,/historyJSON\(index.files\[pa\]\)/);
+ assert.match(app,/historyJSON\(index.files\[pa\],\{date\}\)/);
  assert.doesNotMatch(app,/Promise\.all\(Object\.values\(index.files\)/);
+});
+test('replay dates are uniquely indexed, use a date-specific batch and include a cutoff-day game',()=>{
+ const released=path.join(__dirname,'../docs/data/replay');
+ const read=p=>JSON.parse(fs.readFileSync(path.join(released,p),'utf8'));
+ const {days,default_date}=read('dates.json');
+ assert.equal(default_date,day);
+ assert.equal(days.length,8);
+ assert.equal(new Set(days.map(row=>row.batch_id)).size,days.length);
+ for(const row of days){
+  const dir='day-'+row.date, data=read(dir+'/index.json');
+  assert.equal(data.batch_id,row.batch_id);
+  assert.equal(data.pa_count,row.pa);
+  assert.equal(data.schedule.length,row.games);
+  assert.ok(data.games[row.case.game].includes(row.case.pa));
+  assert.ok(data.training_last_date<data.ml_cutoff && data.ml_cutoff<=row.date);
+  assert.equal(read(dir+'/'+data.files[row.case.pa]).batch_id,row.batch_id);
+ }
+ const first=read('day-2026-04-01/index.json');
+ assert.equal(first.ml_cutoff,first.date);
 });
 test('2026 day publishes complete cutoff-safe game, decision and pitching snapshots',()=>{
  const dir=path.join(__dirname,'../docs/data/replay/day-2026-10-04');

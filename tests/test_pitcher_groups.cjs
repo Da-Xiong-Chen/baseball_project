@@ -62,3 +62,10 @@ test('six teams have two nonoverlapping reliever templates and an empty custom s
 test('2025 closer stays in the documented suggested winning template when present',()=>{
  const p=[{name:'陳柏豪',role:'後援',games:45},...pitchers];assert.ok(groups.defaults(p,'樂天桃猿')[0].members.includes('陳柏豪'));
 });
+test('2026 defaults put the estimated closer first and leave tied teams unordered',()=>{
+ groups.setRuntime({season:2026});
+ try{
+  const p=[{name:'鍾允華',role:'後援',games:10},...pitchers];assert.equal(groups.defaults(p,'統一7-ELEVEn獅')[0].members[0],'鍾允華');
+  const q=[{name:'陳柏豪',role:'後援',games:1},...pitchers];assert.ok(!groups.defaults(q,'樂天桃猿')[0].members.includes('陳柏豪'));
+ }finally{groups.setRuntime({season:2025});}
+});

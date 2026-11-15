@@ -1,5 +1,5 @@
 import os
-"""預設場上名單的棒球規則檢查（docs/data/default-lineups-2025.json）。"""
+"""預設場上名單的棒球規則檢查（docs/data/default-lineups-<球季>.json，球季依目前執行設定）。"""
 import json
 import sys
 import unittest
@@ -16,7 +16,11 @@ POSITIONS = {"C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"}
 class DefaultLineupTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = json.loads((Path(os.environ.get("BASEBALL_STATIC_OUT",ROOT/"docs/data"))/"default-lineups-2025.json").read_text(encoding="utf-8"))
+        from runtime_config import settings
+        path = Path(os.environ.get("BASEBALL_STATIC_OUT",ROOT/"docs/data"))/f"default-lineups-{settings().season}.json"
+        if not path.exists():
+            raise unittest.SkipTest(f"{path.name} 未隨網站發布；名單與執行設定的球季不同")
+        cls.data = json.loads(path.read_text(encoding="utf-8"))
         cls.rosters = server.rosters()
 
     def test_every_team_has_a_default(self):

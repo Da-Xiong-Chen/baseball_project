@@ -61,7 +61,7 @@ async function evaluation(page) {
   await page.locator('#evalBtn:enabled').waitFor();
   await evaluate.press('Enter');
   await result.locator('.result-scope').waitFor();
-  assert.match(await result.locator('.sb-team').last().innerText(),new RegExp(await team.inputValue()));
+  assert.match(await result.locator('.sb-score').innerText(),new RegExp(await team.inputValue()));
   await assertFits(page);
 }
 

@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "default_date": "2026-10-04",
+  "days": [
+    {
+      "date": "2026-03-29",
+      "games": 3,
+      "pa": 225,
+      "batch_id": "223830461b06fcfe15c2d61e8b59691066f9ed339def2dafa7d526f185dd4eb6",
+      "case": {
+        "label": "開季牛棚名單案例",
+        "game": "2026-002",
+        "pa": "2026-002-a020",
+        "decision": "pen"
+      }
+    },
+    {
+      "date": "2026-04-01",
+      "games": 3,
+      "pa": 229,
+      "batch_id": "a33374179343d12a692f67154adcf0d98713725deffc30caf08294575db336a9",
+      "case": {
+        "label": "打席中換人案例",
+        "game": "2026-010",
+        "pa": "2026-010-a034",
+        "decision": "pen"
+      }
+    },
+    {
+      "date": "2026-05-15",
+      "games": 3,
+      "pa": 219,
+      "batch_id": "ca3bb63f9f0d391fb1b2f67c53902f4b29110e9f50597fd813f24d161c3a5e27",
+      "case": {
+        "label": "高球數先發案例",
+        "game": "2026-099",
+        "pa": "2026-099-a027",
+        "decision": "pen"
+      }
+    },
+    {
+      "date": "2026-06-13",
+      "games": 3,
+      "pa": 261,
+      "batch_id": "3c8eb60e4786a1e16a5b512d132ecf979fc0f3edfd2043ce7ad28b1e3b89ba1d",
+      "case": {
+        "label": "晚局一分差案例",
+        "game": "2026-162",
+        "pa": "2026-162-a030",
+        "decision": "pen"
+      }
+    },
+    {
+      "date": "2026-07-29",
+      "games": 3,
+      "pa": 249,
+      "batch_id": "0fab54a0a3f6b7d714f9e09599a259c343437e8018397ed78a20b0483e8be3b5",
+      "case": {
+        "label": "代打與接守案例",
+        "game": "2026-229",
+        "pa": "2026-229-h044",
+        "decision": "ph"
+      }
+    },
+    {
+      "date": "2026-08-14",
+      "games": 3,
+      "pa": 230,
+      "batch_id": "45af1916822737d990c005bb37360af3934d444880e6c60f6c1ac967a9750af8",
+      "case": {
+        "label": "連戰牛棚負荷案例",
+        "game": "2026-264",
+        "pa": "2026-264-a018",
+        "decision": "pen"
+      }
+    },
+    {
+      "date": "2026-09-20",
+      "games": 3,
+      "pa": 225,
+      "batch_id": "e2d7167abbcb759c4089921194d46844ad81f6c2380a8042fd4a676423b44d7e",
+      "case": {
+        "label": "接近提示門檻案例",
+        "game": "2026-344",
+        "pa": "2026-344-a028",
+        "decision": "pen"
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "games": 3,
+      "pa": 235,
+      "batch_id": "3b970badf058ecd54d8244df403e9466b30168c36b253e834bdca5bbfd7c464b",
+      "case": {
+        "label": "原版回放示範",
+        "game": "2026-251",
+        "pa": "2026-251-a034",
+        "decision": "pen"
+      }
+    }
+  ]
+}

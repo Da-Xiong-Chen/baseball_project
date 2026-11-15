@@ -1,0 +1,321 @@
+{
+  "status": "passed",
+  "source_commit": "6fccb0d0d99cd91c6223a45c77c4fe11f154a5a6",
+  "model_batch": "960aa04f6fd9a96f3a3bf60151eb5c3e698b20689219e8da618f80c32b47014e",
+  "training_source": "8374e442821251b39afbc996f2d5e665a2c3bb3df1e7cfe2397dec545b5987a3",
+  "games": 360,
+  "monthly_models": [
+    {
+      "cutoff": "2026-03-01",
+      "training": {
+        "pitches": 201611,
+        "first_date": "2024-03-30",
+        "last_date": "2025-10-06",
+        "missing_velocity": 8577,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2025-09-25",
+        "last_date": "2025-10-06"
+      },
+      "calibration_pa": 2000,
+      "iterations": 352
+    },
+    {
+      "cutoff": "2026-04-01",
+      "training": {
+        "pitches": 203472,
+        "first_date": "2024-03-30",
+        "last_date": "2026-03-31",
+        "missing_velocity": 8621,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2025-09-27",
+        "last_date": "2026-03-31"
+      },
+      "calibration_pa": 2000,
+      "iterations": 338
+    },
+    {
+      "cutoff": "2026-05-01",
+      "training": {
+        "pitches": 218768,
+        "first_date": "2024-03-30",
+        "last_date": "2026-04-30",
+        "missing_velocity": 9000,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2026-04-17",
+        "last_date": "2026-04-30"
+      },
+      "calibration_pa": 2000,
+      "iterations": 384
+    },
+    {
+      "cutoff": "2026-06-01",
+      "training": {
+        "pitches": 236322,
+        "first_date": "2024-03-30",
+        "last_date": "2026-05-31",
+        "missing_velocity": 9248,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2026-05-20",
+        "last_date": "2026-05-31"
+      },
+      "calibration_pa": 2000,
+      "iterations": 432
+    },
+    {
+      "cutoff": "2026-07-01",
+      "training": {
+        "pitches": 249313,
+        "first_date": "2024-03-30",
+        "last_date": "2026-06-30",
+        "missing_velocity": 9455,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2026-06-16",
+        "last_date": "2026-06-30"
+      },
+      "calibration_pa": 2000,
+      "iterations": 297
+    },
+    {
+      "cutoff": "2026-08-01",
+      "training": {
+        "pitches": 263480,
+        "first_date": "2024-03-30",
+        "last_date": "2026-07-31",
+        "missing_velocity": 10154,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2026-07-15",
+        "last_date": "2026-07-31"
+      },
+      "calibration_pa": 2000,
+      "iterations": 437
+    },
+    {
+      "cutoff": "2026-09-01",
+      "training": {
+        "pitches": 278306,
+        "first_date": "2024-03-30",
+        "last_date": "2026-08-30",
+        "missing_velocity": 10773,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2026-08-15",
+        "last_date": "2026-08-30"
+      },
+      "calibration_pa": 2000,
+      "iterations": 450
+    },
+    {
+      "cutoff": "2026-10-01",
+      "training": {
+        "pitches": 296350,
+        "first_date": "2024-03-30",
+        "last_date": "2026-09-30",
+        "missing_velocity": 11188,
+        "hand_policy": "known_event_actor_hands_only; unknown queries average L/R",
+        "velocity_policy": "80_to_170_or_missing; training_only_imputation"
+      },
+      "calibration": {
+        "policy": "chronological_latest_2000_before_cutoff",
+        "first_date": "2026-09-19",
+        "last_date": "2026-09-30"
+      },
+      "calibration_pa": 2000,
+      "iterations": 357
+    }
+  ],
+  "monthly_counts": {
+    "2026-03": 230,
+    "2026-04": 1863,
+    "2026-05": 2148,
+    "2026-06": 1593,
+    "2026-07": 1729,
+    "2026-08": 1869,
+    "2026-09": 2241,
+    "2026-10": 402
+  },
+  "coverage": {
+    "attempted": 12075,
+    "successful": 12075,
+    "errors": 0
+  },
+  "thresholds": {
+    "0.5": {
+      "pen": {
+        "n": 11958,
+        "excluded": 117,
+        "actual": 2206,
+        "suggested": 4197,
+        "both": 903,
+        "stay_n_suggested": 3289,
+        "stay_n_not": 6453,
+        "sys_only": 3294,
+        "neither": 6458,
+        "actual_only": 1303,
+        "stay": 9752,
+        "stay_excluded_mid_pa": 10,
+        "stay_excluded_missing_re24": 0,
+        "difference": 0.005212452395097475,
+        "bootstrap_valid": 2000,
+        "ci": [
+          -0.015,
+          0.025
+        ]
+      },
+      "ph": {
+        "n": 10365,
+        "excluded": 1710,
+        "actual": 491,
+        "suggested": 1241,
+        "both": 133,
+        "stay_n_suggested": 1108,
+        "stay_n_not": 8755,
+        "sys_only": 1108,
+        "neither": 8766,
+        "actual_only": 358,
+        "stay": 9874,
+        "stay_excluded_mid_pa": 11,
+        "stay_excluded_missing_re24": 0,
+        "difference": -0.024864482286553122,
+        "bootstrap_valid": 2000,
+        "ci": [
+          -0.053,
+          0.004
+        ]
+      }
+    },
+    "1.0": {
+      "pen": {
+        "n": 11958,
+        "excluded": 117,
+        "actual": 2206,
+        "suggested": 2394,
+        "both": 560,
+        "stay_n_suggested": 1831,
+        "stay_n_not": 7911,
+        "sys_only": 1834,
+        "neither": 7918,
+        "actual_only": 1646,
+        "stay": 9752,
+        "stay_excluded_mid_pa": 10,
+        "stay_excluded_missing_re24": 0,
+        "difference": 0.013383254973182327,
+        "bootstrap_valid": 2000,
+        "ci": [
+          -0.012,
+          0.037
+        ]
+      },
+      "ph": {
+        "n": 10365,
+        "excluded": 1710,
+        "actual": 491,
+        "suggested": 268,
+        "both": 37,
+        "stay_n_suggested": 231,
+        "stay_n_not": 9632,
+        "sys_only": 231,
+        "neither": 9643,
+        "actual_only": 454,
+        "stay": 9874,
+        "stay_excluded_mid_pa": 11,
+        "stay_excluded_missing_re24": 0,
+        "difference": -0.04661415546662641,
+        "bootstrap_valid": 2000,
+        "ci": [
+          -0.094,
+          0.008
+        ]
+      }
+    },
+    "2.0": {
+      "pen": {
+        "n": 11958,
+        "excluded": 117,
+        "actual": 2206,
+        "suggested": 767,
+        "both": 225,
+        "stay_n_suggested": 541,
+        "stay_n_not": 9201,
+        "sys_only": 542,
+        "neither": 9210,
+        "actual_only": 1981,
+        "stay": 9752,
+        "stay_excluded_mid_pa": 10,
+        "stay_excluded_missing_re24": 0,
+        "difference": -0.018819111118879035,
+        "bootstrap_valid": 2000,
+        "ci": [
+          -0.056,
+          0.019
+        ]
+      },
+      "ph": {
+        "n": 10365,
+        "excluded": 1710,
+        "actual": 491,
+        "suggested": 10,
+        "both": 2,
+        "stay_n_suggested": 8,
+        "stay_n_not": 9855,
+        "sys_only": 8,
+        "neither": 9866,
+        "actual_only": 489,
+        "stay": 9874,
+        "stay_excluded_mid_pa": 11,
+        "stay_excluded_missing_re24": 0,
+        "difference": -0.019174327752409938,
+        "bootstrap_valid": 2000,
+        "ci": [
+          -0.213,
+          0.179
+        ]
+      }
+    }
+  },
+  "website_overlap": {
+    "checked": 98,
+    "max_gain_abs_diff": 4.440892098500626e-15
+  },
+  "csv_sha256": "cd1aabb1dbafe9813dc858781da95b3202b6f360729484c9f29604e676356baa",
+  "json_sha256": "88f2ec9e60831b8a843221a1b390aad35bc54e8ff6e895e0ee6d18a6dc0aeb53",
+  "presentation": {
+    "pages": 38,
+    "edited_pages": [
+      13,
+      14
+    ],
+    "identical_other_pptx_pages": 36,
+    "preserved_media_master_layout_parts": 54,
+    "pdf_text_checked_pages": 38,
+    "pptx_sha256": "4d5e016f349fbeccb76585631b29c9a3a8570642f148b162de621bbdb92552b0",
+    "pdf_sha256": "0c4e1866de082211a593b6a6ff6f2a04d2af18def60ef5e77734c249bf21ef6c"
+  },
+  "verified_source_receipt": "b97836edcec31156b491aa275c44246131498bb856b7ee0e6465dc1c924dc207"
+}

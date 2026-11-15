@@ -6,26 +6,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:FEjzB",
-    "due": "rebas:CPBL:rfEOE",
+    "pitcher": "rebas:CPBL:nVk1Q",
+    "due": "rebas:CPBL:IbHQY",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:eChCD",
-      "rebas:CPBL:c3PEk",
+      "rebas:CPBL:rfEOE",
+      "rebas:CPBL:C5Lw5",
       "rebas:CPBL:Dvre5",
-      "rebas:CPBL:C5Lw5"
+      "rebas:CPBL:yDdjY"
     ],
     "bat_team": "中信兄弟",
     "fld_team": "台鋼雄鷹",
     "next_batters": [
+      "rebas:CPBL:IbHQY",
       "rebas:CPBL:rfEOE",
-      "rebas:CPBL:eChCD",
-      "rebas:CPBL:c3PEk"
+      "rebas:CPBL:C5Lw5"
     ],
     "pen": [
-      "rebas:CPBL:cDiBm",
-      "rebas:CPBL:nVk1Q",
-      "rebas:CPBL:w3aQC"
+      "rebas:CPBL:Ych1T",
+      "rebas:CPBL:Zk6YH",
+      "rebas:CPBL:OZ4Ny"
     ],
     "pitch_count": 90,
     "starter": true
@@ -37,26 +37,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:FEjzB",
-    "due": "rebas:CPBL:rfEOE",
+    "pitcher": "rebas:CPBL:nVk1Q",
+    "due": "rebas:CPBL:IbHQY",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:eChCD",
-      "rebas:CPBL:c3PEk",
+      "rebas:CPBL:rfEOE",
+      "rebas:CPBL:C5Lw5",
       "rebas:CPBL:Dvre5",
-      "rebas:CPBL:C5Lw5"
+      "rebas:CPBL:yDdjY"
     ],
     "bat_team": "中信兄弟",
     "fld_team": "台鋼雄鷹",
     "next_batters": [
+      "rebas:CPBL:IbHQY",
       "rebas:CPBL:rfEOE",
-      "rebas:CPBL:eChCD",
-      "rebas:CPBL:c3PEk"
+      "rebas:CPBL:C5Lw5"
     ],
     "pen": [
-      "rebas:CPBL:cDiBm",
-      "rebas:CPBL:nVk1Q",
-      "rebas:CPBL:w3aQC"
+      "rebas:CPBL:Ych1T",
+      "rebas:CPBL:Zk6YH",
+      "rebas:CPBL:OZ4Ny"
     ],
     "pitch_count": 90,
     "starter": true
@@ -68,26 +68,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:FEjzB",
-    "due": "rebas:CPBL:rfEOE",
+    "pitcher": "rebas:CPBL:nVk1Q",
+    "due": "rebas:CPBL:IbHQY",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:eChCD",
-      "rebas:CPBL:c3PEk",
+      "rebas:CPBL:rfEOE",
+      "rebas:CPBL:C5Lw5",
       "rebas:CPBL:Dvre5",
-      "rebas:CPBL:C5Lw5"
+      "rebas:CPBL:yDdjY"
     ],
     "bat_team": "中信兄弟",
     "fld_team": "台鋼雄鷹",
     "next_batters": [
+      "rebas:CPBL:IbHQY",
       "rebas:CPBL:rfEOE",
-      "rebas:CPBL:eChCD",
-      "rebas:CPBL:c3PEk"
+      "rebas:CPBL:C5Lw5"
     ],
     "pen": [
-      "rebas:CPBL:cDiBm",
-      "rebas:CPBL:nVk1Q",
-      "rebas:CPBL:w3aQC"
+      "rebas:CPBL:Ych1T",
+      "rebas:CPBL:Zk6YH",
+      "rebas:CPBL:OZ4Ny"
     ],
     "pitch_count": 90,
     "starter": true
@@ -99,25 +99,25 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:NHGwk",
+    "pitcher": "rebas:CPBL:Q5oCF",
     "due": "rebas:CPBL:TgNKb",
     "due_pos": "DH",
     "bench": [
+      "rebas:CPBL:XuDGV",
       "rebas:CPBL:WiffT",
-      "rebas:CPBL:1juVE",
-      "rebas:CPBL:puKjJ",
-      "rebas:CPBL:XuDGV"
+      "rebas:CPBL:ojwr3",
+      "rebas:CPBL:ICJNX"
     ],
     "bat_team": "台鋼雄鷹",
     "fld_team": "味全龍",
     "next_batters": [
       "rebas:CPBL:TgNKb",
-      "rebas:CPBL:WiffT",
-      "rebas:CPBL:1juVE"
+      "rebas:CPBL:XuDGV",
+      "rebas:CPBL:WiffT"
     ],
     "pen": [
-      "rebas:CPBL:Q5oCF",
-      "rebas:CPBL:C6A1j",
+      "rebas:CPBL:YsKwk",
+      "rebas:CPBL:NHGwk",
       "rebas:CPBL:nUjcY"
     ],
     "pitch_count": 90,
@@ -130,25 +130,25 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:NHGwk",
+    "pitcher": "rebas:CPBL:Q5oCF",
     "due": "rebas:CPBL:TgNKb",
     "due_pos": "DH",
     "bench": [
+      "rebas:CPBL:XuDGV",
       "rebas:CPBL:WiffT",
-      "rebas:CPBL:1juVE",
-      "rebas:CPBL:puKjJ",
-      "rebas:CPBL:XuDGV"
+      "rebas:CPBL:ojwr3",
+      "rebas:CPBL:ICJNX"
     ],
     "bat_team": "台鋼雄鷹",
     "fld_team": "味全龍",
     "next_batters": [
       "rebas:CPBL:TgNKb",
-      "rebas:CPBL:WiffT",
-      "rebas:CPBL:1juVE"
+      "rebas:CPBL:XuDGV",
+      "rebas:CPBL:WiffT"
     ],
     "pen": [
-      "rebas:CPBL:Q5oCF",
-      "rebas:CPBL:C6A1j",
+      "rebas:CPBL:YsKwk",
+      "rebas:CPBL:NHGwk",
       "rebas:CPBL:nUjcY"
     ],
     "pitch_count": 90,
@@ -161,25 +161,25 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:NHGwk",
+    "pitcher": "rebas:CPBL:Q5oCF",
     "due": "rebas:CPBL:TgNKb",
     "due_pos": "DH",
     "bench": [
+      "rebas:CPBL:XuDGV",
       "rebas:CPBL:WiffT",
-      "rebas:CPBL:1juVE",
-      "rebas:CPBL:puKjJ",
-      "rebas:CPBL:XuDGV"
+      "rebas:CPBL:ojwr3",
+      "rebas:CPBL:ICJNX"
     ],
     "bat_team": "台鋼雄鷹",
     "fld_team": "味全龍",
     "next_batters": [
       "rebas:CPBL:TgNKb",
-      "rebas:CPBL:WiffT",
-      "rebas:CPBL:1juVE"
+      "rebas:CPBL:XuDGV",
+      "rebas:CPBL:WiffT"
     ],
     "pen": [
-      "rebas:CPBL:Q5oCF",
-      "rebas:CPBL:C6A1j",
+      "rebas:CPBL:YsKwk",
+      "rebas:CPBL:NHGwk",
       "rebas:CPBL:nUjcY"
     ],
     "pitch_count": 90,
@@ -192,26 +192,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:5ZFTZ",
-    "due": "rebas:CPBL:u6XUJ",
+    "pitcher": "rebas:CPBL:u7Nvt",
+    "due": "rebas:CPBL:KNmRt",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:elqzw",
-      "rebas:CPBL:KNmRt",
-      "rebas:CPBL:8wMt5",
-      "rebas:CPBL:yvoBa"
+      "rebas:CPBL:VZZgs",
+      "rebas:CPBL:u6XUJ",
+      "rebas:CPBL:dFblH",
+      "rebas:CPBL:8wMt5"
     ],
     "bat_team": "味全龍",
     "fld_team": "富邦悍將",
     "next_batters": [
-      "rebas:CPBL:u6XUJ",
-      "rebas:CPBL:elqzw",
-      "rebas:CPBL:KNmRt"
+      "rebas:CPBL:KNmRt",
+      "rebas:CPBL:VZZgs",
+      "rebas:CPBL:u6XUJ"
     ],
     "pen": [
-      "rebas:CPBL:CE17i",
-      "rebas:CPBL:BLal8",
-      "rebas:CPBL:Fraw"
+      "rebas:CPBL:bNFyN",
+      "rebas:CPBL:Fraw",
+      "rebas:CPBL:CE17i"
     ],
     "pitch_count": 90,
     "starter": true
@@ -223,26 +223,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:5ZFTZ",
-    "due": "rebas:CPBL:u6XUJ",
+    "pitcher": "rebas:CPBL:u7Nvt",
+    "due": "rebas:CPBL:KNmRt",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:elqzw",
-      "rebas:CPBL:KNmRt",
-      "rebas:CPBL:8wMt5",
-      "rebas:CPBL:yvoBa"
+      "rebas:CPBL:VZZgs",
+      "rebas:CPBL:u6XUJ",
+      "rebas:CPBL:dFblH",
+      "rebas:CPBL:8wMt5"
     ],
     "bat_team": "味全龍",
     "fld_team": "富邦悍將",
     "next_batters": [
-      "rebas:CPBL:u6XUJ",
-      "rebas:CPBL:elqzw",
-      "rebas:CPBL:KNmRt"
+      "rebas:CPBL:KNmRt",
+      "rebas:CPBL:VZZgs",
+      "rebas:CPBL:u6XUJ"
     ],
     "pen": [
-      "rebas:CPBL:CE17i",
-      "rebas:CPBL:BLal8",
-      "rebas:CPBL:Fraw"
+      "rebas:CPBL:bNFyN",
+      "rebas:CPBL:Fraw",
+      "rebas:CPBL:CE17i"
     ],
     "pitch_count": 90,
     "starter": true
@@ -254,26 +254,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:5ZFTZ",
-    "due": "rebas:CPBL:u6XUJ",
+    "pitcher": "rebas:CPBL:u7Nvt",
+    "due": "rebas:CPBL:KNmRt",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:elqzw",
-      "rebas:CPBL:KNmRt",
-      "rebas:CPBL:8wMt5",
-      "rebas:CPBL:yvoBa"
+      "rebas:CPBL:VZZgs",
+      "rebas:CPBL:u6XUJ",
+      "rebas:CPBL:dFblH",
+      "rebas:CPBL:8wMt5"
     ],
     "bat_team": "味全龍",
     "fld_team": "富邦悍將",
     "next_batters": [
-      "rebas:CPBL:u6XUJ",
-      "rebas:CPBL:elqzw",
-      "rebas:CPBL:KNmRt"
+      "rebas:CPBL:KNmRt",
+      "rebas:CPBL:VZZgs",
+      "rebas:CPBL:u6XUJ"
     ],
     "pen": [
-      "rebas:CPBL:CE17i",
-      "rebas:CPBL:BLal8",
-      "rebas:CPBL:Fraw"
+      "rebas:CPBL:bNFyN",
+      "rebas:CPBL:Fraw",
+      "rebas:CPBL:CE17i"
     ],
     "pitch_count": 90,
     "starter": true
@@ -289,22 +289,22 @@
     "due": "rebas:CPBL:iDWQ3",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:OqNVW",
       "rebas:CPBL:SioVD",
-      "rebas:CPBL:ooOfM",
-      "rebas:CPBL:psHWp"
+      "rebas:CPBL:0YgQ0",
+      "rebas:CPBL:tm0Z"
     ],
     "bat_team": "富邦悍將",
     "fld_team": "樂天桃猿",
     "next_batters": [
       "rebas:CPBL:iDWQ3",
-      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:OqNVW",
       "rebas:CPBL:SioVD"
     ],
     "pen": [
-      "rebas:CPBL:n6fv0",
-      "rebas:CPBL:JYGnI",
-      "rebas:CPBL:vY7S"
+      "rebas:CPBL:Am8Uy",
+      "rebas:CPBL:8wmMR",
+      "rebas:CPBL:JYGnI"
     ],
     "pitch_count": 90,
     "starter": true
@@ -320,22 +320,22 @@
     "due": "rebas:CPBL:iDWQ3",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:OqNVW",
       "rebas:CPBL:SioVD",
-      "rebas:CPBL:ooOfM",
-      "rebas:CPBL:psHWp"
+      "rebas:CPBL:0YgQ0",
+      "rebas:CPBL:tm0Z"
     ],
     "bat_team": "富邦悍將",
     "fld_team": "樂天桃猿",
     "next_batters": [
       "rebas:CPBL:iDWQ3",
-      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:OqNVW",
       "rebas:CPBL:SioVD"
     ],
     "pen": [
-      "rebas:CPBL:n6fv0",
-      "rebas:CPBL:JYGnI",
-      "rebas:CPBL:vY7S"
+      "rebas:CPBL:Am8Uy",
+      "rebas:CPBL:8wmMR",
+      "rebas:CPBL:JYGnI"
     ],
     "pitch_count": 90,
     "starter": true
@@ -351,22 +351,22 @@
     "due": "rebas:CPBL:iDWQ3",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:OqNVW",
       "rebas:CPBL:SioVD",
-      "rebas:CPBL:ooOfM",
-      "rebas:CPBL:psHWp"
+      "rebas:CPBL:0YgQ0",
+      "rebas:CPBL:tm0Z"
     ],
     "bat_team": "富邦悍將",
     "fld_team": "樂天桃猿",
     "next_batters": [
       "rebas:CPBL:iDWQ3",
-      "rebas:CPBL:NvcWV",
+      "rebas:CPBL:OqNVW",
       "rebas:CPBL:SioVD"
     ],
     "pen": [
-      "rebas:CPBL:n6fv0",
-      "rebas:CPBL:JYGnI",
-      "rebas:CPBL:vY7S"
+      "rebas:CPBL:Am8Uy",
+      "rebas:CPBL:8wmMR",
+      "rebas:CPBL:JYGnI"
     ],
     "pitch_count": 90,
     "starter": true
@@ -379,25 +379,25 @@
     "bat_score": 2,
     "fld_score": 3,
     "pitcher": "rebas:CPBL:Qmj7D",
-    "due": "rebas:CPBL:xdLku",
+    "due": "rebas:CPBL:1MV0s",
     "due_pos": "DH",
     "bench": [
+      "rebas:CPBL:xdLku",
+      "rebas:CPBL:vdpJ5",
       "rebas:CPBL:7vTQV",
-      "rebas:CPBL:ElLgX",
-      "rebas:CPBL:ZtyCx",
-      "rebas:CPBL:vdpJ5"
+      "rebas:CPBL:UeDA6"
     ],
     "bat_team": "樂天桃猿",
     "fld_team": "統一7-ELEVEn獅",
     "next_batters": [
+      "rebas:CPBL:1MV0s",
       "rebas:CPBL:xdLku",
-      "rebas:CPBL:7vTQV",
-      "rebas:CPBL:ElLgX"
+      "rebas:CPBL:vdpJ5"
     ],
     "pen": [
-      "rebas:CPBL:yemqV",
-      "rebas:CPBL:IvH3O",
-      "rebas:CPBL:mlpZo"
+      "rebas:CPBL:h33vK",
+      "rebas:CPBL:yvYke",
+      "rebas:CPBL:8tDFK"
     ],
     "pitch_count": 90,
     "starter": true
@@ -410,25 +410,25 @@
     "bat_score": 2,
     "fld_score": 3,
     "pitcher": "rebas:CPBL:Qmj7D",
-    "due": "rebas:CPBL:xdLku",
+    "due": "rebas:CPBL:1MV0s",
     "due_pos": "DH",
     "bench": [
+      "rebas:CPBL:xdLku",
+      "rebas:CPBL:vdpJ5",
       "rebas:CPBL:7vTQV",
-      "rebas:CPBL:ElLgX",
-      "rebas:CPBL:ZtyCx",
-      "rebas:CPBL:vdpJ5"
+      "rebas:CPBL:UeDA6"
     ],
     "bat_team": "樂天桃猿",
     "fld_team": "統一7-ELEVEn獅",
     "next_batters": [
+      "rebas:CPBL:1MV0s",
       "rebas:CPBL:xdLku",
-      "rebas:CPBL:7vTQV",
-      "rebas:CPBL:ElLgX"
+      "rebas:CPBL:vdpJ5"
     ],
     "pen": [
-      "rebas:CPBL:yemqV",
-      "rebas:CPBL:IvH3O",
-      "rebas:CPBL:mlpZo"
+      "rebas:CPBL:h33vK",
+      "rebas:CPBL:yvYke",
+      "rebas:CPBL:8tDFK"
     ],
     "pitch_count": 90,
     "starter": true
@@ -441,25 +441,25 @@
     "bat_score": 2,
     "fld_score": 3,
     "pitcher": "rebas:CPBL:Qmj7D",
-    "due": "rebas:CPBL:xdLku",
+    "due": "rebas:CPBL:1MV0s",
     "due_pos": "DH",
     "bench": [
+      "rebas:CPBL:xdLku",
+      "rebas:CPBL:vdpJ5",
       "rebas:CPBL:7vTQV",
-      "rebas:CPBL:ElLgX",
-      "rebas:CPBL:ZtyCx",
-      "rebas:CPBL:vdpJ5"
+      "rebas:CPBL:UeDA6"
     ],
     "bat_team": "樂天桃猿",
     "fld_team": "統一7-ELEVEn獅",
     "next_batters": [
+      "rebas:CPBL:1MV0s",
       "rebas:CPBL:xdLku",
-      "rebas:CPBL:7vTQV",
-      "rebas:CPBL:ElLgX"
+      "rebas:CPBL:vdpJ5"
     ],
     "pen": [
-      "rebas:CPBL:yemqV",
-      "rebas:CPBL:IvH3O",
-      "rebas:CPBL:mlpZo"
+      "rebas:CPBL:h33vK",
+      "rebas:CPBL:yvYke",
+      "rebas:CPBL:8tDFK"
     ],
     "pitch_count": 90,
     "starter": true
@@ -471,26 +471,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:5RDHC",
-    "due": "rebas:CPBL:7TPaU",
+    "pitcher": "rebas:CPBL:NiqAD",
+    "due": "rebas:CPBL:LsMyw",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:LsMyw",
       "rebas:CPBL:Nf4Ac",
-      "rebas:CPBL:Ifqha",
-      "rebas:CPBL:gPoLb"
+      "rebas:CPBL:LlGVK",
+      "rebas:CPBL:gPoLb",
+      "rebas:CPBL:Y0UJM"
     ],
     "bat_team": "統一7-ELEVEn獅",
     "fld_team": "中信兄弟",
     "next_batters": [
-      "rebas:CPBL:7TPaU",
       "rebas:CPBL:LsMyw",
-      "rebas:CPBL:Nf4Ac"
+      "rebas:CPBL:Nf4Ac",
+      "rebas:CPBL:LlGVK"
     ],
     "pen": [
-      "rebas:CPBL:b76lK",
       "rebas:CPBL:qQixh",
-      "rebas:CPBL:EIhcu"
+      "rebas:CPBL:4ICxk",
+      "rebas:CPBL:5RDHC"
     ],
     "pitch_count": 90,
     "starter": true
@@ -502,26 +502,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:5RDHC",
-    "due": "rebas:CPBL:7TPaU",
+    "pitcher": "rebas:CPBL:NiqAD",
+    "due": "rebas:CPBL:LsMyw",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:LsMyw",
       "rebas:CPBL:Nf4Ac",
-      "rebas:CPBL:Ifqha",
-      "rebas:CPBL:gPoLb"
+      "rebas:CPBL:LlGVK",
+      "rebas:CPBL:gPoLb",
+      "rebas:CPBL:Y0UJM"
     ],
     "bat_team": "統一7-ELEVEn獅",
     "fld_team": "中信兄弟",
     "next_batters": [
-      "rebas:CPBL:7TPaU",
       "rebas:CPBL:LsMyw",
-      "rebas:CPBL:Nf4Ac"
+      "rebas:CPBL:Nf4Ac",
+      "rebas:CPBL:LlGVK"
     ],
     "pen": [
-      "rebas:CPBL:b76lK",
       "rebas:CPBL:qQixh",
-      "rebas:CPBL:EIhcu"
+      "rebas:CPBL:4ICxk",
+      "rebas:CPBL:5RDHC"
     ],
     "pitch_count": 90,
     "starter": true
@@ -533,26 +533,26 @@
     "bases": 3,
     "bat_score": 2,
     "fld_score": 3,
-    "pitcher": "rebas:CPBL:5RDHC",
-    "due": "rebas:CPBL:7TPaU",
+    "pitcher": "rebas:CPBL:NiqAD",
+    "due": "rebas:CPBL:LsMyw",
     "due_pos": "DH",
     "bench": [
-      "rebas:CPBL:LsMyw",
       "rebas:CPBL:Nf4Ac",
-      "rebas:CPBL:Ifqha",
-      "rebas:CPBL:gPoLb"
+      "rebas:CPBL:LlGVK",
+      "rebas:CPBL:gPoLb",
+      "rebas:CPBL:Y0UJM"
     ],
     "bat_team": "統一7-ELEVEn獅",
     "fld_team": "中信兄弟",
     "next_batters": [
-      "rebas:CPBL:7TPaU",
       "rebas:CPBL:LsMyw",
-      "rebas:CPBL:Nf4Ac"
+      "rebas:CPBL:Nf4Ac",
+      "rebas:CPBL:LlGVK"
     ],
     "pen": [
-      "rebas:CPBL:b76lK",
       "rebas:CPBL:qQixh",
-      "rebas:CPBL:EIhcu"
+      "rebas:CPBL:4ICxk",
+      "rebas:CPBL:5RDHC"
     ],
     "pitch_count": 90,
     "starter": true

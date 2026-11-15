@@ -462,10 +462,10 @@ test('2025 number aliases use team-specific exact strings, preserve 00, and keep
  f.eval('playerNumbers2025={}');assert.equal(f.eval('matchesPlayerSearch("Name","A","Nam")'),true);assert.equal(f.eval('matchesPlayerSearch("Name","A","1")'),false);
 });
 
-test('every exported roster number searches exactly all matching 2025 team members',()=>{
- const aliases=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/player-numbers-2025.json'),'utf8'));
+test('every exported roster number searches exactly all matching 2026 team members',()=>{
+ const aliases=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/player-numbers-2026.json'),'utf8'));
  const model=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/model.json'),'utf8'));
- assert.equal(aliases.season,2025);
+ assert.equal(aliases.season,2026);
  const f=fixture();f.context.aliases=aliases.teams;f.eval('playerNumbers2025=aliases');
  for(const [team,roster] of Object.entries(model.rosters)) {
   for(const kind of ['hitters','pitchers']) {
@@ -739,7 +739,7 @@ test('day-analysis entry keeps primary navigation available without applying the
  const f=entryFixture();f.eval('audienceMode="team";applyOwnLineup=async()=>{throw Error("history must remain independent")};');
  await f.eval("selectAudienceEntry('review')");
  assert.equal(f.eval('currentPage()'),'review');assert.equal(f.node('.feature-nav').hidden,true);
- assert.equal(f.node('.audience-control').hidden,false);assert.match(f.node('#audienceStatus').textContent,/賽前模型提示/);
+ assert.equal(f.node('.audience-control').hidden,false);assert.equal(f.node('#audienceStatus').textContent,'','day analysis has its own heading; no duplicate status sentence');
  assert.equal(f.eval('audienceMode'),'team');
 });
 
@@ -835,7 +835,7 @@ test('API mode obtains the batch identity from meta without loading static Engin
 });
 
 test('conditional fielding plan appears separately and never changes the original candidate or suggestion',async()=>{
- const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/fielding-plans-2025-09-20.json'),'utf8'));
+ const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/day-2026-10-04/fielding-plans.json'),'utf8'));
  const pa=Object.keys(data.plans)[0],incoming=Object.keys(data.plans[pa])[0];
  const r={view:'replay',candidates:[{角色:'現任',球員:'Current'},{角色:'代打',球員:incoming,守備:'unknown'}]};
  f.context.r=r;f.context.planData=data;f.context.pa=pa;
@@ -861,7 +861,7 @@ test('numeric cards preserve missing samples, valid score bounds and safe chart 
 });
 
 test('switching to pitching hides fielding plans and rejects late pinch-hit plan success or failure',async()=>{
- const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/fielding-plans-2025-09-20.json'),'utf8'));
+ const f=fixture(),data=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/day-2026-10-04/fielding-plans.json'),'utf8'));
  const pa=Object.keys(data.plans)[0],incoming=Object.keys(data.plans[pa])[0];
  f.context.r={view:'replay',candidates:[{角色:'代打',球員:incoming,守備:'unknown'}]};f.context.pa=pa;
  for(const fails of [false,true]){
@@ -902,7 +902,7 @@ test('all 18 real-model custom scenarios render both assessment views with finit
 });
 
 test('model validation retry refetches a schema-invalid JSON response instead of reusing it forever',async()=>{
- const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(process.env.BASEBALL_STATIC_OUT||path.join(__dirname,'../docs/data'),'model-evaluation.json'),'utf8'));
+ const f=fixture(),good=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/model-evaluation-v5-2025.json'),'utf8'));
  let requests=0;f.context.Engine.model=()=>({batch_id:good.batch_id});
  f.context.fetch=async()=>({ok:true,json:async()=>++requests===1?{batch_id:good.batch_id}:good});
  const control={insertAdjacentHTML(){}};
@@ -1014,7 +1014,7 @@ test('concise recommendation keeps sample and model-disagreement states without 
  const f=fixture();
  f.context.cands=[{角色:'現任',球員:'Current',預估勝率:0,階層式:0,機器學習:0,樣本球數:1000},
  {角色:'代打',球員:'Next',守備:'ok',預估勝率:2,階層式:2,機器學習:2,樣本球數:10}];
- assert.match(f.eval('recommendation(cands).title'),/候選比較：Next/);
+ assert.match(f.eval('recommendation(cands).title'),/^Next 代打　\+2\.00 百分點$/);
  assert.match(f.eval('recommendation(cands).text'),/樣本有限/);
  f.context.cands[1].機器學習=-1;
  assert.match(f.eval('recommendation(cands).text'),/模型排序不同/);
@@ -1064,4 +1064,47 @@ test('demo scenario names a matchup that exists in the published model data',()=
  const labels=team=>[...model.rosters[team].hitters,...model.rosters[team].pitchers].map(p=>model.players[p.name]||p.name);
  assert.ok(labels(demo.oppTeam).includes(demo.pitcher));assert.ok(labels(demo.myTeam).includes(demo.batter));
  assert.match(fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8'),/id="demoBtn"/);
+});
+test('demo picks the due batter when a saved lineup labels options by batting order',()=>{
+ const f=fixture(),select=f.node('#dueBatter');let changed=0;f.context.Event=class{constructor(type){this.type=type;}};
+ select.dispatchEvent=()=>{changed++;};
+ select.options=[{textContent:'第 1 棒 · 陳傑憲',value:'a'},{textContent:'第 2 棒 · 林佳緯',value:'b'},{textContent:'胡金龍（右打）',value:'c'}];
+ assert.equal(f.eval("selectByLabel('#dueBatter','林佳緯')"),true);assert.equal(select.value,'b');assert.equal(changed,1);
+ assert.equal(f.eval("selectByLabel('#dueBatter','胡金龍')"),true);assert.equal(select.value,'c');
+ assert.equal(f.eval("selectByLabel('#dueBatter','棒')"),false);
+});
+test('replay shortcut explains when the current list has no system suggestion',()=>{
+ const f=fixture();f.eval('openFirstSuggestion()');
+ assert.match(f.node('#replayFirstStatus').textContent,/沒有建議換人/);
+ f.eval('syncReviewSteps()');assert.equal(f.node('#replayFirstSuggest').disabled,true);assert.equal(f.node('#replayFirstStatus').textContent,'');
+});
+test('play results use CPBL scoring terms instead of a generic out or other result',()=>{
+ const f=fixture();
+ for(const [code,label] of [['GIDP','雙殺打'],['SF','高飛犧牲打'],['SH','犧牲短打'],['E','失誤上壘'],['IBB','故意四壞球'],['uBB','四壞球'],['FO','飛球出局'],['GO','滾地球出局']])assert.equal(f.eval(`resultLabel('${code}')`),label);
+ assert.equal(f.eval("resultLabel('ID')"),'其他結果');assert.equal(f.eval("resultLabel('')"),'未提供');
+});
+test('scoreboard keeps the away team on the left in both halves and marks the batting side',()=>{
+ const f=fixture();
+ const top=f.eval("scoreboardTeams({half:'away',bat_team:'A',bat_score:4,fld_team:'H',fld_score:3})");
+ const bottom=f.eval("scoreboardTeams({half:'home',bat_team:'H',bat_score:3,fld_team:'A',fld_score:4})");
+ for(const html of [top,bottom])assert.ok(html.indexOf('>A')<html.indexOf('>H'),'away team first');
+ assert.match(top,/at-bat"><div class="t">A<span class="sb-bat">攻/);assert.match(bottom,/at-bat"><div class="t">H<span class="sb-bat">攻/);
+});
+test('player notes show season lines and head-to-head counts only for custom evaluations',()=>{
+ const f=fixture();
+ f.context.notes={season:2026,data_seasons:[2024,2025,2026],batting:{B:[10,40,35,10,2,1,3,4,1,0,8]},pitching:{P:[20,0,95,30,12,10,40,140]},h2h:{B:{P:[7,2,1,1,0,3]},C:{P:[3,1,0,0,0,1]}}};
+ f.eval('playerNotes=notes');
+ const ph=f.eval("playerNotesHtml({view:'offense',situation:{pitcher:'P'}},{球員:'B'},'ph')");
+ assert.match(ph,/2026 打擊率 \.286・上壘率 \.375・長打率 \.657・3 轟・40 打席/);assert.match(ph,/7 打席 2 安 1 轟 1 四死 3 三振/);
+ const pen=f.eval("playerNotesHtml({view:'defense',bullpen:{next:['B','C','D']}},{投手:'P'},'pen')");
+ assert.match(pen,/防禦率 3\.41・31\.2 局・40 三振・20 場/);assert.match(pen,/對這 3 棒：10 打席 3 安 1 轟 1 四死 4 三振/);
+ assert.match(f.eval("playerNotesHtml({view:'offense',situation:{pitcher:'Z'}},{球員:'B'},'ph')"),/無對戰紀錄/);
+ assert.equal(f.eval("playerNotesHtml({view:'replay',situation:{pitcher:'P'}},{球員:'B'},'ph')"),'');
+});
+test('custom result rows offer a substitution button that replay rows never show',()=>{
+ const f=fixture();
+ assert.match(f.eval("applyButton({view:'offense'},'B','ph',true)"),/class="row-apply is-primary" data-apply-sub="B" data-apply-kind="ph"/);
+ assert.match(f.eval("applyButton({view:'defense'},'P','pen',false)"),/class="row-apply" data-apply-sub="P" data-apply-kind="pen"/);
+ assert.equal(f.eval("applyButton({view:'replay'},'B','ph',true)"),'');
+ assert.equal(f.eval("substitutionNoteHtml({view:'replay'})"),'');
 });

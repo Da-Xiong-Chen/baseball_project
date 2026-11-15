@@ -47,6 +47,23 @@
     const shape=c=>c&&Array.isArray(c.slots)&&c.slots.length===9&&c.slots.every(x=>x&&typeof x.name==='string'&&POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9&&typeof c.pitcher==='string'&&(!c.unavailable||(Array.isArray(c.unavailable)&&c.unavailable.every(n=>typeof n==='string')&&new Set(c.unavailable).size===c.unavailable.length));
     return s&&[1,2].includes(s.version)&&s.season===runtimeSeason&&shape(s.draft)&&(!s.confirmed||shape(s.confirmed));
   }
+  function readBackup(text,team,teamRoster){
+    const data=JSON.parse(text);
+    if(data?.type!=='baseball-lineup'||data.team!==team||!validState(data.state))
+      throw Error('檔案的球隊、球季或名單格式不符。');
+    const imported=data.state.draft;
+    const hitters=new Set(teamRoster.hitters.map(player=>player.name));
+    const pitchers=new Set(teamRoster.pitchers.map(player=>player.name));
+    if(imported.slots.some(slot=>!Object.hasOwn(POS,slot.pos)||(slot.name&&!hitters.has(slot.name)))
+      ||(imported.pitcher&&!pitchers.has(imported.pitcher))
+      ||(imported.unavailable||[]).some(name=>!hitters.has(name)&&!pitchers.has(name)))
+      throw Error('檔案含目前名單沒有的球員，或守位格式不符。');
+    const inUse=imported.slots.filter(slot=>slot.name).map(slot=>slot.name);
+    if(imported.pitcher)inUse.push(imported.pitcher);
+    if(new Set(inUse).size!==inUse.length||inUse.some(name=>imported.unavailable?.includes(name)))
+      throw Error('檔案中有人重複配置，或已退場球員仍在場上。');
+    return clone(imported);
+  }
   const states=new Map();let defaults={},defaultsMeta={},options,teamName='',roster,pickerIndex=null,pickerField=false,returnFocus=null;
   let swapMode=null,swapFirst=null,swapUndo=null;
   const q=s=>options.element.querySelector(s);
@@ -199,11 +216,58 @@
       await o.applied(teamName,{pitcherSelected:pitcherChanged,resetPitchCount:pitcherChanged});
       message(saveMessage(saved,'配置已套用並保存。','配置已套用；本次可用，但無法保存到瀏覽器。'));
     };
+    const exportButton=q('#lineupExport'), importInput=q('#lineupImport');
+    exportButton.onclick=()=>{
+      if(!roster||options.element.hasAttribute('aria-busy'))return;
+      const {draft}=get(teamName);
+      const state={version:2,season:runtimeSeason,draft,confirmed:null};
+      const blob=new Blob([JSON.stringify({type:'baseball-lineup',team:teamName,state},null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob), link=document.createElement('a');
+      link.href=url;link.download=`baseball-lineup-${runtimeSeason}.json`;link.click();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+    };
+    importInput.onchange=async()=>{
+      const file=importInput.files?.[0], activeTeam=teamName, activeRoster=roster;
+      if(!file||!activeRoster||options.element.hasAttribute('aria-busy'))return;
+      try {
+        if(file.size>65536)throw Error('請選擇小於 64 KB 的名單檔。');
+        const draft=readBackup(await file.text(),activeTeam,activeRoster);
+        if(teamName!==activeTeam||roster!==activeRoster)return;
+        resetSwap();get(teamName).draft=draft;draftChanged();
+      } catch(error) {
+        if(teamName===activeTeam)message(error instanceof SyntaxError?'名單檔案不是有效的 JSON。':error.message,true);
+      } finally {importInput.value='';}
+    };
   }
   /* 預設名單：{team:{slots,pitcher,games}}；只在此瀏覽器沒有保存記錄時帶入。 */
   function setDefaults(map){defaults={};defaultsMeta={};Object.entries(map||{}).forEach(([t,v])=>{const c={slots:v.slots.map(x=>({name:x.name,pos:x.pos})),pitcher:v.pitcher};if(c.slots.length===9&&c.slots.every(x=>POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9){defaults[t]=c;defaultsMeta[t]={games:v.games,through:v.through};}});states.forEach((s,t)=>{if(!s.confirmed&&defaults[t]&&!s.storageError&&(s.isDefault||!s.draft.pitcher)){s.draft=clone(defaults[t]);s.isDefault=true;}});}
   function defaultFor(t){return defaults[t]?clone(defaults[t]):null;}
+  /* 換人：kind 為 'ph'（代打承接原棒次與守位）或 'pen'（換投）；被換下的球員記為已退場。回傳復原用的快照。 */
+  function substitute(t,{kind,out,incoming}){
+    const s=get(t);if(!s.confirmed||!out||!incoming||out===incoming)return null;
+    const c=s.confirmed;
+    if(kind==='pen'?c.pitcher!==out:!c.slots.some(x=>x.name===out))return null;
+    if(c.pitcher===incoming||c.slots.some(x=>x.name===incoming)||(c.unavailable||[]).includes(incoming))return null;
+    const snapshot={draft:clone(s.draft),confirmed:clone(s.confirmed),isDefault:!!s.isDefault};
+    const apply=config=>{
+      if(kind==='pen'){if(config.pitcher===out)config.pitcher=incoming;}
+      else{const slot=config.slots.find(x=>x.name===out);if(slot)slot.name=incoming;}
+      config.unavailable=[...new Set([...(config.unavailable||[]),out])].filter(n=>n!==incoming&&n!==config.pitcher&&!config.slots.some(x=>x.name===n));
+    };
+    const synced=JSON.stringify(s.draft)===JSON.stringify(s.confirmed);
+    apply(c);if(synced)s.draft=clone(c);else apply(s.draft);
+    delete s.isDefault;
+    const prev=teamName;teamName=t;const saved=persist();teamName=prev;
+    if(t===teamName&&options&&roster)render();
+    return {snapshot,saved};
+  }
+  function restore(t,snapshot){
+    const s=get(t);if(!snapshot)return;
+    s.draft=clone(snapshot.draft);s.confirmed=clone(snapshot.confirmed);if(snapshot.isDefault)s.isDefault=true;else delete s.isDefault;
+    const prev=teamName;teamName=t;persist();teamName=prev;
+    if(t===teamName&&options&&roster)render();
+  }
   function cancelSwap(){swapMode=null;swapFirst=null;if(options&&roster)render();}
-  const api={setRuntime,release,setDefaults,defaultFor,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity};
+  const api={setRuntime,release,setDefaults,defaultFor,substitute,restore,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity,readBackup};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LineupBoard=api;
 })(typeof window!=='undefined'?window:globalThis);

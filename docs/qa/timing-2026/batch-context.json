@@ -1,0 +1,49 @@
+{
+  "training_version": 5,
+  "engine_contract": 5,
+  "runtime_id": "aa41ed6258a992f837349abbb08ab2189d0b3e1d2f5abfe44c4b70fda7cf3597",
+  "input_id": "8374e442821251b39afbc996f2d5e665a2c3bb3df1e7cfe2397dec545b5987a3",
+  "models": [
+    {
+      "name": "gbt_2026-03_v5.pkl",
+      "cutoff": "2026-03-01",
+      "sha256": "69c502e9ea00c97b26a602f8361e33ec2b049b9fa404be0bc0d580ced479f1f5"
+    },
+    {
+      "name": "gbt_2026-04_v5.pkl",
+      "cutoff": "2026-04-01",
+      "sha256": "35c9ed12f71326e3da21960894b7a27b80a9faf342d276be57cb853dc3321c19"
+    },
+    {
+      "name": "gbt_2026-05_v5.pkl",
+      "cutoff": "2026-05-01",
+      "sha256": "1f1a997328667c18950e8a352f1dc8282b7a7691e75ef60862a2b1aeee30271a"
+    },
+    {
+      "name": "gbt_2026-06_v5.pkl",
+      "cutoff": "2026-06-01",
+      "sha256": "0f78c74f764aedd3bad94ca1c1a8cb1ecc10dda4410a84c7eb03973bad97a4ed"
+    },
+    {
+      "name": "gbt_2026-07_v5.pkl",
+      "cutoff": "2026-07-01",
+      "sha256": "20caeea55cf9ec59c016c597387fdb54d04ef552f3f689f1132563e6201d672a"
+    },
+    {
+      "name": "gbt_2026-08_v5.pkl",
+      "cutoff": "2026-08-01",
+      "sha256": "028221c7b14d8bc8e04931006a8b9ce21376ece45fac8ff52132e74938958134"
+    },
+    {
+      "name": "gbt_2026-09_v5.pkl",
+      "cutoff": "2026-09-01",
+      "sha256": "46750208357a9388470ed433581e362069bc87bd64f877be95d806b6aa83ccaa"
+    },
+    {
+      "name": "gbt_2026-10_v5.pkl",
+      "cutoff": "2026-10-01",
+      "sha256": "1c77dcf75a55e2cb9432ed5e3cfdf13f27b0b17cfb7861b0024a505b5d3f2f4d"
+    }
+  ],
+  "batch_id": "960aa04f6fd9a96f3a3bf60151eb5c3e698b20689219e8da618f80c32b47014e"
+}

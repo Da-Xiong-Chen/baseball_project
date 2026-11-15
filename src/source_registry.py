@@ -28,9 +28,13 @@ def fielding_registry(cutoff=None):
         by_year[(row.date.year,row.team,row.raw_name)].append((row.name,row.date))
         by_team_name[(row.team,row.raw_name)].append((row.name,row.date))
     inputs=[]
-    if year>2025:inputs.append(('cpbl',2025,1.,Path(DATA)/'cpbl/positions_2025.csv'))
-    inputs.extend(('ldkrsi',y,w,Path(DATA)/f'ldkrsi/fieldings_{y}.csv')
-                  for y,w in ((2024,.7),(2023,.4)) if y<year)
+    # 2026 季後：最近一季改用 Rebas 2026 逐打席守備陣容（球員 ID 已解析），較早季別依序降權。
+    # 2026 以前的截止日維持原本 2025 官網 + 2023–2024 ldkrsi 的權重，不影響既有批次。
+    observed=Path(DATA)/'rebas-fielding/positions_2026.csv' if year>2026 else None
+    weights={2025:1.,2024:.7,2023:.4} if observed is None else {2025:.7,2024:.4}
+    if year>2025:inputs.append(('cpbl',2025,weights[2025],Path(DATA)/'cpbl/positions_2025.csv'))
+    inputs.extend(('ldkrsi',y,weights[y],Path(DATA)/f'ldkrsi/fieldings_{y}.csv')
+                  for y in (2024,2023) if y<year and y in weights)
     rows=[];hashes={}
     for namespace,season,weight,path in inputs:
         if not path.exists():continue
@@ -66,6 +70,12 @@ def fielding_registry(cutoff=None):
         else:
             review.append({**row,'player_key':None,'status':'ambiguous' if matches else 'unmatched',
                            'official_identity_or_registration_claim':False})
+    if observed is not None and observed.exists():
+        hashes['rebas:2026']=hashlib.sha256(observed.read_bytes()).hexdigest()
+        known=set(boxes.name)
+        for row in pd.read_csv(observed,encoding='utf-8-sig').to_dict('records'):
+            if row['season']!=2026 or row['player_id'] not in known:continue
+            mapped.append(dict(name=row['player_id'],POS=row['position'],G_w=float(row['observed_games'])))
     frame=pd.DataFrame(mapped,columns=['name','POS','G_w'])
     positions=frame.groupby(['name','POS']).G_w.sum() if not frame.empty else pd.Series(dtype=float,index=pd.MultiIndex.from_tuples([],names=['name','POS']))
     return positions,{'cutoff':cutoff,'source_hashes':hashes,'links':review,

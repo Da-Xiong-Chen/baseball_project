@@ -121,8 +121,11 @@
       const used = result.allocations.filter(player => player.used);
       const allocation = used.length ? `<ol>${used.map(player =>
         `<li>${escapeHtml(label(player.id))}：安排 ${player.assigned} 打席，剩餘 ${player.remaining}</li>`).join('')}</ol>` : '';
-      const reserve = result.reserve.map(player => `${escapeHtml(label(player.id))}（${player.remaining === null ?
-        '容量待確認' : player.remaining + ' 打席'}）`).join('、') || '無';
+      // 有填容量的保留投手逐一列出；尚未確認容量的合併成一句，避免整串「容量待確認」
+      const known = result.reserve.filter(player => player.remaining !== null);
+      const pending = result.reserve.length - known.length;
+      const reserve = [...known.map(player => `${escapeHtml(label(player.id))}（${player.remaining} 打席）`),
+        ...(pending ? [`另 ${pending} 人容量待確認`] : [])].join('、') || '無';
       return `<section class="capacity-result"><h4>${title}</h4><p><strong>${status}</strong> · 已涵蓋 ${result.covered}／${result.target} 打席</p>${allocation}<p>保留：${reserve}</p></section>`;
     }
 
@@ -158,6 +161,39 @@
     };
 
     return {
+      placeFirst(id, planName) {
+        if (!['A','B'].includes(planName)) return;
+        if (!source || source.key !== snapshot().key) refresh();
+        element.open = true;
+        const index = source.pitchers.findIndex(player => player.id === id);
+        const rows = [...element.querySelectorAll('[data-arm]')];
+        const row = rows[index];
+        if (!row) {
+          output.textContent = '這位投手已不在可用牛棚，請確認目前名單。';
+          return;
+        }
+        if (planName === 'B') {
+          compare.checked = true;
+          showComparison();
+        }
+        const selector = orderSelectors[planName === 'B' ? 1 : 0];
+        const status = row.querySelector('[data-status]');
+        const order = row.querySelector(selector);
+        if (status.value !== 'available') {
+          output.textContent = label(id) + '目前不可接續，請先確認狀態。';
+          status.focus();
+          return;
+        }
+        const others = rows.map(r => r.querySelector(selector))
+          .filter(field => field !== order && field.value)
+          .sort((left, right) => Number(left.value) - Number(right.value));
+        clear();
+        order.value = '1';
+        others.forEach((field, i) => { field.value = String(i + 2); });
+        const capacity = row.querySelector('[data-capacity]');
+        output.textContent = `已將 ${label(id)} 排入方案 ${planName} 第一順位。請確認容量，再檢查接續。`;
+        (capacity.value === '' ? capacity : order).focus();
+      },
       contextChanged() {
         if (!source || source.key === snapshot().key) return;
         clear();

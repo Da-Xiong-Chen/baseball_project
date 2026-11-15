@@ -1,0 +1,9 @@
+{
+  "scenarios": 54,
+  "compared_values": 1962,
+  "max_numeric_error": 1.021405182655144e-14,
+  "passed": true,
+  "training_version": 5,
+  "engine_contract": 5,
+  "batch_id": "ce4f4627585377e8864f92bf850fe6dc17f0335ee657c960afcce2edfa5ce26f"
+}
