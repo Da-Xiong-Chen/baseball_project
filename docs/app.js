@@ -2192,7 +2192,7 @@ async function openPlayerNotes(panel,R,kind) {
   }
 }
 /* 換人後自動更新可用人選：按「換上」後，被換下者記為本場已退場，名單、棒次與投手同步更新，再以新名單重新評估。
-   套用場上名單時寫進名單的已退場紀錄；一般模式記在本頁（依我方球隊），重新整理即清除。 */
+   兩種模式都只在本頁保留調度，重新整理即清除。 */
 const exitedByTeam = new Map(), substitutionJournal = new Map();
 let substitutionNote = null;
 function generalExited(team = $('#myTeam').value) { return exitedByTeam.get(team) || new Set(); }

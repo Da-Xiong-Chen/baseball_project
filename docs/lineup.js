@@ -79,11 +79,19 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const label=n=>typeof PlayerIdentity!=='undefined'?PlayerIdentity.currentName(n):String(n??'');
   const key=t=>'cpbl-lineup-'+runtimeSeason+'-v1:'+t;
+  function savedSetup(config){
+    if(!config)return null;
+    const setup=clone(config);
+    delete setup.unavailable;
+    delete setup.retired;
+    setup.slots.forEach(slot=>delete slot.fieldingPending);
+    return setup;
+  }
   function get(t){
     if(!states.has(t)){
       let s={version:2,season:runtimeSeason,draft:empty(),confirmed:null};
       let raw=null;
-      try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:parsed.version,season:runtimeSeason,draft:parsed.draft,confirmed:parsed.confirmed||null,legacyRaw:raw};}s.savedRaw=raw;}
+      try{raw=localStorage.getItem(key(t));if(raw){const parsed=JSON.parse(raw);if(!validState(parsed))throw Error('invalid');s={version:parsed.version,season:runtimeSeason,draft:savedSetup(parsed.draft),confirmed:savedSetup(parsed.confirmed),legacyRaw:raw};}s.savedRaw=raw;}
       catch{s.storageError=true;}
       const draftMigrated=typeof PlayerIdentity==='undefined'&&migrateIdentity(s.draft,t),confirmedMigrated=typeof PlayerIdentity==='undefined'&&migrateIdentity(s.confirmed,t);
       s.identityMigrated=draftMigrated||confirmedMigrated;
@@ -106,10 +114,11 @@
   }
   function persist(){
     const s=get(teamName);
+    if(s.inGame||s.draft.retired?.length||s.confirmed?.retired?.length)return 'session';
     if(s.storageError)return 'unavailable';
     try{
       const storageKey=key(teamName);
-      const raw=JSON.stringify({version:2,season:runtimeSeason,draft:s.draft,confirmed:s.confirmed});
+      const raw=JSON.stringify({version:2,season:runtimeSeason,draft:savedSetup(s.draft),confirmed:savedSetup(s.confirmed)});
       const latest=localStorage.getItem(storageKey);
       if(latest!==s.savedRaw&&latest!==raw)return 'conflict';
       if(latest!==raw)localStorage.setItem(storageKey,raw);
@@ -119,6 +128,7 @@
     }catch{return 'unavailable';}
   }
   function saveMessage(result,success,unavailable){
+    if(result==='session')return '已更新本場名單，關閉或重新整理後會回到原配置。';
     if(result==='conflict')return '另一個分頁已更新名單。本分頁的變更僅保留在目前頁面，重新整理可讀取已保存的名單。';
     return result==='saved'?success:unavailable;
   }
@@ -171,7 +181,8 @@
     q('#lineupUnavailable').onchange=e=>{
       const name=e.target.dataset.lineupUnavailable;if(!name||retired.has(name))return;
       const excluded=new Set(c.unavailable||[]);if(e.target.checked)excluded.add(name);else excluded.delete(name);
-      c.unavailable=[...excluded];draftChanged();
+      c.unavailable=[...excluded];render();
+      message('本場不可用名單已更新，套用後生效。關閉或重新整理後重置。');
       [...options.element.querySelectorAll('[data-lineup-unavailable]')].find(input=>input.dataset.lineupUnavailable===name)?.focus();
     };
   }
@@ -228,8 +239,8 @@
     q('#lineupReset').onclick=async()=>{
       if(options.element.hasAttribute('aria-busy')||!defaults[teamName])return;
       const s=get(teamName);
-      if((s.confirmed?.retired?.length||s.draft.retired?.length)&&!root.confirm('開始新的模擬情境並清除本場退場紀錄？'))return;
-      resetSwap();s.draft=clone(defaults[teamName]);s.confirmed=clone(defaults[teamName]);
+      if((s.inGame||s.confirmed?.unavailable?.length||s.draft.unavailable?.length)&&!root.confirm('開始新的模擬情境並清除本場不可用紀錄？'))return;
+      resetSwap();s.inGame=false;s.draft=clone(defaults[teamName]);s.confirmed=clone(defaults[teamName]);
       // 保存套用狀態，重新整理後仍維持依場上名單評估
       const saved=persist();
       // 與開啟網站時相同：換回預設先發投手時依角色帶入預設球數（先發 90／後援 15），不歸零
@@ -300,13 +311,9 @@
   /* 預設名單：{team:{slots,pitcher,games}}；只在此瀏覽器沒有保存記錄時帶入。 */
   function setDefaults(map){defaults={};defaultsMeta={};Object.entries(map||{}).forEach(([t,v])=>{const c={slots:v.slots.map(x=>({name:x.name,pos:x.pos})),pitcher:v.pitcher};if(c.slots.length===9&&c.slots.every(x=>POS[x.pos])&&new Set(c.slots.map(x=>x.pos)).size===9){defaults[t]=c;defaultsMeta[t]={games:v.games,through:v.through};}});states.forEach((s,t)=>{if(!s.confirmed&&defaults[t]&&!s.storageError&&(s.isDefault||!s.draft.pitcher)){s.draft=clone(defaults[t]);s.isDefault=true;}});}
   function defaultFor(t){return defaults[t]?clone(defaults[t]):null;}
-  function persistSubstitution(t){
-    const previous=teamName;
-    teamName=t;
-    const saved=persist();
-    teamName=previous;
+  function showSubstitution(t){
     if(t===teamName&&options&&roster)render();
-    return {saved,notice:saveMessage(saved,'球隊名單已保存。','變更僅保留在目前頁面，無法保存到瀏覽器。')};
+    return {notice:saveMessage('session')};
   }
   /* 換人：kind 為 'ph'（代打承接原棒次與守位）或 'pen'（換投）；被換下的球員記為已退場。回傳復原用的快照。 */
   function substitute(t,{kind,out,incoming,fieldingPending=false}){
@@ -330,12 +337,13 @@
     const synced=JSON.stringify(s.draft)===JSON.stringify(s.confirmed);
     const samePosition=kind==='pen'||s.draft.slots.find(slot=>slot.name===out)?.pos===c.slots.find(slot=>slot.name===out).pos;
     const draftUpdated=synced||(samePosition&&canReplace(s.draft));
+    s.inGame=true;
     apply(c);
     if(synced)s.draft=clone(c);
     else if(draftUpdated)apply(s.draft);
     snapshot.draftAfter=JSON.stringify(s.draft);
     delete s.isDefault;
-    return {snapshot,draftPreserved:!draftUpdated,...persistSubstitution(t)};
+    return {snapshot,draftPreserved:!draftUpdated,...showSubstitution(t)};
   }
   function restore(t,snapshot){
     const s=get(t);if(!snapshot)return;
@@ -345,7 +353,7 @@
       if(snapshot.isDefault)s.isDefault=true;else delete s.isDefault;
     }
     s.confirmed=clone(snapshot.confirmed);
-    return {draftPreserved,...persistSubstitution(t)};
+    return {draftPreserved,...showSubstitution(t)};
   }
   function cancelSwap(){swapMode=null;swapFirst=null;if(options&&roster)render();}
   const api={setRuntime,release,setDefaults,defaultFor,substitute,restore,cancelSwap,mount,selectTeam,current,validate,empty,validState,assignPlayer,swapPlayers,migrateIdentity,readBackup};
