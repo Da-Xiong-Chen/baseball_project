@@ -30,6 +30,65 @@ async function checkCatalogRetry(browser) {
   } finally {await page.close();}
 }
 
+async function checkReplayHistory(browser) {
+  const page=await browser.newPage({viewport:{width:390,height:880}});
+  try {
+    const date=catalog.days.find(row=>row.date==='2026-04-01');
+    const {game,pa,decision}=date.case;
+    const url=new URL(base);
+    url.search=new URLSearchParams({replay:date.date,game,pa,decision});
+    await page.goto(url.href);
+    const result=page.locator('#resultBody');
+    await result.locator('.scoreboard').waitFor();
+    await result.locator('.tabs [data-t=ph]').click();
+    await page.locator('#resultBody[data-replay-decision=ph]').waitFor();
+    await page.goBack();
+    await page.locator('#resultBody[data-replay-decision=pen]').waitFor();
+    const scoreboard=await result.locator('.scoreboard').elementHandle();
+    await result.locator('.evaluation-nav [href="#candidateCompare"]').click();
+    await page.waitForURL(url=>url.hash==='#candidateCompare');
+    await page.goBack();
+    assert.equal(await scoreboard.evaluate(el=>el.isConnected),true,'an in-page jump must not rerender the comparison');
+    await page.locator('[data-entry=general]').click();
+    await page.locator('[data-entry=general][aria-current=page]').waitFor();
+    await page.goBack();
+    await page.locator('#resultBody[data-replay-decision=pen]').waitFor();
+    await page.goForward();
+    await page.locator('[data-entry=general][aria-current=page]').waitFor({timeout:4000});
+    await page.goBack();
+    await page.locator('#resultBody[data-replay-decision=pen]').waitFor();
+    await page.locator('[data-entry=team]').click();
+    await page.locator('#lineupPage').waitFor();
+    await page.goBack();
+    await page.locator('#resultBody[data-replay-decision=pen]').waitFor();
+    await page.goForward();
+    await page.locator('[data-entry=team][aria-current=page]').waitFor();
+    await page.locator('#lineupPage').waitFor();
+    await page.goBack();
+    await page.locator('#resultBody[data-replay-decision=pen]').waitFor();
+    await page.locator('#replayDate').selectOption('2026-09-20');
+    await page.locator('#gameList [data-g]').first().waitFor();
+    await page.locator('#replayDate').selectOption('2026-05-15');
+    await page.locator('#gameList [data-g]').first().waitFor();
+    await page.goBack();
+    await page.locator('[data-sub=replay].on').waitFor({timeout:4000});
+    assert.equal(await page.locator('#replayDate').inputValue(),'2026-09-20');
+    await page.locator('#gameList [data-g]').first().waitFor();
+    await page.goto(base);
+    await page.locator('#evalBtn:enabled').waitFor();
+    await page.locator('[data-entry=review]').click();
+    await page.locator('#reviewPage .replay-match-heading').first().waitFor();
+    let reloaded=false;
+    page.on('request',request=>{if(request.isNavigationRequest())reloaded=true;});
+    await page.locator('#replayFeatured').click();
+    await result.locator('.scoreboard').waitFor();
+    await page.goBack();
+    await page.locator('#reviewPage .replay-match-heading').first().waitFor();
+    assert.equal(reloaded,false,'featured cases preserve the existing document and review state');
+    console.log('Passed forward and back across replay tabs, dates, featured cases and general evaluation');
+  } finally {await page.close();}
+}
+
 async function checkFieldingEvidence(browser) {
   const page=await browser.newPage({viewport:{width:390,height:880}});
   const errors=[];
@@ -197,6 +256,7 @@ async function check(browser,width) {
   const browser=await engine.launch(process.env.BASEBALL_QA_EXECUTABLE?{executablePath:process.env.BASEBALL_QA_EXECUTABLE}:{});
   try {
     await checkCatalogRetry(browser);
+    await checkReplayHistory(browser);
     await checkFieldingEvidence(browser);
     for(const width of (process.env.BASEBALL_QA_WIDTHS||'390,1280').split(',').map(Number))await check(browser,width);
   }

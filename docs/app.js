@@ -450,6 +450,14 @@ async function init() {
     updateReplayURL(game,pa,decision,date);
     await restoreReplayLocation();
   };
+  $('#replayFeatured').onclick=event=>{
+    if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+    const target=replayLocation(new URL(event.currentTarget.href));
+    if(!target?.pa)return;
+    event.preventDefault();
+    updateReplayURL(target.game,target.pa,target.decision,target.replay);
+    return restoreReplayLocation();
+  };
   $('#historyPlayer').onchange=renderHistoryContext;['#historyPitchCount','#historyStarter'].forEach(id=>$(id).oninput=renderHistoryContext);
   $$('[data-history-role]').forEach(b=>b.onclick=()=>{historyRole=b.dataset.historyRole;$$('[data-history-role]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});loadHistoryContext();});
   $('#historyPitcher').onchange=mountHistoricalPitch;
@@ -591,10 +599,19 @@ function replayURL(game, pa, decision, date) {
   }
   return url;
 }
-function updateReplayURL(game, pa, decision, date) {
+function replayScreen(page=currentPage(), sub=backtestSub) {
+  return {page, sub:page==='review'?sub:null, audience:audienceMode};
+}
+function updateReplayURL(game, pa, decision, date, screen=replayScreen()) {
   if (!pa && !date && !replayLocation()) return;
   const url = replayURL(game,pa,decision,date);
-  if (url.href !== location.href) window.history.pushState(null,'',url);
+  const browser=window.history;
+  if(url.href===location.href) {
+    browser.replaceState({...browser.state,replayScreen:screen},'',url);
+    return;
+  }
+  browser.replaceState({...browser.state,replayScreen:replayScreen()},'',location.href);
+  browser.pushState({replayScreen:screen},'',url);
 }
 let backtestSub = "season";
 let featureGeneration=0,loadedReplayTeam='';
@@ -684,9 +701,15 @@ async function showFeaturePage(page, sub, {fromLocation=false} = {}) {
     clearResult();
   }
   if(typeof LineupBoard!=='undefined')LineupBoard.cancelSwap();
-  if(page==='review')backtestSub=sub?(['season','replay'].includes(sub)?sub:'season'):(['season','replay'].includes(backtestSub)?backtestSub:'season');
-  const replay=page==='review'&&backtestSub==='replay',main=page==='evaluation'||replay;
-  if (!replay && !fromLocation) updateReplayURL(null,null,null,page==='review'&&HISTORY_DATE!==DEFAULT_HISTORY_DATE?HISTORY_DATE:null);
+  const requestedSub=sub||backtestSub;
+  const reviewSub=['season','replay'].includes(requestedSub)?requestedSub:'season';
+  const replay=page==='review'&&reviewSub==='replay',main=page==='evaluation'||replay;
+  if(!fromLocation){
+    const screen=replayScreen(page,reviewSub), target=replayLocation();
+    if(!replay)updateReplayURL(null,null,null,page==='review'&&HISTORY_DATE!==DEFAULT_HISTORY_DATE?HISTORY_DATE:null,screen);
+    else if(target&&!target.pa)updateReplayURL(null,null,null,HISTORY_DATE,screen);
+  }
+  if(page==='review')backtestSub=reviewSub;
   $('#lineupPage').hidden=page!=='lineup';$('#reviewPage').hidden=page!=='review'||replay;$('#evaluationPage').hidden=!main;
   if(!replay&&S.mode==='replay')setMode('custom');
   if(replay)$('#rpTeam').value=$('#reviewTeam').value;
@@ -711,14 +734,29 @@ async function showFeaturePage(page, sub, {fromLocation=false} = {}) {
   window.scrollTo({top:0,behavior:'auto'});
 }
 let replayLocationGeneration=0;
-async function restoreReplayLocation() {
-  const token=++replayLocationGeneration;
-  const navigation=featureGeneration;
+async function restoreReplayLocation(event) {
   const target=replayLocation();
+  const screen=window.history.state?.replayScreen;
+  const reviewSub=screen?.page==='review'&&screen.sub==='replay'?'replay':'season';
+  if(event?.type==='popstate') {
+    // A fragment jump must keep the current result, selection and disclosure.
+    if(target?.pa&&S.last?.view==='replay'&&currentPage()==='review'&&
+        target.replay===HISTORY_DATE&&target.game===S.game&&target.pa===S.pa&&target.decision===S.tab)return;
+    if(!target&&['lineup','evaluation'].includes(screen?.page)&&screen.page===currentPage()&&screen.audience===audienceMode)return;
+  }
+  const token=++replayLocationGeneration;
+  const entry=++entryGeneration;
+  const navigation=featureGeneration;
   if (!target) {
-    if (currentPage()==='review') {
+    if(['lineup','evaluation'].includes(screen?.page)&&['general','team'].includes(screen.audience)){
+      audienceMode=screen.audience;
+      const opening=showFeaturePage(screen.page,undefined,{fromLocation:true});
+      const expected=featureGeneration;
+      await opening;
+      if(entry===entryGeneration&&expected===featureGeneration)await setAudienceMode(screen.audience);
+    } else if (screen?.page==='review'||currentPage()==='review') {
       setHistoryDate(DEFAULT_HISTORY_DATE);
-      await showFeaturePage('review','season',{fromLocation:true});
+      await showFeaturePage('review',reviewSub,{fromLocation:true});
     }
     return;
   }
@@ -726,7 +764,7 @@ async function restoreReplayLocation() {
   if (token!==replayLocationGeneration||navigation!==featureGeneration) return;
   const knownDate=setHistoryDate(target.replay);
   if (knownDate && !target.pa && !target.game && !target.decision) {
-    await showFeaturePage('review','season',{fromLocation:true});
+    await showFeaturePage('review',reviewSub,{fromLocation:true});
     return;
   }
   let index;

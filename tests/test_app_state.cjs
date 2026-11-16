@@ -12,7 +12,7 @@ function fixture() {
     return nodes.get(key);
   };
   const context = {document:{querySelector:node,querySelectorAll:()=>[]}, location:{href:'http://localhost/'}, console, URL, URLSearchParams, AbortSignal,
-    window:{matchMedia:()=>({matches:false}),scrollTo(){},history:{pushState(_state,_title,url){context.location.href=url.href;}}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
+    window:{matchMedia:()=>({matches:false}),scrollTo(){},history:{state:null,replaceState(state,_title,url){this.state=state;context.location.href=String(url);},pushState(state,_title,url){this.state=state;context.location.href=url.href;}}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
     PitchChange:{mount:o=>context.lastMount=o,staticResult:()=>{}},fetch:async()=>({ok:true,json:async()=>({})})};
   let code = fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
   code = code.slice(0,code.lastIndexOf('init().catch'));
@@ -31,6 +31,16 @@ test('replay links include only public coordinates and preserve existing non-rep
   assert.equal(f.eval('replayLocation().pa'),'2026-251-a000');
   f.eval('updateReplayURL()');
   assert.equal(f.context.location.href,'https://example.com/project/');
+});
+
+test('popstate for a fragment within the rendered replay leaves the active result in place',async()=>{
+  const f=fixture();
+  f.node('#lineupPage').hidden=true;
+  f.context.location.href='https://example.com/project/?replay=2026-10-04&game=2026-251&pa=2026-251-a000&decision=pen#candidateCompare';
+  f.eval("Object.assign(S,{mode:'replay',game:'2026-251',pa:'2026-251-a000',tab:'pen',last:{view:'replay'}});loadReplayDates=()=>{throw Error('fragment must not refetch the date list')}");
+  await f.eval("restoreReplayLocation({type:'popstate'})");
+  assert.equal(f.eval('replayLocationGeneration'),0);
+  assert.equal(f.eval('S.last.view'),'replay');
 });
 
 test('replay neighbors skip filtered and unavailable PAs even when the selection is filtered out',()=>{

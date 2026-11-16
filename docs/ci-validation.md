@@ -44,7 +44,7 @@ python tests/browser_fault_server.py --port 8030
 
 `browser_multiday.cjs` 會讓日期清單第一次回傳 HTTP 503，驗證在原連結重試後能回到正確打席，並確認真實結果保持收合。其他操作及發布狀態見[現行發布驗收](project-closeout-20261116.md)。
 
-同一腳本亦驗證跨日情境選單、接守紀錄故障後重試、鍵盤展開、實際接守與無候選原因。若日期清單的 `evidence_schema` 為 1，發布檢查會要求各日期的 `evidence.json` 批次、打席與當日資料一致。[匯出及稽核方式](qa/replay-evidence-20261116/README.md)
+同一腳本亦驗證跨日情境選單、接守紀錄故障後重試、鍵盤操作、實際接守與無候選原因，以及瀏覽器上一頁、下一頁與頁內錨點。若日期清單的 `evidence_schema` 為 1，發布檢查會要求各日期的 `evidence.json` 批次、打席與當日資料一致。[匯出及稽核方式](qa/replay-evidence-20261116/README.md)
 
 ## 發布與回復核對
 

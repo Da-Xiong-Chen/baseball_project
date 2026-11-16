@@ -52,3 +52,4 @@ python scripts/audit_replay_ranking_stability.py --source docs/data/replay --out
 - 重複匯出日期索引與八份補充檔，逐檔位元組一致。發布包 2,959 份資產，新增八份補充檔，更新日期索引與 HTML、CSS、JavaScript，既有模型資料與打席分數的雜湊一致。
 - 233 項 JavaScript 測試通過。177 項完整 Python 測試中 174 項通過，3 項舊版專用案例因缺少舊匯出檔跳過。
 - Edge 靜態站測 320、390、768、1280 CSS px，另做 125% 版面縮放。WebKit 測 390、1280 CSS px，本機 Python API 以 Edge 390 CSS px 重跑。覆蓋情境連結、接守與候選排除、鍵盤展開、HTTP 503 重試、回放切換、牛棚 A／B、逐次復原與名單備份。
+- 瀏覽器上一頁與下一頁會還原逐打席的攻守視角、日期清單原本的子頁及一般使用者或球隊入口。代表案例可在頁內開啟。跳到「比較球員」時保留已渲染的結果與揭示狀態。
