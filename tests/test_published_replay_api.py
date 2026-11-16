@@ -50,6 +50,19 @@ class PublishedReplayApiTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '回放類型'):
             self.replay_api(self.pid, '2026-04-01', 'invalid')
 
+    def test_published_replay_excludes_the_projected_replacement_from_catcher_reserves(self):
+        pid, date = '2026-003-h007', '2026-03-29'
+        frozen = json.loads((self.replay/f'day-{date}'/f'{pid}.json').read_bytes())['ph']['candidates']
+        current = self.replay_api(pid, date, 'ph')['candidates']
+        corrected = []
+        for before, after in zip(frozen, current, strict=True):
+            self.assertEqual({k: v for k, v in before.items() if k != '守備說明'},
+                             {k: v for k, v in after.items() if k != '守備說明'})
+            if before['守備說明'] != after['守備說明']:
+                corrected.append(after['守備說明'])
+        self.assertEqual(len(corrected), 3)
+        self.assertTrue(all('板凳已無備用捕手' in note for note in corrected))
+
     def test_with_a_month_weight_the_api_can_recompute(self):
         date = '2026-04-01'
         pa = pd.DataFrame({'pa_id': [self.pid], 'date': pd.to_datetime([date])})

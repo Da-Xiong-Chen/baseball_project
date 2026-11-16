@@ -201,6 +201,13 @@ def published_replay(pid, date, decision, root=None):
     result = bundle.get(decision) or bundle['ph']
     if result['batch_id'] != batch or result['model_cutoff'] != date or result['ml_cutoff'] != month:
         raise ValueError('已發布回放的截止日不一致')
+    candidates = result.get('candidates', [])
+    # Older frozen bundles kept the last catcher in the reserve count.
+    if sum(row.get('角色') == '代打' and '可直接接守捕手' in row.get('守備說明', '') for row in candidates) == 1:
+        for row in candidates:
+            note = row.get('守備說明', '')
+            if note.startswith('需由 ') and '接守捕手' in note and '板凳已無備用捕手' not in note:
+                row['守備說明'] = note + '；之後板凳已無備用捕手'
     return {**result, 'replay_context': {**result['replay_context'], 'decision': decision}}
 
 

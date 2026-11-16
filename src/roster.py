@@ -68,24 +68,32 @@ def assign_positions(lineup, cutoff=None):
 
 def defense_check(out_name, out_pos, in_name, bench_after, cutoff=None):
     """out_name（守 out_pos）被 in_name 代打後，守備排不排得出來。"""
+    status, text, _ = defense_plan(out_pos, in_name, bench_after, cutoff)
+    return status, text
+
+
+def defense_plan(out_pos, in_name, bench_after, cutoff=None):
+    """Evaluate the next defensive alignment without applying either substitution."""
     if out_pos == "DH":
-        return 'ok', f'{display_name(in_name,cutoff)} 接任指定打擊'
+        return 'ok', f'{display_name(in_name,cutoff)} 接任指定打擊', 'direct'
+    replacement = None
     if can_play(in_name, out_pos, cutoff):
         msg = f'{display_name(in_name,cutoff)} 可直接接守{POS_ZH[out_pos]}'
         status = "ok"
     else:
         cover = [b for b in bench_after if can_play(b, out_pos, cutoff)]
         if cover:
-            msg = f'需由 {display_name(cover[0],cutoff)} 接守{POS_ZH[out_pos]}（再消耗 1 名板凳）'
+            replacement = cover[0]
+            msg = f'需由 {display_name(replacement,cutoff)} 接守{POS_ZH[out_pos]}（再消耗 1 名板凳）'
             status = "warn"
         else:
-            return "unknown", f"沒有已確認可接守{POS_ZH[out_pos]}的紀錄；需人工確認"
+            return "unknown", f"沒有已確認可接守{POS_ZH[out_pos]}的紀錄；需人工確認", "unconfirmed"
     if out_pos == "C":
-        backups = [b for b in bench_after if can_play(b, "C", cutoff) and b != in_name]
+        backups = [b for b in bench_after if b not in (in_name, replacement) and can_play(b, "C", cutoff)]
         if len(backups) == 0:
             msg += "；之後板凳已無備用捕手"
             status = "warn" if status == "ok" else status
-    return status, msg
+    return status, msg, 'replacement' if replacement else 'direct'
 
 
 def fielding_rearrangement(positions, out_name, in_name, cutoff, max_moves=2):

@@ -155,3 +155,17 @@ test('undo restores the confirmed pitcher and preserves newer batting-order edit
  assert.equal(f.api.current('A').pitcher,'P0');
  assert.deepEqual(JSON.parse(f.values.get(key)).draft,newest);
 });
+
+test('undo of an unconfirmed pinch-hit restores the outgoing player and clears the temporary fielding flag',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const change=f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H10',fieldingPending:true});
+ const stored=JSON.parse(f.values.get(key)).confirmed;
+ assert.equal(stored.slots[0].fieldingPending,true);
+ assert.equal(stored.slots[0].name,'H10');
+ assert.equal(f.api.restore('A',change.snapshot).saved,'saved');
+ const original=JSON.parse(f.values.get(key)).confirmed;
+ assert.equal(original.slots[0].name,'H0');
+ assert.equal(original.slots[0].fieldingPending,undefined);
+});

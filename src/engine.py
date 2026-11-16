@@ -10,7 +10,7 @@ from model import PITCHES_PER_PA, fit
 import numpy as np
 import recent
 
-from roster import POS_ZH, active_roster, assign_positions, defense_check, hitter_pool, positions_of, reliever_pool
+from roster import POS_ZH, active_roster, assign_positions, defense_plan, hitter_pool, positions_of, reliever_pool
 from historical_actors import at_start, game_pitches
 from runtime_config import settings
 
@@ -191,8 +191,10 @@ def evaluate_pinch_hit(sit, model=None, ml=None, scores=True):
         )
         if name != due:
             others = [b for b in sit["bench"] if b != name]
-            st, msg = defense_check(due, due_pos, name, others, cutoff)
+            st, msg, action = defense_plan(due_pos, name, others, cutoff)
             rec["守備"], rec["守備說明"] = st, msg
+            if row.get("game") is None:
+                rec["fielding_action"] = action
         else:
             rec["守備"], rec["守備說明"] = "ok", f"目前守{POS_ZH.get(due_pos, due_pos)}"
         rec["可信度"] = "高" if r["n"] >= 1500 else "中" if r["n"] >= 500 else "低"

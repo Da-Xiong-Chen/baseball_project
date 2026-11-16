@@ -179,7 +179,7 @@ async function staticApi(path, body) {
       if(bundle.date!==date||bundle.pa_id!==pa)throw batchMismatch();
       const decision=q('decision')==='pen'?'pen':'ph',r=decision==='pen'?(bundle.pen||bundle.ph):bundle.ph;
       if(r.batch_id!==index.batch_id||r.ml_cutoff!==index.ml_cutoff||r.model_cutoff!==date)throw batchMismatch();
-      return {...r,replay_context:{...r.replay_context,decision}};
+      return {...r,candidates:archivedCatcherNotes(r.candidates),replay_context:{...r.replay_context,decision}};
     }
     case "evaluate": return Engine.evaluate(body);
     case "detail": {
@@ -831,7 +831,8 @@ function battingOptions(roster,configured,restricted){
 }
 function lineupSelectionSummary(configured,mode=audienceMode){
   const teamMode=mode==='team';
-  const description=teamMode?(configured?`依場上名單選人 · 投手 ${N(configured.pitcher)}`:'先設定九棒、守位與投手，再套用名單。'):'自由選擇球員；不需先設定場上名單。';
+  const pending=configured?.slots?.filter(slot=>slot.fieldingPending).map(slot=>POS[slot.pos])||[];
+  const description=teamMode?(configured?`依場上名單選人 · 投手 ${N(configured.pitcher)}${pending.length?` · 接守待確認：${esc(pending.join('、'))}`:''}`:'先設定九棒、守位與投手，再套用名單。'):'自由選擇球員；不需先設定場上名單。';
   const action=teamMode?`<button type="button" data-page="lineup">${configured?'編輯名單':'設定名單'}</button>`:'<span class="selection-badge">自由選人</span>';
   return `<span class="lineup-summary-text">${description}</span><span class="lineup-summary-actions">${action}</span>`;
 }
@@ -1689,6 +1690,14 @@ function hitterComponentChart(candidate, current, rows) {
   const data=fields.map(([name,key])=>({name,value:candidate[key],base:current[key]}));
   return `<div class="compare-values"><div class="hitter-component-chart">${valueComparisonChart(data,scale,'相對現任得分優勢 · 分／打席',true,'僅拆解階層式估計。')}</div></div>`;
 }
+function archivedCatcherNotes(rows) {
+  if(rows?.filter(row=>row['角色']==='代打'&&row['守備說明']?.includes('可直接接守捕手')).length!==1)return rows;
+  return rows.map(row=>{
+    const note=row['守備說明']||'';
+    return note.startsWith('需由 ')&&note.includes('接守捕手')&&!note.includes('板凳已無備用捕手')
+      ?{...row,'守備說明':note+'；之後板凳已無備用捕手'}:row;
+  });
+}
 function compactFielding(text) {
   return String(text||'').replace(/^需由 (.+?) 接守(.+?)（再消耗 1 名板凳）/,'接守：$1 · $2（另需 1 人）').replace(/^換下後板凳無人可守/,'無人接守').replace(/^.+? 可直接接守/,'可接守');
 }
@@ -2161,11 +2170,14 @@ async function applySubstitution(kind, incoming) {
   const team = $('#myTeam').value, lineup = ownLineup();
   const out = kind === 'pen' ? $('#myPitcher').value : $('#dueBatter').value;
   if (!incoming || incoming === out) return;
+  const candidate=kind==='ph'?R.candidates.find(row=>row['球員']===incoming&&row['角色']==='代打'):null;
+  if(kind==='ph'&&!candidate)return;
+  const pending=candidate&&pinchHitNeedsFielding(candidate);
   const before = substitutionSnapshot();
   let lineupUndo = null;
   let storage = null;
   if (lineup) {
-    const done = LineupBoard.substitute(team, { kind, out, incoming });
+    const done = LineupBoard.substitute(team, { kind, out, incoming, fieldingPending:pending });
     if (!done) { substitutionNote = { text: `${playerText(incoming)}無法換上：請到球隊名單確認登錄與退場狀態。`, error: true }; renderResult(); return; }
     lineupUndo = done.snapshot;
     storage = done;
@@ -2184,8 +2196,7 @@ async function applySubstitution(kind, incoming) {
     const order = lineup ? LineupBoard.current(team).slots.findIndex(s => s.name === incoming) + 1 : 0;
     $('#dueBatter').value = incoming; if (pos) $('#duePos').value = pos;
     S.bench.delete(incoming); renderBench(); syncPenExited();
-    const canField = pos === 'DH' || Object.keys(S.roster[team]?.hitters.find(h => h.name === incoming)?.positions || {}).includes(pos);
-    text = `${playerText(incoming)}代打${playerText(out)}${order ? `，承接第 ${order} 棒` : ''}（${POS[pos] || pos}），${playerText(out)}退場。板凳名單已更新。${canField ? '' : `下個守備半局請確認${POS[pos] || pos}由誰接守。`}`;
+    text = `${playerText(incoming)}代打${playerText(out)}${order ? `，承接第 ${order} 棒` : ''}，${playerText(out)}退場。板凳名單已更新。${pending ? `下個守備半局請確認${POS[pos] || pos}由誰接守。` : ''}`;
   }
   const entries=substitutionJournal.get(journalKey())||[];
   entries.push({kind,incoming,out,before,lineupUndo,after:changeFingerprint()});
@@ -2225,10 +2236,14 @@ function substitutionNoteHtml(R) {
   return `<div class="substitution-note${n?.error ? ' is-error' : ''}" tabindex="-1" role="status">${n ? `<p>${esc(n.text)}</p>` : ''}${status}${draft}${exited.length ? `<p class="exited-list"><span>已退場／不可用</span>${exited.map(x => `<span class="chip">${N(x)}</span>`).join('')}</p>` : ''}${history}${canUndo ? '<button type="button" class="sub-undo" data-sub-undo>復原這次換人</button>' : ''}</div>`;
 }
 const applyButton = (R, name, kind, primary) => R.view === 'replay' ? '' : `<button type="button" class="row-apply${primary ? ' is-primary' : ''}" data-apply-sub="${esc(name)}" data-apply-kind="${kind}" aria-label="換上 ${N(name)}，並更新可用人選">換上</button>`;
+function pinchHitNeedsFielding(row) {
+  if(row.fielding_action)return row.fielding_action!=='direct';
+  return ['unknown','bad'].includes(row['守備'])||row['守備說明']?.startsWith('需由 ')===true;
+}
 function pinchHitPreview(R,row,primary) {
   if(R.view==='replay')return '';
   return `<details class="pinch-hit-preview"><summary>預覽代打</summary><p>換上 ${N(row['球員'])} 代打，承接原棒次。</p>
-    <p>下個守備半局：${fieldingMessage(row)}</p>${applyButton(R,row['球員'],'ph',primary)}</details>`;
+    <p>下個守備半局：${fieldingMessage(row)}</p>${pinchHitNeedsFielding(row)?'<p>「換上」會先記錄代打；接守人選請另行確認。</p>':''}${applyButton(R,row['球員'],'ph',primary)}</details>`;
 }
 function phTable(R) {
   const c = R.candidates;

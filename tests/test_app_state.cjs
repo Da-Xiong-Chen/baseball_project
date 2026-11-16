@@ -21,6 +21,15 @@ function fixture() {
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
+test('an archived catching replacement removes the sole backup without mutating the replay bundle',()=>{
+  const f=fixture();
+  const bundle=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/day-2026-03-29/2026-003-h007.json'),'utf8'));
+  f.context.rows=bundle.ph.candidates;
+  const result=f.eval('archivedCatcherNotes(rows)');
+  assert.equal(result.filter((row,i)=>row['守備說明']!==bundle.ph.candidates[i]['守備說明']).length,3);
+  assert.match(result.find(row=>row['守備說明'].startsWith('需由 '))['守備說明'],/板凳已無備用捕手/);
+});
+
 test('replay links include only public coordinates and preserve existing non-replay anchors on ordinary visits',()=>{
   const f=fixture();
   f.context.location.href='https://example.com/project/#candidateCompare';

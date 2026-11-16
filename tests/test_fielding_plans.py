@@ -3,9 +3,19 @@ import sys,unittest,json,hashlib
 from pathlib import Path
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
-from roster import FIELD_POS,fielding_rearrangement
+from roster import FIELD_POS,defense_plan,fielding_rearrangement
 
 class FieldingPlanTests(unittest.TestCase):
+    def test_last_bench_catcher_is_not_counted_after_projected_replacement(self):
+        with patch('roster.can_play', side_effect=lambda name, pos, cutoff: name.startswith('catcher')), \
+             patch('roster.display_name', side_effect=lambda name, cutoff: name):
+            status, note, action = defense_plan('C', 'hitter', ['catcher1'], '2026-09-20')
+            self.assertEqual((status, action), ('warn', 'replacement'))
+            self.assertIn('板凳已無備用捕手', note)
+            self.assertNotIn('板凳已無備用捕手',
+                             defense_plan('C', 'hitter', ['catcher1', 'catcher2'], '2026-09-20')[1])
+            self.assertEqual(defense_plan('C', 'catcher1', ['hitter'], '2026-09-20')[2], 'direct')
+
     def setUp(self):
         self.positions={p:p for p in FIELD_POS+['DH']}
         self.allowed={(p,p) for p in FIELD_POS}|{('1B','3B'),('New','1B')}
@@ -31,7 +41,7 @@ class FieldingPlanTests(unittest.TestCase):
         from runtime_config import settings
         date=settings().history_date
         day=Path(os.environ.get('BASEBALL_STATIC_OUT',root/'docs/data'))/f'replay/day-{date}'
-        if not (day/'fielding-plans.json').exists():self.skipTest(f'{date} 單日回放未隨網站發布；網站只發布 2026/10/04')
+        if not (day/'fielding-plans.json').exists():self.skipTest(f'目前測試設定的 {date} 未提供回放守位匯出檔')
         data=json.loads((day/'fielding-plans.json').read_text(encoding='utf8'));index=json.loads((day/'index.json').read_text(encoding='utf8'))
         self.assertEqual(hashlib.sha256((day/'index.json').read_bytes()).hexdigest(),data['replay_index_sha256'])
         self.assertEqual(len(data['plans']),data['counts']['pas_with_plan']);self.assertGreater(len(data['plans']),0)

@@ -99,21 +99,22 @@ const Engine = (() => {
   // ---------- 守備 ----------
   const positionsOf = (name) => M.eligible[name] || [];
   const canPlay = (name, pos) => pos === "DH" || positionsOf(name).includes(pos);
-  function defenseCheck(outName, outPos, inName, benchAfter) {
-    if (outPos === 'DH') return ['ok', `${playerName(inName)} 接任指定打擊`];
-    let msg, status;
+  function defensePlan(outPos, inName, benchAfter) {
+    if (outPos === 'DH') return ['ok', `${playerName(inName)} 接任指定打擊`, 'direct'];
+    let msg, status, replacement;
     if (canPlay(inName, outPos)) {
       msg = `${playerName(inName)} 可直接接守${POS_ZH[outPos]}`; status = 'ok';
     } else {
       const cover = benchAfter.filter((b) => canPlay(b, outPos));
-      if (!cover.length) return ["unknown", `沒有已確認可接守${POS_ZH[outPos]}的紀錄；需人工確認`];
-      msg = `需由 ${playerName(cover[0])} 接守${POS_ZH[outPos]}（再消耗 1 名板凳）`; status = 'warn';
+      if (!cover.length) return ["unknown", `沒有已確認可接守${POS_ZH[outPos]}的紀錄；需人工確認`, 'unconfirmed'];
+      replacement = cover[0];
+      msg = `需由 ${playerName(replacement)} 接守${POS_ZH[outPos]}（再消耗 1 名板凳）`; status = 'warn';
     }
-    if (outPos === "C" && !benchAfter.filter((b) => canPlay(b, "C") && b !== inName).length) {
+    if (outPos === "C" && !benchAfter.some(b=>b!==inName&&b!==replacement&&canPlay(b,"C"))) {
       msg += "；之後板凳已無備用捕手";
       if (status === "ok") status = "warn";
     }
-    return [status, msg];
+    return [status, msg, replacement?'replacement':'direct'];
   }
 
   // ---------- 疲勞 ----------
@@ -207,7 +208,7 @@ const Engine = (() => {
         可守: positionsOf(name).join(",") || "-", 投手對此側樣本:r.mix_n, 比較池人數:pool.length,
         資料警示:[!['L','R','S'].includes(M.bhand[name]) ? '打者手別未記錄，採雙側平均估計' : '', hand(M.phand[row.pitcher])==='U' ? '投手手別未記錄，採雙側平均估計' : '', !r.mix_n ? '投手對此侧球路採聯盟回退' : ''].filter(Boolean).join('；'),
       };
-      if (name !== due) [rec.守備, rec.守備說明] = defenseCheck(due, duePos, name, bench.filter((b) => b !== name));
+      if (name !== due) [rec.守備, rec.守備說明, rec.fielding_action] = defensePlan(duePos, name, bench.filter((b) => b !== name));
       else [rec.守備, rec.守備說明] = ["ok", `目前守${POS_ZH[duePos] || duePos}`];
       rec.可信度 = r.n >= 1500 ? "高" : r.n >= 500 ? "中" : "低";
       return rec;
