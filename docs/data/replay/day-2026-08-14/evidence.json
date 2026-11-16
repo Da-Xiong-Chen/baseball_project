@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-14",
+  "batch_id": "45af1916822737d990c005bb37360af3934d444880e6c60f6c1ac967a9750af8",
+  "fielding": {
+    "2026-263-a025": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-263-h028",
+      "original_position": "C",
+      "opening_fielder": "宋嘉翔"
+    },
+    "2026-263-a030": {
+      "status": "pinch_hitter_fielded",
+      "position": "LF",
+      "observed_pa": "2026-263-h037"
+    },
+    "2026-263-h026": {
+      "status": "pinch_hitter_fielded",
+      "position": "1B",
+      "observed_pa": "2026-263-a024"
+    },
+    "2026-264-a032": {
+      "status": "no_defensive_half"
+    },
+    "2026-264-a035": {
+      "status": "no_defensive_half"
+    },
+    "2026-264-h037": {
+      "status": "pinch_hitter_fielded",
+      "position": "1B",
+      "observed_pa": "2026-264-a030"
+    }
+  },
+  "availability": {
+    "2026-262-h027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-262-h029": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-262-h035": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-262-h036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-262-h037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-262-h038": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h021": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h022": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h030": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h035": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-263-h037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-264-a020": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-264-a022": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-264-a029": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-264-a031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-264-h023": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-264-h032": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}

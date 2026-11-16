@@ -83,8 +83,10 @@ def inspect_site(site):
         local_asset(site, f'data/replay/{game["game"]}.json')
     day_indexes = {p.parent.name.removeprefix('day-'): p for p in (site / 'data/replay').glob('day-*/index.json')}
     catalog = site / 'data/replay/dates.json'
+    evidence_required = False
     if catalog.exists():
         listing = read_json(catalog)
+        evidence_required = listing.get('evidence_schema') == 1
         dates = [row['date'] for row in listing['days']]
         if (listing['schema_version'] != 1 or len(set(dates)) != len(dates)
                 or listing['default_date'] not in dates or set(dates) != set(day_indexes)):
@@ -94,10 +96,10 @@ def inspect_site(site):
             if (row['games'] != len(manifest['games']) or row['pa'] != manifest['pa_count']
                     or row['batch_id'] != manifest['batch_id']):
                 raise ValueError(f"Replay date catalog metadata disagrees: {row['date']}")
-            case = row.get('case')
-            if case and (case['decision'] not in ('ph','pen')
-                         or case['pa'] not in manifest['games'].get(case['game'], [])):
-                raise ValueError(f"Replay featured case is unavailable: {row['date']}")
+            for case in (row.get('case'), row.get('observed_case')):
+                if case and (case['decision'] not in ('ph','pen')
+                             or case['pa'] not in manifest['games'].get(case['game'], [])):
+                    raise ValueError(f"Replay featured case is unavailable: {row['date']}")
     for index in day_indexes.values():
         manifest=read_json(index)
         if manifest.get('schema_version')!=1 or manifest.get('pa_count')!=len(manifest.get('files',{})):
@@ -125,10 +127,12 @@ def inspect_site(site):
             indexed_ids=[pid for game in manifest['games'].values() for pid in game]
             if len(indexed_ids)!=len(manifest['files']) or set(indexed_ids)!=set(manifest['files']):
                 raise ValueError(f'Daily PA coverage disagrees: {index}')
+            replay_pas = {}
             for game in sorted(ids):
                 payload=day_asset(game+'.json')
                 if payload['date']!=manifest['date'] or [r['pa_id'] for r in payload['pas']]!=manifest['games'][game]:
                     raise ValueError(f'Daily game and index disagree: {game}')
+                replay_pas.update((r['pa_id'], r) for r in payload['pas'])
             supporting={name:day_asset(name) for name in ('context.json','timing.json','fielding-plans.json')}
             for name, payload in supporting.items():
                 if payload['date']!=day:
@@ -138,6 +142,35 @@ def inspect_site(site):
             timing=supporting['timing.json']
             if timing['season']!=manifest['season'] or set(timing['games'])!=ids:
                 raise ValueError(f'Daily timing coverage disagrees: {index}')
+            if evidence_required:
+                evidence=day_asset('evidence.json')
+                fielding, availability=evidence['fielding'], evidence['availability']
+                actual_pinch_hits={pa for pa, row in replay_pas.items() if row.get('is_ph')}
+                if (evidence['schema_version']!=1 or evidence['date']!=day
+                        or set(fielding)!=actual_pinch_hits or set(availability)-set(indexed_ids)):
+                    raise ValueError(f'Daily observation coverage disagrees: {index}')
+                positions={'P','C','1B','2B','3B','SS','LF','CF','RF'}
+                for pa, row in fielding.items():
+                    game, _=pa.rsplit('-',1)
+                    status=row['status']
+                    observed=row.get('observed_pa')
+                    actual=status in {'pinch_hitter_fielded','other_player_fielded'}
+                    initial=replay_pas[pa]
+                    following=replay_pas.get(observed,{})
+                    next_inning=initial['inning']+int(initial['half']=='home')
+                    if (status not in {'pinch_hitter_fielded','other_player_fielded','unconfirmed','no_defensive_half'}
+                            or (actual and (observed not in manifest['games'][game] or following['half']==initial['half']
+                                or following['inning']!=next_inning))
+                            or (not actual and observed is not None)
+                            or (status=='pinch_hitter_fielded' and row.get('position') not in positions)
+                            or ('opening_fielder' in row and (status!='other_player_fielded'
+                                or row.get('original_position') not in positions or not row['opening_fielder']))):
+                        raise ValueError(f'Invalid observed fielding: {pa}')
+                for pa, reasons in availability.items():
+                    if replay_pas[pa]['inning']<6 or not reasons or any(kind not in {'ph','pen'} or reason not in (
+                        {'no_prior_pool','all_used','fielding_unconfirmed'} if kind=='ph' else {'no_prior_pool','all_used'}
+                    ) for kind, reason in reasons.items()):
+                        raise ValueError(f'Invalid replay candidate evidence: {pa}')
             pitch=day_asset('pitch/index.json')
             if pitch['season']!=manifest['season']:
                 raise ValueError(f'Daily pitch index has wrong season: {index}')

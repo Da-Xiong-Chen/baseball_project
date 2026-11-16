@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "date": "2026-03-29",
+  "batch_id": "223830461b06fcfe15c2d61e8b59691066f9ed339def2dafa7d526f185dd4eb6",
+  "fielding": {
+    "2026-002-a033": {
+      "status": "no_defensive_half"
+    },
+    "2026-003-h034": {
+      "status": "no_defensive_half"
+    },
+    "2026-004-a041": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-004-h036"
+    }
+  },
+  "availability": {
+    "2026-002-a020": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a021": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a022": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a023": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a024": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a025": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a026": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a027": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a028": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a029": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a030": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a031": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a032": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-a033": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h019": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h020": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h021": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h022": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h023": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h024": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h025": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h026": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h027": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h028": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h029": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-002-h030": {
+      "pen": "no_prior_pool",
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a022": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a023": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a024": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a025": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a026": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a027": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a028": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a029": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a030": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a031": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a032": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a033": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a034": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a035": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a036": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a037": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-a038": {
+      "ph": "no_prior_pool"
+    },
+    "2026-003-h020": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h021": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h022": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-003-h023": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h024": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h025": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h026": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h027": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h028": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h029": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h030": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h031": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-003-h032": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-003-h033": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-003-h034": {
+      "pen": "no_prior_pool"
+    },
+    "2026-003-h035": {
+      "pen": "no_prior_pool"
+    },
+    "2026-004-a026": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a027": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a028": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a029": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a030": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a031": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a032": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a033": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a034": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a035": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a036": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a037": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a038": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a039": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a040": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a041": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a042": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-a043": {
+      "ph": "no_prior_pool"
+    },
+    "2026-004-h023": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-004-h024": {
+      "pen": "no_prior_pool"
+    },
+    "2026-004-h025": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-004-h026": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-004-h027": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-004-h028": {
+      "pen": "no_prior_pool",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-004-h029": {
+      "pen": "no_prior_pool"
+    },
+    "2026-004-h030": {
+      "pen": "no_prior_pool"
+    },
+    "2026-004-h031": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h032": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h033": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h034": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h035": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h036": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h037": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h038": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h039": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    },
+    "2026-004-h040": {
+      "pen": "no_prior_pool",
+      "ph": "all_used"
+    }
+  }
+}

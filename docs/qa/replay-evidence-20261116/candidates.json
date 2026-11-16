@@ -1,0 +1,4374 @@
+{
+  "by_month_team": {
+    "2026-03 | 中信兄弟": {
+      "exclusions": {
+        "pen_no_prior_pool": 20,
+        "ph_all_used": 10,
+        "ph_fielding_unconfirmed": 8,
+        "ph_no_prior_pool": 18
+      },
+      "pen_10": {
+        "candidate_slots": 171,
+        "decisions": 53,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 10,
+        "observed_in_pool": 3
+      },
+      "pen_10_team": {
+        "candidate_slots": 171,
+        "decisions": 53,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 10,
+        "observed_in_pool": 3
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 453,
+        "decisions": 53,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 7
+      },
+      "pen_21_team": {
+        "candidate_slots": 171,
+        "decisions": 53,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 10,
+        "observed_in_pool": 3
+      },
+      "pen_35_team": {
+        "candidate_slots": 171,
+        "decisions": 53,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 10,
+        "observed_in_pool": 3
+      },
+      "ph_10": {
+        "candidate_slots": 56,
+        "decisions": 52,
+        "different_latest_team_slots": 0,
+        "empty": 28,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_10_team": {
+        "candidate_slots": 56,
+        "decisions": 52,
+        "different_latest_team_slots": 0,
+        "empty": 28,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 483,
+        "decisions": 52,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_21_team": {
+        "candidate_slots": 56,
+        "decisions": 52,
+        "different_latest_team_slots": 0,
+        "empty": 28,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_35_team": {
+        "candidate_slots": 56,
+        "decisions": 52,
+        "different_latest_team_slots": 0,
+        "empty": 28,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      }
+    },
+    "2026-03 | 台鋼雄鷹": {
+      "exclusions": {
+        "pen_no_prior_pool": 12,
+        "ph_fielding_unconfirmed": 12,
+        "ph_no_prior_pool": 14
+      },
+      "pen_10": {
+        "candidate_slots": 13,
+        "decisions": 25,
+        "different_latest_team_slots": 0,
+        "empty": 12,
+        "observed_changes": 5,
+        "observed_in_pool": 0
+      },
+      "pen_10_team": {
+        "candidate_slots": 13,
+        "decisions": 25,
+        "different_latest_team_slots": 0,
+        "empty": 12,
+        "observed_changes": 5,
+        "observed_in_pool": 0
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 141,
+        "decisions": 25,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 1
+      },
+      "pen_21_team": {
+        "candidate_slots": 13,
+        "decisions": 25,
+        "different_latest_team_slots": 0,
+        "empty": 12,
+        "observed_changes": 5,
+        "observed_in_pool": 0
+      },
+      "pen_35_team": {
+        "candidate_slots": 13,
+        "decisions": 25,
+        "different_latest_team_slots": 0,
+        "empty": 12,
+        "observed_changes": 5,
+        "observed_in_pool": 0
+      },
+      "ph_10": {
+        "candidate_slots": 31,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_10_team": {
+        "candidate_slots": 31,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 213,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 1,
+        "observed_in_pool": 1
+      },
+      "ph_21_team": {
+        "candidate_slots": 31,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_35_team": {
+        "candidate_slots": 31,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      }
+    },
+    "2026-03 | 味全龍": {
+      "exclusions": {
+        "pen_no_prior_pool": 16,
+        "ph_fielding_unconfirmed": 5,
+        "ph_no_prior_pool": 17
+      },
+      "pen_10": {
+        "candidate_slots": 64,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 16,
+        "observed_changes": 8,
+        "observed_in_pool": 0
+      },
+      "pen_10_team": {
+        "candidate_slots": 64,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 16,
+        "observed_changes": 8,
+        "observed_in_pool": 0
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 275,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 8,
+        "observed_in_pool": 4
+      },
+      "pen_21_team": {
+        "candidate_slots": 64,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 16,
+        "observed_changes": 8,
+        "observed_in_pool": 0
+      },
+      "pen_35_team": {
+        "candidate_slots": 64,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 16,
+        "observed_changes": 8,
+        "observed_in_pool": 0
+      },
+      "ph_10": {
+        "candidate_slots": 30,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 17,
+        "observed_changes": 3,
+        "observed_in_pool": 0
+      },
+      "ph_10_team": {
+        "candidate_slots": 30,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 17,
+        "observed_changes": 3,
+        "observed_in_pool": 0
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 194,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 3,
+        "observed_in_pool": 0
+      },
+      "ph_21_team": {
+        "candidate_slots": 30,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 17,
+        "observed_changes": 3,
+        "observed_in_pool": 0
+      },
+      "ph_35_team": {
+        "candidate_slots": 30,
+        "decisions": 32,
+        "different_latest_team_slots": 0,
+        "empty": 17,
+        "observed_changes": 3,
+        "observed_in_pool": 0
+      }
+    },
+    "2026-03 | 富邦悍將": {
+      "exclusions": {
+        "pen_no_prior_pool": 18,
+        "ph_fielding_unconfirmed": 3,
+        "ph_no_prior_pool": 18
+      },
+      "pen_10": {
+        "candidate_slots": 54,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 7,
+        "observed_in_pool": 1
+      },
+      "pen_10_team": {
+        "candidate_slots": 54,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 7,
+        "observed_in_pool": 1
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 244,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 7,
+        "observed_in_pool": 4
+      },
+      "pen_21_team": {
+        "candidate_slots": 54,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 7,
+        "observed_in_pool": 1
+      },
+      "pen_35_team": {
+        "candidate_slots": 54,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 7,
+        "observed_in_pool": 1
+      },
+      "ph_10": {
+        "candidate_slots": 83,
+        "decisions": 37,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 2,
+        "observed_in_pool": 1
+      },
+      "ph_10_team": {
+        "candidate_slots": 83,
+        "decisions": 37,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 2,
+        "observed_in_pool": 1
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 349,
+        "decisions": 37,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 2,
+        "observed_in_pool": 1
+      },
+      "ph_21_team": {
+        "candidate_slots": 83,
+        "decisions": 37,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 2,
+        "observed_in_pool": 1
+      },
+      "ph_35_team": {
+        "candidate_slots": 83,
+        "decisions": 37,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 2,
+        "observed_in_pool": 1
+      }
+    },
+    "2026-03 | 樂天桃猿": {
+      "exclusions": {
+        "pen_no_prior_pool": 18,
+        "ph_fielding_unconfirmed": 6,
+        "ph_no_prior_pool": 20
+      },
+      "pen_10": {
+        "candidate_slots": 216,
+        "decisions": 54,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 14,
+        "observed_in_pool": 5
+      },
+      "pen_10_team": {
+        "candidate_slots": 216,
+        "decisions": 54,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 14,
+        "observed_in_pool": 5
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 345,
+        "decisions": 54,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 9
+      },
+      "pen_21_team": {
+        "candidate_slots": 216,
+        "decisions": 54,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 14,
+        "observed_in_pool": 5
+      },
+      "pen_35_team": {
+        "candidate_slots": 216,
+        "decisions": 54,
+        "different_latest_team_slots": 0,
+        "empty": 18,
+        "observed_changes": 14,
+        "observed_in_pool": 5
+      },
+      "ph_10": {
+        "candidate_slots": 95,
+        "decisions": 49,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 5,
+        "observed_in_pool": 3
+      },
+      "ph_10_team": {
+        "candidate_slots": 95,
+        "decisions": 49,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 5,
+        "observed_in_pool": 3
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 411,
+        "decisions": 49,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 4
+      },
+      "ph_21_team": {
+        "candidate_slots": 95,
+        "decisions": 49,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 5,
+        "observed_in_pool": 3
+      },
+      "ph_35_team": {
+        "candidate_slots": 95,
+        "decisions": 49,
+        "different_latest_team_slots": 0,
+        "empty": 20,
+        "observed_changes": 5,
+        "observed_in_pool": 3
+      }
+    },
+    "2026-03 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "pen_no_prior_pool": 14,
+        "ph_all_used": 11,
+        "ph_fielding_unconfirmed": 3,
+        "ph_no_prior_pool": 12
+      },
+      "pen_10": {
+        "candidate_slots": 48,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 9,
+        "observed_in_pool": 1
+      },
+      "pen_10_team": {
+        "candidate_slots": 48,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 9,
+        "observed_in_pool": 1
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 199,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 9,
+        "observed_in_pool": 4
+      },
+      "pen_21_team": {
+        "candidate_slots": 48,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 9,
+        "observed_in_pool": 1
+      },
+      "pen_35_team": {
+        "candidate_slots": 48,
+        "decisions": 33,
+        "different_latest_team_slots": 0,
+        "empty": 14,
+        "observed_changes": 9,
+        "observed_in_pool": 1
+      },
+      "ph_10": {
+        "candidate_slots": 4,
+        "decisions": 27,
+        "different_latest_team_slots": 0,
+        "empty": 23,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_10_team": {
+        "candidate_slots": 4,
+        "decisions": 27,
+        "different_latest_team_slots": 0,
+        "empty": 23,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 291,
+        "decisions": 27,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_21_team": {
+        "candidate_slots": 4,
+        "decisions": 27,
+        "different_latest_team_slots": 0,
+        "empty": 23,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      },
+      "ph_35_team": {
+        "candidate_slots": 4,
+        "decisions": 27,
+        "different_latest_team_slots": 0,
+        "empty": 23,
+        "observed_changes": 1,
+        "observed_in_pool": 0
+      }
+    },
+    "2026-04 | 中信兄弟": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 59
+      },
+      "pen_10": {
+        "candidate_slots": 1966,
+        "decisions": 286,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 54
+      },
+      "pen_10_team": {
+        "candidate_slots": 1966,
+        "decisions": 286,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 54
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1966,
+        "decisions": 286,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 54
+      },
+      "pen_21_team": {
+        "candidate_slots": 2174,
+        "decisions": 286,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 54
+      },
+      "pen_35_team": {
+        "candidate_slots": 2199,
+        "decisions": 286,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 54
+      },
+      "ph_10": {
+        "candidate_slots": 1886,
+        "decisions": 311,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_10_team": {
+        "candidate_slots": 1886,
+        "decisions": 311,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1886,
+        "decisions": 311,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_21_team": {
+        "candidate_slots": 2295,
+        "decisions": 311,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_35_team": {
+        "candidate_slots": 2373,
+        "decisions": 311,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      }
+    },
+    "2026-04 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 55
+      },
+      "pen_10": {
+        "candidate_slots": 2524,
+        "decisions": 352,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 59
+      },
+      "pen_10_team": {
+        "candidate_slots": 2524,
+        "decisions": 352,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 59
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2524,
+        "decisions": 352,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 59
+      },
+      "pen_21_team": {
+        "candidate_slots": 2775,
+        "decisions": 352,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 60
+      },
+      "pen_35_team": {
+        "candidate_slots": 2775,
+        "decisions": 352,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 60
+      },
+      "ph_10": {
+        "candidate_slots": 2409,
+        "decisions": 343,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_10_team": {
+        "candidate_slots": 2409,
+        "decisions": 343,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2409,
+        "decisions": 343,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_21_team": {
+        "candidate_slots": 2672,
+        "decisions": 343,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_35_team": {
+        "candidate_slots": 2701,
+        "decisions": 343,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      }
+    },
+    "2026-04 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 62
+      },
+      "pen_10": {
+        "candidate_slots": 2311,
+        "decisions": 315,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 60
+      },
+      "pen_10_team": {
+        "candidate_slots": 2311,
+        "decisions": 315,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 60
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2311,
+        "decisions": 315,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 60
+      },
+      "pen_21_team": {
+        "candidate_slots": 2461,
+        "decisions": 315,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 61
+      },
+      "pen_35_team": {
+        "candidate_slots": 2504,
+        "decisions": 315,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 61
+      },
+      "ph_10": {
+        "candidate_slots": 1870,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 13
+      },
+      "ph_10_team": {
+        "candidate_slots": 1870,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 13
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1870,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 13
+      },
+      "ph_21_team": {
+        "candidate_slots": 2184,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      },
+      "ph_35_team": {
+        "candidate_slots": 2328,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      }
+    },
+    "2026-04 | 富邦悍將": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 17
+      },
+      "pen_10": {
+        "candidate_slots": 2051,
+        "decisions": 297,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 55
+      },
+      "pen_10_team": {
+        "candidate_slots": 2051,
+        "decisions": 297,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 55
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2051,
+        "decisions": 297,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 55
+      },
+      "pen_21_team": {
+        "candidate_slots": 2196,
+        "decisions": 297,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 55
+      },
+      "pen_35_team": {
+        "candidate_slots": 2225,
+        "decisions": 297,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 55
+      },
+      "ph_10": {
+        "candidate_slots": 2285,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 19
+      },
+      "ph_10_team": {
+        "candidate_slots": 2285,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 19
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2285,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 19
+      },
+      "ph_21_team": {
+        "candidate_slots": 2784,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 19
+      },
+      "ph_35_team": {
+        "candidate_slots": 2986,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 19
+      }
+    },
+    "2026-04 | 樂天桃猿": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 43
+      },
+      "pen_10": {
+        "candidate_slots": 2023,
+        "decisions": 281,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_10_team": {
+        "candidate_slots": 2023,
+        "decisions": 281,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2023,
+        "decisions": 281,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_21_team": {
+        "candidate_slots": 2370,
+        "decisions": 281,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 57
+      },
+      "pen_35_team": {
+        "candidate_slots": 2456,
+        "decisions": 281,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 57
+      },
+      "ph_10": {
+        "candidate_slots": 1686,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_10_team": {
+        "candidate_slots": 1686,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1686,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_21_team": {
+        "candidate_slots": 1879,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_35_team": {
+        "candidate_slots": 1879,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      }
+    },
+    "2026-04 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 55
+      },
+      "pen_10": {
+        "candidate_slots": 2697,
+        "decisions": 332,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 58
+      },
+      "pen_10_team": {
+        "candidate_slots": 2697,
+        "decisions": 332,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 58
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2697,
+        "decisions": 332,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 58
+      },
+      "pen_21_team": {
+        "candidate_slots": 3070,
+        "decisions": 332,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 58
+      },
+      "pen_35_team": {
+        "candidate_slots": 3156,
+        "decisions": 332,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 58
+      },
+      "ph_10": {
+        "candidate_slots": 1903,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10_team": {
+        "candidate_slots": 1903,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1903,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_21_team": {
+        "candidate_slots": 2055,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_35_team": {
+        "candidate_slots": 2083,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      }
+    },
+    "2026-05 | 中信兄弟": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 66
+      },
+      "pen_10": {
+        "candidate_slots": 2770,
+        "decisions": 345,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 53
+      },
+      "pen_10_team": {
+        "candidate_slots": 2770,
+        "decisions": 345,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 53
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2770,
+        "decisions": 345,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 53
+      },
+      "pen_21_team": {
+        "candidate_slots": 3190,
+        "decisions": 345,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_35_team": {
+        "candidate_slots": 3401,
+        "decisions": 345,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 56
+      },
+      "ph_10": {
+        "candidate_slots": 2856,
+        "decisions": 397,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10_team": {
+        "candidate_slots": 2856,
+        "decisions": 397,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2856,
+        "decisions": 397,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_21_team": {
+        "candidate_slots": 3517,
+        "decisions": 397,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_35_team": {
+        "candidate_slots": 4108,
+        "decisions": 397,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      }
+    },
+    "2026-05 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 64
+      },
+      "pen_10": {
+        "candidate_slots": 2630,
+        "decisions": 342,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 59
+      },
+      "pen_10_team": {
+        "candidate_slots": 2630,
+        "decisions": 342,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 59
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2630,
+        "decisions": 342,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 59
+      },
+      "pen_21_team": {
+        "candidate_slots": 3090,
+        "decisions": 342,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 61
+      },
+      "pen_35_team": {
+        "candidate_slots": 3421,
+        "decisions": 342,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 63,
+        "observed_in_pool": 61
+      },
+      "ph_10": {
+        "candidate_slots": 2612,
+        "decisions": 349,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 11
+      },
+      "ph_10_team": {
+        "candidate_slots": 2612,
+        "decisions": 349,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 11
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2612,
+        "decisions": 349,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 11
+      },
+      "ph_21_team": {
+        "candidate_slots": 4051,
+        "decisions": 349,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 11
+      },
+      "ph_35_team": {
+        "candidate_slots": 5223,
+        "decisions": 349,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 13
+      }
+    },
+    "2026-05 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 33
+      },
+      "pen_10": {
+        "candidate_slots": 3098,
+        "decisions": 407,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_10_team": {
+        "candidate_slots": 3098,
+        "decisions": 407,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 3098,
+        "decisions": 407,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_21_team": {
+        "candidate_slots": 3444,
+        "decisions": 407,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_35_team": {
+        "candidate_slots": 3772,
+        "decisions": 407,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "ph_10": {
+        "candidate_slots": 2477,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 16
+      },
+      "ph_10_team": {
+        "candidate_slots": 2477,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 16
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2477,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 16
+      },
+      "ph_21_team": {
+        "candidate_slots": 3344,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 17
+      },
+      "ph_35_team": {
+        "candidate_slots": 3747,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 19,
+        "observed_in_pool": 17
+      }
+    },
+    "2026-05 | 富邦悍將": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 21
+      },
+      "pen_10": {
+        "candidate_slots": 2488,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 74,
+        "observed_in_pool": 72
+      },
+      "pen_10_team": {
+        "candidate_slots": 2488,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 74,
+        "observed_in_pool": 72
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2488,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 74,
+        "observed_in_pool": 72
+      },
+      "pen_21_team": {
+        "candidate_slots": 2842,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 74,
+        "observed_in_pool": 72
+      },
+      "pen_35_team": {
+        "candidate_slots": 3470,
+        "decisions": 381,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 74,
+        "observed_in_pool": 72
+      },
+      "ph_10": {
+        "candidate_slots": 2832,
+        "decisions": 354,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 18
+      },
+      "ph_10_team": {
+        "candidate_slots": 2832,
+        "decisions": 354,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 18
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2832,
+        "decisions": 354,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 18
+      },
+      "ph_21_team": {
+        "candidate_slots": 4112,
+        "decisions": 354,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 18
+      },
+      "ph_35_team": {
+        "candidate_slots": 5130,
+        "decisions": 354,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 19
+      }
+    },
+    "2026-05 | 樂天桃猿": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 47
+      },
+      "pen_10": {
+        "candidate_slots": 2181,
+        "decisions": 325,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 53
+      },
+      "pen_10_team": {
+        "candidate_slots": 2181,
+        "decisions": 325,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 53
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2181,
+        "decisions": 325,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 53
+      },
+      "pen_21_team": {
+        "candidate_slots": 2515,
+        "decisions": 325,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 59
+      },
+      "pen_35_team": {
+        "candidate_slots": 2796,
+        "decisions": 325,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 60,
+        "observed_in_pool": 59
+      },
+      "ph_10": {
+        "candidate_slots": 2044,
+        "decisions": 320,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 10
+      },
+      "ph_10_team": {
+        "candidate_slots": 2044,
+        "decisions": 320,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 10
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2044,
+        "decisions": 320,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 10
+      },
+      "ph_21_team": {
+        "candidate_slots": 2825,
+        "decisions": 320,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 12
+      },
+      "ph_35_team": {
+        "candidate_slots": 3420,
+        "decisions": 320,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 12
+      }
+    },
+    "2026-05 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 37
+      },
+      "pen_10": {
+        "candidate_slots": 2935,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 61,
+        "observed_in_pool": 61
+      },
+      "pen_10_team": {
+        "candidate_slots": 2935,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 61,
+        "observed_in_pool": 61
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2935,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 61,
+        "observed_in_pool": 61
+      },
+      "pen_21_team": {
+        "candidate_slots": 3160,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 61,
+        "observed_in_pool": 61
+      },
+      "pen_35_team": {
+        "candidate_slots": 3526,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 61,
+        "observed_in_pool": 61
+      },
+      "ph_10": {
+        "candidate_slots": 2592,
+        "decisions": 347,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 25,
+        "observed_in_pool": 24
+      },
+      "ph_10_team": {
+        "candidate_slots": 2592,
+        "decisions": 347,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 25,
+        "observed_in_pool": 24
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2592,
+        "decisions": 347,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 25,
+        "observed_in_pool": 24
+      },
+      "ph_21_team": {
+        "candidate_slots": 3384,
+        "decisions": 347,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 25,
+        "observed_in_pool": 24
+      },
+      "ph_35_team": {
+        "candidate_slots": 4067,
+        "decisions": 347,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 25,
+        "observed_in_pool": 24
+      }
+    },
+    "2026-06 | 中信兄弟": {
+      "exclusions": {
+        "pen_all_used": 6,
+        "ph_fielding_unconfirmed": 38
+      },
+      "pen_10": {
+        "candidate_slots": 1751,
+        "decisions": 270,
+        "different_latest_team_slots": 0,
+        "empty": 6,
+        "observed_changes": 52,
+        "observed_in_pool": 45
+      },
+      "pen_10_team": {
+        "candidate_slots": 1751,
+        "decisions": 270,
+        "different_latest_team_slots": 0,
+        "empty": 6,
+        "observed_changes": 52,
+        "observed_in_pool": 45
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1751,
+        "decisions": 270,
+        "different_latest_team_slots": 0,
+        "empty": 6,
+        "observed_changes": 52,
+        "observed_in_pool": 45
+      },
+      "pen_21_team": {
+        "candidate_slots": 2212,
+        "decisions": 270,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 48
+      },
+      "pen_35_team": {
+        "candidate_slots": 2647,
+        "decisions": 270,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 48
+      },
+      "ph_10": {
+        "candidate_slots": 1725,
+        "decisions": 258,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_10_team": {
+        "candidate_slots": 1725,
+        "decisions": 258,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1725,
+        "decisions": 258,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_21_team": {
+        "candidate_slots": 2198,
+        "decisions": 258,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_35_team": {
+        "candidate_slots": 2703,
+        "decisions": 258,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      }
+    },
+    "2026-06 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 65
+      },
+      "pen_10": {
+        "candidate_slots": 1799,
+        "decisions": 252,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 40,
+        "observed_in_pool": 35
+      },
+      "pen_10_team": {
+        "candidate_slots": 1799,
+        "decisions": 252,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 40,
+        "observed_in_pool": 35
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1799,
+        "decisions": 252,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 40,
+        "observed_in_pool": 35
+      },
+      "pen_21_team": {
+        "candidate_slots": 2184,
+        "decisions": 252,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 40,
+        "observed_in_pool": 38
+      },
+      "pen_35_team": {
+        "candidate_slots": 2636,
+        "decisions": 252,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 40,
+        "observed_in_pool": 39
+      },
+      "ph_10": {
+        "candidate_slots": 1666,
+        "decisions": 237,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_10_team": {
+        "candidate_slots": 1666,
+        "decisions": 237,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1666,
+        "decisions": 237,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_21_team": {
+        "candidate_slots": 2068,
+        "decisions": 237,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_35_team": {
+        "candidate_slots": 2574,
+        "decisions": 237,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      }
+    },
+    "2026-06 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 28
+      },
+      "pen_10": {
+        "candidate_slots": 2141,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 42,
+        "observed_in_pool": 36
+      },
+      "pen_10_team": {
+        "candidate_slots": 2141,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 42,
+        "observed_in_pool": 36
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2141,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 42,
+        "observed_in_pool": 36
+      },
+      "pen_21_team": {
+        "candidate_slots": 2515,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 42,
+        "observed_in_pool": 38
+      },
+      "pen_35_team": {
+        "candidate_slots": 2835,
+        "decisions": 272,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 42,
+        "observed_in_pool": 39
+      },
+      "ph_10": {
+        "candidate_slots": 1830,
+        "decisions": 289,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 13
+      },
+      "ph_10_team": {
+        "candidate_slots": 1830,
+        "decisions": 289,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 13
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1830,
+        "decisions": 289,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 13
+      },
+      "ph_21_team": {
+        "candidate_slots": 2170,
+        "decisions": 289,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      },
+      "ph_35_team": {
+        "candidate_slots": 2773,
+        "decisions": 289,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      }
+    },
+    "2026-06 | 富邦悍將": {
+      "exclusions": {
+        "pen_all_used": 5,
+        "ph_fielding_unconfirmed": 9
+      },
+      "pen_10": {
+        "candidate_slots": 1749,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 5,
+        "observed_changes": 43,
+        "observed_in_pool": 37
+      },
+      "pen_10_team": {
+        "candidate_slots": 1749,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 5,
+        "observed_changes": 43,
+        "observed_in_pool": 37
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1749,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 5,
+        "observed_changes": 43,
+        "observed_in_pool": 37
+      },
+      "pen_21_team": {
+        "candidate_slots": 1977,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 43,
+        "observed_in_pool": 38
+      },
+      "pen_35_team": {
+        "candidate_slots": 2250,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 43,
+        "observed_in_pool": 38
+      },
+      "ph_10": {
+        "candidate_slots": 1999,
+        "decisions": 284,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_10_team": {
+        "candidate_slots": 1999,
+        "decisions": 284,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1999,
+        "decisions": 284,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_21_team": {
+        "candidate_slots": 2780,
+        "decisions": 284,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_35_team": {
+        "candidate_slots": 3915,
+        "decisions": 284,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      }
+    },
+    "2026-06 | 樂天桃猿": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 25
+      },
+      "pen_10": {
+        "candidate_slots": 1939,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 45,
+        "observed_in_pool": 37
+      },
+      "pen_10_team": {
+        "candidate_slots": 1939,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 45,
+        "observed_in_pool": 37
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1939,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 45,
+        "observed_in_pool": 37
+      },
+      "pen_21_team": {
+        "candidate_slots": 2158,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 45,
+        "observed_in_pool": 41
+      },
+      "pen_35_team": {
+        "candidate_slots": 2322,
+        "decisions": 279,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 45,
+        "observed_in_pool": 41
+      },
+      "ph_10": {
+        "candidate_slots": 1728,
+        "decisions": 268,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 13
+      },
+      "ph_10_team": {
+        "candidate_slots": 1728,
+        "decisions": 268,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 13
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1728,
+        "decisions": 268,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 13
+      },
+      "ph_21_team": {
+        "candidate_slots": 2132,
+        "decisions": 268,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 14
+      },
+      "ph_35_team": {
+        "candidate_slots": 2579,
+        "decisions": 268,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 14
+      }
+    },
+    "2026-06 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 38
+      },
+      "pen_10": {
+        "candidate_slots": 1850,
+        "decisions": 241,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 49,
+        "observed_in_pool": 43
+      },
+      "pen_10_team": {
+        "candidate_slots": 1850,
+        "decisions": 241,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 49,
+        "observed_in_pool": 43
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1850,
+        "decisions": 241,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 49,
+        "observed_in_pool": 43
+      },
+      "pen_21_team": {
+        "candidate_slots": 2175,
+        "decisions": 241,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 49,
+        "observed_in_pool": 46
+      },
+      "pen_35_team": {
+        "candidate_slots": 2360,
+        "decisions": 241,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 49,
+        "observed_in_pool": 47
+      },
+      "ph_10": {
+        "candidate_slots": 1991,
+        "decisions": 257,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_10_team": {
+        "candidate_slots": 1991,
+        "decisions": 257,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1991,
+        "decisions": 257,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_21_team": {
+        "candidate_slots": 2463,
+        "decisions": 257,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      },
+      "ph_35_team": {
+        "candidate_slots": 2841,
+        "decisions": 257,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 12
+      }
+    },
+    "2026-07 | 中信兄弟": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 53
+      },
+      "pen_10": {
+        "candidate_slots": 2169,
+        "decisions": 291,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 48
+      },
+      "pen_10_team": {
+        "candidate_slots": 2169,
+        "decisions": 291,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 48
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2169,
+        "decisions": 291,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 48
+      },
+      "pen_21_team": {
+        "candidate_slots": 2707,
+        "decisions": 291,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 50
+      },
+      "pen_35_team": {
+        "candidate_slots": 3189,
+        "decisions": 291,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 50
+      },
+      "ph_10": {
+        "candidate_slots": 1471,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 18,
+        "observed_in_pool": 15
+      },
+      "ph_10_team": {
+        "candidate_slots": 1471,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 18,
+        "observed_in_pool": 15
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1471,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 18,
+        "observed_in_pool": 15
+      },
+      "ph_21_team": {
+        "candidate_slots": 2006,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 18,
+        "observed_in_pool": 16
+      },
+      "ph_35_team": {
+        "candidate_slots": 2457,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 18,
+        "observed_in_pool": 17
+      }
+    },
+    "2026-07 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 33
+      },
+      "pen_10": {
+        "candidate_slots": 1670,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 55,
+        "observed_in_pool": 45
+      },
+      "pen_10_team": {
+        "candidate_slots": 1670,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 55,
+        "observed_in_pool": 45
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1670,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 55,
+        "observed_in_pool": 45
+      },
+      "pen_21_team": {
+        "candidate_slots": 2240,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 55,
+        "observed_in_pool": 50
+      },
+      "pen_35_team": {
+        "candidate_slots": 2501,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 55,
+        "observed_in_pool": 51
+      },
+      "ph_10": {
+        "candidate_slots": 1874,
+        "decisions": 278,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_10_team": {
+        "candidate_slots": 1874,
+        "decisions": 278,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1874,
+        "decisions": 278,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 8
+      },
+      "ph_21_team": {
+        "candidate_slots": 2689,
+        "decisions": 278,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 10
+      },
+      "ph_35_team": {
+        "candidate_slots": 3349,
+        "decisions": 278,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 10,
+        "observed_in_pool": 10
+      }
+    },
+    "2026-07 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 14
+      },
+      "pen_10": {
+        "candidate_slots": 2164,
+        "decisions": 267,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 44,
+        "observed_in_pool": 38
+      },
+      "pen_10_team": {
+        "candidate_slots": 2164,
+        "decisions": 267,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 44,
+        "observed_in_pool": 38
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2164,
+        "decisions": 267,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 44,
+        "observed_in_pool": 38
+      },
+      "pen_21_team": {
+        "candidate_slots": 2712,
+        "decisions": 267,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 44,
+        "observed_in_pool": 42
+      },
+      "pen_35_team": {
+        "candidate_slots": 3273,
+        "decisions": 267,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 44,
+        "observed_in_pool": 42
+      },
+      "ph_10": {
+        "candidate_slots": 1820,
+        "decisions": 303,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 8,
+        "observed_in_pool": 8
+      },
+      "ph_10_team": {
+        "candidate_slots": 1820,
+        "decisions": 303,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 8,
+        "observed_in_pool": 8
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1820,
+        "decisions": 303,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 8,
+        "observed_in_pool": 8
+      },
+      "ph_21_team": {
+        "candidate_slots": 2291,
+        "decisions": 303,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 8,
+        "observed_in_pool": 8
+      },
+      "ph_35_team": {
+        "candidate_slots": 2619,
+        "decisions": 303,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 8,
+        "observed_in_pool": 8
+      }
+    },
+    "2026-07 | 富邦悍將": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 25
+      },
+      "pen_10": {
+        "candidate_slots": 1839,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_10_team": {
+        "candidate_slots": 1839,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1839,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_21_team": {
+        "candidate_slots": 2109,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 56
+      },
+      "pen_35_team": {
+        "candidate_slots": 2257,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 56
+      },
+      "ph_10": {
+        "candidate_slots": 1715,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 11
+      },
+      "ph_10_team": {
+        "candidate_slots": 1715,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 11
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1715,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 11
+      },
+      "ph_21_team": {
+        "candidate_slots": 2239,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 11
+      },
+      "ph_35_team": {
+        "candidate_slots": 2671,
+        "decisions": 266,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 12,
+        "observed_in_pool": 11
+      }
+    },
+    "2026-07 | 樂天桃猿": {
+      "exclusions": {
+        "pen_all_used": 4,
+        "ph_fielding_unconfirmed": 46
+      },
+      "pen_10": {
+        "candidate_slots": 1728,
+        "decisions": 301,
+        "different_latest_team_slots": 0,
+        "empty": 4,
+        "observed_changes": 52,
+        "observed_in_pool": 44
+      },
+      "pen_10_team": {
+        "candidate_slots": 1728,
+        "decisions": 301,
+        "different_latest_team_slots": 0,
+        "empty": 4,
+        "observed_changes": 52,
+        "observed_in_pool": 44
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1728,
+        "decisions": 301,
+        "different_latest_team_slots": 0,
+        "empty": 4,
+        "observed_changes": 52,
+        "observed_in_pool": 44
+      },
+      "pen_21_team": {
+        "candidate_slots": 2282,
+        "decisions": 301,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 46
+      },
+      "pen_35_team": {
+        "candidate_slots": 2746,
+        "decisions": 301,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 48
+      },
+      "ph_10": {
+        "candidate_slots": 2223,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 6,
+        "observed_in_pool": 6
+      },
+      "ph_10_team": {
+        "candidate_slots": 2223,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 6,
+        "observed_in_pool": 6
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2223,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 6,
+        "observed_in_pool": 6
+      },
+      "ph_21_team": {
+        "candidate_slots": 2883,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 6,
+        "observed_in_pool": 6
+      },
+      "ph_35_team": {
+        "candidate_slots": 3537,
+        "decisions": 316,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 6,
+        "observed_in_pool": 6
+      }
+    },
+    "2026-07 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 12
+      },
+      "pen_10": {
+        "candidate_slots": 2414,
+        "decisions": 302,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 58,
+        "observed_in_pool": 49
+      },
+      "pen_10_team": {
+        "candidate_slots": 2414,
+        "decisions": 302,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 58,
+        "observed_in_pool": 49
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2414,
+        "decisions": 302,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 58,
+        "observed_in_pool": 49
+      },
+      "pen_21_team": {
+        "candidate_slots": 2906,
+        "decisions": 302,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 58,
+        "observed_in_pool": 52
+      },
+      "pen_35_team": {
+        "candidate_slots": 3230,
+        "decisions": 302,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 58,
+        "observed_in_pool": 54
+      },
+      "ph_10": {
+        "candidate_slots": 2490,
+        "decisions": 300,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 8
+      },
+      "ph_10_team": {
+        "candidate_slots": 2490,
+        "decisions": 300,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 8
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2490,
+        "decisions": 300,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 8
+      },
+      "ph_21_team": {
+        "candidate_slots": 3711,
+        "decisions": 300,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_35_team": {
+        "candidate_slots": 4411,
+        "decisions": 300,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      }
+    },
+    "2026-08 | 中信兄弟": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 78
+      },
+      "pen_10": {
+        "candidate_slots": 2763,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 64,
+        "observed_in_pool": 61
+      },
+      "pen_10_team": {
+        "candidate_slots": 2763,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 64,
+        "observed_in_pool": 61
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2763,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 64,
+        "observed_in_pool": 61
+      },
+      "pen_21_team": {
+        "candidate_slots": 2920,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 64,
+        "observed_in_pool": 62
+      },
+      "pen_35_team": {
+        "candidate_slots": 3278,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 64,
+        "observed_in_pool": 62
+      },
+      "ph_10": {
+        "candidate_slots": 1965,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      },
+      "ph_10_team": {
+        "candidate_slots": 1965,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1965,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      },
+      "ph_21_team": {
+        "candidate_slots": 2165,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      },
+      "ph_35_team": {
+        "candidate_slots": 2413,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 15,
+        "observed_in_pool": 14
+      }
+    },
+    "2026-08 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 48
+      },
+      "pen_10": {
+        "candidate_slots": 2230,
+        "decisions": 321,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 46
+      },
+      "pen_10_team": {
+        "candidate_slots": 2230,
+        "decisions": 321,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 46
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2230,
+        "decisions": 321,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 46
+      },
+      "pen_21_team": {
+        "candidate_slots": 2883,
+        "decisions": 321,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 49
+      },
+      "pen_35_team": {
+        "candidate_slots": 3457,
+        "decisions": 321,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 53,
+        "observed_in_pool": 49
+      },
+      "ph_10": {
+        "candidate_slots": 2327,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_10_team": {
+        "candidate_slots": 2327,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2327,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_21_team": {
+        "candidate_slots": 3280,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_35_team": {
+        "candidate_slots": 3814,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      }
+    },
+    "2026-08 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 33
+      },
+      "pen_10": {
+        "candidate_slots": 2608,
+        "decisions": 308,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 44
+      },
+      "pen_10_team": {
+        "candidate_slots": 2608,
+        "decisions": 308,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 44
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2608,
+        "decisions": 308,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 44
+      },
+      "pen_21_team": {
+        "candidate_slots": 3148,
+        "decisions": 308,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 46
+      },
+      "pen_35_team": {
+        "candidate_slots": 3747,
+        "decisions": 308,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 52,
+        "observed_in_pool": 47
+      },
+      "ph_10": {
+        "candidate_slots": 1486,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_10_team": {
+        "candidate_slots": 1486,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1486,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_21_team": {
+        "candidate_slots": 1661,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_35_team": {
+        "candidate_slots": 2061,
+        "decisions": 283,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      }
+    },
+    "2026-08 | 富邦悍將": {
+      "exclusions": {
+        "pen_all_used": 4,
+        "ph_fielding_unconfirmed": 11
+      },
+      "pen_10": {
+        "candidate_slots": 1976,
+        "decisions": 288,
+        "different_latest_team_slots": 0,
+        "empty": 4,
+        "observed_changes": 59,
+        "observed_in_pool": 50
+      },
+      "pen_10_team": {
+        "candidate_slots": 1976,
+        "decisions": 288,
+        "different_latest_team_slots": 0,
+        "empty": 4,
+        "observed_changes": 59,
+        "observed_in_pool": 50
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1976,
+        "decisions": 288,
+        "different_latest_team_slots": 0,
+        "empty": 4,
+        "observed_changes": 59,
+        "observed_in_pool": 50
+      },
+      "pen_21_team": {
+        "candidate_slots": 2663,
+        "decisions": 288,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 58
+      },
+      "pen_35_team": {
+        "candidate_slots": 2938,
+        "decisions": 288,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 58
+      },
+      "ph_10": {
+        "candidate_slots": 2150,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 14
+      },
+      "ph_10_team": {
+        "candidate_slots": 2150,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 14
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2150,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 14
+      },
+      "ph_21_team": {
+        "candidate_slots": 3120,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 15
+      },
+      "ph_35_team": {
+        "candidate_slots": 3749,
+        "decisions": 292,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 15
+      }
+    },
+    "2026-08 | 樂天桃猿": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 51
+      },
+      "pen_10": {
+        "candidate_slots": 1921,
+        "decisions": 256,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 48,
+        "observed_in_pool": 45
+      },
+      "pen_10_team": {
+        "candidate_slots": 1921,
+        "decisions": 256,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 48,
+        "observed_in_pool": 45
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 1921,
+        "decisions": 256,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 48,
+        "observed_in_pool": 45
+      },
+      "pen_21_team": {
+        "candidate_slots": 2190,
+        "decisions": 256,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 48,
+        "observed_in_pool": 47
+      },
+      "pen_35_team": {
+        "candidate_slots": 2400,
+        "decisions": 256,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 48,
+        "observed_in_pool": 47
+      },
+      "ph_10": {
+        "candidate_slots": 1574,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_10_team": {
+        "candidate_slots": 1574,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 1574,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_21_team": {
+        "candidate_slots": 2095,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_35_team": {
+        "candidate_slots": 2643,
+        "decisions": 285,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      }
+    },
+    "2026-08 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 57
+      },
+      "pen_10": {
+        "candidate_slots": 2461,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 53
+      },
+      "pen_10_team": {
+        "candidate_slots": 2461,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 53
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2461,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 53
+      },
+      "pen_21_team": {
+        "candidate_slots": 2870,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 53
+      },
+      "pen_35_team": {
+        "candidate_slots": 3501,
+        "decisions": 329,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 57,
+        "observed_in_pool": 54
+      },
+      "ph_10": {
+        "candidate_slots": 2372,
+        "decisions": 319,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 12
+      },
+      "ph_10_team": {
+        "candidate_slots": 2372,
+        "decisions": 319,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 12
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2372,
+        "decisions": 319,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 12
+      },
+      "ph_21_team": {
+        "candidate_slots": 3374,
+        "decisions": 319,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 13
+      },
+      "ph_35_team": {
+        "candidate_slots": 4241,
+        "decisions": 319,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 14,
+        "observed_in_pool": 14
+      }
+    },
+    "2026-09 | 中信兄弟": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 79
+      },
+      "pen_10": {
+        "candidate_slots": 2466,
+        "decisions": 357,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_10_team": {
+        "candidate_slots": 2466,
+        "decisions": 357,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2466,
+        "decisions": 357,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 55
+      },
+      "pen_21_team": {
+        "candidate_slots": 3063,
+        "decisions": 357,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 56
+      },
+      "pen_35_team": {
+        "candidate_slots": 3450,
+        "decisions": 357,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 59,
+        "observed_in_pool": 56
+      },
+      "ph_10": {
+        "candidate_slots": 2339,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_10_team": {
+        "candidate_slots": 2339,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2339,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "ph_21_team": {
+        "candidate_slots": 3004,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "ph_35_team": {
+        "candidate_slots": 3004,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      }
+    },
+    "2026-09 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 59
+      },
+      "pen_10": {
+        "candidate_slots": 3180,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 54
+      },
+      "pen_10_team": {
+        "candidate_slots": 3180,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 54
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 3180,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 54
+      },
+      "pen_21_team": {
+        "candidate_slots": 3696,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 58
+      },
+      "pen_35_team": {
+        "candidate_slots": 3924,
+        "decisions": 367,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 66,
+        "observed_in_pool": 58
+      },
+      "ph_10": {
+        "candidate_slots": 2270,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 14
+      },
+      "ph_10_team": {
+        "candidate_slots": 2270,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 14
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2270,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 14
+      },
+      "ph_21_team": {
+        "candidate_slots": 2967,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 15
+      },
+      "ph_35_team": {
+        "candidate_slots": 3942,
+        "decisions": 348,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 17,
+        "observed_in_pool": 15
+      }
+    },
+    "2026-09 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 32
+      },
+      "pen_10": {
+        "candidate_slots": 3087,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 67,
+        "observed_in_pool": 62
+      },
+      "pen_10_team": {
+        "candidate_slots": 3087,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 67,
+        "observed_in_pool": 62
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 3087,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 67,
+        "observed_in_pool": 62
+      },
+      "pen_21_team": {
+        "candidate_slots": 3638,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 67,
+        "observed_in_pool": 62
+      },
+      "pen_35_team": {
+        "candidate_slots": 4264,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 67,
+        "observed_in_pool": 63
+      },
+      "ph_10": {
+        "candidate_slots": 2658,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10_team": {
+        "candidate_slots": 2658,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2658,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_21_team": {
+        "candidate_slots": 3502,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_35_team": {
+        "candidate_slots": 3995,
+        "decisions": 373,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      }
+    },
+    "2026-09 | 富邦悍將": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 30
+      },
+      "pen_10": {
+        "candidate_slots": 2777,
+        "decisions": 376,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_10_team": {
+        "candidate_slots": 2777,
+        "decisions": 376,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2777,
+        "decisions": 376,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_21_team": {
+        "candidate_slots": 3230,
+        "decisions": 376,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 71
+      },
+      "pen_35_team": {
+        "candidate_slots": 3606,
+        "decisions": 376,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 75,
+        "observed_in_pool": 72
+      },
+      "ph_10": {
+        "candidate_slots": 2897,
+        "decisions": 409,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_10_team": {
+        "candidate_slots": 2897,
+        "decisions": 409,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2897,
+        "decisions": 409,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_21_team": {
+        "candidate_slots": 3770,
+        "decisions": 409,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      },
+      "ph_35_team": {
+        "candidate_slots": 4658,
+        "decisions": 409,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 16
+      }
+    },
+    "2026-09 | 樂天桃猿": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 48
+      },
+      "pen_10": {
+        "candidate_slots": 3408,
+        "decisions": 413,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 70,
+        "observed_in_pool": 64
+      },
+      "pen_10_team": {
+        "candidate_slots": 3408,
+        "decisions": 413,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 70,
+        "observed_in_pool": 64
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 3408,
+        "decisions": 413,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 70,
+        "observed_in_pool": 64
+      },
+      "pen_21_team": {
+        "candidate_slots": 3661,
+        "decisions": 413,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 70,
+        "observed_in_pool": 67
+      },
+      "pen_35_team": {
+        "candidate_slots": 3889,
+        "decisions": 413,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 70,
+        "observed_in_pool": 67
+      },
+      "ph_10": {
+        "candidate_slots": 2834,
+        "decisions": 383,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "ph_10_team": {
+        "candidate_slots": 2834,
+        "decisions": 383,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2834,
+        "decisions": 383,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "ph_21_team": {
+        "candidate_slots": 3664,
+        "decisions": 383,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "ph_35_team": {
+        "candidate_slots": 4029,
+        "decisions": 383,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 13
+      }
+    },
+    "2026-09 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 54
+      },
+      "pen_10": {
+        "candidate_slots": 2681,
+        "decisions": 355,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 73,
+        "observed_in_pool": 68
+      },
+      "pen_10_team": {
+        "candidate_slots": 2681,
+        "decisions": 355,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 73,
+        "observed_in_pool": 68
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 2681,
+        "decisions": 355,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 73,
+        "observed_in_pool": 68
+      },
+      "pen_21_team": {
+        "candidate_slots": 3028,
+        "decisions": 355,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 73,
+        "observed_in_pool": 69
+      },
+      "pen_35_team": {
+        "candidate_slots": 3219,
+        "decisions": 355,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 73,
+        "observed_in_pool": 69
+      },
+      "ph_10": {
+        "candidate_slots": 2295,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 19
+      },
+      "ph_10_team": {
+        "candidate_slots": 2295,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 19
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 2295,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 19
+      },
+      "ph_21_team": {
+        "candidate_slots": 3317,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 19
+      },
+      "ph_35_team": {
+        "candidate_slots": 4143,
+        "decisions": 361,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 21,
+        "observed_in_pool": 20
+      }
+    },
+    "2026-10 | 中信兄弟": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 8
+      },
+      "pen_10": {
+        "candidate_slots": 331,
+        "decisions": 41,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 4
+      },
+      "pen_10_team": {
+        "candidate_slots": 331,
+        "decisions": 41,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 4
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 331,
+        "decisions": 41,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 4
+      },
+      "pen_21_team": {
+        "candidate_slots": 331,
+        "decisions": 41,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 4
+      },
+      "pen_35_team": {
+        "candidate_slots": 383,
+        "decisions": 41,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 6
+      },
+      "ph_10": {
+        "candidate_slots": 452,
+        "decisions": 59,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_10_team": {
+        "candidate_slots": 452,
+        "decisions": 59,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 452,
+        "decisions": 59,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_21_team": {
+        "candidate_slots": 550,
+        "decisions": 59,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      },
+      "ph_35_team": {
+        "candidate_slots": 604,
+        "decisions": 59,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 0,
+        "observed_in_pool": 0
+      }
+    },
+    "2026-10 | 台鋼雄鷹": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 6
+      },
+      "pen_10": {
+        "candidate_slots": 607,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "pen_10_team": {
+        "candidate_slots": 607,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 607,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "pen_21_team": {
+        "candidate_slots": 887,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "pen_35_team": {
+        "candidate_slots": 957,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 11
+      },
+      "ph_10": {
+        "candidate_slots": 479,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_10_team": {
+        "candidate_slots": 479,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 479,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_21_team": {
+        "candidate_slots": 542,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_35_team": {
+        "candidate_slots": 720,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      }
+    },
+    "2026-10 | 味全龍": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 10
+      },
+      "pen_10": {
+        "candidate_slots": 561,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "pen_10_team": {
+        "candidate_slots": 561,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 561,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 9
+      },
+      "pen_21_team": {
+        "candidate_slots": 668,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 10
+      },
+      "pen_35_team": {
+        "candidate_slots": 721,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 11,
+        "observed_in_pool": 11
+      },
+      "ph_10": {
+        "candidate_slots": 505,
+        "decisions": 74,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 5
+      },
+      "ph_10_team": {
+        "candidate_slots": 505,
+        "decisions": 74,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 5
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 505,
+        "decisions": 74,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 5
+      },
+      "ph_21_team": {
+        "candidate_slots": 655,
+        "decisions": 74,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 5
+      },
+      "ph_35_team": {
+        "candidate_slots": 746,
+        "decisions": 74,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 5,
+        "observed_in_pool": 5
+      }
+    },
+    "2026-10 | 富邦悍將": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 3
+      },
+      "pen_10": {
+        "candidate_slots": 512,
+        "decisions": 71,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 8
+      },
+      "pen_10_team": {
+        "candidate_slots": 512,
+        "decisions": 71,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 8
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 512,
+        "decisions": 71,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 8
+      },
+      "pen_21_team": {
+        "candidate_slots": 603,
+        "decisions": 71,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 8
+      },
+      "pen_35_team": {
+        "candidate_slots": 706,
+        "decisions": 71,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 13,
+        "observed_in_pool": 8
+      },
+      "ph_10": {
+        "candidate_slots": 491,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 2,
+        "observed_in_pool": 2
+      },
+      "ph_10_team": {
+        "candidate_slots": 491,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 2,
+        "observed_in_pool": 2
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 491,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 2,
+        "observed_in_pool": 2
+      },
+      "ph_21_team": {
+        "candidate_slots": 578,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 2,
+        "observed_in_pool": 2
+      },
+      "ph_35_team": {
+        "candidate_slots": 747,
+        "decisions": 63,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 2,
+        "observed_in_pool": 2
+      }
+    },
+    "2026-10 | 樂天桃猿": {
+      "pen_10": {
+        "candidate_slots": 659,
+        "decisions": 87,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 14
+      },
+      "pen_10_team": {
+        "candidate_slots": 659,
+        "decisions": 87,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 14
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 659,
+        "decisions": 87,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 14
+      },
+      "pen_21_team": {
+        "candidate_slots": 888,
+        "decisions": 87,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "pen_35_team": {
+        "candidate_slots": 903,
+        "decisions": 87,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 15
+      },
+      "ph_10": {
+        "candidate_slots": 770,
+        "decisions": 81,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_10_team": {
+        "candidate_slots": 770,
+        "decisions": 81,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 770,
+        "decisions": 81,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_21_team": {
+        "candidate_slots": 981,
+        "decisions": 81,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      },
+      "ph_35_team": {
+        "candidate_slots": 1078,
+        "decisions": 81,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 3
+      }
+    },
+    "2026-10 | 統一7-ELEVEn獅": {
+      "exclusions": {
+        "ph_fielding_unconfirmed": 1
+      },
+      "pen_10": {
+        "candidate_slots": 685,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 11
+      },
+      "pen_10_team": {
+        "candidate_slots": 685,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 11
+      },
+      "pen_10_team_opening": {
+        "candidate_slots": 685,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 11
+      },
+      "pen_21_team": {
+        "candidate_slots": 702,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 11
+      },
+      "pen_35_team": {
+        "candidate_slots": 702,
+        "decisions": 70,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 16,
+        "observed_in_pool": 11
+      },
+      "ph_10": {
+        "candidate_slots": 532,
+        "decisions": 62,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 4
+      },
+      "ph_10_team": {
+        "candidate_slots": 532,
+        "decisions": 62,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 4
+      },
+      "ph_10_team_opening": {
+        "candidate_slots": 532,
+        "decisions": 62,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 4
+      },
+      "ph_21_team": {
+        "candidate_slots": 545,
+        "decisions": 62,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 4
+      },
+      "ph_35_team": {
+        "candidate_slots": 590,
+        "decisions": 62,
+        "different_latest_team_slots": 0,
+        "empty": 0,
+        "observed_changes": 4,
+        "observed_in_pool": 4
+      }
+    }
+  },
+  "candidate_size_histograms": {
+    "pen_10": {
+      "0": 117,
+      "1": 37,
+      "10": 1042,
+      "11": 212,
+      "12": 83,
+      "13": 15,
+      "2": 54,
+      "3": 173,
+      "4": 541,
+      "5": 1041,
+      "6": 1821,
+      "7": 2283,
+      "8": 2421,
+      "9": 2235
+    },
+    "pen_10_team": {
+      "0": 117,
+      "1": 37,
+      "10": 1042,
+      "11": 212,
+      "12": 83,
+      "13": 15,
+      "2": 54,
+      "3": 173,
+      "4": 541,
+      "5": 1041,
+      "6": 1821,
+      "7": 2283,
+      "8": 2421,
+      "9": 2235
+    },
+    "pen_10_team_opening": {
+      "0": 19,
+      "1": 37,
+      "10": 1054,
+      "11": 231,
+      "12": 100,
+      "13": 23,
+      "14": 4,
+      "15": 9,
+      "16": 5,
+      "2": 54,
+      "3": 173,
+      "4": 541,
+      "5": 1044,
+      "6": 1824,
+      "7": 2287,
+      "8": 2425,
+      "9": 2245
+    },
+    "pen_21_team": {
+      "0": 98,
+      "1": 18,
+      "10": 2299,
+      "11": 1080,
+      "12": 548,
+      "13": 196,
+      "14": 13,
+      "15": 13,
+      "2": 28,
+      "3": 46,
+      "4": 185,
+      "5": 468,
+      "6": 989,
+      "7": 1620,
+      "8": 2104,
+      "9": 2370
+    },
+    "pen_35_team": {
+      "0": 98,
+      "1": 13,
+      "10": 2391,
+      "11": 2062,
+      "12": 1180,
+      "13": 669,
+      "14": 196,
+      "15": 20,
+      "16": 13,
+      "2": 14,
+      "3": 36,
+      "4": 102,
+      "5": 237,
+      "6": 569,
+      "7": 1041,
+      "8": 1492,
+      "9": 1942
+    },
+    "ph_10": {
+      "0": 120,
+      "1": 22,
+      "10": 272,
+      "11": 197,
+      "12": 33,
+      "17": 16,
+      "2": 113,
+      "3": 290,
+      "4": 759,
+      "5": 1306,
+      "6": 2552,
+      "7": 3141,
+      "8": 2145,
+      "9": 1109
+    },
+    "ph_10_team": {
+      "0": 120,
+      "1": 22,
+      "10": 272,
+      "11": 197,
+      "12": 33,
+      "17": 16,
+      "2": 113,
+      "3": 290,
+      "4": 759,
+      "5": 1306,
+      "6": 2552,
+      "7": 3141,
+      "8": 2145,
+      "9": 1109
+    },
+    "ph_10_team_opening": {
+      "1": 22,
+      "10": 283,
+      "11": 198,
+      "12": 43,
+      "13": 30,
+      "14": 8,
+      "15": 19,
+      "16": 35,
+      "17": 16,
+      "2": 113,
+      "3": 290,
+      "4": 759,
+      "5": 1306,
+      "6": 2552,
+      "7": 3141,
+      "8": 2145,
+      "9": 1115
+    },
+    "ph_21_team": {
+      "0": 120,
+      "1": 19,
+      "10": 2090,
+      "11": 1389,
+      "12": 722,
+      "13": 342,
+      "14": 140,
+      "15": 5,
+      "18": 16,
+      "2": 59,
+      "3": 84,
+      "4": 185,
+      "5": 526,
+      "6": 1060,
+      "7": 1346,
+      "8": 2100,
+      "9": 1872
+    },
+    "ph_35_team": {
+      "0": 120,
+      "1": 19,
+      "10": 1521,
+      "11": 1972,
+      "12": 1622,
+      "13": 1035,
+      "14": 653,
+      "15": 489,
+      "16": 219,
+      "17": 119,
+      "2": 53,
+      "20": 16,
+      "3": 62,
+      "4": 117,
+      "5": 284,
+      "6": 595,
+      "7": 785,
+      "8": 1005,
+      "9": 1389
+    }
+  },
+  "decisions": 12075,
+  "exclusions": {
+    "pen_all_used": 19,
+    "pen_no_prior_pool": 98,
+    "ph_all_used": 21,
+    "ph_fielding_unconfirmed": 1590,
+    "ph_no_prior_pool": 99
+  },
+  "games": 360,
+  "scope": "Exact incumbent and prior actors; observed changes label coverage, not eligibility. Alternatives require last observed team before game day to match. Opening fallback only fills empty pools in the first ten calendar days, using each club's final 21-day window from the previous season. Retrospective only.",
+  "season": 2026,
+  "summary": {
+    "pen_10": {
+      "candidate_slots": 88366,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 117,
+      "observed_changes": 2228,
+      "observed_in_pool": 1962
+    },
+    "pen_10_team": {
+      "candidate_slots": 88366,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 117,
+      "observed_changes": 2228,
+      "observed_in_pool": 1962
+    },
+    "pen_10_team_opening": {
+      "candidate_slots": 89457,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 19,
+      "observed_changes": 2228,
+      "observed_in_pool": 1981
+    },
+    "pen_21_team": {
+      "candidate_slots": 103099,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 98,
+      "observed_changes": 2228,
+      "observed_in_pool": 2036
+    },
+    "pen_35_team": {
+      "candidate_slots": 114558,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 98,
+      "observed_changes": 2228,
+      "observed_in_pool": 2052
+    },
+    "ph_10": {
+      "candidate_slots": 80679,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 120,
+      "observed_changes": 540,
+      "observed_in_pool": 479
+    },
+    "ph_10_team": {
+      "candidate_slots": 80679,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 120,
+      "observed_changes": 540,
+      "observed_in_pool": 479
+    },
+    "ph_10_team_opening": {
+      "candidate_slots": 82321,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 0,
+      "observed_changes": 540,
+      "observed_in_pool": 481
+    },
+    "ph_21_team": {
+      "candidate_slots": 104801,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 120,
+      "observed_changes": 540,
+      "observed_in_pool": 494
+    },
+    "ph_35_team": {
+      "candidate_slots": 123950,
+      "decisions": 12075,
+      "different_latest_team_slots": 0,
+      "empty": 120,
+      "observed_changes": 540,
+      "observed_in_pool": 504
+    }
+  },
+  "timing_csv_sha256": "cd1aabb1dbafe9813dc858781da95b3202b6f360729484c9f29604e676356baa"
+}

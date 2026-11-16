@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-29",
+  "batch_id": "0fab54a0a3f6b7d714f9e09599a259c343437e8018397ed78a20b0483e8be3b5",
+  "fielding": {
+    "2026-228-h028": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-228-a028",
+      "original_position": "RF",
+      "opening_fielder": "王苡丞"
+    },
+    "2026-228-h035": {
+      "status": "no_defensive_half"
+    },
+    "2026-229-a036": {
+      "status": "pinch_hitter_fielded",
+      "position": "C",
+      "observed_pa": "2026-229-h035"
+    },
+    "2026-230-a034": {
+      "status": "pinch_hitter_fielded",
+      "position": "C",
+      "observed_pa": "2026-230-h042"
+    },
+    "2026-230-a037": {
+      "status": "pinch_hitter_fielded",
+      "position": "LF",
+      "observed_pa": "2026-230-h042"
+    }
+  },
+  "availability": {
+    "2026-228-h031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-229-a020": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-229-a029": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-229-a039": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-230-a033": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-230-a039": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-230-h036": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}

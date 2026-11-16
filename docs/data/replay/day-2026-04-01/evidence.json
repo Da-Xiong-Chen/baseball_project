@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "date": "2026-04-01",
+  "batch_id": "a33374179343d12a692f67154adcf0d98713725deffc30caf08294575db336a9",
+  "fielding": {
+    "2026-008-h035": {
+      "status": "no_defensive_half"
+    },
+    "2026-009-h034": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-009-a034",
+      "original_position": "SS",
+      "opening_fielder": "馬傑森"
+    },
+    "2026-010-a028": {
+      "status": "pinch_hitter_fielded",
+      "position": "RF",
+      "observed_pa": "2026-010-h029"
+    },
+    "2026-010-a032": {
+      "status": "pinch_hitter_fielded",
+      "position": "3B",
+      "observed_pa": "2026-010-h029"
+    },
+    "2026-010-h033": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-010-a033",
+      "original_position": "2B",
+      "opening_fielder": "林祖傑"
+    }
+  },
+  "availability": {
+    "2026-008-a021": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-a022": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-a026": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-a030": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-a031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-a035": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-h023": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-h024": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-h032": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-008-h033": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a022": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a030": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a033": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-a039": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-h026": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-h027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-h028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-h035": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-h036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-009-h037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-010-a024": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-010-a034": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-010-a036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-010-h029": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}

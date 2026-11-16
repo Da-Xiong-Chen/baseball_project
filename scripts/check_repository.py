@@ -15,7 +15,7 @@ CURRENT_DOCS = ['README.md', '協作指南.md', '資料來源.md', 'docs/技術�
     'docs/qa/release-readiness-20261029/README.md', 'docs/qa/release-foundation-20261106/README.md',
     'docs/qa/replay-20261112/README.md', 'docs/qa/model-horizons-20261113/README.md',
     'docs/qa/data-2026-20261114/README.md', 'docs/qa/website-roadmap-20261115/README.md',
-    'docs/project-closeout-20261116.md']
+    'docs/project-closeout-20261116.md', 'docs/qa/replay-evidence-20261116/README.md']
 
 
 def prose(text):

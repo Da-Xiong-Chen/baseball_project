@@ -442,6 +442,14 @@ async function init() {
     await showFeaturePage('review',backtestSub,{fromLocation:true});
   };
   $('#replayCatalogRetry').onclick=()=>replayLocation()?restoreReplayLocation():loadReplayDates();
+  $('#replayCase').onchange=async event=>{
+    const select=event.target, option=select.selectedOptions[0];
+    select.selectedIndex=0;
+    if (!option?.dataset.game) return;
+    const {game,pa,decision,date}=option.dataset;
+    updateReplayURL(game,pa,decision,date);
+    await restoreReplayLocation();
+  };
   $('#historyPlayer').onchange=renderHistoryContext;['#historyPitchCount','#historyStarter'].forEach(id=>$(id).oninput=renderHistoryContext);
   $$('[data-history-role]').forEach(b=>b.onclick=()=>{historyRole=b.dataset.historyRole;$$('[data-history-role]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});loadHistoryContext();});
   $('#historyPitcher').onchange=mountHistoricalPitch;
@@ -504,6 +512,7 @@ const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lin
 const DEFAULT_HISTORY_DATE="2026-10-04";
 let HISTORY_DATE=DEFAULT_HISTORY_DATE;
 const historySeason=Number(DEFAULT_HISTORY_DATE.slice(0,4));
+let replayEvidenceAvailable=false;
 const historyRoot=date=>`data/replay/day-${date}/`;
 let replayDates=null;
 
@@ -529,7 +538,14 @@ async function loadReplayDates() {
         throw Error('回放日期索引無效');
     }});
     replayDates=new Map(catalog.days.map(row=>[row.date,row]));
+    replayEvidenceAvailable=catalog.evidence_schema===1;
     $('#replayDate').innerHTML=catalog.days.map(({date})=>`<option value="${date}">${date.replaceAll('-','/')}</option>`).join('');
+    const cases=$('#replayCase');
+    const options=catalog.days.flatMap(({date,case:featured,observed_case})=>[featured,observed_case]
+      .filter(item=>item?.game&&item.pa&&['ph','pen'].includes(item.decision))
+      .map(item=>`<option data-date="${esc(date)}" data-game="${esc(item.game)}" data-pa="${esc(item.pa)}" data-decision="${esc(item.decision)}">${esc(item.label)} · ${date.slice(5).replace('-','/')}</option>`));
+    cases.innerHTML='<option value="">依情境找案例</option>'+options.join('');
+    cases.hidden=!options.length;
     $('#replayCatalogRetry').hidden=true;
     $('#replayDateStatus').textContent='';
     paintHistoryDate();
@@ -590,9 +606,54 @@ async function historyReplayIndex(date=HISTORY_DATE){
        throw Error('單日回放索引無效');
   }});
 }
-async function historyJSON(file,{reload=false,date=HISTORY_DATE}={}){
+async function historyJSON(file,{reload=false,date=HISTORY_DATE,validate}={}){
   const {batch_id}=await historyReplayIndex(date);
-  return json(historyRoot(date)+file,{reload,replayBatch:batch_id});
+  return json(historyRoot(date)+file,{reload,replayBatch:batch_id,validate});
+}
+function historyEvidence(date){
+  return historyJSON('evidence.json',{date,validate(data){
+    if(data.schema_version!==1||data.date!==date||!data.fielding||!data.availability)throw Error('回放補充紀錄不符');
+  }});
+}
+
+const replayAvailabilityText={
+  no_prior_pool:'賽前觀察期間沒有符合候選條件的出賽紀錄。',
+  all_used:'依當時名單推估，人選已在場或本場已使用。',
+  fielding_unconfirmed:'有板凳人選，但守位紀錄無法確認接守。',
+};
+const replayPositionName={P:'投手',C:'捕手','1B':'一壘','2B':'二壘','3B':'三壘',SS:'游擊',LF:'左外野',CF:'中外野',RF:'右外野'};
+
+async function showReplayAvailability(element,pa,kind,date){
+  try{
+    const data=await historyEvidence(date);
+    const reason=replayAvailabilityText[data.availability[pa]?.[kind]];
+    if(element.isConnected&&typeof reason==='string'){element.textContent=reason;element.hidden=false;}
+  }catch{ /* Keep the core comparison usable if supplementary evidence cannot load. */ }
+}
+
+async function showObservedFielding(element,pa,date){
+  if(element.dataset.loaded)return;
+  element.dataset.loaded='true';
+  try{
+    const data=await historyEvidence(date);
+    if(!element.isConnected)return;
+    const row=data.fielding[pa];
+    const text={
+      pinch_hitter_fielded:()=>Object.hasOwn(replayPositionName,row.position)
+        ?`代打球員在下一個守備半局守${replayPositionName[row.position]}。`:'確認代打球員在下一個守備半局接守。',
+      other_player_fielded:()=>typeof row.opening_fielder==='string'&&Object.hasOwn(replayPositionName,row.original_position)
+        ?`下一個守備半局開場，${replayPositionName[row.original_position]}由 ${row.opening_fielder} 防守。`
+        :'下一個守備半局開場由其他球員守備。',
+      no_defensive_half:()=> '這次代打後，該隊沒有下一個守備半局。',
+      unconfirmed:()=> '現有紀錄無法確認接守安排。',
+    };
+    element.textContent='接守紀錄｜'+(row&&Object.hasOwn(text,row.status)?text[row.status]():'現有紀錄無法確認接守安排。');
+  }catch{
+    if(!element.isConnected)return;
+    delete element.dataset.loaded;
+    element.innerHTML='接守紀錄暫時無法載入。 <button type="button">重試</button>';
+    element.querySelector('button').onclick=()=>showObservedFielding(element,pa,date);
+  }
 }
 async function refreshHistoryDay(){
   await Promise.all([renderReview(),loadHistoricalPitchers(),loadHistoryContext()]);
@@ -1715,7 +1776,7 @@ function decisionQuickCompare(R, kind) {
       return [{name:row.batter,gap:prior.runs+prior.fatigue-row.runs-row.fatigue}];
     }).sort((a,b)=>Math.abs(b.gap)-Math.abs(a.gap));
     const largest=comparisons[0];
-    return largest?`三棒中差距最大：${N(largest.name)}（${sign(largest.gap,3)} 分，相對現任減少失分）`:'';
+    return largest?`三棒中差距最大：${N(largest.name)}（預估失分較現任${largest.gap>=0?'少':'多'} ${Math.abs(largest.gap).toFixed(3)} 分）`:'';
   };
   const cards=[current,...candidates].map((row,i)=>{
     const note=i?details(row):'比較基準';
@@ -1728,7 +1789,9 @@ function decisionQuickCompare(R, kind) {
       <div>${i?`<b class="num ${cls(row[value],0)}">${sign(row[value])}</b> 百分點`:'續用基準'}</div>
       ${note?`<small>${note}</small>`:''}${workload}${actions}</div>`;
   });
-  return `<section class="decision-fast-read" aria-label="與現任比較"><h2>與現任比較</h2><div class="quick-candidates">${cards.join('')}</div></section>`;
+  const gap=candidates.length===2?candidates[0][value]-candidates[1][value]:null;
+  const difference=gap===null?'':`<p class="quick-gap">前兩位候選相差 ${gap>0&&gap<0.01?'不到 0.01':gap.toFixed(2)} 百分點</p>`;
+  return `<section class="decision-fast-read" aria-label="與現任比較"><h2>與現任比較</h2>${difference}<div class="quick-candidates">${cards.join('')}</div></section>`;
 }
 
 function renderResult(preserveTabs = false) {
@@ -1800,6 +1863,12 @@ function renderResult(preserveTabs = false) {
     }
   }
   html+=decisionQuickCompare(R,activeTab);
+  const evidenceDate=HISTORY_DATE, evidencePa=S.pa;
+  const verifyAvailability=replayEvidenceAvailable&&view==='replay'&&(
+    activeTab==='ph'
+      ?!R.candidates.some(row=>row['角色']==='代打'&&['ok','warn'].includes(row['守備']))
+      :!R.bullpen.rows.some(row=>row['角色']==='牛棚'));
+  if(verifyAvailability)html+='<p class="situation-note" data-replay-availability role="status" hidden></p>';
   if(s.inning>=10)html+=`<p class="situation-note">延長局數沿用第 9 局換算，僅供參考。</p>`;
   if(s.inning>=9&&s.half==='home'&&s.bat_score>s.fld_score)html+=`<p class="situation-note">此情境主隊已領先，請確認是否仍有下一打席。</p>`;
   if (R.actual) {
@@ -1810,7 +1879,7 @@ function renderResult(preserveTabs = false) {
     const rank = bench.findIndex((c) => c["球員"] === a.batter) + 1;
     html += `<details class="replay-disclosure" data-reveal-action ${disclosure.action?'open':''}><summary>揭示實際調度</summary><div class="actual"><span class="mut">實際發生：</span>
       <span>${activeTab==='pen'?`${context?.pitcher_changed?'換上':'續投'} <b>${N(actualPitcher)}</b>`:a.is_ph ? `換上 <b>${N(a.batter)}</b> 代打${rank ? `（系統排名第 ${rank} / ${bench.length}）` : ""}` : `<b>${N(a.batter)}</b> 續打`}</span>
-      </div><details data-reveal-outcome ${disclosure.outcome?'open':''}><summary>揭示這個打席的結果</summary><div class="actual"><span>${activeTab==='pen'?N(a.batter)+'：':''}結果 <b>${esc(resultLabel(a.result))}</b></span><span>該打席攻方 WPA <b class="${cls(a.WPA, 0)}">${Number.isFinite(a.WPA)?sign(a.WPA*100,2)+' 百分點':'未提供'}</b></span></div>`;
+      </div>${replayEvidenceAvailable&&activeTab==='ph'&&a.is_ph?'<p class="situation-note" data-observed-fielding role="status">載入接守紀錄…</p>':''}<details data-reveal-outcome ${disclosure.outcome?'open':''}><summary>揭示這個打席的結果</summary><div class="actual"><span>${activeTab==='pen'?N(a.batter)+'：':''}結果 <b>${esc(resultLabel(a.result))}</b></span><span>該打席攻方 WPA <b class="${cls(a.WPA, 0)}">${Number.isFinite(a.WPA)?sign(a.WPA*100,2)+' 百分點':'未提供'}</b></span></div>`;
     if(a.mid_pa_actor_change)html+=`<p class="situation-note">打席中另有換人；結束時為 ${N(a.final_batter)} 對 ${N(a.final_pitcher)}，結果不歸為原人選的完整打席。</p>`;
     html+='</details>';
     const tm = timingFor(S.pa);
@@ -1845,7 +1914,18 @@ function renderResult(preserveTabs = false) {
     $('#replayShare').onclick=copyReplayLink;
   }
   const action=$('[data-reveal-action]'),outcome=$('[data-reveal-outcome]'),disclosurePa=S.pa;
-  if(action)action.ontoggle=()=>{if(historyDisclosure.pa!==disclosurePa)return;historyDisclosure.set('action',action.open);if(!action.open&&outcome)outcome.open=false;syncReviewSteps();};
+  const observedFielding=$('[data-observed-fielding]');
+  if(verifyAvailability)void showReplayAvailability($('[data-replay-availability]'),evidencePa,activeTab,evidenceDate);
+  if(action){
+    if(action.open&&observedFielding)void showObservedFielding(observedFielding,evidencePa,evidenceDate);
+    action.ontoggle=()=>{
+      if(historyDisclosure.pa!==disclosurePa||action.isConnected===false)return;
+      historyDisclosure.set('action',action.open);
+      if(action.open&&observedFielding)void showObservedFielding(observedFielding,evidencePa,evidenceDate);
+      if(!action.open&&outcome)outcome.open=false;
+      syncReviewSteps();
+    };
+  }
   if(outcome)outcome.ontoggle=()=>{if(historyDisclosure.pa!==disclosurePa)return;historyDisclosure.set('outcome',outcome.open);renderPAs();};
   if (retainedTabs) {
     $('#resultBody .tabs').replaceWith(retainedTabs);

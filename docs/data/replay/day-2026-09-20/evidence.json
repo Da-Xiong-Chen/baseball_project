@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-20",
+  "batch_id": "e2d7167abbcb759c4089921194d46844ad81f6c2380a8042fd4a676423b44d7e",
+  "fielding": {
+    "2026-343-h035": {
+      "status": "pinch_hitter_fielded",
+      "position": "CF",
+      "observed_pa": "2026-343-a030"
+    },
+    "2026-343-h040": {
+      "status": "no_defensive_half"
+    },
+    "2026-344-a028": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-344-h033",
+      "original_position": "RF",
+      "opening_fielder": "王苡丞"
+    },
+    "2026-344-h041": {
+      "status": "no_defensive_half"
+    }
+  },
+  "availability": {
+    "2026-343-h023": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-343-h024": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-343-h030": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-343-h032": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-343-h033": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-343-h039": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-344-a024": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-344-a033": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-344-h027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-344-h029": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-344-h036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-344-h038": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-345-a019": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-345-a028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-345-a031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-345-h032": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}
