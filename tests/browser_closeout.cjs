@@ -214,12 +214,30 @@ async function pinchHitFielding(browser) {
     assert.deepEqual(saved.unavailable,[catcher]);
     await openLineup(page);
     await page.locator('#lineupWarnings').getByText(/請確認接守：捕手/).waitFor();
+    const catcherIndex=saved.slots.findIndex(slot=>slot.pos==='C');
+    await page.locator(`[data-position="${catcherIndex}"]`).selectOption('DH');
+    await page.locator('#lineupWarnings').getByText(/請確認接守：捕手/).waitFor();
+    assert.doesNotMatch(await page.locator('#lineupWarnings').textContent(),/請確認接守：指定打擊/);
+    const draft=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).draft,key);
+    const cover=draft.slots.find(slot=>slot.pos==='C');
+    assert.equal(cover.fieldingPending,true);
+    assert.equal(draft.slots.find(slot=>slot.pos==='DH').fieldingPending,undefined);
+    await page.locator('#lineupBackup summary').click();
+    const downloading=page.waitForEvent('download');
+    await page.locator('#lineupExport').click();
+    const backup=await (await downloading).path();
+    await page.locator(`[data-position="${catcherIndex}"]`).selectOption('C');
+    await page.locator('#lineupImport').setInputFiles(backup);
+    await page.locator('#lineupMessage').getByText(/草稿已保存/).waitFor();
+    const recovered=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+    assert.deepEqual(recovered.draft,draft);
+    assert.deepEqual(recovered.confirmed,saved);
     await page.locator('#lineupApply').getByText('確認接守並套用').waitFor();
     await page.locator('#lineupApply').click();
     await page.getByText('配置已套用並保存。').waitFor();
     const confirmed=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
     assert.equal(confirmed.slots.find(slot=>slot.pos==='C').fieldingPending,undefined);
-    console.log('Passed team pinch-hitter, pending fielder, reload and manual confirmation');
+    console.log('Passed team pinch-hitter, positional confirmation, backup restore and manual apply');
   } finally {await context.close();}
 }
 

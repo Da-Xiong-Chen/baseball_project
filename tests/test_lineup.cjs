@@ -169,3 +169,68 @@ test('undo of an unconfirmed pinch-hit restores the outgoing player and clears t
  assert.equal(original.slots[0].name,'H0');
  assert.equal(original.slots[0].fieldingPending,undefined);
 });
+
+test('fielding confirmation remains with the defensive position in either swap workflow',()=>{
+ for(const swap of [(c)=>L.swapPlayers(c,0,8,'field'),(c)=>L.assignPlayer(c,0,'H8',true)]){
+  const c=config();
+  c.slots[0].fieldingPending=true;
+  swap(c);
+  assert.equal(c.slots[0].pos,'DH');
+  assert.equal(c.slots[0].fieldingPending,undefined);
+  assert.equal(c.slots[8].pos,'C');
+  assert.equal(c.slots[8].fieldingPending,true);
+ }
+});
+
+const lineupBackup=(draft)=>JSON.stringify({type:'baseball-lineup',team:'A',state:{version:2,season:2025,draft,confirmed:null}});
+
+test('backup imports preserve confirmed configuration and ignore a slower previous file',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const file=f.node('#lineupImport'), first=config(), second=config();
+ first.slots[0].name='H9';
+ second.slots[0].name='H10';
+ second.slots[0].fieldingPending=true;
+ let finish;
+ file.files=[{size:500,text:()=>new Promise(resolve=>{finish=resolve;})}];
+ const old=file.onchange();
+ file.files=[{size:500,text:async()=>lineupBackup(second)}];
+ await file.onchange();
+ finish(lineupBackup(first));
+ await old;
+ const stored=JSON.parse(f.values.get(key));
+ assert.deepEqual(stored.draft,second);
+ assert.deepEqual(stored.confirmed,config());
+});
+
+test('a delayed backup cannot replace a later draft edit or survive switching away and back',async()=>{
+ for(const switchTeam of [false,true]){
+  const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+  await fillUI(f);
+  const incoming=config();
+  incoming.slots[0].name='H9';
+  const file=f.node('#lineupImport');
+  let finish;
+  file.files=[{size:500,text:()=>new Promise(resolve=>{finish=resolve;})}];
+  const pending=file.onchange();
+  if(switchTeam){await f.api.selectTeam('B');await f.api.selectTeam('A');}
+  else f.pick(0,'H10');
+  const expected=f.values.get(key);
+  finish(lineupBackup(incoming));
+  await pending;
+  assert.equal(f.values.get(key),expected);
+ }
+});
+
+test('a pinch hit does not carry a confirmed fielding change into a differently positioned draft',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A', draft=config();
+ L.swapPlayers(draft,0,8,'field');
+ f.values.set(key,JSON.stringify({version:2,season:2025,draft,confirmed:config()}));
+ await f.api.selectTeam('A');
+ const change=f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H10',fieldingPending:true});
+ assert.equal(change.draftPreserved,true);
+ const stored=JSON.parse(f.values.get(key));
+ assert.equal(stored.confirmed.slots[0].fieldingPending,true);
+ assert.deepEqual(stored.draft,draft);
+});

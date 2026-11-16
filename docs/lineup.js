@@ -16,16 +16,23 @@
     return changed;
   }
   const empty=()=>({slots:Object.keys(POS).map(pos=>({name:'',pos})),pitcher:''});
+  function swapFieldingPositions(first,second){
+    if(first===second)return;
+    const pending=first.fieldingPending;
+    [first.pos,second.pos]=[second.pos,first.pos];
+    if(second.fieldingPending)first.fieldingPending=true;else delete first.fieldingPending;
+    if(pending)second.fieldingPending=true;else delete second.fieldingPending;
+  }
   function assignPlayer(config,index,name,fromField=false){
     if(index==='P'){config.pitcher=name;return;}
     const other=config.slots.findIndex(s=>s.name===name);
     if(other===index)return;
-    if(other!==-1&&fromField){[config.slots[index].pos,config.slots[other].pos]=[config.slots[other].pos,config.slots[index].pos];return;}
+    if(other!==-1&&fromField){swapFieldingPositions(config.slots[index],config.slots[other]);return;}
     const old=config.slots[index].name;if(other!==-1)config.slots[other].name=old;config.slots[index].name=name;
   }
   function swapPlayers(config,a,b,mode){
     if(!['field','order'].includes(mode)||!Number.isInteger(a)||!Number.isInteger(b)||a<0||b<0||a>8||b>8||a===b||!config.slots[a].name||!config.slots[b].name)return false;
-    if(mode==='field')[config.slots[a].pos,config.slots[b].pos]=[config.slots[b].pos,config.slots[a].pos];
+    if(mode==='field')swapFieldingPositions(config.slots[a],config.slots[b]);
     else [config.slots[a],config.slots[b]]=[config.slots[b],config.slots[a]];
     return true;
   }
@@ -204,7 +211,15 @@
       if(move){resetSwap();const c=get(teamName).draft,i=Number(move.dataset.move),j=i+Number(move.dataset.step);if(j>=0&&j<9){[c.slots[i],c.slots[j]]=[c.slots[j],c.slots[i]];draftChanged();const next=q(`[data-move="${j}"][data-step="${move.dataset.step}"]`);(next.disabled?q(`[data-pick="${j}"]`):next).focus();}}
     });
     options.element.querySelectorAll('[data-field]').forEach(button=>button.onclick=()=>{const pos=button.getAttribute('data-field');openPicker(pos==='P'?'P':get(teamName).draft.slots.findIndex(s=>s.pos===pos),button);});
-    q('#lineupRows').onchange=e=>{if(options.element.hasAttribute('aria-busy')||!e.target.matches('[data-position]'))return;resetSwap();const c=get(teamName).draft,i=Number(e.target.dataset.position),pos=e.target.value,j=c.slots.findIndex(s=>s.pos===pos);if(j!==-1)c.slots[j].pos=c.slots[i].pos;c.slots[i].pos=pos;draftChanged();q(`[data-position="${i}"]`).focus();};
+    q('#lineupRows').onchange=e=>{
+      if(options.element.hasAttribute('aria-busy')||!e.target.matches('[data-position]'))return;
+      const c=get(teamName).draft,i=Number(e.target.dataset.position),j=c.slots.findIndex(s=>s.pos===e.target.value);
+      if(!c.slots[i]||j===-1||i===j)return;
+      resetSwap();
+      swapFieldingPositions(c.slots[i],c.slots[j]);
+      draftChanged();
+      q(`[data-position="${i}"]`).focus();
+    };
     q('#lineupPitcherPick').onclick=e=>openPicker('P',e.currentTarget);
     q('#lineupReset').onclick=async()=>{
       if(options.element.hasAttribute('aria-busy')||!defaults[teamName])return;
@@ -234,17 +249,28 @@
       link.href=url;link.download=`baseball-lineup-${runtimeSeason}.json`;link.click();
       setTimeout(()=>URL.revokeObjectURL(url),1000);
     };
+    let latestImport=0;
     importInput.onchange=async()=>{
+      const request=++latestImport, selection=selectTeam.generation;
       const file=importInput.files?.[0], activeTeam=teamName, activeRoster=roster;
+      importInput.value='';
       if(!file||!activeRoster||options.element.hasAttribute('aria-busy'))return;
+      const state=get(activeTeam);
+      const before=JSON.stringify([state.draft,state.confirmed]);
+      const isCurrent=()=>request===latestImport&&selection===selectTeam.generation;
       try {
         if(file.size>65536)throw Error('請選擇小於 64 KB 的名單檔。');
-        const draft=readBackup(await file.text(),activeTeam,activeRoster);
-        if(teamName!==activeTeam||roster!==activeRoster)return;
-        resetSwap();get(teamName).draft=draft;draftChanged();
+        const text=await file.text();
+        if(!isCurrent())return;
+        if(JSON.stringify([state.draft,state.confirmed])!==before){
+          message('讀取備份期間名單已變更。請重新選擇檔案以匯入草稿。',true);
+          return;
+        }
+        const draft=readBackup(text,activeTeam,activeRoster);
+        resetSwap();state.draft=draft;draftChanged();
       } catch(error) {
-        if(teamName===activeTeam)message(error instanceof SyntaxError?'名單檔案不是有效的 JSON。':error.message,true);
-      } finally {importInput.value='';}
+        if(isCurrent())message(error instanceof SyntaxError?'名單檔案不是有效的 JSON。':error.message,true);
+      }
     };
   }
   /* 預設名單：{team:{slots,pitcher,games}}；只在此瀏覽器沒有保存記錄時帶入。 */
@@ -277,7 +303,8 @@
       config.unavailable=[...new Set([...(config.unavailable||[]),out])].filter(n=>n!==incoming&&n!==config.pitcher&&!config.slots.some(x=>x.name===n));
     };
     const synced=JSON.stringify(s.draft)===JSON.stringify(s.confirmed);
-    const draftUpdated=synced||canReplace(s.draft);
+    const samePosition=kind==='pen'||s.draft.slots.find(slot=>slot.name===out)?.pos===c.slots.find(slot=>slot.name===out).pos;
+    const draftUpdated=synced||(samePosition&&canReplace(s.draft));
     apply(c);
     if(synced)s.draft=clone(c);
     else if(draftUpdated)apply(s.draft);
