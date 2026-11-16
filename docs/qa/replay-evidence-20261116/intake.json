@@ -1,0 +1,40 @@
+{
+  "accepted_correction": {
+    "changes": {
+      "added": 0,
+      "corrected": 1,
+      "retained": 96,
+      "unchanged": 0
+    },
+    "dataset_id": "f80b2b6f05e3d699476251c79a02771fb3e3b0d5cb28d08e15b1b65ece86517d"
+  },
+  "repeat_week_2": {
+    "changes": {
+      "added": 0,
+      "corrected": 0,
+      "retained": 84,
+      "unchanged": 13
+    },
+    "dataset_id": "e996fc4c49ac6f340d2ec9063e7684e5b78c1cc25de12252271cc6ab5231b37a"
+  },
+  "scope": "Subset of archived official data; correction simulates a same-game source-byte revision without changing measured values.",
+  "unapproved_correction_rejected": true,
+  "week_1": {
+    "changes": {
+      "added": 16,
+      "corrected": 0,
+      "retained": 68,
+      "unchanged": 0
+    },
+    "dataset_id": "a30897fb7e2d771ebba64c1658e88a0b7ec14c67391619651df504b92b1b4a69"
+  },
+  "week_2": {
+    "changes": {
+      "added": 13,
+      "corrected": 0,
+      "retained": 84,
+      "unchanged": 0
+    },
+    "dataset_id": "e996fc4c49ac6f340d2ec9063e7684e5b78c1cc25de12252271cc6ab5231b37a"
+  }
+}

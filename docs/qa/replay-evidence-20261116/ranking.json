@@ -1,0 +1,132 @@
+{
+  "groups": {
+    "pen:all:hierarchical": {
+      "has_two_candidates": 1715,
+      "n": 1725,
+      "prompt_changed": 141,
+      "top_changed": 490,
+      "top_two_within_0_25_pp": 856
+    },
+    "pen:all:tree": {
+      "has_two_candidates": 1715,
+      "n": 1725,
+      "prompt_changed": 150,
+      "top_changed": 474,
+      "top_two_within_0_25_pp": 856
+    },
+    "pen:all:without_fatigue": {
+      "has_two_candidates": 1715,
+      "n": 1725,
+      "prompt_changed": 27,
+      "top_changed": 0,
+      "top_two_within_0_25_pp": 856
+    },
+    "pen:incumbent_or_top_has_fewer_than_500_pitches:hierarchical": {
+      "has_two_candidates": 534,
+      "n": 544,
+      "prompt_changed": 41,
+      "top_changed": 185,
+      "top_two_within_0_25_pp": 344
+    },
+    "pen:incumbent_or_top_has_fewer_than_500_pitches:tree": {
+      "has_two_candidates": 534,
+      "n": 544,
+      "prompt_changed": 23,
+      "top_changed": 169,
+      "top_two_within_0_25_pp": 344
+    },
+    "pen:incumbent_or_top_has_fewer_than_500_pitches:without_fatigue": {
+      "has_two_candidates": 534,
+      "n": 544,
+      "prompt_changed": 1,
+      "top_changed": 0,
+      "top_two_within_0_25_pp": 344
+    },
+    "pen:late_close:hierarchical": {
+      "has_two_candidates": 153,
+      "n": 163,
+      "prompt_changed": 19,
+      "top_changed": 54,
+      "top_two_within_0_25_pp": 42
+    },
+    "pen:late_close:tree": {
+      "has_two_candidates": 153,
+      "n": 163,
+      "prompt_changed": 11,
+      "top_changed": 43,
+      "top_two_within_0_25_pp": 42
+    },
+    "pen:late_close:without_fatigue": {
+      "has_two_candidates": 153,
+      "n": 163,
+      "prompt_changed": 2,
+      "top_changed": 0,
+      "top_two_within_0_25_pp": 42
+    },
+    "ph:all:hierarchical": {
+      "has_two_candidates": 1432,
+      "n": 1443,
+      "prompt_changed": 23,
+      "top_changed": 392,
+      "top_two_within_0_25_pp": 1199
+    },
+    "ph:all:tree": {
+      "has_two_candidates": 1432,
+      "n": 1443,
+      "prompt_changed": 33,
+      "top_changed": 379,
+      "top_two_within_0_25_pp": 1199
+    },
+    "ph:all:without_platoon": {
+      "has_two_candidates": 1432,
+      "n": 1443,
+      "prompt_changed": 10,
+      "top_changed": 176,
+      "top_two_within_0_25_pp": 1199
+    },
+    "ph:incumbent_or_top_has_fewer_than_500_pitches:hierarchical": {
+      "has_two_candidates": 442,
+      "n": 453,
+      "prompt_changed": 6,
+      "top_changed": 223,
+      "top_two_within_0_25_pp": 389
+    },
+    "ph:incumbent_or_top_has_fewer_than_500_pitches:tree": {
+      "has_two_candidates": 442,
+      "n": 453,
+      "prompt_changed": 15,
+      "top_changed": 150,
+      "top_two_within_0_25_pp": 389
+    },
+    "ph:incumbent_or_top_has_fewer_than_500_pitches:without_platoon": {
+      "has_two_candidates": 442,
+      "n": 453,
+      "prompt_changed": 5,
+      "top_changed": 56,
+      "top_two_within_0_25_pp": 389
+    },
+    "ph:late_close:hierarchical": {
+      "has_two_candidates": 132,
+      "n": 132,
+      "prompt_changed": 5,
+      "top_changed": 47,
+      "top_two_within_0_25_pp": 78
+    },
+    "ph:late_close:tree": {
+      "has_two_candidates": 132,
+      "n": 132,
+      "prompt_changed": 13,
+      "top_changed": 16,
+      "top_two_within_0_25_pp": 78
+    },
+    "ph:late_close:without_platoon": {
+      "has_two_candidates": 132,
+      "n": 132,
+      "prompt_changed": 3,
+      "top_changed": 28,
+      "top_two_within_0_25_pp": 78
+    }
+  },
+  "scope": "Archived date-specific scores, same eligible candidate pool in every calculation. Ranking and threshold sensitivity only, not observed predictive error or a causal effect. Removing platoon subtracts the current 50% hierarchical component from the fixed blend.",
+  "threshold_pp": 1
+}

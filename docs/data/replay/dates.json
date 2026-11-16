@@ -60,6 +60,12 @@
         "game": "2026-229",
         "pa": "2026-229-h044",
         "decision": "ph"
+      },
+      "observed_case": {
+        "label": "代打後實際接守",
+        "game": "2026-229",
+        "pa": "2026-229-a036",
+        "decision": "ph"
       }
     },
     {
@@ -98,5 +104,6 @@
         "decision": "pen"
       }
     }
-  ]
+  ],
+  "evidence_schema": 1
 }

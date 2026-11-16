@@ -2,6 +2,7 @@
 
 只用 Python 標準函式庫 + 專案既有的 pandas/numpy/scipy。
 """
+from hashlib import sha256
 import json
 import math
 import os
@@ -9,6 +10,7 @@ import sys
 import threading
 import traceback
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -166,6 +168,49 @@ def replay_result(pid, decision="ph"):
     return result
 
 
+def published_replay(pid, date, decision, root=None):
+    """Read a published historical decision when the date's training weight is absent."""
+    root = Path(WEB, 'data', 'replay') if root is None else root
+    catalog = root / 'dates.json'
+    if not catalog.is_file():
+        return None
+    listing = json.loads(catalog.read_bytes())
+    date_entry = next((row for row in listing['days'] if row['date'] == date), None)
+    if date_entry is None:
+        return None
+    month = settings().month_for(date)
+    day = root / f'day-{date}'
+    index = json.loads((day / 'index.json').read_bytes())
+    batch = date_entry['batch_id']
+    if (listing['schema_version'] != 1 or index['schema_version'] != 1
+            or index['date'] != date or index['season'] != settings().season
+            or index['model_cutoff'] != date or index['ml_cutoff'] != month
+            or index['batch_id'] != batch
+            or not index['training_last_date'] < month or not index['calibration_last_date'] < month):
+        raise ValueError('已發布回放的日期或模型批次不一致')
+    filename = index['files'].get(pid)
+    if filename != f'{pid}.json' or Path(filename).name != filename:
+        raise ValueError('已發布回放找不到此打席')
+    data = (day / filename).read_bytes()
+    if sha256(data).hexdigest() != index['sha256'].get(pid):
+        raise ValueError('已發布回放的打席檔未通過雜湊驗證')
+    bundle = json.loads(data)
+    if (bundle['schema_version'] != 1 or bundle['batch_id'] != batch
+            or bundle['date'] != date or bundle['pa_id'] != pid):
+        raise ValueError('已發布回放的打席資料不一致')
+    result = bundle.get(decision) or bundle['ph']
+    if result['batch_id'] != batch or result['model_cutoff'] != date or result['ml_cutoff'] != month:
+        raise ValueError('已發布回放的截止日不一致')
+    candidates = result.get('candidates', [])
+    # Older frozen bundles kept the last catcher in the reserve count.
+    if sum(row.get('角色') == '代打' and '可直接接守捕手' in row.get('守備說明', '') for row in candidates) == 1:
+        for row in candidates:
+            note = row.get('守備說明', '')
+            if note.startswith('需由 ') and '接守捕手' in note and '板凳已無備用捕手' not in note:
+                row['守備說明'] = note + '；之後板凳已無備用捕手'
+    return {**result, 'replay_context': {**result['replay_context'], 'decision': decision}}
+
+
 # ---------- API ----------
 def validate_evaluation(body):
     if not isinstance(body, dict):
@@ -281,7 +326,20 @@ def api(path, qs, body):
         return clean(d[cols+['start_batter','start_pitcher','mid_pa_actor_change','batter_display','pitcher_display','final_batter_display','final_pitcher_display']])
     if path == "/api/replay":
         pid = qs["pa"][0]
-        return replay_result(pid, qs.get("decision", ["ph"])[0])
+        decision = qs.get("decision", ["ph"])[0]
+        if decision not in ("ph", "pen"):
+            raise ValueError("回放類型須為 ph 或 pen")
+        found = pa.loc[pa["pa_id"] == pid, "date"]
+        if found.empty:
+            raise ValueError("找不到此打席")
+        date = str(found.iat[0].date())
+        month = settings().month_for(date)
+        if not Path(mlmodel.path_for(month)).is_file():
+            result = published_replay(pid, date, decision)
+            if result is not None:
+                return result
+            raise ValueError(f'{date} 尚未發布回放。離線重算需準備 {month} 月初模型與對應的獨立批次。')
+        return replay_result(pid, decision)
     if path == "/api/evaluate":
         body = validate_evaluation(body)
         m = model_for(FULL)

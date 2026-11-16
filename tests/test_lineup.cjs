@@ -6,13 +6,13 @@ test('incomplete, cross-team and unsupported two-way configurations cannot be ap
 
 test('malformed draft and confirmed state are rejected',()=>{const c=config(),s={version:1,season:2025,draft:c,confirmed:{}};assert.equal(L.validState(s),false);s.confirmed=c;assert.equal(L.validState(s),true);s.draft={};assert.equal(L.validState(s),false);});
 const fs=require('node:fs');const vm=require('node:vm');
-function uiFixture(storageMode='ok',loadTeam=async()=>roster,values=new Map()){
+function uiFixture(storageMode='ok',loadTeam=async()=>roster,values=new Map(),onApply=()=>{}){
  const nodes=new Map(),listeners={};
  const node=id=>{if(!nodes.has(id)){const events={};nodes.set(id,{value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},classList:{add(){},toggle(){}},setAttribute(){},focus(){},showModal(){this.open=true;},close(){this.open=false;for(const fn of events.close||[])fn();events.close=[];},addEventListener(type,fn){(events[type]??=[]).push(fn);},dispatch(type,event){for(const fn of events[type]||[])fn(event);}});}return nodes.get(id);};
  const attrs=new Set(),element={querySelector:node,querySelectorAll:()=>[],setAttribute:a=>attrs.add(a),removeAttribute:a=>attrs.delete(a),hasAttribute:a=>attrs.has(a),addEventListener:(name,fn)=>listeners[name]=fn};
  const storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>{if(storageMode==='throw')throw Error('denied');if(storageMode!=='silent')values.set(k,v);},removeItem:k=>values.delete(k)};
  const context={module:{exports:{}},window:{},localStorage:storage,document:{activeElement:null},console};vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../docs/lineup.js'),'utf8'),context);const api=context.module.exports,applied=[];
- api.mount({element,teams:['A','B'],team:loadTeam,matches:(name,team,q)=>name.includes(q),pitchCount:()=>15,role:()=>true,applied:async(t,c)=>applied.push({team:t,change:c})});
+ api.mount({element,teams:['A','B'],team:loadTeam,matches:(name,team,q)=>name.includes(q),pitchCount:()=>15,role:()=>true,applied:async(t,c)=>{applied.push({team:t,change:c});await onApply(t,c);}});
  const pick=(slot,name)=>{listeners.click({target:{closest:sel=>sel==='[data-pick]'?{dataset:{pick:String(slot)}}:null}});if(node('#lineupPicker').open)node('#lineupPlayerList').onclick({target:{closest:()=>({dataset:{player:name},disabled:false})}});};
  return {api,node,pick,values,applied,listeners,element};
 }
@@ -103,6 +103,22 @@ test('failed team switch returns selector and apply action to the last loaded te
  assert.match(f.node('#lineupMessage').textContent,/載入失敗/);await f.node('#lineupApply').onclick();assert.ok(f.api.current('A'));assert.equal(f.api.current('B'),null);
 });
 
+test('a slow applied or reset callback cannot replace the next club lineup message',async()=>{
+ for(const action of ['#lineupApply','#lineupReset']){
+  let finish;
+  const f=uiFixture('ok',async()=>roster,new Map(),()=>new Promise(resolve=>{finish=resolve;}));
+  f.api.setDefaults({A:config()});
+  await f.api.selectTeam('A');
+  const old=f.node(action).onclick();
+  await f.api.selectTeam('B');
+  const message=f.node('#lineupMessage').textContent;
+  finish();
+  await old;
+  assert.equal(f.node('#lineupTeam').value,'B');
+  assert.equal(f.node('#lineupMessage').textContent,message);
+ }
+});
+
 
 test('first team load failure keeps apply disabled and picker safe until retry succeeds',async()=>{
  let fail=true;const f=uiFixture('ok',async()=>{if(fail)throw Error('offline');return roster});
@@ -130,3 +146,107 @@ test('Escape cancels the player picker without changing the draft and respects c
 });
 test('substitution moves the pinch hitter into the same slot and position, records the exit and restores on undo',async()=>{const f=uiFixture();await fillUI(f);await f.node('#lineupApply').onclick();const pos=f.api.current('A').slots[3].pos;const done=f.api.substitute('A',{kind:'ph',out:'H3',incoming:'H10'});assert.ok(done);const c=f.api.current('A');assert.equal(c.slots[3].name,'H10');assert.equal(c.slots[3].pos,pos);assert.deepEqual([...c.unavailable],['H3']);assert.deepEqual(L.validate(c,roster),[]);assert.deepEqual(JSON.parse(f.values.get('cpbl-lineup-2025-v1:A')).confirmed.unavailable,['H3']);f.api.restore('A',done.snapshot);assert.equal(f.api.current('A').slots[3].name,'H3');assert.equal(f.api.current('A').unavailable,undefined);});
 test('pitching change replaces the pitcher, keeps every exit and refuses players already out or on the field',async()=>{const f=uiFixture();await fillUI(f);await f.node('#lineupApply').onclick();assert.ok(f.api.substitute('A',{kind:'pen',out:'P0',incoming:'P1'}));assert.equal(f.api.current('A').pitcher,'P1');assert.deepEqual([...f.api.current('A').unavailable],['P0']);assert.equal(f.api.substitute('A',{kind:'pen',out:'P1',incoming:'P0'}),null);assert.equal(f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H1'}),null);assert.equal(f.api.substitute('B',{kind:'ph',out:'H0',incoming:'H9'}),null);assert.ok(f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H9'}));assert.deepEqual([...f.api.current('A').unavailable].sort(),['H0','P0']);});
+
+test('substitution keeps a conflicting unsaved lineup draft intact',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A', draft=config();
+ draft.slots[4].name='H10';
+ f.values.set(key,JSON.stringify({version:2,season:2025,draft,confirmed:config()}));
+ await f.api.selectTeam('A');
+ const change=f.api.substitute('A',{kind:'ph',out:'H3',incoming:'H10'});
+ const stored=JSON.parse(f.values.get(key));
+ assert.equal(change.saved,'saved');
+ assert.equal(stored.confirmed.slots[3].name,'H10');
+ assert.deepEqual(stored.draft,draft);
+});
+
+test('undo restores the confirmed pitcher and preserves newer batting-order edits in the draft',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const change=f.api.substitute('A',{kind:'pen',out:'P0',incoming:'P1'});
+ f.listeners.click({target:{closest:sel=>sel==='[data-move]'?{dataset:{move:'1',step:'-1'}}:null}});
+ const newest=JSON.parse(f.values.get(key)).draft;
+ const restored=f.api.restore('A',change.snapshot);
+ assert.equal(restored.saved,'saved');
+ assert.equal(f.api.current('A').pitcher,'P0');
+ assert.deepEqual(JSON.parse(f.values.get(key)).draft,newest);
+});
+
+test('undo of an unconfirmed pinch-hit restores the outgoing player and clears the temporary fielding flag',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const change=f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H10',fieldingPending:true});
+ const stored=JSON.parse(f.values.get(key)).confirmed;
+ assert.equal(stored.slots[0].fieldingPending,true);
+ assert.equal(stored.slots[0].name,'H10');
+ assert.equal(f.api.restore('A',change.snapshot).saved,'saved');
+ const original=JSON.parse(f.values.get(key)).confirmed;
+ assert.equal(original.slots[0].name,'H0');
+ assert.equal(original.slots[0].fieldingPending,undefined);
+});
+
+test('fielding confirmation remains with the defensive position in either swap workflow',()=>{
+ for(const swap of [(c)=>L.swapPlayers(c,0,8,'field'),(c)=>L.assignPlayer(c,0,'H8',true)]){
+  const c=config();
+  c.slots[0].fieldingPending=true;
+  swap(c);
+  assert.equal(c.slots[0].pos,'DH');
+  assert.equal(c.slots[0].fieldingPending,undefined);
+  assert.equal(c.slots[8].pos,'C');
+  assert.equal(c.slots[8].fieldingPending,true);
+ }
+});
+
+const lineupBackup=(draft)=>JSON.stringify({type:'baseball-lineup',team:'A',state:{version:2,season:2025,draft,confirmed:null}});
+
+test('backup imports preserve confirmed configuration and ignore a slower previous file',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const file=f.node('#lineupImport'), first=config(), second=config();
+ first.slots[0].name='H9';
+ second.slots[0].name='H10';
+ second.slots[0].fieldingPending=true;
+ let finish;
+ file.files=[{size:500,text:()=>new Promise(resolve=>{finish=resolve;})}];
+ const old=file.onchange();
+ file.files=[{size:500,text:async()=>lineupBackup(second)}];
+ await file.onchange();
+ finish(lineupBackup(first));
+ await old;
+ const stored=JSON.parse(f.values.get(key));
+ assert.deepEqual(stored.draft,second);
+ assert.deepEqual(stored.confirmed,config());
+});
+
+test('a delayed backup cannot replace a later draft edit or survive switching away and back',async()=>{
+ for(const switchTeam of [false,true]){
+  const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+  await fillUI(f);
+  const incoming=config();
+  incoming.slots[0].name='H9';
+  const file=f.node('#lineupImport');
+  let finish;
+  file.files=[{size:500,text:()=>new Promise(resolve=>{finish=resolve;})}];
+  const pending=file.onchange();
+  if(switchTeam){await f.api.selectTeam('B');await f.api.selectTeam('A');}
+  else f.pick(0,'H10');
+  const expected=f.values.get(key);
+  finish(lineupBackup(incoming));
+  await pending;
+  assert.equal(f.values.get(key),expected);
+ }
+});
+
+test('a pinch hit does not carry a confirmed fielding change into a differently positioned draft',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A', draft=config();
+ L.swapPlayers(draft,0,8,'field');
+ f.values.set(key,JSON.stringify({version:2,season:2025,draft,confirmed:config()}));
+ await f.api.selectTeam('A');
+ const change=f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H10',fieldingPending:true});
+ assert.equal(change.draftPreserved,true);
+ const stored=JSON.parse(f.values.get(key));
+ assert.equal(stored.confirmed.slots[0].fieldingPending,true);
+ assert.deepEqual(stored.draft,draft);
+});

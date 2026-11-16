@@ -92,6 +92,71 @@ async function lineup(context) {
   await second.close();
 }
 
+async function substitutionPersistence(browser) {
+  const context=await browser.newContext({viewport:{width,height:900}});
+  try {
+    const first=await context.newPage(), second=await context.newPage();
+    await openLineup(first);
+    await first.locator('#lineupApply').press('Enter');
+    await first.getByText('配置已套用並保存。').waitFor();
+    await openLineup(second);
+    const key='cpbl-lineup-2026-v1:'+await first.locator('#lineupTeam').inputValue();
+    const evaluate=async page=>{
+      await page.locator('.feature-nav [data-page=evaluation]').click();
+      await page.locator('[data-view=defense]').click();
+      await page.locator('#evalBtn:enabled').click();
+      await page.locator('[data-apply-kind=pen]').first().waitFor();
+    };
+    const changeAndUndo=async (page,changeMessage,undoMessage=changeMessage,beforeUndo=()=>{})=>{
+      const pitcher=page.locator('#myPitcher'), previous=await pitcher.inputValue();
+      const change=page.locator('[data-apply-kind=pen]').first();
+      const incoming=await change.getAttribute('data-apply-sub');
+      await change.click();
+      await page.locator('.substitution-note').getByText(changeMessage).waitFor({timeout:4500});
+      assert.equal(await pitcher.inputValue(),incoming);
+      await beforeUndo();
+      await page.locator('[data-sub-undo]').click();
+      await page.locator('.substitution-note').getByText(undoMessage).waitFor({timeout:4500});
+      assert.equal(await pitcher.inputValue(),previous);
+      return incoming;
+    };
+    await evaluate(second);
+    await first.locator('[data-move="0"][data-step="1"]').press('Enter');
+    await first.locator('#lineupApply').press('Enter');
+    await first.getByText('配置已套用並保存。').waitFor();
+    const saved=await first.evaluate(key=>localStorage.getItem(key),key);
+    await changeAndUndo(second,/另一個分頁已更新名單/);
+    assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
+    const denied=await context.newPage();
+    await denied.addInitScript(()=>{
+      globalThis.blockLineupWrites=true;
+      const set=Storage.prototype.setItem;
+      Storage.prototype.setItem=function(key,value){
+        if(globalThis.blockLineupWrites&&String(key).startsWith('cpbl-lineup-'))throw new DOMException('Test denied write','QuotaExceededError');
+        return set.call(this,key,value);
+      };
+    });
+    await openLineup(denied);
+    await evaluate(denied);
+    await denied.evaluate(()=>{
+      const original=api;
+      let fail=true;
+      api=(path,body)=>{
+        if(fail&&path==='api/evaluate'){fail=false;return Promise.reject(Error('Test rejected reevaluation'));}
+        return original(path,body);
+      };
+    });
+    await changeAndUndo(denied,/無法保存到瀏覽器/,/球隊名單已保存/,()=>
+      denied.getByText('評估未完成，請重試。',{exact:false}).waitFor());
+    assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
+    await denied.evaluate(()=>{globalThis.blockLineupWrites=false;});
+    const incoming=await changeAndUndo(denied,/球隊名單已保存/,/無法保存到瀏覽器/,()=>
+      denied.evaluate(()=>{globalThis.blockLineupWrites=true;}));
+    assert.equal(await first.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed.pitcher,key),incoming);
+    console.log('Passed substitution and undo with cross-tab conflicts and denied lineup writes');
+  } finally {await context.close();}
+}
+
 async function historical(page) {
   await page.goto(base);
   await page.locator("#evalBtn:enabled").waitFor();
@@ -111,6 +176,104 @@ async function historical(page) {
   await page.waitForFunction(()=>document.querySelector('#replayShareStatus').textContent.length>0);
   await page.goBack();
   await page.locator('#resultBody[data-replay-pa="2026-251-a000"]').waitFor();
+  const archived=new URL(base);
+  archived.search=new URLSearchParams({replay:'2026-03-29',game:'2026-003',pa:'2026-003-h007',decision:'ph'});
+  await page.goto(archived.href);
+  await page.locator('#resultBody[data-replay-pa="2026-003-h007"]').waitFor();
+  assert.equal(await page.evaluate(()=>S.last.candidates.filter(row=>
+    row['守備說明'].startsWith('需由 ')&&row['守備說明'].includes('板凳已無備用捕手')).length),3);
+}
+
+async function lineupAcrossRosterReload(browser) {
+  const context=await browser.newContext({viewport:{width,height:900}});
+  try {
+    const page=await context.newPage();
+    await openLineup(page);
+    const teamSelect=page.locator('#lineupTeam');
+    const next=await teamSelect.locator('option').evaluateAll(options=>options.find(option=>!option.selected).value);
+    await teamSelect.selectOption(next);
+    await page.locator('#lineupApply:enabled').waitFor();
+    await page.evaluate(club=>{
+      const original=team;
+      globalThis.failLineupRoster=true;
+      team=(name)=>name===club&&globalThis.failLineupRoster
+        ?Promise.reject(Error('Test lineup roster load failed')):original(name);
+    },next);
+    await page.locator('#lineupApply').click();
+    await page.getByText('配置已套用並保存。').waitFor();
+    const expected=await page.evaluate(club=>LineupBoard.current(club).pitcher,next);
+    await page.locator('.feature-nav [data-page=evaluation]').click();
+    await page.locator('#formError').getByText('名單載入失敗，請重試。').waitFor();
+    assert.equal(await page.locator('#evalBtn').isDisabled(),true);
+    await page.evaluate(()=>{globalThis.failLineupRoster=false;});
+    await page.locator('#formError .retry').click();
+    await page.locator('#evalBtn:enabled').waitFor();
+    await page.locator('[data-view=defense]').click();
+    assert.equal(await page.locator('#myTeam').inputValue(),next);
+    assert.equal(await page.locator('#myPitcher').inputValue(),expected);
+    assert.equal(await page.locator('#pitchCount').inputValue(),'0');
+    assert.equal(await page.locator('#pitchCount').isEditable(),true);
+    await page.locator('#evalBtn').click();
+    await page.locator('#resultBody .scoreboard').waitFor();
+    console.log('Passed cross-club lineup application and roster retry without losing the pitcher reset');
+  } finally {await context.close();}
+}
+
+async function pinchHitFielding(browser) {
+  const context=await browser.newContext({viewport:{width,height:900}});
+  try {
+    const page=await context.newPage();
+    await openLineup(page);
+    const club=await page.locator('#lineupTeam').inputValue();
+    const key='cpbl-lineup-2026-v1:'+club;
+    await page.locator('#lineupApply').click();
+    await page.getByText('配置已套用並保存。').waitFor();
+    await page.locator('.feature-nav [data-page=evaluation]').click();
+    const catcher=await page.evaluate(club=>LineupBoard.current(club).slots.find(slot=>slot.pos==='C').name,club);
+    await page.locator('#dueBatter').selectOption(catcher);
+    await page.locator('#benchAll').click();
+    await page.locator('#evalBtn:enabled').click();
+    await page.locator('#resultBody .evaluation-table').waitFor();
+    const candidate=await page.evaluate(()=>S.last.candidates.find(row=>row.fielding_action==='replacement')?.['球員']);
+    assert.ok(candidate,'confirmed catcher-replacement case');
+    const toggle=page.locator('[data-rows-toggle=ph]');
+    if(await toggle.isVisible())await toggle.click();
+    const preview=page.locator(`[data-batter="${candidate}"] .pinch-hit-preview`);
+    await preview.locator('summary').click();
+    await preview.getByText(/會先記錄代打/).waitFor();
+    await preview.locator('[data-apply-kind=ph]').click();
+    await page.locator('#lineupSummary').getByText(/接守待確認：捕手/).waitFor();
+    const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
+    assert.equal(saved.slots.find(slot=>slot.pos==='C').name,candidate);
+    assert.equal(saved.slots.find(slot=>slot.pos==='C').fieldingPending,true);
+    assert.deepEqual(saved.unavailable,[catcher]);
+    await openLineup(page);
+    await page.locator('#lineupWarnings').getByText(/請確認接守：捕手/).waitFor();
+    const catcherIndex=saved.slots.findIndex(slot=>slot.pos==='C');
+    await page.locator(`[data-position="${catcherIndex}"]`).selectOption('DH');
+    await page.locator('#lineupWarnings').getByText(/請確認接守：捕手/).waitFor();
+    assert.doesNotMatch(await page.locator('#lineupWarnings').textContent(),/請確認接守：指定打擊/);
+    const draft=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).draft,key);
+    const cover=draft.slots.find(slot=>slot.pos==='C');
+    assert.equal(cover.fieldingPending,true);
+    assert.equal(draft.slots.find(slot=>slot.pos==='DH').fieldingPending,undefined);
+    await page.locator('#lineupBackup summary').click();
+    const downloading=page.waitForEvent('download');
+    await page.locator('#lineupExport').click();
+    const backup=await (await downloading).path();
+    await page.locator(`[data-position="${catcherIndex}"]`).selectOption('C');
+    await page.locator('#lineupImport').setInputFiles(backup);
+    await page.locator('#lineupMessage').getByText(/草稿已保存/).waitFor();
+    const recovered=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+    assert.deepEqual(recovered.draft,draft);
+    assert.deepEqual(recovered.confirmed,saved);
+    await page.locator('#lineupApply').getByText('確認接守並套用').waitFor();
+    await page.locator('#lineupApply').click();
+    await page.getByText('配置已套用並保存。').waitFor();
+    const confirmed=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
+    assert.equal(confirmed.slots.find(slot=>slot.pos==='C').fieldingPending,undefined);
+    console.log('Passed team pinch-hitter, positional confirmation, backup restore and manual apply');
+  } finally {await context.close();}
 }
 
 async function main() {
@@ -126,6 +289,9 @@ async function main() {
     page.on('pageerror',e=>errors.push(e.message));
     await evaluation(page);
     await lineup(context);
+    await substitutionPersistence(browser);
+    await lineupAcrossRosterReload(browser);
+    await pinchHitFielding(browser);
     await historical(page);
     assert.deepEqual(errors,[]);
     await assertFits(page);

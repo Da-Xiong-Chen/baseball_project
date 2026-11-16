@@ -12,7 +12,7 @@ function fixture() {
     return nodes.get(key);
   };
   const context = {document:{querySelector:node,querySelectorAll:()=>[]}, location:{href:'http://localhost/'}, console, URL, URLSearchParams, AbortSignal,
-    window:{matchMedia:()=>({matches:false}),scrollTo(){},history:{pushState(_state,_title,url){context.location.href=url.href;}}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
+    window:{matchMedia:()=>({matches:false}),scrollTo(){},history:{state:null,replaceState(state,_title,url){this.state=state;context.location.href=String(url);},pushState(state,_title,url){this.state=state;context.location.href=url.href;}}}, Engine:{model:()=>({}), detail:()=>{throw Error('unsafe fallback');}},
     PitchChange:{mount:o=>context.lastMount=o,staticResult:()=>{}},fetch:async()=>({ok:true,json:async()=>({})})};
   let code = fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
   code = code.slice(0,code.lastIndexOf('init().catch'));
@@ -20,6 +20,15 @@ function fixture() {
   return {context,node,eval:s=>vm.runInContext(s,context)};
 }
 const deferred = ()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
+
+test('an archived catching replacement removes the sole backup without mutating the replay bundle',()=>{
+  const f=fixture();
+  const bundle=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/day-2026-03-29/2026-003-h007.json'),'utf8'));
+  f.context.rows=bundle.ph.candidates;
+  const result=f.eval('archivedCatcherNotes(rows)');
+  assert.equal(result.filter((row,i)=>row['守備說明']!==bundle.ph.candidates[i]['守備說明']).length,3);
+  assert.match(result.find(row=>row['守備說明'].startsWith('需由 '))['守備說明'],/板凳已無備用捕手/);
+});
 
 test('replay links include only public coordinates and preserve existing non-replay anchors on ordinary visits',()=>{
   const f=fixture();
@@ -31,6 +40,16 @@ test('replay links include only public coordinates and preserve existing non-rep
   assert.equal(f.eval('replayLocation().pa'),'2026-251-a000');
   f.eval('updateReplayURL()');
   assert.equal(f.context.location.href,'https://example.com/project/');
+});
+
+test('popstate for a fragment within the rendered replay leaves the active result in place',async()=>{
+  const f=fixture();
+  f.node('#lineupPage').hidden=true;
+  f.context.location.href='https://example.com/project/?replay=2026-10-04&game=2026-251&pa=2026-251-a000&decision=pen#candidateCompare';
+  f.eval("Object.assign(S,{mode:'replay',game:'2026-251',pa:'2026-251-a000',tab:'pen',last:{view:'replay'}});loadReplayDates=()=>{throw Error('fragment must not refetch the date list')}");
+  await f.eval("restoreReplayLocation({type:'popstate'})");
+  assert.equal(f.eval('replayLocationGeneration'),0);
+  assert.equal(f.eval('S.last.view'),'replay');
 });
 
 test('replay neighbors skip filtered and unavailable PAs even when the selection is filtered out',()=>{
@@ -786,6 +805,25 @@ test('historical analysis refuses custom roster application, refresh and evaluat
  assert.equal(f.node('#oppTeam').value,'Opponent');
 });
 
+test('a slow lineup apply never resets the new club pitcher or clears a completed replay',async()=>{
+ for(const destination of ['club','review']){
+  const f=fixture(), waiting=deferred();
+  f.context.waiting=waiting.promise;
+  f.node('#myTeam').value='First';f.node('#oppTeam').value='Opponent';
+  f.node('#pitchCount').value='68';
+  f.eval("let testPage='lineup';currentPage=()=>testPage;S.roster={Second:{pitchers:[]}};refreshCustom=()=>waiting;renderRole=()=>{};invalidateCustom=()=>{};renderBench=()=>{};renderPenVisibility=()=>{};clearResult=()=>{S.last=null}");
+  const old=f.eval("applyOwnLineup('Second',{pitcherSelected:true,resetPitchCount:true})");
+  if(destination==='club')f.node('#myTeam').value='Third';
+  else f.eval("testPage='review';");
+  f.eval("S.last={id:'latest'};S.starter=true;");
+  waiting.resolve(true);
+  await old;
+  assert.equal(f.node('#pitchCount').value,'68');
+  assert.equal(f.eval('S.starter'),true);
+  assert.equal(f.eval('S.last.id'),'latest');
+ }
+});
+
 test('manual unavailable list filters team candidates but never historical candidates',()=>{
  const f=fixture();f.eval("currentPage=()=> 'evaluation';audienceMode='team';confirmedOwnLineup=()=>({pitcher:'P',slots:[{name:'Active'}],unavailable:['Out']})");
  assert.equal(f.eval("benchEligible('Out')"),false);assert.equal(f.eval("benchEligible('Bench')"),true);
@@ -921,6 +959,30 @@ test('retrying unavailable timing markers replaces a cached invalid response',as
  assert.equal(requests,2);
 });
 
+test('a delayed failure cannot erase timing markers after leaving and reopening a replay date',async()=>{
+ const f=fixture(), old=deferred();
+ let requests=0;
+ f.context.fetchHistoryTiming=(_, {date})=>++requests===1?old.promise:Promise.resolve({
+  schema_version:2,date,season:2026,games:{},threshold:1
+ });
+ f.eval(`historyJSON=fetchHistoryTiming;replayDates=new Map([['2026-04-01',{}]]);`);
+ const first=f.eval('loadTiming()');
+ f.eval("setHistoryDate('2026-04-01');setHistoryDate('2026-10-04')");
+ assert.equal((await f.eval('loadTiming()')).date,'2026-10-04');
+ old.reject(Error('obsolete request failed'));
+ await first;
+ assert.equal(f.eval('timingData.date'),'2026-10-04');
+});
+
+test('replay pitch profiles stay pinned to the requested cutoff when the selected date changes',async()=>{
+ const f=fixture();
+ f.context.PitchChange={staticResult:options=>options};
+ f.eval("historyReplayIndex=async date=>({batch_id:date})");
+ const options=await f.eval("replayPitchChange({cutoff:'2026-04-01'})");
+ assert.equal(options.batchId,'2026-04-01');
+ assert.equal(options.root,'data/replay/day-2026-04-01/pitch/');
+});
+
 test('an older failed JSON request cannot evict a newer successful reload',async()=>{
  const f=fixture(),old=deferred();f.context.old=old.promise;let requests=0;
  f.context.fetch=()=>++requests===1?old.promise:Promise.resolve({ok:true,json:async()=>({fresh:true})});
@@ -1026,6 +1088,18 @@ test('capacity worksheet edits preserve a displayed comparison and a pending eva
  f.eval("invalidateCustom({target:{closest:selector=>selector==='#bullpenCapacity'?{}:null}})");assert.equal(f.eval('S.last.id'),'kept');
  const pending=deferred();f.context.pending=pending.promise;f.eval('S.last=null;renderResult=()=>{};');const job=f.eval("run(()=>pending,'defense')");
  f.eval("invalidateCustom({target:{closest:selector=>selector==='#bullpenCapacity'?{}:null}})");pending.resolve({id:'fresh'});await job;assert.equal(f.eval('S.last.id'),'fresh');
+});
+
+test('checked bullpen pitchers exclude the incumbent and unavailable players for both audiences',()=>{
+ const f=fixture();
+ f.node('#myTeam').value='Team';
+ f.node('#myPitcher').value='current';
+ f.context.document.querySelectorAll=selector=>selector==='#penList input:checked'
+  ?['current','used','starting','reserve'].map(value=>({value})):[];
+ f.eval("ownLineup=()=>null;exitedByTeam.set('Team',new Set(['used']))");
+ assert.equal(f.eval("selectedBullpen().join(',')"),'starting,reserve');
+ f.eval("ownLineup=()=>({pitcher:'current',slots:[{name:'starting'}],unavailable:['used']})");
+ assert.equal(f.eval("selectedBullpen().join(',')"),'reserve');
 });
 test('actual evaluation edits still clear the result and notify the capacity context',()=>{
  const f=fixture();let changes=0;f.context.control={contextChanged(){changes++}};f.eval('capacityControl=control;S.last={id:"old"};');

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-04",
+  "batch_id": "3b970badf058ecd54d8244df403e9466b30168c36b253e834bdca5bbfd7c464b",
+  "fielding": {
+    "2026-252-a031": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-252-h023"
+    },
+    "2026-252-h033": {
+      "status": "no_defensive_half"
+    },
+    "2026-270-a028": {
+      "status": "no_defensive_half"
+    }
+  },
+  "availability": {
+    "2026-251-a027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-251-a036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-251-a037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-251-a039": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-251-a045": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-251-a046": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-252-a040": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-270-h032": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-270-h041": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}

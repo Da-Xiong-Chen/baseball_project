@@ -1138,6 +1138,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 .capacity-arm input,.capacity-arm select { width:100%; min-width:0; min-height:44px; }
 .capacity-arm legend { padding:0 5px; font-weight:700; }
 .capacity-rows { display:grid; gap:12px; }
+.capacity-rows[hidden] { display:none; }
 .capacity-body [data-output] { overflow-wrap:anywhere; }
 
 .capacity-body [aria-invalid="true"] { border:2px solid var(--warn,#a14512); outline-offset:3px; }
@@ -1368,11 +1369,17 @@ body { background: var(--page-bg); }
 .replay-date-control { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; min-width:0; }
 .replay-date-control label { font-size:13px; font-weight:700; }
 .replay-date-control select { width:auto; min-width:145px; max-width:100%; background:var(--panel); padding-inline:10px; font-variant-numeric:tabular-nums; }
+#replayCase { max-width:min(100%, 18rem); }
+.replay-date-control :is(select,a):focus-visible, .replay-disclosure summary:focus-visible {
+  outline:2px solid var(--accent); outline-offset:2px;
+}
+.replay-disclosure [data-observed-fielding] { margin:10px 4px; line-height:1.5; }
 #replayFeatured:not([hidden]) { display:inline-flex; align-items:center; color:var(--accent); }
 #replayDateStatus:empty { display:none; }
 .quick-candidates { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
 .decision-fast-read { padding:16px; border-top:1px solid var(--matchday-line); }
 .decision-fast-read h2 { margin:0 0 9px; font-size:16px; }
+.quick-gap { margin:0 0 9px; color:var(--muted); font-size:13px; }
 .quick-candidate { display:flex; flex-direction:column; gap:5px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--panel-2); min-width:0; }
 .quick-candidate :is(span,small) { color:var(--muted); }
 .quick-candidate strong { overflow-wrap:anywhere; font-size:16px; }
@@ -1399,6 +1406,7 @@ body { background: var(--page-bg); }
   .quick-candidate > :is(small,.quick-plan-actions) { grid-column:1 / -1; }
   .quick-candidate > strong { grid-column:1; grid-row:2; }
   .quick-candidate > div:not(.quick-plan-actions) { grid-column:2; grid-row:2; text-align:end; }
+  .quick-candidate > span:last-of-type:not(:first-child) { grid-column:1 / -1; }
   .decision-fast-read { padding:12px; }
   .scoreboard .lev { margin-top:0; }
 }

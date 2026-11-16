@@ -12,6 +12,7 @@
     const orderSelectors = ['[data-order]', '[data-order-b]'];
     let source = null;
     let hasResult = false;
+    let stale = false;
 
     element.innerHTML = `
       <summary>牛棚接續規劃</summary>
@@ -31,6 +32,7 @@
     const compare = q('[data-compare]');
     const output = q('[data-output]');
     const calculate = q('[data-calculate]');
+    const worksheet = q('[data-rows]');
 
     function clear() {
       hasResult = false;
@@ -55,12 +57,14 @@
 
     function refresh() {
       source = snapshot();
+      stale = false;
       clear();
       calculate.disabled = !source.pitchers.length;
       compare.disabled = calculate.disabled;
+      worksheet.hidden = false;
       const options = '<option value="">保留</option>' + source.pitchers.map((_, i) =>
         `<option value="${i + 1}">${i + 1}</option>`).join('');
-      q('[data-rows]').innerHTML = source.pitchers.map((player, i) => {
+      worksheet.innerHTML = source.pitchers.map((player, i) => {
         const name = escapeHtml(label(player.id));
         return `<fieldset class="capacity-arm" data-arm="${i}">
           <legend>${name}</legend>
@@ -195,11 +199,17 @@
         (capacity.value === '' ? capacity : order).focus();
       },
       contextChanged() {
-        if (!source || source.key === snapshot().key) return;
+        if (!source) return;
+        const changed = source.key !== snapshot().key;
+        if (changed === stale) return;
+        stale = changed;
         clear();
-        output.textContent = '牛棚名單已變更，請重新帶入已選牛棚。';
-        calculate.disabled = true;
-        compare.disabled = true;
+        worksheet.hidden = stale;
+        calculate.disabled = stale || !source.pitchers.length;
+        compare.disabled = calculate.disabled;
+        output.textContent = stale
+          ? '牛棚名單已變更，請重新帶入已選牛棚。'
+          : '已恢復原牛棚與方案設定，可以重新檢查接續。';
       },
     };
   }

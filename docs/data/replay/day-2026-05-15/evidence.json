@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "date": "2026-05-15",
+  "batch_id": "ca3bb63f9f0d391fb1b2f67c53902f4b29110e9f50597fd813f24d161c3a5e27",
+  "fielding": {
+    "2026-099-h025": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-099-a038",
+      "original_position": "C",
+      "opening_fielder": "陳重羽"
+    },
+    "2026-099-h032": {
+      "status": "no_defensive_half"
+    },
+    "2026-100-h029": {
+      "status": "pinch_hitter_fielded",
+      "position": "RF",
+      "observed_pa": "2026-100-a034"
+    },
+    "2026-100-h032": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-100-a034"
+    },
+    "2026-101-a025": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-101-h028",
+      "original_position": "C",
+      "opening_fielder": "吳明鴻"
+    },
+    "2026-101-h027": {
+      "status": "other_player_fielded",
+      "observed_pa": "2026-101-a023",
+      "original_position": "LF",
+      "opening_fielder": "周佳樂"
+    }
+  },
+  "availability": {
+    "2026-099-a028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-099-a037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-099-a038": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-100-a019": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-100-a028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-100-h033": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-a019": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-a022": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-a026": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-a030": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-a031": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-h028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-h029": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-101-h034": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}

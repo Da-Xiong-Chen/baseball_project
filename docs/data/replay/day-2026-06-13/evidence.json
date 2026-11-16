@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "date": "2026-06-13",
+  "batch_id": "3c8eb60e4786a1e16a5b512d132ecf979fc0f3edfd2043ce7ad28b1e3b89ba1d",
+  "fielding": {
+    "2026-160-h027": {
+      "status": "pinch_hitter_fielded",
+      "position": "SS",
+      "observed_pa": "2026-160-a041"
+    },
+    "2026-161-a041": {
+      "status": "pinch_hitter_fielded",
+      "position": "LF",
+      "observed_pa": "2026-161-h026"
+    },
+    "2026-162-a029": {
+      "status": "pinch_hitter_fielded",
+      "position": "3B",
+      "observed_pa": "2026-162-h028"
+    },
+    "2026-162-a035": {
+      "status": "pinch_hitter_fielded",
+      "position": "1B",
+      "observed_pa": "2026-162-h034"
+    },
+    "2026-162-h044": {
+      "status": "pinch_hitter_fielded",
+      "position": "3B",
+      "observed_pa": "2026-162-a049"
+    }
+  },
+  "availability": {
+    "2026-160-a043": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-160-a044": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-160-h028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a027": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a029": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a038": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a039": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a040": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-161-a045": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a024": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a026": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a034": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a036": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a038": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a042": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a043": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a044": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a045": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a046": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a047": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a050": {
+      "pen": "all_used",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a051": {
+      "pen": "all_used"
+    },
+    "2026-162-a052": {
+      "pen": "all_used"
+    },
+    "2026-162-a053": {
+      "pen": "all_used",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a054": {
+      "pen": "all_used",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-a055": {
+      "pen": "all_used",
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-h028": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-h037": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-h038": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-h042": {
+      "ph": "fielding_unconfirmed"
+    },
+    "2026-162-h049": {
+      "ph": "fielding_unconfirmed"
+    }
+  }
+}

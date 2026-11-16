@@ -11,15 +11,15 @@
 
 | 要找的內容 | 最新入口 |
 |---|---|
-| 最新網站、模型與資料驗收 | [11/15 季中迭代](docs/qa/season-iteration-2026/README.md) · [11/14 改用 2026 球季資料](docs/qa/data-2026-20261114/README.md) · [11/12 回放、模型與瀏覽器驗收](docs/qa/replay-20261112/README.md) · [11/06 牛棚方案比較](docs/qa/release-foundation-20261106/README.md) |
-| PR 檢查、異常操作與真實訓練驗收 | [10/29 最新發布前驗收](docs/qa/release-readiness-20261029/README.md) · [CI 執行方式](docs/ci-validation.md) |
-| 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
-| 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
+| 最新網站、模型與資料驗收 | [候選名單、接守與新球季演練](docs/qa/replay-evidence-20261116/README.md) · [專案收尾與發布驗收](docs/project-closeout-20261116.md) · [2026 球季資料](docs/qa/data-2026-20261114/README.md) |
+| PR 檢查與瀏覽器異常操作 | [現行發布驗收](docs/project-closeout-20261116.md) · [CI 執行方式](docs/ci-validation.md) |
+| 程式碼審查與修正 | [回放連結與本機 API](docs/project-closeout-20261116.md) · [11/6 整合審查](docs/qa/release-foundation-20261106/README.md) |
+| 後續模型及資料工作 | [季中迭代的驗收方法](docs/qa/season-iteration-2026/README.md) · [資料來源與守位](資料來源.md) |
 | 參賽簡報 | [38 頁工作稿 PPT／PDF](presentations/competition-2026/README.md#最新工作稿) · [原交件版](presentations/competition-2026/submission-20261023/README.md) |
-| 最新模型實驗 | [2024–2026 打席與三棒失分比較](docs/qa/model-horizons-20261113/README.md) |
+| 最新模型實驗 | [2026 換投時機回測](docs/qa/timing-2026/README.md) · [疲勞調整與勝率校準](docs/qa/website-roadmap-20261115/README.md) · [季中迭代](docs/qa/season-iteration-2026/README.md) |
 | 模型與身份基準 | [10/25 v5 整合驗收](docs/qa/identity-integration-20261025/README.md) |
 
-**版本狀態**　2026 回放與首頁示範情境已隨 [PR #36](https://github.com/Da-Xiong-Chen/baseball_project/pull/36)、[PR #37](https://github.com/Da-Xiong-Chen/baseball_project/pull/37) 合併進 main，並發布到線上網站；也可依[本機執行](#本機執行)預覽。公開網站版本以 GitHub Pages 部署紀錄為準。
+**版本狀態**　8 個比賽日回放、球隊調度與 2026 模型驗收已隨 [PR #38](https://github.com/Da-Xiong-Chen/baseball_project/pull/38) 合併並部署到 GitHub Pages。可依[本機執行](#本機執行)預覽，也可查閱[部署紀錄](https://github.com/Da-Xiong-Chen/baseball_project/deployments)。
 
 | 項目 | 內容 |
 |---|---|
@@ -54,7 +54,7 @@
 | 作品實際能做什麼 | 開啟[本機預覽](#本機執行)，選「一般使用者」→「換打／換投評估」，點「看示範情境」自動評估，或自行設定局勢與候選 |
 | 系統的建議和教練實際調度差在哪 | 選「單日分析」，選日期、球隊與比賽，或直接開啟當天的代表案例，再揭示實際調度及結果 |
 | 方法和數據 | 本頁[方法](#方法)與[驗證結果](#驗證結果)；完整說明見 [docs/技術細節.md](docs/技術細節.md) |
-| 驗證是否確實 | [11/12 單日回放驗收](docs/qa/replay-20261112/README.md)、[整體程式審查](docs/qa/code-review-20261029/README.md)、[v5 整合驗收](docs/qa/identity-integration-20261025/README.md)、[全部測試與驗收索引](docs/qa/README.md) |
+| 驗證是否確實 | [八日回放數值核對](docs/qa/website-roadmap-20261115/replay-verification.json) · [網站與 API 操作驗收](docs/project-closeout-20261116.md) · [全部測試與驗收索引](docs/qa/README.md) |
 | 提案內容 | [38 頁參賽簡報](presentations/competition-2026/README.md) |
 
 **我們的四個重點：**
@@ -78,19 +78,19 @@
 
 | 功能 | 說明 |
 |---|---|
-| **代打評估** | 設定局數、比分、壘況、出局、對方投手與輪到的打者，比較現任與最多四位板凳候選的勝率換算差距，並檢查換人後的接守安排 |
-| **換投評估** | 輸入場上投手的本場球數，比較牛棚投手對上接下來三棒的差距，並納入用球數造成的疲勞 |
+| **代打評估** | 設定局數、比分、壘況、出局、對方投手與輪到的打者，比較現任與最多四位板凳候選的勝率換算差距。按「換上」前可預覽接守人選與守位 |
+| **換投評估** | 輸入場上投手的本場球數，比較牛棚投手對上接下來三棒的差距與疲勞調整。手機先顯示現任與最多兩位候選，展開可看完整比較 |
 | **我方場上名單** | 用球場圖和棒次表安排九棒與投手，可用姓名或 2026 背號搜尋；球隊模式下，候選會自動排除場上球員 |
-| **牛棚接續容量表** | 從換投結果把候選帶到方案 A／B 的第一順位，以自行確認的可用名單與剩餘容量比較兩套接續順位，查看後續缺口和保留投手 |
-| **換人後自動更新可用人選** | 在代打或換投結果表按「換上」：代打承接原棒次與守位，換投改場上投手、球數從 0 起算；被換下的球員記為本場退場，不再列入板凳與牛棚，並以新名單立即重新評估。可一鍵復原；球隊模式會把退場寫入名單並保存 |
+| **牛棚接續容量表** | 從換投結果把候選帶到方案 A／B 的第一順位，以自行確認的剩餘容量比較後續缺口和保留投手。換投或換隊後，請以目前牛棚重新計算；復原到原配置可繼續使用原方案設定 |
+| **換人後自動更新可用人選** | 確認代打後更新原棒次與接守安排；確認換投後新投手球數從 0 起算。已退場球員從本場候選排除，系統以新名單重算。球隊模式同步保存名單 |
 | **季成績與對戰紀錄** | 展開「季成績與對戰」才載入自訂評估的 2026 季成績與 2024–2026 對戰資料，供對照現任或候選 |
-| **2026 單日分析** | 8 個比賽日、24 場、1,873 個打席，可依比分、壘況、調度類型或球員篩選。可複製單一打席的連結 |
-| **球隊配置備份** | 下載目前球隊名單草稿，或匯入同隊同季的備份。確認後按「套用配置」更新評估頁 |
-| **代打與調度紀錄** | 先預覽代打與接守，再確認換上。操作期間可查看本場調度歷程，逐次復原仍與目前配置相符的換人 |
+| **2026 單日分析** | 從 8 個比賽日按日期或情境找案例，可依比分、壘況、調度類型或球員篩選。先看賽前評估，再揭示實際調度和代打後接守。可複製該打席連結 |
+| **球隊配置備份** | 下載或匯入同隊同季的草稿，包含待確認的接守守位。匯入後可先檢視與調整，再套用到評估頁 |
+| **代打與調度紀錄** | 先預覽代打與接守，再確認換上。需另外安排接守時，球隊名單會標記「接守待確認」，直到使用者確認配置。可逐次復原換人，並查看名單保存結果 |
 
 ![代打候選表：每位候選列出 2026 成績與對魔力藍的對戰紀錄](assets/readme/matchup-notes.png)
 
-![按「換上」後：布雷克記為退場，牛棚以新投手重新評估，可一鍵復原](assets/readme/substitution.png)
+![球隊調度範例：布雷克退場，牛棚以新投手重新評估](assets/readme/substitution.png)
 
 網站上方有三個入口：
 
@@ -98,9 +98,11 @@
 - **球隊**：先套用我方場上名單，候選只從板凳與牛棚中選，適合模擬實際用兵。
 - **單日分析**：回顧 2026 年的真實比賽，對照系統提示與實際調度。
 
-![當日總覽：局數對照圖標出系統建議（藍圈）與實際換人（橘點）](assets/readme/day-overview.png)
+可以直接開啟 [4/1 打席中換人](https://da-xiong-chen.github.io/baseball_project/?replay=2026-04-01&game=2026-010&pa=2026-010-a034&decision=pen) 或 [7/29 代打後實際接守](https://da-xiong-chen.github.io/baseball_project/?replay=2026-07-29&game=2026-229&pa=2026-229-a036&decision=ph)。在 7/29 案例展開「揭示實際調度」可查看下一個守備半局的捕手安排。
 
-![逐打席回放：左側清單以菱形與燈號標示壘況與出局，右側為決策前的換投比較](assets/readme/single-day.png)
+![4/1 當日總覽：日期選擇、代表案例、換投與換打分頁，以及實際調度的局數時間軸](assets/readme/day-overview.png)
+
+![7/29 台鋼對統一，九局上 3 比 3、一出局滿壘。揭示實際調度後可確認劉時豪代打，下一個守備半局接任捕手。打席結果仍收合](assets/readme/single-day.png)
 
 ## 一個實際例子
 
@@ -142,7 +144,7 @@
 | 換投時機 | 2026 例行賽第 6 局起 11,958 筆可評估換投決策。實際續投且可比較 RE24 的打席中，有換投提示／無提示各 1,831／7,911 筆，進攻方 RE24 平均差 **+0.013 分／打席**（95% 比賽重抽樣區間 −0.012 至 +0.037） | 以 1 百分點為提示門檻，比較兩組在實際續投時的觀察結果。[回測與驗收](docs/qa/timing-2026/README.md) |
 | 疲勞調整 | 2026 同樣本 9,044 個三棒視窗，開啟現行疲勞項的失分 MSE 較關閉高 0.000845，95% 比賽配對區間 +0.000564 至 +0.001130 | 95 球以上先發組也呈現同方向。結果用於離線診斷，正式權重待新賽季前瞻驗證。[多日回放與模型驗收](docs/qa/website-roadmap-20261115/README.md) |
 | 季中迭代 | 2026 例行賽 24 週、88,179 球，每週以當時資料重建、預測下一週：近期加權（半衰期 30／60 天）都沒有更準，打者 30 天顯著變差（95% 區間 −0.358 至 −0.037） | 網站維持不加權；每週重跑 `scripts/season_iteration.py` 即可再檢查。[完整紀錄](docs/qa/season-iteration-2026/README.md) |
-| 數值一致性 | 2026 球季批次 54 組自訂情境、1,962 個數值一致；2026 固定單日 235 打席的 470 組攻守比較一致；v5（2024–2025）時期另核對 18 組自訂情境與 275 場／498 組代打回放 | 這些是不同驗收母體，皆不是準確率；[單日重算](docs/qa/replay-20261112/history-day-parity.json) · [自訂與舊回放](docs/qa/code-review-20261029/numeric-parity.json) |
+| 數值一致性 | 自訂評估核對 54 組情境的 1,962 個數值。八日回放核對 1,873 個打席的 3,746 組攻守比較與 1,692 筆調度標記 | 驗證 Python 重算與網站匯出一致。[自訂評估](docs/qa/data-2026-20261114/README.md) · [八日回放](docs/qa/website-roadmap-20261115/replay-verification.json) |
 | 系統測試 | 完整資料掃描、Python／JavaScript 同情境對照，以及桌面、320／390px 瀏覽器操作分開驗收；本輪紀錄見下方連結 | 數值一致、操作可完成，不等同調度效益已證實 |
 
 各項驗證的程序與原始紀錄見 [docs/技術細節.md](docs/技術細節.md#5-驗證與實驗)。
@@ -172,13 +174,13 @@ python download_data.py      # 下載 Rebas 2024–2026 逐球資料、ldkrsi �
 python start_server.py       # 開啟 http://127.0.0.1:8000（Windows 也可雙擊「啟動系統.bat」）
 ```
 
-`start_server.py` 使用與網站相同的 2026 球季批次（`models/2026/`）；直接執行 `python server.py` 則是原 v5（2024–2025）批次，供重現舊驗收使用。
+`start_server.py` 的自訂評估使用與網站相同的 2026 球季批次（`models/2026/`）。已公開的歷史比賽可由回放 API 讀取原匯出結果。離線重新計算歷史結果需要對應的月初權重和批次合約。直接執行 `python server.py` 採 2024–2025 v5 批次，供重現舊驗收使用。
 
-訓練好的模型已隨專案提供：2026 球季批次在 `models/2026/`，原 v5 批次為 `models/active-batch.json`，執行現有功能不需要重新訓練。重訓請使用[候選模型訓練指南](docs/training-v5.md)，先固定來源並執行 dry-run；輸出保留在 output/，不直接覆寫正式模型。測試指令：
+訓練好的 2026 季後模型在 `models/2026/`。現有功能可直接使用。如需重現實驗，從[三季資料驗收](docs/qa/data-2026-20261114/README.md)與[2026 月初模型及換投時機回測](docs/qa/timing-2026/README.md)查閱資料、截止日及批次。[舊 v5 訓練指南](docs/training-v5.md)可重現 2024–2025 批次。
 
 ```bash
-python -m unittest discover -s tests     # Python 測試
-node --test tests/*.cjs                  # 前端測試（需 Node.js）
+python scripts/run_ci.py                 # 前端、靜態資料、文件與 Python fixture（需 Node.js）
+python -m unittest discover -s tests     # 完整 Python：需三季逐球資料
 ```
 
 ## 專案結構與文件
@@ -198,6 +200,7 @@ node --test tests/*.cjs                  # 前端測試（需 Node.js）
 | [docs/qa/README.md](docs/qa/README.md) | 想查各輪測試與驗收證據 |
 | [資料來源.md](資料來源.md) | 想知道資料從哪裡來、怎麼下載 |
 | [協作指南.md](協作指南.md) | 要參與開發的協作者 |
+| [docs/ci-validation.md](docs/ci-validation.md) | 要重跑 CI、瀏覽器操作、發布與回復核對的維護者 |
 | [docs/archive/](docs/archive/README.md) | 早期規劃與測試報告（歷史紀錄） |
 
 ## 資料來源與授權
