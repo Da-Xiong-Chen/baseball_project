@@ -9,6 +9,13 @@
 - 網站涵蓋 **8 個比賽日、24 場、1,873 個打席**。3,746 組攻守視圖及 1,692 筆調度標記均有核對紀錄。
 - [公開網站](https://da-xiong-chen.github.io/baseball_project/) · [PR #38](https://github.com/Da-Xiong-Chen/baseball_project/pull/38) · [Pages 部署](https://github.com/Da-Xiong-Chen/baseball_project/actions/runs/43736382036) · [main 自動檢查](https://github.com/Da-Xiong-Chen/baseball_project/actions/runs/43736383836) · [逐日驗收](qa/website-roadmap-20261115/replay-verification.json) · [部署資產比對](qa/project-closeout-20261116/pages.json)
 
+## 回放連結與切換日期
+
+- 日期索引暫時失敗時，原分享網址和重試入口會保留。重試成功後會回到該日期、比賽、打席與攻守視角，實際結果維持收合。Edge 實測先回傳 HTTP 503，再由使用者點「重新載入日期」。
+- 切換日期會清掉前一日的畫面與資料。單元測試涵蓋從 A 切到 B 再回到 A 時，舊請求失敗不會蓋掉新載入的調度標記。配球比較使用請求自己的日期與回放批次。
+- 靜態站使用 Edge 在 320、390、768、1280 CSS px 重跑多日回放與核心操作，本機 API 另於 390 px 重跑。233 項 JavaScript 測試通過。完整 Python 測試共 173 項，170 項通過，3 項跳過舊版專用案例。重新匯出後比對 2,951 份發布資產，差異限於 `app.js` 與 `index.html`。
+- [PR #39](https://github.com/Da-Xiong-Chen/baseball_project/pull/39) 包含回放連結、日期切換修正、本機 API 改善及文件同步。核對公開部署請依 [CI 說明](ci-validation.md#發布與回復核對)。
+
 ## 本機 API 收尾
 
 使用 `start_server.py` 時，自訂評估用 2024–2026 季後模型。歷史回放依日期使用各自的批次。隨專案提供的 2026 權重目錄只含季後模型，所以本機回放 API 會在找不到當月權重時，讀取同日期的已匯出回放，並查核日期、模型批次、截止日及個別打席 SHA-256。當月權重已配置的環境仍可重算。未公開的日期需要配置對應的月初權重及批次。

@@ -9,7 +9,7 @@ import unicodedata
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-CURRENT_DOCS = ['README.md', '協作指南.md', 'docs/技術細節.md', 'docs/qa/README.md',
+CURRENT_DOCS = ['README.md', '協作指南.md', '資料來源.md', 'docs/技術細節.md', 'docs/qa/README.md',
     'presentations/competition-2026/README.md', 'docs/training-v5.md', 'docs/ci-validation.md',
     'docs/qa/code-review-20261029/README.md', 'docs/qa/review-fixes-20261029/README.md',
     'docs/qa/release-readiness-20261029/README.md', 'docs/qa/release-foundation-20261106/README.md',

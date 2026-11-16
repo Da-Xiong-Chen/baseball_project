@@ -6,6 +6,30 @@ const {chromium}=require(process.env.PLAYWRIGHT_PACKAGE||'playwright');
 const base=process.env.BASEBALL_QA_URL||'http://127.0.0.1:8052/';
 const catalog=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/data/replay/dates.json'),'utf8'));
 
+async function checkCatalogRetry(browser) {
+  const page=await browser.newPage({viewport:{width:390,height:880}});
+  const april=catalog.days.find(row=>row.date==='2026-04-01');
+  const {game,pa,decision}=april.case;
+  const url=new URL(base);
+  url.search=new URLSearchParams({replay:april.date,game,pa,decision});
+  let requests=0;
+  try {
+    await page.route('**/data/replay/dates.json',route=>
+      ++requests===1?route.fulfill({status:503}):route.continue());
+    await page.goto(url.href);
+    await page.getByText('暫時無法確認分享日期，請重新載入日期。').waitFor({timeout:8000});
+    assert.equal(page.url(),url.href);
+    assert.equal(requests,1);
+    await page.locator('#replayCatalogRetry').click();
+    await page.locator('#resultBody .scoreboard').waitFor();
+    assert.equal(await page.locator('#replayDate').inputValue(),april.date);
+    assert.equal(await page.locator('[data-reveal-outcome]').evaluate(el=>el.open),false);
+    assert.equal(page.url(),url.href);
+    assert.equal(requests,2);
+    console.log('Passed recovery of a valid replay link after a temporary date catalogue failure');
+  } finally {await page.close();}
+}
+
 async function check(browser,width) {
   const page=await browser.newPage({viewport:{width,height:880},deviceScaleFactor:1});
   const errors=[], requests=[];
@@ -115,6 +139,9 @@ async function check(browser,width) {
 
 (async()=>{
   const browser=await chromium.launch(process.env.BASEBALL_QA_EXECUTABLE?{executablePath:process.env.BASEBALL_QA_EXECUTABLE}:{});
-  try {for(const width of (process.env.BASEBALL_QA_WIDTHS||'390,1280').split(',').map(Number))await check(browser,width);}
+  try {
+    await checkCatalogRetry(browser);
+    for(const width of (process.env.BASEBALL_QA_WIDTHS||'390,1280').split(',').map(Number))await check(browser,width);
+  }
   finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

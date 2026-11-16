@@ -921,6 +921,30 @@ test('retrying unavailable timing markers replaces a cached invalid response',as
  assert.equal(requests,2);
 });
 
+test('a delayed failure cannot erase timing markers after leaving and reopening a replay date',async()=>{
+ const f=fixture(), old=deferred();
+ let requests=0;
+ f.context.fetchHistoryTiming=(_, {date})=>++requests===1?old.promise:Promise.resolve({
+  schema_version:2,date,season:2026,games:{},threshold:1
+ });
+ f.eval(`historyJSON=fetchHistoryTiming;replayDates=new Map([['2026-04-01',{}]]);`);
+ const first=f.eval('loadTiming()');
+ f.eval("setHistoryDate('2026-04-01');setHistoryDate('2026-10-04')");
+ assert.equal((await f.eval('loadTiming()')).date,'2026-10-04');
+ old.reject(Error('obsolete request failed'));
+ await first;
+ assert.equal(f.eval('timingData.date'),'2026-10-04');
+});
+
+test('replay pitch profiles stay pinned to the requested cutoff when the selected date changes',async()=>{
+ const f=fixture();
+ f.context.PitchChange={staticResult:options=>options};
+ f.eval("historyReplayIndex=async date=>({batch_id:date})");
+ const options=await f.eval("replayPitchChange({cutoff:'2026-04-01'})");
+ assert.equal(options.batchId,'2026-04-01');
+ assert.equal(options.root,'data/replay/day-2026-04-01/pitch/');
+});
+
 test('an older failed JSON request cannot evict a newer successful reload',async()=>{
  const f=fixture(),old=deferred();f.context.old=old.promise;let requests=0;
  f.context.fetch=()=>++requests===1?old.promise:Promise.resolve({ok:true,json:async()=>({fresh:true})});

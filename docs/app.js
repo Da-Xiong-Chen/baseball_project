@@ -548,6 +548,7 @@ function setHistoryDate(date) {
   ++historyReviewGeneration;
   ++historyContextGeneration;
   ++historyPitchGeneration;
+  ++timingGeneration;
   clearResult();
   S.games=[]; S.pas=null; S.game=null; S.pa=null; S.replayAvailable=null; S.replayPlayers={};
   historyDisclosure.reset();
@@ -638,7 +639,7 @@ async function showFeaturePage(page, sub, {fromLocation=false} = {}) {
   const skip=PAGE_SKIP[replay?'replay':page];$('.skip-link').href=skip[0];$('.skip-link').textContent=skip[1];
   $$('.feature-nav [data-page]').forEach(b=>{if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   syncEntryNavigation();
-  if(page==='review')await loadReplayDates();
+  if(page==='review'&&!fromLocation)await loadReplayDates();
   if(navigation!==featureGeneration)return;
   if(page==='lineup')await LineupBoard.selectTeam($('#myTeam').value);
   if(page==='review'&&!replay){if(!$('#reviewTeam').value)$('#reviewTeam').value=S.teams[0]||'';await refreshHistoryDay();}
@@ -660,7 +661,7 @@ async function restoreReplayLocation() {
     }
     return;
   }
-  if (target.replay!==DEFAULT_HISTORY_DATE) await loadReplayDates();
+  await loadReplayDates();
   if (token!==replayLocationGeneration||navigation!==featureGeneration) return;
   const knownDate=setHistoryDate(target.replay);
   if (knownDate && !target.pa && !target.game && !target.decision) {
@@ -1143,12 +1144,14 @@ async function run(fn, view, {focusTab,focusControl} = {}) {
 }
 
 /* ---------------- 換人時機比對（src/timing_backtest.py 離線模擬產生） ---------------- */
-let timingData = null;
+let timingData = null, timingGeneration = 0;
 async function loadTiming() {
   if (timingData === null) {
-    const date=HISTORY_DATE;
-    try { const d=await historyJSON('timing.json',{reload:true,date});if(date===HISTORY_DATE)timingData=d.schema_version===2&&d.date===date&&d.season===historySeason&&d.games&&d.threshold===SUGGEST_GAP?d:false; }
-    catch { if(date===HISTORY_DATE)timingData=false; }  // 沒有時機資料時，回放照常使用
+    const date=HISTORY_DATE, request=++timingGeneration;
+    try {
+      const d=await historyJSON('timing.json',{reload:true,date});
+      if(request===timingGeneration)timingData=d.schema_version===2&&d.date===date&&d.season===historySeason&&d.games&&d.threshold===SUGGEST_GAP?d:false;
+    } catch { if(request===timingGeneration)timingData=false; }  // 沒有時機資料時，回放照常使用
   }
   return timingData;
 }
@@ -1273,7 +1276,7 @@ async function renderReview(){
 let historyPitchGeneration=0,historyPitchTeam='';
 const historyPitchSelections=new Map();
 async function replayPitchChange(options){
-  const date=HISTORY_DATE;
+  const date=options.cutoff;
   const index=await historyReplayIndex(date);
   return PitchChange.staticResult({...options,root:historyRoot(date)+'pitch/',batchId:index.batch_id});
 }

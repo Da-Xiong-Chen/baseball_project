@@ -17,7 +17,7 @@ python scripts/run_ci.py
 
 ## 完整資料驗收
 
-有既有原始資料的環境仍執行完整 Python 測試、tests/verify_decisions.py、實際瀏覽器操作及需要時的候選模型驗收。CI 通過不代表模型效果已證實，也不能取代完整資料驗收。
+使用 2024–2026 原始資料執行 `python -m unittest discover -s tests`。有重算需求時，另依[八日回放驗收](qa/website-roadmap-20261115/README.md)配置月初權重、日期批次與報告目錄，再跑 `tests/verify_history_day.py`。以實際瀏覽器檢查發布資產及操作流程；候選模型效果依[模型實驗](qa/model-horizons-20261113/README.md)的方法另行評估。
 
 目前不設定或變更主分支保護規則；維護者可在 PR 檢查實際成功後，再決定是否將其設為合併條件。新工作流程第一次是否需要核准執行，依 GitHub 專案設定，不預先宣稱雲端 CI 已通過。
 
@@ -28,6 +28,7 @@ python scripts/run_ci.py
 ```powershell
 $env:BASEBALL_QA_URL = 'http://127.0.0.1:8042/'
 node tests/browser_closeout.cjs
+$env:BASEBALL_QA_WIDTHS = '320,390,768,1280'
 node tests/browser_multiday.cjs
 ```
 
@@ -41,10 +42,10 @@ python tests/browser_fault_server.py --port 8030
 
 控制頁 `http://127.0.0.1:8030/__qa__/controls` 可模擬模型／回放 HTTP 503 與延遲，再以同站網站操作恢復。`/__qa__/storage-denied` 在不允許同源的 sandbox iframe 內載入網站，讓瀏覽器真的拒絕 localStorage；不是修改使用者瀏覽器權限或假造應用程式回傳。測試站只綁 127.0.0.1，不複製到 docs 或公開部署。
 
-本輪狀態與證據見 [發布前驗收](qa/release-readiness-20261029/README.md)。
+`browser_multiday.cjs` 會讓日期清單第一次回傳 HTTP 503，驗證在原連結重試後能回到正確打席，並確認真實結果保持收合。其他操作及發布狀態見[現行發布驗收](project-closeout-20261116.md)。
 
 ## 發布與回復核對
 
-1. 審查時記錄提交 SHA、PR 檢查、單日回放批次 ID、逐球模型截止日。用 `python scripts/prepare_site.py --output output/<新發布目錄>` 產生含逐檔 SHA-256 的發布清單。
+1. 審查時記錄提交 SHA、PR 檢查、各回放日期的批次 ID 與逐球模型截止日。用 `python scripts/prepare_site.py --output output/<新發布目錄>` 產生含逐檔 SHA-256 的發布清單。
 2. 維護者合併並部署後，在公開站以新瀏覽器環境和保有舊快取的環境測試。先比對 HTML 中的 CSS／JS 版本，再查回放索引、個別打席、舊連結和簡報下載。確認公開 HTML 來自合併版本後，才記錄部署通過。
 3. 若錯版，先核對 Pages 部署 SHA 和公開 HTML。HTML 正確時比較新舊瀏覽器，若乾淨環境也失敗，查回放索引及資料檔的 HTTP 狀態、批次和雜湊。將受影響網址、最後可用版本與測試結果交給維護者，依其流程回復整批資產。
