@@ -232,6 +232,7 @@ async function check(browser,width) {
       const button=page.locator('[data-apply-kind=pen]').first();
       await button.waitFor();
       const id=await button.getAttribute('data-apply-sub');
+      await page.locator('#confirmChangeEligibility').check();
       await button.click();
       await page.locator('[data-sub-undo]').waitFor();
       assert.equal(await field.inputValue(),id);
@@ -254,6 +255,7 @@ async function check(browser,width) {
     await choose();
     await page.locator('#penAll').click();
     const out=page.locator(`#penList input[value="${incumbent}"]`);
+    assert.equal(await field.locator(`option[value="${incumbent}"]`).isDisabled(),true,'an exited pitcher cannot be selected as the incumbent');
     assert.equal(await out.isDisabled(),true);
     assert.equal(await out.isChecked(),false,'select all cannot reselect a retired pitcher');
     await capacity.locator('[data-refresh]').click();

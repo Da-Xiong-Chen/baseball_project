@@ -28,7 +28,7 @@
     function convert(old,pool){const id=resolve(old,pool);if(id===null){unresolved.push(old);return old;}if(id!==old)changed=true;return id;}
     value.pitcher=convert(value.pitcher,roster.pitchers);
     value.slots.forEach(slot=>slot.name=convert(slot.name,roster.hitters));
-    if(value.unavailable)value.unavailable=[...new Set(value.unavailable.map(n=>convert(n,[...roster.hitters,...roster.pitchers])))];
+    for(const field of ['unavailable','retired'])if(value[field])value[field]=[...new Set(value[field].map(n=>convert(n,[...roster.hitters,...roster.pitchers])))];
     return {value,unresolved:[...new Set(unresolved)],changed};
   }
   function migrateEvaluation(config,bat,fld){

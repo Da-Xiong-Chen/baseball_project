@@ -250,3 +250,23 @@ test('a pinch hit does not carry a confirmed fielding change into a differently 
  assert.equal(stored.confirmed.slots[0].fieldingPending,true);
  assert.deepEqual(stored.draft,draft);
 });
+
+test('an old backup cannot return a retired player to the same game',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const before=f.api.current('A');
+ f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H10'});
+ const after=f.api.current('A');
+ assert.deepEqual([...after.retired],['H0']);
+ const file=f.node('#lineupImport');
+ file.files=[{size:500,text:async()=>lineupBackup(before)}];
+ await file.onchange();
+ await f.node('#lineupApply').onclick();
+ assert.match(f.node('#lineupMessage').textContent,/已退場/);
+ assert.equal(JSON.stringify(f.api.current('A')),JSON.stringify(after));
+ const reopened=uiFixture('ok',async()=>roster,new Map([[key,f.values.get(key)]]));
+ await reopened.api.selectTeam('A');
+ assert.equal(reopened.api.substitute('A',{kind:'ph',out:'H10',incoming:'H0'}),null);
+ assert.equal(JSON.stringify(reopened.api.current('A')),JSON.stringify(after));
+});

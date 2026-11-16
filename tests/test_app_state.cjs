@@ -324,7 +324,7 @@ test('unknown fielding stays visible in a collapsed DH group without inventing e
 
 test('ended home and extra-inning away situations do not request an evaluation',async()=>{
  for(const [view,half,inning,mine,opponent] of [['offense','home',9,4,3],['defense','home',10,2,3],['offense','away',10,2,3]]) {
-  const f=fixture();f.node('#myScore').value=String(mine);f.node('#oppScore').value=String(opponent);f.node('#pitchCount').value='10';f.node('#myTeam').value='A';f.node('#oppTeam').value='B';
+  const f=fixture();f.node('#myScore').value=String(mine);f.node('#oppScore').value=String(opponent);f.node('#pitchCount').value='10';f.node('#myTeam').value='A';f.node('#oppTeam').value='B';f.node('#myPitcher').value='P1';f.node('#dueBatter').value='B1';
   f.eval(`S.ready=true;S.view='${view}';S.half='${half}';S.inning=${inning};api=()=>{throw Error('must not evaluate ended game')}`);
   await f.eval('evaluateCustom()');assert.match(f.node('#formError').innerHTML,/比賽已結束/);assert.equal(f.eval('S.last'),null);
  }
@@ -670,6 +670,41 @@ test('hitter preset ignores a hidden invalid pitcher count',()=>{
  const f=fixture();let raw=null;f.context.localStorage={getItem:()=>raw,setItem:(k,v)=>{raw=v;}};
  f.node('#historyPlayer').value='H';f.node('#historyPitchCount').value='-1';f.eval('historyRole="hitters";saveHistoryPreset()');
  assert.equal(JSON.parse(raw).history.pitchCount,'0');assert.match(f.node('#presetStatus').textContent,/已保存/);
+});
+
+test('a slow demo roster cannot overwrite newer manual scores or an open replay',async()=>{
+ for(const destination of ['manual','replay']){
+  const f=fixture(), roster=deferred();
+  f.node('#myTeam').value='Other';f.node('#oppTeam').value='Opponent';
+  f.context.loadingRoster=roster.promise;
+  f.eval("let testPage='evaluation';currentPage=()=>testPage;S.ready=true;S.teams=[DEMO.myTeam,DEMO.oppTeam,'Other','Opponent'];refreshCustom=()=>loadingRoster;");
+  const pending=f.eval('loadDemo()');
+  if(destination==='manual'){
+   f.node('#myScore').value='6';
+   f.eval("invalidateCustom({target:$('#myScore')});");
+  }else{
+   f.eval("testPage='review';S.last={id:'history'};");
+  }
+  roster.resolve();
+  await pending;
+  assert.notEqual(f.eval('S.inning'),8);
+  if(destination==='manual')assert.equal(f.node('#myScore').value,'6');
+  else assert.equal(f.eval('S.last.id'),'history');
+ }
+});
+
+test('a history preset interrupted by a date change cannot edit the new date settings',async()=>{
+ const f=fixture(), context=deferred();
+ f.context.localStorage={getItem:()=>JSON.stringify({history:{date:'2026-10-04',team:'A',role:'pitchers',player:'Pitcher',pitchCount:'80',starter:'1',fatigueLevel:'2'}})};
+ f.context.loadingHistory=context.promise;
+ f.eval("currentPage=()=> 'review';S.teams=['A'];historyContext={teams:{A:{pitchers:[{name:'Pitcher'}]}}};loadHistoryContext=()=>loadingHistory;renderHistoryContext=()=>{};renderReview=async()=>{};loadHistoricalPitchers=async()=>{};");
+ const pending=f.eval('loadHistoryPreset()');
+ f.eval("HISTORY_DATE='2026-04-01';");
+ f.node('#historyPitchCount').value='12';
+ context.resolve({date:'2026-10-04',teams:{A:{pitchers:[{name:'Pitcher'}]}}});
+ await pending;
+ assert.equal(f.node('#historyPitchCount').value,'12');
+ assert.doesNotMatch(f.node('#presetStatus').textContent||'',/已載入歷史情境/);
 });
 
 test('history player selection survives revisits and stays isolated by team and role',async()=>{

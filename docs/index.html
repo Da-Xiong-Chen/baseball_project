@@ -76,7 +76,7 @@
     </div><div class="lineup-dh"><button type="button" data-field="DH"></button><p class="mut">DH 不占守備位置</p></div></section>
     <section class="card lineup-order-card" aria-labelledby="lineupOrderTitle"><div class="card-h"><h3 id="lineupOrderTitle">打擊順序</h3><button id="lineupSwapOrder" type="button" aria-pressed="false">互換棒次</button><span id="lineupOrderHint" class="mut" role="status">↑↓ 調整棒次</span></div><div class="card-b"><div class="lineup-pitcher"><span>場上投手</span><button type="button" id="lineupPitcherPick"><strong id="lineupPitcherName">選擇投手</strong><span aria-hidden="true">⌄</span></button></div><div id="lineupRows"></div></div></section>
   </div>
-<details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">套用後排除候選；恢復預設名單會清除此紀錄。</p><div id="lineupUnavailable"></div></details>
+<details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">已記錄的換人會鎖定退場球員。恢復預設名單可開始新情境。</p><div id="lineupUnavailable"></div></details>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
   <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
   <details id="lineupBackup" class="lineup-backup"><summary>備份名單</summary>
@@ -283,14 +283,14 @@
 </footer>
 
 <script src="engine.js?v=pinch-fielding-20261116"></script>
-<script src="players.js?v=20261025-v5"></script>
+<script src="players.js?v=cpbl-substitutions-20261116"></script>
 <script src="pitch-change.js?v=20261112-replay"></script>
 <script src="pitcher-groups.js?v=20261114-2026"></script>
 <script src="motion.js?v=20261023-motion1"></script>
-<script src="lineup.js?v=lineup-sync-20261116"></script>
+<script src="lineup.js?v=cpbl-substitutions-20261116"></script>
 <script src="backtest.js?v=20261114-2026"></script>
 <script src="bullpen-plan.js?v=20261026-1"></script>
 <script src="bullpen-plan-ui.js?v=availability-20261116"></script>
-<script src="app.js?v=lineup-sync-20261116"></script>
+<script src="app.js?v=preset-load-closeout-20261116"></script>
 </body>
 </html>

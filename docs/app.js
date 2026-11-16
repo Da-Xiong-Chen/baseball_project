@@ -99,6 +99,7 @@ function invalidateCustom(event) {
   capacityControl?.contextChanged();
   clearValidErrors();
   if (S.mode !== 'custom' || ['benchFilter','penFilter'].includes(event?.target?.id) || event?.target?.closest?.('#pitcherGroups') || event?.target?.closest?.('#bullpenCapacity')) return;
+  ++scenarioGeneration;
   if(resultInputKey!==null&&evaluationKey()===resultInputKey)return;
   substitutionNote=null;
   clearResult();
@@ -282,13 +283,24 @@ function saveSituation() {
     outs: S.outs, bases: S.bases, myScore: +$('#myScore').value || 0, oppScore: +$('#oppScore').value || 0 };
   presetStatus(writePrefs(p) ? '已存成預設。' : '本次局面仍可使用，但無法保存到瀏覽器；原預設未更新。');
 }
+let scenarioGeneration=0;
 async function applySituation(sit, quiet = false) {
   if (!sit) { if (!quiet) presetStatus('還沒有存過預設。'); return; }
+  const intent=++scenarioGeneration, page=featureGeneration;
+  let roster=rosterGeneration;
   const valid = t => S.teams.includes(t);
   if ((valid(sit.myTeam) && sit.myTeam !== $('#myTeam').value) || (valid(sit.oppTeam) && sit.oppTeam !== $('#oppTeam').value)) {
     if (valid(sit.myTeam)) $('#myTeam').value = sit.myTeam;
     if (valid(sit.oppTeam) && sit.oppTeam !== $('#myTeam').value) $('#oppTeam').value = sit.oppTeam;
-    syncTeamChoices('myTeam'); await refreshCustom();
+    syncTeamChoices('myTeam');
+    const loading=refreshCustom();
+    roster=rosterGeneration;
+    await loading;
+  }
+  if(intent!==scenarioGeneration||page!==featureGeneration||roster!==rosterGeneration||currentPage()!=='evaluation')return;
+  if(!S.ready){
+    $(quiet?'#demoStatus':'#presetStatus').textContent='球隊資料載入失敗，請重試。';
+    return;
   }
   S.inning = Math.min(12, Math.max(1, +sit.inning || 1)); S.half = sit.half === 'home' ? 'home' : 'away';
   S.outs = Math.min(2, Math.max(0, +sit.outs || 0)); S.bases = Math.min(7, Math.max(0, +sit.bases || 0));
@@ -296,6 +308,7 @@ async function applySituation(sit, quiet = false) {
   if (sit.view === 'defense' || sit.view === 'offense') setView(sit.view);
   renderState(); syncScoreControls(); refreshAutoPitchCount(); invalidateCustom();
   if (!quiet) presetStatus('已載入預設。');
+  return scenarioGeneration;
 }
 /* 示範情境：README 的實際例子，讓第一次使用者不必自行設定就能看到一組有差距的比較 */
 const DEMO = { view: 'offense', myTeam: '統一7-ELEVEn獅', oppTeam: '富邦悍將', inning: 8, half: 'away', outs: 1, bases: 2,
@@ -303,7 +316,7 @@ const DEMO = { view: 'offense', myTeam: '統一7-ELEVEn獅', oppTeam: '富邦悍
 /* 套用球隊名單後打者選項會是「第 N 棒 · 姓名」，比對前先去掉棒次前綴 */
 const optionName = text => text.trim().replace(/^第\s*\d+\s*棒\s*·\s*/, '');
 function selectByLabel(id, label) {
-  const select = $(id), option = [...select.options].find(o => optionName(o.textContent).startsWith(label));
+  const select = $(id), option = [...select.options].find(o => !o.disabled&&optionName(o.textContent).startsWith(label));
   if (!option) return false;
   if (select.value !== option.value) { select.value = option.value; select.dispatchEvent(new Event('change', { bubbles: true })); }
   return true;
@@ -312,10 +325,12 @@ async function loadDemo() {
   if (!S.ready || currentPage() !== 'evaluation') return;
   const status = $('#demoStatus');
   if (audienceMode !== 'general') { await selectAudienceEntry('general'); if (audienceMode !== 'general' || currentPage() !== 'evaluation') return; }
-  await applySituation(DEMO, true);
+  const page=featureGeneration, applied=await applySituation(DEMO,true);
+  if(applied!==scenarioGeneration||page!==featureGeneration||currentPage()!=='evaluation')return;
   if (!S.ready || $('#myTeam').value !== DEMO.myTeam || $('#oppTeam').value !== DEMO.oppTeam) { status.textContent = '示範情境需要的球隊資料無法載入，請自行設定局面。'; return; }
   if (!selectByLabel('#oppPitcher', DEMO.pitcher) || !selectByLabel('#dueBatter', DEMO.batter)) { status.textContent = '示範情境的球員不在目前名單，已帶入局面，請自行選擇投打人選。'; return; }
   if (!selectByLabel('#duePos', POS.DH)) return;
+  status.textContent='8 局上 統一 1：2 富邦，一出局二壘有人';
   await evaluateCustom();
 }
 function clearSituation() {
@@ -435,7 +450,7 @@ async function init() {
   // Historical scope has its own team selection, never the current user's team.
   $('#reviewTeam').innerHTML = opts; $('#reviewTeam').value = S.teams[0] || '';
   $('#rpTeam').value = $('#reviewTeam').value;
-  $('#reviewTeam').onchange = ()=>{historyDisclosure.reset(); $('#rpTeam').value=$('#reviewTeam').value;refreshHistoryDay(); };
+  $('#reviewTeam').onchange = ()=>{++historyPresetGeneration;historyDisclosure.reset(); $('#rpTeam').value=$('#reviewTeam').value;refreshHistoryDay(); };
   $('#replayDate').onchange=async event=>{
     ++replayLocationGeneration;
     if (!setHistoryDate(event.target.value)) return;
@@ -460,8 +475,11 @@ async function init() {
     return restoreReplayLocation();
   };
   $('#historyPlayer').onchange=renderHistoryContext;['#historyPitchCount','#historyStarter'].forEach(id=>$(id).oninput=renderHistoryContext);
-  $$('[data-history-role]').forEach(b=>b.onclick=()=>{historyRole=b.dataset.historyRole;$$('[data-history-role]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});loadHistoryContext();});
+  $$('[data-history-role]').forEach(b=>b.onclick=()=>{++historyPresetGeneration;historyRole=b.dataset.historyRole;$$('[data-history-role]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});loadHistoryContext();});
   $('#historyPitcher').onchange=mountHistoricalPitch;
+  $('#historyDayContent').addEventListener('input',event=>{
+    if(['historyPlayer','historyPitchCount','historyStarter','fatigueLevel'].includes(event.target.id))++historyPresetGeneration;
+  });
   LineupBoard.mount({element:$('#lineupPage'),teams:S.teams,team,matches:matchesPlayerSearch,pitchCount:()=>$('#pitchCount').value,role:()=>S.starter,applied:applyOwnLineup});
   $$('[data-page]').forEach(b=>b.onclick=()=>showFeaturePage(b.dataset.page));
   // Every new visit starts with direct evaluation; stored lineups remain available in 球隊.
@@ -851,6 +869,7 @@ function syncOwnLineup() {
     $('#duePos').value=c.slots.find(s=>s.name===$('#dueBatter').value).pos;
   }
   $('#duePos').disabled=!!c;$('#myPitcher').disabled=!!c;$('#duePosLock').hidden=!c;$('#myPitcherLock').hidden=!c;
+  syncRetiredStarters();
   $('#lineupSummary').innerHTML=lineupSelectionSummary(c);
   $('#audienceStatus').textContent=audienceMode==='team'?(c?'依已套用的場上名單評估。':'請先完成九棒、守位與投手，再套用配置。'):'';
   const editLineup=$('#lineupSummary [data-page]');if(editLineup)editLineup.onclick=()=>showFeaturePage('lineup');
@@ -894,7 +913,7 @@ function bindStatic() {
     if (event.target.closest('#halfSeg button, #outs button, #diamond .base, #baseControls button, #roleSeg button, #innUp, #innDown, #benchList button[data-group], #benchAll, #benchNone, #penAll, #penNone')) invalidateCustom(event);
   });
   $$("#backtestSeg button").forEach((b) => b.onclick = () => showFeaturePage("review", b.dataset.sub));
-  $$("#viewSeg button").forEach((b) => b.onclick = () => setView(b.dataset.view));
+  $$("#viewSeg button").forEach((b) => b.onclick = () => {++scenarioGeneration;setView(b.dataset.view);});
   $$("#halfSeg button").forEach((b) => b.onclick = () => { S.half = b.dataset.half; renderState(); });
   $("#innUp").onclick = () => { changeInning(1); };
   $("#innDown").onclick = () => { changeInning(-1); };
@@ -1195,6 +1214,11 @@ async function evaluateCustom() {
   }
   const my = $("#myTeam").value, opp = $("#oppTeam").value;
   if (my === opp) { $("#formError").innerHTML = '<p role="alert">我方與對手須為不同球隊。</p>'; return; }
+  const currentPlayer=S.view==='offense'?'dueBatter':'myPitcher';
+  const currentName=$('#'+currentPlayer).value;
+  if(!currentName||exitedNames().includes(currentName)){
+    showFieldError(currentPlayer,'請選擇仍可上場的球員；已退場球員不能再上場。');return;
+  }
   const myScore = +$("#myScore").value || 0, oppScore = +$("#oppScore").value || 0;
   const battingScore=S.view==='offense'?myScore:oppScore, fieldingScore=S.view==='offense'?oppScore:myScore;
   if(S.inning>=9&&((S.half==='home'&&battingScore>fieldingScore)||(S.half==='away'&&S.inning>=10&&fieldingScore>battingScore))) {
@@ -1313,22 +1337,32 @@ function saveHistoryPreset(){
  const p=readPrefs();p.history={date:HISTORY_DATE,team:$('#reviewTeam').value,role:historyRole,player:player.value,pitchCount:historyRole==='pitchers'?pc.value:'0',starter:$('#historyStarter').value,fatigueLevel:$('#fatigueLevel').value};
  presetStatus(writePrefs(p)?'歷史情境已保存。':'本次可用，但瀏覽器不允許儲存。');
 }
+let historyPresetGeneration=0;
 async function loadHistoryPreset(){
+  const intent=++historyPresetGeneration, page=featureGeneration;
   const p=readPrefs().history;
   if(!p||p.date!==HISTORY_DATE){presetStatus('尚未保存這一天的歷史情境。');return;}
   if(!S.teams.includes(p.team))return;
-  $('#reviewTeam').value=p.team;historyRole=p.role==='hitters'?'hitters':'pitchers';
+  if($('#reviewTeam').value!==p.team)historyDisclosure.reset();
+  $('#reviewTeam').value=p.team;$('#rpTeam').value=p.team;historyRole=p.role==='hitters'?'hitters':'pitchers';
+  const role=historyRole;
+  const isCurrent=()=>intent===historyPresetGeneration&&page===featureGeneration&&p.date===HISTORY_DATE&&
+    $('#reviewTeam').value===p.team&&historyRole===role&&currentPage()==='review';
   $$('[data-history-role]').forEach(b=>{b.classList.toggle('on',b.dataset.historyRole===historyRole);b.setAttribute('aria-pressed',String(b.dataset.historyRole===historyRole));});
-  await loadHistoryContext();
-  const pool=(historyContext?.teams[p.team]?.[historyRole]||[]).map(row=>({...row,display_name:historyContext.players?.[row.name]}));
+  const context=await loadHistoryContext();
+  if(!isCurrent())return;
+  if(!context){presetStatus('賽前狀態載入失敗，請重新載入預設。');return;}
+  const pool=(context.teams[p.team]?.[role]||[]).map(row=>({...row,display_name:context.players?.[row.name]}));
   const id=typeof PlayerIdentity!=='undefined'?PlayerIdentity.resolve(p.player,pool):p.player;
-  if(!id){presetStatus('舊情境的球員無法唯一辨識，請重新選取；原儲存內容仍保留。');return;}
+  if(!pool.some(row=>row.name===id)){presetStatus('舊情境的球員無法唯一辨識，請重新選取；原儲存內容仍保留。');return;}
   $('#historyPlayer').value=id;
   $('#historyPitchCount').value=String(clampNum(p.pitchCount,160));$('#historyStarter').value=p.starter==='1'?'1':'0';
   $('#fatigueLevel').value=['0','1','2'].includes(p.fatigueLevel)?p.fatigueLevel:'0';
-  setFatigueLevel();renderHistoryContext();await renderReview();await loadHistoricalPitchers();presetStatus('已載入歷史情境。');
+  setFatigueLevel();renderHistoryContext();
+  await Promise.all([renderReview(),loadHistoricalPitchers()]);
+  if(isCurrent())presetStatus('已載入歷史情境。');
 }
-function clearHistoryPreset(){$('#historyPitchCount').value='0';$('#historyStarter').value='0';$('#fatigueLevel').value='0';setFatigueLevel();renderHistoryContext();presetStatus('已重設歷史球數與疲勞假設。');}
+function clearHistoryPreset(){++historyPresetGeneration;$('#historyPitchCount').value='0';$('#historyStarter').value='0';$('#fatigueLevel').value='0';setFatigueLevel();renderHistoryContext();presetStatus('已重設歷史球數與疲勞假設。');}
 let historyRole='pitchers',historyContext=null,historyContextGeneration=0;
 let historySelectionKey='';
 const historySelections=new Map();
@@ -1342,6 +1376,7 @@ async function loadHistoryContext(){
  player.innerHTML=list.map(p=>`<option value="${esc(p.name)}">${N(p.name)}</option>`).join('');
  const saved=historySelections.get(key);player.value=list.some(p=>p.name===saved)?saved:(list[0]?.name||'');
  historySelectionKey=key;player.disabled=!list.length;$('#historyPitchInputs').hidden=historyRole!=='pitchers';renderHistoryContext();
+ return context;
  }catch{if(token===historyContextGeneration)$('#historyPlayerContext').innerHTML='<p role="alert">賽前狀態載入失敗。</p><button type="button" id="historyContextRetry">重新載入</button>';if($('#historyContextRetry'))$('#historyContextRetry').onclick=loadHistoryContext;}
 }
 function historicalFatigue(pc,starter,curve){
@@ -1973,7 +2008,7 @@ function renderResult(preserveTabs = false) {
   else html += `<div class="card-h"><h2>${view === "defense" ? "換投評估" : "代打評估"}</h2><span class="hint">${view === "defense" ? "" : ""}</span></div>`;
   html += `<p class="eligibility-note">${R.view==='replay'?'歷史名單與守位為推估；':''}換人前請確認上場資格。</p>`;
   html += resultScope(R,activeTab);
-  html += `<nav class="evaluation-nav" aria-label="評估結果導航"><span class="mut">勾選球員加入比較</span><a class="link" href="#candidateCompare">${uiIcon("compare")}比較球員 <span id="compareSelectionCount">${comparisonNames(R,activeTab).size}／${COMPARISON_LIMIT}</span><span aria-hidden="true">↓</span></a></nav><div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${activeTab === "pen" ? penTable(R) : phTable(R)}</div></div>`;
+  html += `<nav class="evaluation-nav" aria-label="評估結果導航"><span class="mut">勾選球員加入比較</span><a class="link" href="#candidateCompare">${uiIcon("compare")}比較球員 <span id="compareSelectionCount">${comparisonNames(R,activeTab).size}／${COMPARISON_LIMIT}</span><span aria-hidden="true">↓</span></a></nav>${changeEligibilityControl(R,activeTab)}<div class="tbl-wrap" tabindex="0" role="region" aria-label="球員評估表，可左右捲動">${activeTab === "pen" ? penTable(R) : phTable(R)}</div></div>`;
   html += `<div id="candidateCompare" tabindex="-1">${comparisonPanel(R,null,activeTab)}</div><div id="fieldingPlans" aria-live="polite"></div><section id="matchupDetails" aria-label="配球與對決明細" tabindex="-1"><div class="matchup-navigation"><a class="comparison-back" id="matchupReturn" href="#evaluationSection">返回球員列表 ↑</a></div><div id="pitchArsenal">${mixCard(R)}</div>`;
   html += `<div class="detail-grid"><div id="pitchChange"></div><div id="detail"></div></div></section>`;
   html += `<div id="detailStatus" class="sr-only" role="status"></div><div class="foot">${assessmentNotes(R)}<details class="rules-note"><summary>換人規則提醒</summary><ul><li>已退場球員不可再上場；名單須排除已退場與未登錄者。</li><li>代打承接原棒次；替換指定打擊時須確認 DH 資格。</li><li>換投前確認當季的最低投球義務與例外。</li><li>延長局最多 12 局，二壘跑者可依實際局面修改。</li></ul><a href="https://www.cpbl.com.tw/files/file_pool/1/0p065549820043528193/2025%E6%A3%92%E7%90%83%E8%A6%8F%E5%89%87%28%E5%AE%98%E7%B6%B2%E7%94%A8%29.pdf" target="_blank" rel="noopener noreferrer">CPBL 官方棒球規則（2025）</a></details></div>`;
@@ -2162,6 +2197,26 @@ const exitedByTeam = new Map(), substitutionJournal = new Map();
 let substitutionNote = null;
 function generalExited(team = $('#myTeam').value) { return exitedByTeam.get(team) || new Set(); }
 function exitedNames() { const c = ownLineup(); return c ? [...(c.unavailable || [])] : [...generalExited()]; }
+function syncRetiredStarters() {
+  const c=ownLineup(), retired=new Set(c?.unavailable||(!c?generalExited():[]));
+  for(const id of ['#dueBatter','#myPitcher']){
+    const select=$(id), options=[...(select.options||[])];
+    options.forEach(option=>{option.disabled=retired.has(option.value);});
+    if(retired.has(select.value)){
+      select.value=options.find(option=>!option.disabled)?.value||'';
+      if(id==='#myPitcher')syncRole();
+    }
+  }
+}
+function changeEligibilityText(kind) {
+  if(kind==='pen')return '確認死球時機及候選可用，且現任投手已履行最低投球義務，或主審已准許例外。';
+  if($('#duePos').value==='DH')return '確認死球時機及候選可用。先發 DH 已完成首打席、對方已換投，或現任 DH 是替補。';
+  return '已確認在死球時機，且代打球員在本場可用名單中。';
+}
+function changeEligibilityControl(R,kind){
+  const text=R.view==='replay'?'':changeEligibilityText(kind);
+  return text?`<div class="card-b"><label><input type="checkbox" id="confirmChangeEligibility"> ${text}</label><p class="mut" id="changeEligibilityStatus" role="status"></p></div>`:'';
+}
 function substitutionSnapshot() {
   return { team: $('#myTeam').value, due: $('#dueBatter').value, duePos: $('#duePos').value, pitcher: $('#myPitcher').value,
     pitchCount: $('#pitchCount').value, starter: S.starter, auto: autoPitchCount, bench: [...S.bench],
@@ -2180,12 +2235,20 @@ function syncPenExited() {
 }
 async function applySubstitution(kind, incoming) {
   const R = S.last;
-  if (!R || R.view === 'replay' || S.mode !== 'custom' || !S.ready) return;
+  if (!R || S.mode !== 'custom' || !S.ready ||
+      !((kind==='pen'&&R.view==='defense')||(kind==='ph'&&R.view==='offense'))) return;
   const team = $('#myTeam').value, lineup = ownLineup();
   const out = kind === 'pen' ? $('#myPitcher').value : $('#dueBatter').value;
-  if (!incoming || incoming === out) return;
+  if (!incoming || !out || incoming === out || exitedNames().includes(out)) return;
+  if(kind==='pen'&&(!bullpenEligible(incoming)||!R.bullpen?.rows.some(row=>row['投手']===incoming&&row['角色']!=='場上')))return;
   const candidate=kind==='ph'?R.candidates.find(row=>row['球員']===incoming&&row['角色']==='代打'):null;
-  if(kind==='ph'&&!candidate)return;
+  if(kind==='ph'&&(!candidate||!benchEligible(incoming)))return;
+  if(changeEligibilityText(kind)&&!$('#confirmChangeEligibility')?.checked){
+    const status=$('#changeEligibilityStatus');
+    if(status)status.textContent='請先確認換人時機，再記錄換人。';
+    $('#confirmChangeEligibility')?.focus();
+    return;
+  }
   const pending=candidate&&pinchHitNeedsFielding(candidate);
   const before = substitutionSnapshot();
   let lineupUndo = null;
@@ -2197,7 +2260,7 @@ async function applySubstitution(kind, incoming) {
     storage = done;
     syncOwnLineup();
   } else {
-    exitedByTeam.set(team, new Set([...generalExited(team), out].filter(n => n !== incoming)));
+    exitedByTeam.set(team, new Set([...generalExited(team), out]));
   }
   let text;
   if (kind === 'pen') {
@@ -2212,6 +2275,7 @@ async function applySubstitution(kind, incoming) {
     S.bench.delete(incoming); renderBench(); syncPenExited();
     text = `${playerText(incoming)}代打${playerText(out)}${order ? `，承接第 ${order} 棒` : ''}，${playerText(out)}退場。板凳名單已更新。${pending ? `下個守備半局請確認${POS[pos] || pos}由誰接守。` : ''}`;
   }
+  syncRetiredStarters();
   const entries=substitutionJournal.get(journalKey())||[];
   entries.push({kind,incoming,out,before,lineupUndo,after:changeFingerprint()});
   substitutionJournal.set(journalKey(),entries);
@@ -2230,7 +2294,7 @@ async function undoSubstitution() {
   $('#dueBatter').value = b.due; $('#duePos').value = b.duePos; $('#myPitcher').value = b.pitcher;
   $('#pitchCount').value = b.pitchCount; S.starter = b.starter; autoPitchCount = b.auto; S.bench = new Set(b.bench);
   const pen = new Map(b.pen); $$('#penList input').forEach(i => { if (pen.has(i.value)) i.checked = pen.get(i.value); });
-  renderRole(); renderBench(); syncPenExited();
+  syncRetiredStarters(); renderRole(); renderBench(); syncPenExited();
   substitutionNote = { text: '已復原上一次換人。', storage };
   await evaluateCustom();
   $('#resultBody .substitution-note')?.focus({ preventScroll: true });
