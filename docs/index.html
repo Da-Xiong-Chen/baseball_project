@@ -79,6 +79,7 @@
 <details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">退場與不可用紀錄只保留在目前頁面，關閉或重新整理後重置。</p><div id="lineupUnavailable"></div></details>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
   <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
+  <p class="mut">編輯名單只調整評估配置。要記錄本場換人，請在換打／換投結果按「換上」。</p>
   <details id="lineupBackup" class="lineup-backup"><summary>備份名單</summary>
     <button id="lineupExport" type="button">下載名單</button>
     <label for="lineupImport">匯入名單草稿</label>
@@ -287,7 +288,7 @@
 <script src="pitch-change.js?v=20261112-replay"></script>
 <script src="pitcher-groups.js?v=20261114-2026"></script>
 <script src="motion.js?v=20261023-motion1"></script>
-<script src="lineup.js?v=lineup-session-20261116"></script>
+<script src="lineup.js?v=lineup-setup-20261116"></script>
 <script src="backtest.js?v=20261114-2026"></script>
 <script src="bullpen-plan.js?v=20261026-1"></script>
 <script src="bullpen-plan-ui.js?v=availability-20261116"></script>

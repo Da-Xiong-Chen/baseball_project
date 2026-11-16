@@ -164,6 +164,13 @@ async function substitutionPersistence(browser) {
       if(mode==='team')await tab.locator('.feature-nav [data-page=evaluation]').click();
       await tab.locator('[data-view=defense]').click();
       const incumbent=await tab.locator('#myPitcher').inputValue();
+      if(mode==='general'){
+        const select=tab.locator('#myPitcher');
+        const alternative=await select.locator('option').evaluateAll((options,original)=>options.find(option=>option.value!==original).value,incumbent);
+        await select.selectOption(alternative);
+        assert.equal(await select.locator(`option[value="${incumbent}"]`).isDisabled(),false);
+        await select.selectOption(incumbent);
+      }
       await tab.locator('#evalBtn:enabled').click();
       await tab.locator('#confirmChangeEligibility').check();
       await tab.locator('[data-apply-kind=pen]').first().click();
@@ -310,12 +317,10 @@ async function pinchHitFielding(browser) {
     assert.deepEqual(await page.evaluate(club=>LineupBoard.current(club),club),saved);
     await page.locator('#lineupApply').getByText('確認接守並套用').waitFor();
     await page.locator('#lineupApply').click();
-    await page.locator('#lineupMessage').getByText(/請保留指定打擊的棒次/).waitFor();
-    assert.deepEqual(await page.evaluate(club=>LineupBoard.current(club),club),saved);
-    await page.locator(`[data-position="${catcherIndex}"]`).selectOption('C');
-    await page.locator('#lineupApply').click();
     await page.getByText(/已更新本場名單/).waitFor();
     const confirmed=await page.evaluate(club=>LineupBoard.current(club),club);
+    assert.equal(confirmed.slots[catcherIndex].pos,'DH');
+    assert.deepEqual(confirmed.retired,[catcher]);
     assert.equal(confirmed.slots.find(slot=>slot.pos==='C').fieldingPending,undefined);
     const persisted=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
     assert.equal(persisted.slots.find(slot=>slot.pos==='C').name,catcher);

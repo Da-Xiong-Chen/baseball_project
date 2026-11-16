@@ -287,3 +287,37 @@ test('opening a previously saved setup clears old retired and unavailable flags'
  await f.api.selectTeam('A');
  assert.equal(JSON.stringify(f.api.current('A')),JSON.stringify(config()));
 });
+
+test('manual lineup edits can be reversed without recording a substitution',async()=>{
+ const f=uiFixture();
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const pickPitcher=name=>{
+  f.node('#lineupPitcherPick').onclick({currentTarget:{}});
+  f.node('#lineupPlayerList').onclick({target:{closest:()=>({dataset:{player:name}})}});
+ };
+ f.pick(1,'H10');
+ pickPitcher('P1');
+ await f.node('#lineupApply').onclick();
+ assert.equal(f.api.current('A').slots[1].name,'H10');
+ assert.equal(f.api.current('A').pitcher,'P1');
+ f.pick(1,'H1');
+ pickPitcher('P0');
+ await f.node('#lineupApply').onclick();
+ assert.equal(JSON.stringify(f.api.current('A')),JSON.stringify(config()));
+
+ assert.ok(f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H9'}));
+ f.pick(1,'H10');
+ pickPitcher('P1');
+ await f.node('#lineupApply').onclick();
+ assert.equal(f.api.current('A').slots[1].name,'H10');
+ assert.equal(f.api.current('A').pitcher,'P1');
+ f.pick(1,'H1');
+ pickPitcher('P0');
+ await f.node('#lineupApply').onclick();
+ const current=f.api.current('A');
+ assert.equal(current.slots[1].name,'H1');
+ assert.equal(current.pitcher,'P0');
+ assert.deepEqual([...current.retired],['H0']);
+ assert.deepEqual([...current.unavailable],['H0']);
+});

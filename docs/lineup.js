@@ -71,7 +71,12 @@
     if(imported.pitcher)inUse.push(imported.pitcher);
     if(new Set(inUse).size!==inUse.length||inUse.some(name=>imported.unavailable?.includes(name)))
       throw Error('檔案中有人重複配置，或已退場球員仍在場上。');
-    return clone(imported);
+    const draft=clone(imported);
+    if(draft.retired){
+      draft.unavailable=draft.unavailable.filter(name=>!draft.retired.includes(name));
+      delete draft.retired;
+    }
+    return draft;
   }
   const states=new Map();let defaults={},defaultsMeta={},options,teamName='',roster,pickerIndex=null,pickerField=false,returnFocus=null;
   let swapMode=null,swapFirst=null,swapUndo=null;
@@ -249,24 +254,12 @@
     };
     q('#lineupApply').onclick=async()=>{
       const s=get(teamName),old=s.confirmed,next=clone(s.draft);
-      const retired=new Set([...(old?.retired||[]),...(next.retired||[])]);
-      const errors=[];
       if(old?.retired?.length){
-        for(const [i,slot] of old.slots.entries()){
-          if((slot.pos==='DH')!==(next.slots[i].pos==='DH'))errors.push('本場請保留指定打擊的棒次；取消 DH 的特殊調度請另行記錄。');
-          if(slot.pos==='DH'&&slot.name!==next.slots[i].name)errors.push('本場請從代打評估替換指定打擊，並確認換人時機。');
-          const newOrder=next.slots.findIndex(x=>x.name===slot.name);
-          if(newOrder>=0&&newOrder!==i)errors.push('本場已記錄換人，場上球員須保留原棒次。');
-          if(newOrder===-1)retired.add(slot.name);
-        }
-        if(old.pitcher!==next.pitcher)errors.push('本場請從換投評估記錄換投，確認現任投手的最低投球義務。');
+        next.retired=[...old.retired];
+        next.unavailable=[...new Set([...(next.unavailable||[]),...next.retired])];
       }
-      if(retired.size){
-        next.retired=[...retired];
-        next.unavailable=[...new Set([...(next.unavailable||[]),...retired])];
-      }
-      errors.push(...validate(next,roster));
-      if(errors.length){message([...new Set(errors)].join(' '),true);return;}
+      const errors=validate(next,roster);
+      if(errors.length){message(errors.join(' '),true);return;}
       const pitcherChanged=!old||old.pitcher!==next.pitcher;
       resetSwap();delete s.isDefault;
       next.slots.forEach(slot=>delete slot.fieldingPending);
