@@ -1061,6 +1061,18 @@ test('capacity worksheet edits preserve a displayed comparison and a pending eva
  const pending=deferred();f.context.pending=pending.promise;f.eval('S.last=null;renderResult=()=>{};');const job=f.eval("run(()=>pending,'defense')");
  f.eval("invalidateCustom({target:{closest:selector=>selector==='#bullpenCapacity'?{}:null}})");pending.resolve({id:'fresh'});await job;assert.equal(f.eval('S.last.id'),'fresh');
 });
+
+test('checked bullpen pitchers exclude the incumbent and unavailable players for both audiences',()=>{
+ const f=fixture();
+ f.node('#myTeam').value='Team';
+ f.node('#myPitcher').value='current';
+ f.context.document.querySelectorAll=selector=>selector==='#penList input:checked'
+  ?['current','used','starting','reserve'].map(value=>({value})):[];
+ f.eval("ownLineup=()=>null;exitedByTeam.set('Team',new Set(['used']))");
+ assert.equal(f.eval("selectedBullpen().join(',')"),'starting,reserve');
+ f.eval("ownLineup=()=>({pitcher:'current',slots:[{name:'starting'}],unavailable:['used']})");
+ assert.equal(f.eval("selectedBullpen().join(',')"),'reserve');
+});
 test('actual evaluation edits still clear the result and notify the capacity context',()=>{
  const f=fixture();let changes=0;f.context.control={contextChanged(){changes++}};f.eval('capacityControl=control;S.last={id:"old"};');
  f.eval("invalidateCustom({target:{id:'myPitcher'}})");assert.equal(f.eval('S.last'),null);assert.equal(changes,1);

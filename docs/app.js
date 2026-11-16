@@ -424,8 +424,9 @@ async function init() {
   $("#duePos").innerHTML = Object.entries(POS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
   bindStatic();
   if(typeof BullpenPlanUI!=='undefined')capacityControl=BullpenPlanUI.mount({element:$('#bullpenCapacity'),label:playerText,snapshot:()=>{
-    const pitchers=$$('#penList input:checked').map(p=>({id:p.value})).filter(p=>p.id!==$('#myPitcher').value&&!ownLineup()?.unavailable?.includes(p.id));
-    return {pitchers,key:JSON.stringify([runtime.season,$('#myTeam').value,$('#myPitcher').value,pitchers])};
+    const club=$('#myTeam').value;
+    const pitchers=loadedTeams.my===club?selectedBullpen().map(id=>({id})):[];
+    return {pitchers,key:JSON.stringify([runtime.season,club,$('#myPitcher').value,pitchers])};
   }});
   loadPrefSettings();
   renderState();
@@ -515,6 +516,8 @@ async function setAudienceMode(mode){
 let dueFromLineup = false;  // 「輪到的打者」選項目前是否來自場上名單
 function ownLineup() { return currentPage()==='review'?null:audienceMode==='team'?confirmedOwnLineup():null; }
 function benchEligible(name) { const c=ownLineup();return name!==c?.pitcher&&!c?.slots.some(s=>s.name===name)&&!c?.unavailable?.includes(name)&&(!!c||!generalExited().has(name)); }
+function bullpenEligible(name) { return name!==$('#myPitcher').value&&benchEligible(name); }
+function selectedBullpen() { return $$('#penList input:checked').map(input=>input.value).filter(bullpenEligible); }
 const PAGE_SKIP = {evaluation:["#workspace","跳到情境設定"], lineup:["#lineupTitle","跳到場上名單"], review:["#reviewTitle","跳到當日總覽"], replay:["#workspace","跳到選擇比賽"]};
 /* 「模型回測」頁分成賽季總覽（#reviewPage）與逐打席回放（沿用評估頁版面的回放模式） */
 const DEFAULT_HISTORY_DATE="2026-10-04";
@@ -905,7 +908,7 @@ function bindStatic() {
   $("#duePos").onchange = () => renderBench();
   $("#benchAll").onclick = () => { S.bench = new Set(S.roster[$("#myTeam").value].hitters.filter(h => h.name !== $("#dueBatter").value&&benchEligible(h.name)).map(h => h.name)); renderBench(); };
   $("#benchNone").onclick = () => { S.bench.clear(); renderBench(); };
-  $("#penAll").onclick = () => { $$("#penList input").forEach((i) => i.checked = true); invalidateCustom();groupControl?.refresh(); };
+  $("#penAll").onclick = () => { $$("#penList input").forEach(i=>{i.checked=bullpenEligible(i.value);}); invalidateCustom();groupControl?.refresh(); };
   $("#penNone").onclick = () => { $$("#penList input").forEach((i) => i.checked = false); invalidateCustom();groupControl?.refresh(); };
   $("#evalBtn").onclick = evaluateCustom;
   $('#recentWeight').oninput = savePrefSettings;
@@ -1051,8 +1054,9 @@ async function refreshCustom() {
     $('#myStreak').value='0';
     if(typeof PitcherGroups!=='undefined')groupControl=PitcherGroups.mount({element:$('#pitcherGroups'),list:$('#penList'),availability:$('#penAvailability'),team:myName,pitchers:my.pitchers,current:()=>$('#myPitcher').value,unavailable:()=>[...(ownLineup()?.slots.map(s=>s.name)||[]),...(ownLineup()?.unavailable||[]),...(ownLineup()?[]:generalExited())],changed:()=>invalidateCustom()});
   }
+  loadedTeams={my:myName,opp:oppName};
   syncOwnLineup();autoPos();renderBench();renderPenVisibility();syncPenExited();
-  loadedTeams={my:myName,opp:oppName};S.ready=true;$('#evalBtn').disabled=false;if($('#demoBtn'))$('#demoBtn').disabled=false;
+  S.ready=true;$('#evalBtn').disabled=false;if($('#demoBtn'))$('#demoBtn').disabled=false;
 
 }
 function renderPenVisibility(searching=false) {
@@ -1192,7 +1196,7 @@ async function evaluateCustom() {
     if(new Set(nb).size!==3){const duplicated=nb.find(n=>nb.filter(x=>x===n).length>1);['nb1','nb2','nb3'].filter((id,i)=>nb[i]===duplicated).reverse().forEach(id=>showFieldError(id,'接下來三棒須為不同打者。'));return;}
     body = { inning: S.inning, half: S.half, outs: S.outs, bases: S.bases, bat_score: oppScore, fld_score: myScore,
       pitcher: $("#myPitcher").value, due: nb[0], due_pos: "DH", bench: [], bat_team: opp, fld_team: my,
-      next_batters: nb, pen: $$("#penList input:checked").map((i) => i.value).filter(name=>name!==$("#myPitcher").value&&benchEligible(name)),
+      next_batters: nb, pen: selectedBullpen(),
       pitch_count: +$("#pitchCount").value || 0, starter: S.starter, ...prefSettings(), streaks: streakMarks() };
   }
   await run(() => api("api/evaluate", body), S.view);
@@ -2145,6 +2149,7 @@ function syncPenExited() {
   const out = new Set(ownLineup() ? [] : generalExited());
   $$('#penList input').forEach(i => { const gone = out.has(i.value); if (gone) i.checked = false; i.disabled = gone; i.closest('label')?.classList.toggle('is-exited', gone); });
   groupControl?.refresh();
+  capacityControl?.contextChanged();
 }
 async function applySubstitution(kind, incoming) {
   const R = S.last;
