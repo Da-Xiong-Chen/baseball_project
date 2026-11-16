@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 <script src="theme.js?v=20261025-v5-id1"></script>
-<link rel="stylesheet" href="style.css?v=availability-20261116">
+<link rel="stylesheet" href="style.css?v=lineup-changes-20261116">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -67,6 +67,17 @@
 </div>
 <section id="lineupPage" class="lineup-page" hidden aria-labelledby="lineupTitle">
   <div class="lineup-heading"><div><h2 id="lineupTitle" tabindex="-1">我方場上名單</h2></div><div><label class="f" for="lineupTeam">配置球隊</label><select id="lineupTeam"></select></div></div>
+  <div class="seg" aria-label="場上名單操作"><button type="button" id="lineupSetupTab" class="on" aria-pressed="true">設定先發</button><button type="button" id="lineupChangeTab" aria-pressed="false">設定換人</button></div>
+  <section id="lineupChanges" class="card" hidden aria-label="設定換人">
+    <div class="card-b"><div class="row2">
+      <div><label class="f" for="lineupChangeKind">調度類型</label><select id="lineupChangeKind"><option value="ph">代打</option><option value="pen">換投</option></select></div>
+      <div><label class="f" for="lineupChangeOut">換下球員</label><select id="lineupChangeOut"></select></div>
+      <div><label class="f" for="lineupChangeIn">換上球員</label><select id="lineupChangeIn"></select></div>
+    </div><p class="mut" id="lineupChangeSource"></p><label id="lineupChangeCheck"><input type="checkbox" id="lineupChangeConfirm"> <span id="lineupChangeRule"></span></label>
+    <div class="lineup-actions"><button type="button" id="lineupRecord" class="primary" disabled>記錄換人</button><button type="button" id="lineupUndoChange" hidden>復原上次換人</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
+    <p id="lineupChangeStatus" role="status"></p><ol id="lineupChangeHistory"></ol></div>
+  </section>
+  <div id="lineupSetup">
   <div class="lineup-tools"><span id="lineupStatus"></span></div>
   <div class="lineup-layout">
     <section class="card lineup-field-card" aria-label="守備配置"><div class="card-h"><h3>守備配置</h3><button id="lineupSwapField" type="button" aria-pressed="false">互換守位</button><span id="lineupFieldHint" class="mut" role="status">點守位選球員</span></div><div class="lineup-field">
@@ -79,13 +90,14 @@
 <details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">退場與不可用紀錄只保留在目前頁面，關閉或重新整理後重置。</p><div id="lineupUnavailable"></div></details>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
   <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
-  <p class="mut">編輯名單只調整評估配置。要記錄本場換人，請在換打／換投結果按「換上」。</p>
+  <p class="mut">修改先發只更新評估配置。記錄正式調度請切換到「設定換人」。</p>
   <details id="lineupBackup" class="lineup-backup"><summary>備份名單</summary>
     <button id="lineupExport" type="button">下載名單</button>
     <label for="lineupImport">匯入名單草稿</label>
     <input id="lineupImport" type="file" accept=".json,application/json">
   </details>
   <p class="mut lineup-footnote" id="lineupSeasonNote">預設為 2026 最後 30 場最常先發的球員；名單不會跨裝置同步。</p>
+  </div>
   <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2026 背號…"><div id="lineupPlayerList"></div></dialog>
 </section>
 
@@ -288,10 +300,10 @@
 <script src="pitch-change.js?v=20261112-replay"></script>
 <script src="pitcher-groups.js?v=20261114-2026"></script>
 <script src="motion.js?v=20261023-motion1"></script>
-<script src="lineup.js?v=lineup-setup-20261116"></script>
+<script src="lineup.js?v=lineup-changes-20261116"></script>
 <script src="backtest.js?v=20261114-2026"></script>
 <script src="bullpen-plan.js?v=20261026-1"></script>
 <script src="bullpen-plan-ui.js?v=availability-20261116"></script>
-<script src="app.js?v=lineup-session-20261116"></script>
+<script src="app.js?v=lineup-changes-20261116"></script>
 </body>
 </html>

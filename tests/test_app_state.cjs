@@ -1131,7 +1131,7 @@ test('checked bullpen pitchers exclude the incumbent and unavailable players for
  f.node('#myPitcher').value='current';
  f.context.document.querySelectorAll=selector=>selector==='#penList input:checked'
   ?['current','used','starting','reserve'].map(value=>({value})):[];
- f.eval("ownLineup=()=>null;exitedByTeam.set('Team',new Set(['used']))");
+ f.eval("ownLineup=()=>null;generalExited=()=>new Set(['used'])");
  assert.equal(f.eval("selectedBullpen().join(',')"),'starting,reserve');
  f.eval("ownLineup=()=>({pitcher:'current',slots:[{name:'starting'}],unavailable:['used']})");
  assert.equal(f.eval("selectedBullpen().join(',')"),'reserve');
@@ -1210,10 +1210,11 @@ test('player notes show season lines and head-to-head counts only for custom eva
  assert.match(f.eval("playerNotesHtml({view:'offense',situation:{pitcher:'Z'}},{球員:'B'},'ph')"),/無對戰紀錄/);
  assert.equal(f.eval("playerNotesHtml({view:'replay',situation:{pitcher:'P'}},{球員:'B'},'ph')"),'');
 });
-test('custom result rows offer a substitution button that replay rows never show',()=>{
+test('evaluation previews explain fielding without recording a substitution',()=>{
  const f=fixture();
- assert.match(f.eval("applyButton({view:'offense'},'B','ph',true)"),/class="row-apply is-primary" data-apply-sub="B" data-apply-kind="ph"/);
- assert.match(f.eval("applyButton({view:'defense'},'P','pen',false)"),/class="row-apply" data-apply-sub="P" data-apply-kind="pen"/);
- assert.equal(f.eval("applyButton({view:'replay'},'B','ph',true)"),'');
- assert.equal(f.eval("substitutionNoteHtml({view:'replay'})"),'');
+ f.context.previewRow={'球員':'B','守備說明':'可直接接守','守備':'ok'};
+ const html=f.eval("pinchHitPreview({view:'offense'},previewRow)");
+ assert.match(html,/承接原棒次/);
+ assert.doesNotMatch(html,/<button|data-apply-sub/);
+ assert.equal(f.eval("pinchHitPreview({view:'replay'},previewRow)"),'');
 });
