@@ -11,7 +11,7 @@ python -m pip install -r requirements.txt
 python scripts/run_ci.py
 ```
 
-這一層不下載或要求 Rebas 原始逐球資料。包括 Python／前端 JS 語法、目前文件路徑與章節連結、696 份靜態資產、全部前端測試，以及來源清單、checkpoint、輸入契約及發布等合成 fixture Python 測試。最新文件清單由 scripts/check_repository.py 的 CURRENT_DOCS 管理；新主導覽文件需加入清單。外部網站連結不在這個離線檢查範圍。
+這一層使用已匯出的資料與測試 fixture，包含 Python／前端 JS 語法、文件連結、靜態資產檢查、所有前端單元測試，以及來源清單、checkpoint、輸入契約與已發布回放 API 的 Python 測試。文件清單由 `scripts/check_repository.py` 的 `CURRENT_DOCS` 管理。外部網址另在發布驗收檢查。
 
 真正無原始資料的 checkout 可加 `--require-no-raw`；如果 data/rebas 存在就拒絕，避免把本機有資料的通過誤稱乾淨 CI 證據。原始模型訓練與完整 Python／回放數值驗收不在這層。檢查日誌保存在忽略追蹤的 output/ci-validation；runner 以任何失敗的子程序結束碼作為整體結果，並保留開發者原有的歷史測試 fixture。
 
@@ -28,6 +28,7 @@ python scripts/run_ci.py
 ```powershell
 $env:BASEBALL_QA_URL = 'http://127.0.0.1:8042/'
 node tests/browser_closeout.cjs
+node tests/browser_multiday.cjs
 ```
 
 `BASEBALL_QA_BROWSER=webkit` 可測 WebKit。若 Playwright 套件在其他路徑，用 `PLAYWRIGHT_PACKAGE` 指定；若以現有 Chrome 執行，可用 `BASEBALL_QA_EXECUTABLE` 指定執行檔。腳本使用新的瀏覽器環境，會在同一環境開兩個分頁測名單，測完即關閉。WebKit 測試與 Safari 實機測試分開記錄。

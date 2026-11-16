@@ -1,0 +1,67 @@
+{
+  "commit": "4cf3cd8ec15ac8139b3a34265b5595b0ae3dc32f",
+  "deployment_id": 7806457037,
+  "url": "https://da-xiong-chen.github.io/baseball_project/",
+  "pages_state": "success",
+  "assets": [
+    {
+      "path": "index.html",
+      "sha256": "02c06078d15ce2913364178318592b9629927c3cfee243ea3f070084f72fb2d8"
+    },
+    {
+      "path": "app.js",
+      "sha256": "52ec2ccf0fb84fdeb3b9354a7053713245e0033b5379c81104819775b7a782b4"
+    },
+    {
+      "path": "style.css",
+      "sha256": "881b414eb46bfa8d1749c486e22257ea4e8ae67d5c1fbc4bd893b46a86357567"
+    },
+    {
+      "path": "data/model.json",
+      "sha256": "c79345f18c965b8a205701ab1428c2aaaa4ab393a08bb63b637efaffa3283d16"
+    },
+    {
+      "path": "data/replay/dates.json",
+      "sha256": "589022cfd9ec347033362df81345d16cf9351607405ce0af894fe0162b9264fe"
+    },
+    {
+      "path": "data/replay/day-2026-04-01/index.json",
+      "sha256": "980953a4189a5784e591de35da712d4c6f326f2266fa78c94da4c297ccf75737"
+    },
+    {
+      "path": "data/replay/day-2026-04-01/2026-010-a034.json",
+      "sha256": "f9391f7b62316169c972214bdbdc47b246817866603859cd35c1432b1a174885"
+    },
+    {
+      "path": "data/replay/day-2026-10-04/index.json",
+      "sha256": "5aa56b6fed17c43f2aaf077f5f3161e9ee5bcee6278c9b586536ce0cfd2e5849"
+    }
+  ],
+  "batch_id": "ce4f4627585377e8864f92bf850fe6dc17f0335ee657c960afcce2edfa5ce26f",
+  "checks": [
+    {
+      "name": "deploy",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Da-Xiong-Chen/baseball_project/actions/runs/43736382036/job/132879886617"
+    },
+    {
+      "name": "report-build-status",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Da-Xiong-Chen/baseball_project/actions/runs/43736382036/job/132879886597"
+    },
+    {
+      "name": "offline-checks",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Da-Xiong-Chen/baseball_project/actions/runs/43736383836/job/132879787785"
+    },
+    {
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Da-Xiong-Chen/baseball_project/actions/runs/43736382036/job/132879785824"
+    }
+  ]
+}

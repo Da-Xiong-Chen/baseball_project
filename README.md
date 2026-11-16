@@ -11,15 +11,15 @@
 
 | 要找的內容 | 最新入口 |
 |---|---|
-| 最新網站、模型與資料驗收 | [11/15 季中迭代](docs/qa/season-iteration-2026/README.md) · [11/14 改用 2026 球季資料](docs/qa/data-2026-20261114/README.md) · [11/12 回放、模型與瀏覽器驗收](docs/qa/replay-20261112/README.md) · [11/06 牛棚方案比較](docs/qa/release-foundation-20261106/README.md) |
+| 最新網站、模型與資料驗收 | [專案收尾與發布驗收](docs/project-closeout-20261116.md) · [11/15 多日回放與模型](docs/qa/website-roadmap-20261115/README.md) · [11/14 2026 球季資料](docs/qa/data-2026-20261114/README.md) |
 | PR 檢查、異常操作與真實訓練驗收 | [10/29 最新發布前驗收](docs/qa/release-readiness-20261029/README.md) · [CI 執行方式](docs/ci-validation.md) |
 | 本輪程式碼審查與修正 | [原始 Code Review](docs/qa/code-review-20261029/README.md) · [三項問題修正驗收](docs/qa/review-fixes-20261029/README.md) |
 | 已完成及尚待採用的後續工作 | [年度進件、近況試跑與牛棚容量實作](docs/future-foundation-20261026.md) |
 | 參賽簡報 | [38 頁工作稿 PPT／PDF](presentations/competition-2026/README.md#最新工作稿) · [原交件版](presentations/competition-2026/submission-20261023/README.md) |
-| 最新模型實驗 | [2024–2026 打席與三棒失分比較](docs/qa/model-horizons-20261113/README.md) |
+| 最新模型實驗 | [2026 換投時機回測](docs/qa/timing-2026/README.md) · [疲勞調整與勝率校準](docs/qa/website-roadmap-20261115/README.md) · [季中迭代](docs/qa/season-iteration-2026/README.md) |
 | 模型與身份基準 | [10/25 v5 整合驗收](docs/qa/identity-integration-20261025/README.md) |
 
-**版本狀態**　2026 回放與首頁示範情境已隨 [PR #36](https://github.com/Da-Xiong-Chen/baseball_project/pull/36)、[PR #37](https://github.com/Da-Xiong-Chen/baseball_project/pull/37) 合併進 main，並發布到線上網站；也可依[本機執行](#本機執行)預覽。公開網站版本以 GitHub Pages 部署紀錄為準。
+**版本狀態**　8 個比賽日回放、球隊調度與 2026 模型驗收已隨 [PR #38](https://github.com/Da-Xiong-Chen/baseball_project/pull/38) 合併並部署到 GitHub Pages。可依[本機執行](#本機執行)預覽，也可查閱[部署紀錄](https://github.com/Da-Xiong-Chen/baseball_project/deployments)。
 
 | 項目 | 內容 |
 |---|---|
@@ -172,13 +172,13 @@ python download_data.py      # 下載 Rebas 2024–2026 逐球資料、ldkrsi �
 python start_server.py       # 開啟 http://127.0.0.1:8000（Windows 也可雙擊「啟動系統.bat」）
 ```
 
-`start_server.py` 使用與網站相同的 2026 球季批次（`models/2026/`）；直接執行 `python server.py` 則是原 v5（2024–2025）批次，供重現舊驗收使用。
+`start_server.py` 的自訂評估使用與網站相同的 2026 球季批次（`models/2026/`）。已公開的歷史比賽可由回放 API 讀取原匯出結果。離線重新計算歷史結果需要對應的月初權重和批次合約。直接執行 `python server.py` 採 2024–2025 v5 批次，供重現舊驗收使用。
 
 訓練好的模型已隨專案提供：2026 球季批次在 `models/2026/`，原 v5 批次為 `models/active-batch.json`，執行現有功能不需要重新訓練。重訓請使用[候選模型訓練指南](docs/training-v5.md)，先固定來源並執行 dry-run；輸出保留在 output/，不直接覆寫正式模型。測試指令：
 
 ```bash
-python -m unittest discover -s tests     # Python 測試
-node --test tests/*.cjs                  # 前端測試（需 Node.js）
+python scripts/run_ci.py                 # 前端、靜態資料、文件與 Python fixture（需 Node.js）
+python -m unittest discover -s tests     # 完整 Python：需三季逐球資料
 ```
 
 ## 專案結構與文件
