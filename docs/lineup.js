@@ -196,7 +196,7 @@
   function changeChoices(){
     const s=get(teamName), config=s.confirmed||s.draft, kind=q('#lineupChangeKind').value;
     const outgoing=kind==='pen'? [{name:config.pitcher}]:config.slots.map((slot,i)=>({name:slot.name,order:i+1,pos:slot.pos}));
-    const occupied=new Set([config.pitcher,...config.slots.map(slot=>slot.name),...(config.unavailable||[]),...(s.draft.unavailable||[])]);
+    const occupied=new Set([config.pitcher,...config.slots.map(slot=>slot.name),...(config.unavailable||[])]);
     const incoming=(kind==='pen'?roster.pitchers:roster.hitters).filter(player=>!occupied.has(player.name));
     return {s,config,kind,outgoing:outgoing.filter(slot=>slot.name),incoming};
   }
@@ -209,7 +209,8 @@
     entrant.innerHTML='<option value="">選擇球員</option>'+incoming.map(player=>`<option value="${esc(player.name)}">${esc(label(player.name))}</option>`).join('');
     if(incoming.some(player=>player.name===previousIn))entrant.value=previousIn;
     const blockers=validate(config,roster);
-    q('#lineupChangeSource').textContent=blockers.length?'請先在「設定先發」完成九棒與場上投手。':!incoming.length?'目前沒有可用替補球員。':s.confirmed?'依目前套用的場上名單記錄。':'首次換人會以目前先發草稿為起點。';
+    const hasUnappliedDraft=s.confirmed&&JSON.stringify(s.draft)!==JSON.stringify(s.confirmed);
+    q('#lineupChangeSource').textContent=blockers.length?'請先在「設定先發」完成九棒與場上投手。':!incoming.length?'目前沒有可用替補球員。':hasUnappliedDraft?'先發草稿尚未套用。換人以目前已套用的場上名單為準。':s.confirmed?'依目前套用的場上名單記錄。':'首次換人會以目前先發草稿為起點。';
     q('#lineupChangeRule').textContent=kind==='pen'?'確認目前為死球、候選可用，且現任投手已履行最低投球義務或經主審許可。':outgoing.find(slot=>slot.name===out.value)?.pos==='DH'?'確認目前為死球、候選可用，且先發 DH 已完成首打席、對方已換投，或現任 DH 是替補。':'確認目前為死球，代打球員已登錄且本場可用。';
     q('#lineupRecord').disabled=!!blockers.length||!out.value||!entrant.value||!q('#lineupChangeConfirm').checked||options.element.hasAttribute('aria-busy');
     const changes=s.changes||[];

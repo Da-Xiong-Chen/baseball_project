@@ -93,13 +93,12 @@ async function lineup(context) {
 }
 
 async function substitutionPersistence(browser) {
-  const context=await browser.newContext({viewport:{width,height:900}});
+  const context=await browser.newContext({viewport:{width,height:900},hasTouch:width<500});
   try {
-    const first=await context.newPage(), second=await context.newPage();
+    const first=await context.newPage();
     await openLineup(first);
     await first.locator('#lineupApply').press('Enter');
     await first.getByText('配置已套用並保存。').waitFor();
-    await openLineup(second);
     const key='cpbl-lineup-2026-v1:'+await first.locator('#lineupTeam').inputValue();
     const saved=await first.evaluate(key=>localStorage.getItem(key),key);
     for(const mode of ['team','general']){
@@ -122,18 +121,21 @@ async function substitutionPersistence(browser) {
         await select.selectOption(original);
       }
       await tab.locator('.feature-nav [data-page=lineup]').click();
-      await tab.locator('#lineupChangeTab').click();
+      await tab.getByRole('button',{name:'設定換人',exact:true}).press('Enter');
+      assert.equal(await tab.locator('#lineupChangeTab').getAttribute('aria-pressed'),'true');
+      await assertFits(tab);
       await tab.locator('#lineupChangeKind').selectOption('pen');
       const out=await tab.locator('#lineupChangeOut').inputValue();
       const incoming=await tab.locator('#lineupChangeIn option').nth(1).getAttribute('value');
       const record=async()=>{
         await tab.locator('#lineupChangeIn').selectOption(incoming);
         assert.equal(await tab.locator('#lineupRecord').isDisabled(),true);
-        await tab.locator('#lineupChangeConfirm').check();
-        await tab.locator('#lineupRecord').click();
+        await tab.getByRole('checkbox',{name:/最低投球義務/}).press('Space');
+        await tab.getByRole('button',{name:'記錄換人',exact:true}).press('Enter');
         await tab.locator('#lineupChangeStatus').getByText(/已退場/).waitFor();
       };
       await record();
+      await assertFits(tab);
       assert.equal(await tab.locator('#lineupChangeIn option').evaluateAll((opts,id)=>opts.some(option=>option.value===id),out),false);
       await tab.locator('#lineupUndoChange').click();
       await tab.locator('#lineupChangeStatus').getByText(/已復原/).waitFor();
@@ -156,6 +158,19 @@ async function substitutionPersistence(browser) {
       assert.equal(await tab.locator('#lineupChangeHistory li').count(),0);
       await tab.close();
     }
+    await first.locator('#lineupChangeTab').click();
+    await first.locator('#lineupChangeKind').selectOption('pen');
+    const available=await first.locator('#lineupChangeIn option').nth(1).getAttribute('value');
+    await first.locator('#lineupSetupTab').click();
+    await first.locator('.lineup-unavailable summary').click();
+    await first.locator(`[data-lineup-unavailable="${available}"]`).check();
+    await first.locator('#lineupChangeTab').click();
+    await first.locator('#lineupChangeSource').getByText(/先發草稿尚未套用/).waitFor();
+    assert.equal(await first.locator(`#lineupChangeIn option[value="${available}"]`).count(),1);
+    await first.locator('#lineupSetupTab').click();
+    await first.locator('#lineupApply').click();
+    await first.locator('#lineupChangeTab').click();
+    assert.equal(await first.locator(`#lineupChangeIn option[value="${available}"]`).count(),0);
     assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
     console.log('Passed tab-local substitutions, undo, denied writes, and reopening both modes');
   } finally {await context.close();}
