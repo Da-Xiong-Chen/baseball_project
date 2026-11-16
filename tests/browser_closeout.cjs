@@ -92,6 +92,71 @@ async function lineup(context) {
   await second.close();
 }
 
+async function substitutionPersistence(browser) {
+  const context=await browser.newContext({viewport:{width,height:900}});
+  try {
+    const first=await context.newPage(), second=await context.newPage();
+    await openLineup(first);
+    await first.locator('#lineupApply').press('Enter');
+    await first.getByText('配置已套用並保存。').waitFor();
+    await openLineup(second);
+    const key='cpbl-lineup-2026-v1:'+await first.locator('#lineupTeam').inputValue();
+    const evaluate=async page=>{
+      await page.locator('.feature-nav [data-page=evaluation]').click();
+      await page.locator('[data-view=defense]').click();
+      await page.locator('#evalBtn:enabled').click();
+      await page.locator('[data-apply-kind=pen]').first().waitFor();
+    };
+    const changeAndUndo=async (page,changeMessage,undoMessage=changeMessage,beforeUndo=()=>{})=>{
+      const pitcher=page.locator('#myPitcher'), previous=await pitcher.inputValue();
+      const change=page.locator('[data-apply-kind=pen]').first();
+      const incoming=await change.getAttribute('data-apply-sub');
+      await change.click();
+      await page.locator('.substitution-note').getByText(changeMessage).waitFor({timeout:4500});
+      assert.equal(await pitcher.inputValue(),incoming);
+      await beforeUndo();
+      await page.locator('[data-sub-undo]').click();
+      await page.locator('.substitution-note').getByText(undoMessage).waitFor({timeout:4500});
+      assert.equal(await pitcher.inputValue(),previous);
+      return incoming;
+    };
+    await evaluate(second);
+    await first.locator('[data-move="0"][data-step="1"]').press('Enter');
+    await first.locator('#lineupApply').press('Enter');
+    await first.getByText('配置已套用並保存。').waitFor();
+    const saved=await first.evaluate(key=>localStorage.getItem(key),key);
+    await changeAndUndo(second,/另一個分頁已更新名單/);
+    assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
+    const denied=await context.newPage();
+    await denied.addInitScript(()=>{
+      globalThis.blockLineupWrites=true;
+      const set=Storage.prototype.setItem;
+      Storage.prototype.setItem=function(key,value){
+        if(globalThis.blockLineupWrites&&String(key).startsWith('cpbl-lineup-'))throw new DOMException('Test denied write','QuotaExceededError');
+        return set.call(this,key,value);
+      };
+    });
+    await openLineup(denied);
+    await evaluate(denied);
+    await denied.evaluate(()=>{
+      const original=api;
+      let fail=true;
+      api=(path,body)=>{
+        if(fail&&path==='api/evaluate'){fail=false;return Promise.reject(Error('Test rejected reevaluation'));}
+        return original(path,body);
+      };
+    });
+    await changeAndUndo(denied,/無法保存到瀏覽器/,/球隊名單已保存/,()=>
+      denied.getByText('評估未完成，請重試。',{exact:false}).waitFor());
+    assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
+    await denied.evaluate(()=>{globalThis.blockLineupWrites=false;});
+    const incoming=await changeAndUndo(denied,/球隊名單已保存/,/無法保存到瀏覽器/,()=>
+      denied.evaluate(()=>{globalThis.blockLineupWrites=true;}));
+    assert.equal(await first.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed.pitcher,key),incoming);
+    console.log('Passed substitution and undo with cross-tab conflicts and denied lineup writes');
+  } finally {await context.close();}
+}
+
 async function historical(page) {
   await page.goto(base);
   await page.locator("#evalBtn:enabled").waitFor();
@@ -126,6 +191,7 @@ async function main() {
     page.on('pageerror',e=>errors.push(e.message));
     await evaluation(page);
     await lineup(context);
+    await substitutionPersistence(browser);
     await historical(page);
     assert.deepEqual(errors,[]);
     await assertFits(page);

@@ -1233,14 +1233,18 @@ async function run(fn, view, {focusTab,focusControl} = {}) {
     if (token !== runGeneration) return;
     S.last = null;
     resultInputKey = null;
+    const actionStatus=substitutionNote&&view!=='replay'?substitutionNoteHtml({view}):'';
     if(e.code==='BATCH_MISMATCH'){
-      box.innerHTML='<div class="err-box" role="alert">資料與模型批次不同，請重新載入完整版本。<button class="retry">重新載入頁面</button></div>';
-      box.querySelector('.retry').onclick=()=>location.reload();return;
+      box.innerHTML=actionStatus+'<div class="err-box" role="alert">資料與模型批次不同，請重新載入完整版本。<button class="retry">重新載入頁面</button></div>';
+      box.querySelector('.retry').onclick=()=>location.reload();
+    } else {
+      box.innerHTML = actionStatus+`<div class="err-box" role="alert">評估未完成，請重試。<button class="retry">重新評估</button></div>`;
+      const retry = box.querySelector('.retry');
+      retry.onclick = () => run(fn, view, {focusTab,focusControl});
+      if(focusTab||focusControl)retry.focus?.();
     }
-    box.innerHTML = `<div class="err-box" role="alert">評估未完成，請重試。<button class="retry">重新評估</button></div>`;
-    const retry = box.querySelector('.retry');
-    retry.onclick = () => run(fn, view, {focusTab,focusControl});
-    if(focusTab||focusControl)retry.focus?.();
+    const undo=box.querySelector('[data-sub-undo]');
+    if(undo)undo.onclick=undoSubstitution;
   } finally {
     if (token === runGeneration) { btn.disabled = !S.ready; btn.innerHTML = uiIcon("compare") + "評估"; }
   }
@@ -2159,10 +2163,12 @@ async function applySubstitution(kind, incoming) {
   if (!incoming || incoming === out) return;
   const before = substitutionSnapshot();
   let lineupUndo = null;
+  let storage = null;
   if (lineup) {
     const done = LineupBoard.substitute(team, { kind, out, incoming });
     if (!done) { substitutionNote = { text: `${playerText(incoming)}無法換上：請到球隊名單確認登錄與退場狀態。`, error: true }; renderResult(); return; }
     lineupUndo = done.snapshot;
+    storage = done;
     syncOwnLineup();
   } else {
     exitedByTeam.set(team, new Set([...generalExited(team), out].filter(n => n !== incoming)));
@@ -2172,19 +2178,19 @@ async function applySubstitution(kind, incoming) {
     $('#myPitcher').value = incoming;
     S.starter = false; $('#pitchCount').value = 0; autoPitchCount = null;
     renderRole(); syncPenExited(); renderBench();
-    text = `換上${playerText(incoming)}，${playerText(out)}退場。新投手球數從 0 起算，牛棚已重新評估。`;
+    text = `換上${playerText(incoming)}，${playerText(out)}退場。新投手球數從 0 起算，牛棚名單已更新。`;
   } else {
     const pos = lineup ? LineupBoard.current(team).slots.find(s => s.name === incoming)?.pos : $('#duePos').value;
     const order = lineup ? LineupBoard.current(team).slots.findIndex(s => s.name === incoming) + 1 : 0;
     $('#dueBatter').value = incoming; if (pos) $('#duePos').value = pos;
     S.bench.delete(incoming); renderBench(); syncPenExited();
     const canField = pos === 'DH' || Object.keys(S.roster[team]?.hitters.find(h => h.name === incoming)?.positions || {}).includes(pos);
-    text = `${playerText(incoming)}代打${playerText(out)}${order ? `，承接第 ${order} 棒` : ''}（${POS[pos] || pos}），${playerText(out)}退場。板凳已重新評估。${canField ? '' : `下個守備半局請確認${POS[pos] || pos}由誰接守。`}`;
+    text = `${playerText(incoming)}代打${playerText(out)}${order ? `，承接第 ${order} 棒` : ''}（${POS[pos] || pos}），${playerText(out)}退場。板凳名單已更新。${canField ? '' : `下個守備半局請確認${POS[pos] || pos}由誰接守。`}`;
   }
   const entries=substitutionJournal.get(journalKey())||[];
   entries.push({kind,incoming,out,before,lineupUndo,after:changeFingerprint()});
   substitutionJournal.set(journalKey(),entries);
-  substitutionNote = { text };
+  substitutionNote = { text, storage };
   await evaluateCustom();
   $('#resultBody .substitution-note')?.focus({ preventScroll: true });
 }
@@ -2193,13 +2199,14 @@ async function undoSubstitution() {
   if (!u || u.after!==changeFingerprint()) return;
   entries.pop();
   const b = u.before;
-  if (u.lineupUndo) { LineupBoard.restore(b.team, u.lineupUndo); syncOwnLineup(); }
+  const storage = u.lineupUndo ? LineupBoard.restore(b.team, u.lineupUndo) : null;
+  if (u.lineupUndo) syncOwnLineup();
   exitedByTeam.set(b.team, new Set(b.exited));
   $('#dueBatter').value = b.due; $('#duePos').value = b.duePos; $('#myPitcher').value = b.pitcher;
   $('#pitchCount').value = b.pitchCount; S.starter = b.starter; autoPitchCount = b.auto; S.bench = new Set(b.bench);
   const pen = new Map(b.pen); $$('#penList input').forEach(i => { if (pen.has(i.value)) i.checked = pen.get(i.value); });
   renderRole(); renderBench(); syncPenExited();
-  substitutionNote = { text: '已復原上一次換人。' };
+  substitutionNote = { text: '已復原上一次換人。', storage };
   await evaluateCustom();
   $('#resultBody .substitution-note')?.focus({ preventScroll: true });
 }
@@ -2212,7 +2219,10 @@ function substitutionNoteHtml(R) {
   const history=entries.length?`<details class="substitution-history"><summary>本場調度紀錄（${entries.length}）</summary><ol>${
     entries.map(entry=>`<li>${entry.kind==='pen'?'換投':'代打'}：${N(entry.out)} → ${N(entry.incoming)}</li>`).join('')}</ol></details>`:'';
   const canUndo=entries.length && entries.at(-1).after===changeFingerprint();
-  return `<div class="substitution-note${n?.error ? ' is-error' : ''}" tabindex="-1" role="status">${n ? `<p>${esc(n.text)}</p>` : ''}${exited.length ? `<p class="exited-list"><span>已退場／不可用</span>${exited.map(x => `<span class="chip">${N(x)}</span>`).join('')}</p>` : ''}${history}${canUndo ? '<button type="button" class="sub-undo" data-sub-undo>復原這次換人</button>' : ''}</div>`;
+  const storage=n?.storage;
+  const status=storage?.notice?`<p>${esc(storage.notice)}</p>`:'';
+  const draft=storage?.draftPreserved?'<p>已保留未套用的草稿，套用前請核對本場調度。</p>':'';
+  return `<div class="substitution-note${n?.error ? ' is-error' : ''}" tabindex="-1" role="status">${n ? `<p>${esc(n.text)}</p>` : ''}${status}${draft}${exited.length ? `<p class="exited-list"><span>已退場／不可用</span>${exited.map(x => `<span class="chip">${N(x)}</span>`).join('')}</p>` : ''}${history}${canUndo ? '<button type="button" class="sub-undo" data-sub-undo>復原這次換人</button>' : ''}</div>`;
 }
 const applyButton = (R, name, kind, primary) => R.view === 'replay' ? '' : `<button type="button" class="row-apply${primary ? ' is-primary' : ''}" data-apply-sub="${esc(name)}" data-apply-kind="${kind}" aria-label="換上 ${N(name)}，並更新可用人選">換上</button>`;
 function pinchHitPreview(R,row,primary) {

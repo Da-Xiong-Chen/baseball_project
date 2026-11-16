@@ -130,3 +130,28 @@ test('Escape cancels the player picker without changing the draft and respects c
 });
 test('substitution moves the pinch hitter into the same slot and position, records the exit and restores on undo',async()=>{const f=uiFixture();await fillUI(f);await f.node('#lineupApply').onclick();const pos=f.api.current('A').slots[3].pos;const done=f.api.substitute('A',{kind:'ph',out:'H3',incoming:'H10'});assert.ok(done);const c=f.api.current('A');assert.equal(c.slots[3].name,'H10');assert.equal(c.slots[3].pos,pos);assert.deepEqual([...c.unavailable],['H3']);assert.deepEqual(L.validate(c,roster),[]);assert.deepEqual(JSON.parse(f.values.get('cpbl-lineup-2025-v1:A')).confirmed.unavailable,['H3']);f.api.restore('A',done.snapshot);assert.equal(f.api.current('A').slots[3].name,'H3');assert.equal(f.api.current('A').unavailable,undefined);});
 test('pitching change replaces the pitcher, keeps every exit and refuses players already out or on the field',async()=>{const f=uiFixture();await fillUI(f);await f.node('#lineupApply').onclick();assert.ok(f.api.substitute('A',{kind:'pen',out:'P0',incoming:'P1'}));assert.equal(f.api.current('A').pitcher,'P1');assert.deepEqual([...f.api.current('A').unavailable],['P0']);assert.equal(f.api.substitute('A',{kind:'pen',out:'P1',incoming:'P0'}),null);assert.equal(f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H1'}),null);assert.equal(f.api.substitute('B',{kind:'ph',out:'H0',incoming:'H9'}),null);assert.ok(f.api.substitute('A',{kind:'ph',out:'H0',incoming:'H9'}));assert.deepEqual([...f.api.current('A').unavailable].sort(),['H0','P0']);});
+
+test('substitution keeps a conflicting unsaved lineup draft intact',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A', draft=config();
+ draft.slots[4].name='H10';
+ f.values.set(key,JSON.stringify({version:2,season:2025,draft,confirmed:config()}));
+ await f.api.selectTeam('A');
+ const change=f.api.substitute('A',{kind:'ph',out:'H3',incoming:'H10'});
+ const stored=JSON.parse(f.values.get(key));
+ assert.equal(change.saved,'saved');
+ assert.equal(stored.confirmed.slots[3].name,'H10');
+ assert.deepEqual(stored.draft,draft);
+});
+
+test('undo restores the confirmed pitcher and preserves newer batting-order edits in the draft',async()=>{
+ const f=uiFixture(), key='cpbl-lineup-2025-v1:A';
+ await fillUI(f);
+ await f.node('#lineupApply').onclick();
+ const change=f.api.substitute('A',{kind:'pen',out:'P0',incoming:'P1'});
+ f.listeners.click({target:{closest:sel=>sel==='[data-move]'?{dataset:{move:'1',step:'-1'}}:null}});
+ const newest=JSON.parse(f.values.get(key)).draft;
+ const restored=f.api.restore('A',change.snapshot);
+ assert.equal(restored.saved,'saved');
+ assert.equal(f.api.current('A').pitcher,'P0');
+ assert.deepEqual(JSON.parse(f.values.get(key)).draft,newest);
+});
