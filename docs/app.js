@@ -857,16 +857,29 @@ function syncOwnLineup() {
   S.bench.forEach(n=>{if(!benchEligible(n))S.bench.delete(n);});
   groupControl?.refresh();
 }
+let pendingLineupPitcher=null;
+function syncLineupPitcher(name){
+  const pending=pendingLineupPitcher;
+  if(!pending||pending.name!==name||pending.mode!==audienceMode)return;
+  pendingLineupPitcher=null;
+  if(pending.change.pitcherSelected)S.starter=S.roster[name].pitchers.find(p=>p.name===$('#myPitcher').value)?.role==='先發';
+  if(pending.change.resetPitchCount){$('#pitchCount').value=0;autoPitchCount=null;}
+  renderRole();
+}
 async function applyOwnLineup(name,change={}) {
   if(currentPage()==='review')return;
-  if($('#myTeam').value!==name){$('#myTeam').value=name;syncTeamChoices('myTeam');await refreshCustom();}
-  else {
-    const c=ownLineup();
-    if(!c&&dueFromLineup){const due=$('#dueBatter').value;$('#dueBatter').innerHTML=S.roster[name].hitters.map(h=>`<option value="${esc(h.name)}">${N(h.name)}（${handText(h.hand)}打）</option>`).join('');$('#dueBatter').value=due;dueFromLineup=false;}
-    syncOwnLineup();autoPos();renderBench();
+  if(Object.hasOwn(change,'pitcherSelected')||Object.hasOwn(change,'resetPitchCount')){
+    pendingLineupPitcher={name,mode:audienceMode,change};
   }
-  if(change.pitcherSelected)S.starter=S.roster[name].pitchers.find(p=>p.name===$('#myPitcher').value)?.role==='先發';
-  if(change.resetPitchCount)$('#pitchCount').value=0;
+  if($('#myTeam').value!==name||loadedTeams.my!==name||!S.ready){
+    $('#myTeam').value=name;
+    syncTeamChoices('myTeam');
+    return refreshCustom();
+  }
+  const c=ownLineup();
+  if(!c&&dueFromLineup){const due=$('#dueBatter').value;$('#dueBatter').innerHTML=S.roster[name].hitters.map(h=>`<option value="${esc(h.name)}">${N(h.name)}（${handText(h.hand)}打）</option>`).join('');$('#dueBatter').value=due;dueFromLineup=false;}
+  syncOwnLineup();autoPos();renderBench();
+  syncLineupPitcher(name);
   renderRole();invalidateCustom();clearResult();renderBench();renderPenVisibility();
 }
 
@@ -1019,6 +1032,7 @@ async function refreshCustom() {
   clearResult();
   $("#formError").innerHTML = '<span role="status">正在載入名單…</span>';
   const myName = $("#myTeam").value, oppName = $("#oppTeam").value;
+  if(pendingLineupPitcher&&(pendingLineupPitcher.name!==myName||pendingLineupPitcher.mode!==audienceMode))pendingLineupPitcher=null;
   const myChanged=loadedTeams.my!==myName,oppChanged=loadedTeams.opp!==oppName;
   let my, opp;
   try {
@@ -1056,7 +1070,7 @@ async function refreshCustom() {
     if(typeof PitcherGroups!=='undefined')groupControl=PitcherGroups.mount({element:$('#pitcherGroups'),list:$('#penList'),availability:$('#penAvailability'),team:myName,pitchers:my.pitchers,current:()=>$('#myPitcher').value,unavailable:()=>[...(ownLineup()?.slots.map(s=>s.name)||[]),...(ownLineup()?.unavailable||[]),...(ownLineup()?[]:generalExited())],changed:()=>invalidateCustom()});
   }
   loadedTeams={my:myName,opp:oppName};
-  syncOwnLineup();autoPos();renderBench();renderPenVisibility();syncPenExited();
+  syncOwnLineup();syncLineupPitcher(myName);autoPos();renderBench();renderPenVisibility();syncPenExited();
   S.ready=true;$('#evalBtn').disabled=false;if($('#demoBtn'))$('#demoBtn').disabled=false;
 
 }

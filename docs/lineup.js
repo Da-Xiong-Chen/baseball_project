@@ -227,7 +227,8 @@
       // 保存套用狀態，重新整理後仍維持依場上名單評估
       const saved=persist();
       // 與開啟網站時相同：換回預設先發投手時依角色帶入預設球數（先發 90／後援 15），不歸零
-      s.isDefault=true;render();await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});message(saveMessage(saved,'已恢復預設名單並套用。','已恢復預設並套用；本次可用，但無法保存到瀏覽器。'));
+      s.isDefault=true;render();message(saveMessage(saved,'已恢復預設名單並套用。','已恢復預設並套用；本次可用，但無法保存到瀏覽器。'));
+      await o.applied(teamName,{pitcherSelected:false,resetPitchCount:false});
     };
     q('#lineupApply').onclick=async()=>{
       const s=get(teamName),errors=validate(s.draft,roster);
@@ -236,8 +237,8 @@
       resetSwap();delete s.isDefault;
       s.draft.slots.forEach(slot=>delete slot.fieldingPending);
       s.confirmed=clone(s.draft);const saved=persist();render();
-      await o.applied(teamName,{pitcherSelected:pitcherChanged,resetPitchCount:pitcherChanged});
       message(saveMessage(saved,'配置已套用並保存。','配置已套用；本次可用，但無法保存到瀏覽器。'));
+      await o.applied(teamName,{pitcherSelected:pitcherChanged,resetPitchCount:pitcherChanged});
     };
     const exportButton=q('#lineupExport'), importInput=q('#lineupImport');
     exportButton.onclick=()=>{

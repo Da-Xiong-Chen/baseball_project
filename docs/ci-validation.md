@@ -46,6 +46,8 @@ python tests/browser_fault_server.py --port 8030
 
 同一腳本亦驗證跨日情境選單、接守紀錄故障後重試、鍵盤操作、實際接守與無候選原因，以及瀏覽器上一頁、下一頁與頁內錨點。若日期清單的 `evidence_schema` 為 1，發布檢查會要求各日期的 `evidence.json` 批次、打席與當日資料一致。[匯出及稽核方式](qa/replay-evidence-20261116/README.md)
 
+`browser_closeout.cjs` 會測跨隊套用名單時暫時讀不到球員資料的情境。重試後核對球隊、場上投手及新投手球數，再送出評估。
+
 ## 發布與回復核對
 
 1. 審查時記錄提交 SHA、PR 檢查、各回放日期的批次 ID 與逐球模型截止日。用 `python scripts/prepare_site.py --output output/<新發布目錄>` 產生含逐檔 SHA-256 的發布清單。

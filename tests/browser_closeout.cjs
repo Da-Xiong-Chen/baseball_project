@@ -184,6 +184,41 @@ async function historical(page) {
     row['守備說明'].startsWith('需由 ')&&row['守備說明'].includes('板凳已無備用捕手')).length),3);
 }
 
+async function lineupAcrossRosterReload(browser) {
+  const context=await browser.newContext({viewport:{width,height:900}});
+  try {
+    const page=await context.newPage();
+    await openLineup(page);
+    const teamSelect=page.locator('#lineupTeam');
+    const next=await teamSelect.locator('option').evaluateAll(options=>options.find(option=>!option.selected).value);
+    await teamSelect.selectOption(next);
+    await page.locator('#lineupApply:enabled').waitFor();
+    await page.evaluate(club=>{
+      const original=team;
+      globalThis.failLineupRoster=true;
+      team=(name)=>name===club&&globalThis.failLineupRoster
+        ?Promise.reject(Error('Test lineup roster load failed')):original(name);
+    },next);
+    await page.locator('#lineupApply').click();
+    await page.getByText('配置已套用並保存。').waitFor();
+    const expected=await page.evaluate(club=>LineupBoard.current(club).pitcher,next);
+    await page.locator('.feature-nav [data-page=evaluation]').click();
+    await page.locator('#formError').getByText('名單載入失敗，請重試。').waitFor();
+    assert.equal(await page.locator('#evalBtn').isDisabled(),true);
+    await page.evaluate(()=>{globalThis.failLineupRoster=false;});
+    await page.locator('#formError .retry').click();
+    await page.locator('#evalBtn:enabled').waitFor();
+    await page.locator('[data-view=defense]').click();
+    assert.equal(await page.locator('#myTeam').inputValue(),next);
+    assert.equal(await page.locator('#myPitcher').inputValue(),expected);
+    assert.equal(await page.locator('#pitchCount').inputValue(),'0');
+    assert.equal(await page.locator('#pitchCount').isEditable(),true);
+    await page.locator('#evalBtn').click();
+    await page.locator('#resultBody .scoreboard').waitFor();
+    console.log('Passed cross-club lineup application and roster retry without losing the pitcher reset');
+  } finally {await context.close();}
+}
+
 async function pinchHitFielding(browser) {
   const context=await browser.newContext({viewport:{width,height:900}});
   try {
@@ -255,6 +290,7 @@ async function main() {
     await evaluation(page);
     await lineup(context);
     await substitutionPersistence(browser);
+    await lineupAcrossRosterReload(browser);
     await pinchHitFielding(browser);
     await historical(page);
     assert.deepEqual(errors,[]);

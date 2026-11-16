@@ -805,6 +805,25 @@ test('historical analysis refuses custom roster application, refresh and evaluat
  assert.equal(f.node('#oppTeam').value,'Opponent');
 });
 
+test('a slow lineup apply never resets the new club pitcher or clears a completed replay',async()=>{
+ for(const destination of ['club','review']){
+  const f=fixture(), waiting=deferred();
+  f.context.waiting=waiting.promise;
+  f.node('#myTeam').value='First';f.node('#oppTeam').value='Opponent';
+  f.node('#pitchCount').value='68';
+  f.eval("let testPage='lineup';currentPage=()=>testPage;S.roster={Second:{pitchers:[]}};refreshCustom=()=>waiting;renderRole=()=>{};invalidateCustom=()=>{};renderBench=()=>{};renderPenVisibility=()=>{};clearResult=()=>{S.last=null}");
+  const old=f.eval("applyOwnLineup('Second',{pitcherSelected:true,resetPitchCount:true})");
+  if(destination==='club')f.node('#myTeam').value='Third';
+  else f.eval("testPage='review';");
+  f.eval("S.last={id:'latest'};S.starter=true;");
+  waiting.resolve(true);
+  await old;
+  assert.equal(f.node('#pitchCount').value,'68');
+  assert.equal(f.eval('S.starter'),true);
+  assert.equal(f.eval('S.last.id'),'latest');
+ }
+});
+
 test('manual unavailable list filters team candidates but never historical candidates',()=>{
  const f=fixture();f.eval("currentPage=()=> 'evaluation';audienceMode='team';confirmedOwnLineup=()=>({pitcher:'P',slots:[{name:'Active'}],unavailable:['Out']})");
  assert.equal(f.eval("benchEligible('Out')"),false);assert.equal(f.eval("benchEligible('Bench')"),true);

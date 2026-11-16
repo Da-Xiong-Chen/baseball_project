@@ -6,13 +6,13 @@ test('incomplete, cross-team and unsupported two-way configurations cannot be ap
 
 test('malformed draft and confirmed state are rejected',()=>{const c=config(),s={version:1,season:2025,draft:c,confirmed:{}};assert.equal(L.validState(s),false);s.confirmed=c;assert.equal(L.validState(s),true);s.draft={};assert.equal(L.validState(s),false);});
 const fs=require('node:fs');const vm=require('node:vm');
-function uiFixture(storageMode='ok',loadTeam=async()=>roster,values=new Map()){
+function uiFixture(storageMode='ok',loadTeam=async()=>roster,values=new Map(),onApply=()=>{}){
  const nodes=new Map(),listeners={};
  const node=id=>{if(!nodes.has(id)){const events={};nodes.set(id,{value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},classList:{add(){},toggle(){}},setAttribute(){},focus(){},showModal(){this.open=true;},close(){this.open=false;for(const fn of events.close||[])fn();events.close=[];},addEventListener(type,fn){(events[type]??=[]).push(fn);},dispatch(type,event){for(const fn of events[type]||[])fn(event);}});}return nodes.get(id);};
  const attrs=new Set(),element={querySelector:node,querySelectorAll:()=>[],setAttribute:a=>attrs.add(a),removeAttribute:a=>attrs.delete(a),hasAttribute:a=>attrs.has(a),addEventListener:(name,fn)=>listeners[name]=fn};
  const storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>{if(storageMode==='throw')throw Error('denied');if(storageMode!=='silent')values.set(k,v);},removeItem:k=>values.delete(k)};
  const context={module:{exports:{}},window:{},localStorage:storage,document:{activeElement:null},console};vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../docs/lineup.js'),'utf8'),context);const api=context.module.exports,applied=[];
- api.mount({element,teams:['A','B'],team:loadTeam,matches:(name,team,q)=>name.includes(q),pitchCount:()=>15,role:()=>true,applied:async(t,c)=>applied.push({team:t,change:c})});
+ api.mount({element,teams:['A','B'],team:loadTeam,matches:(name,team,q)=>name.includes(q),pitchCount:()=>15,role:()=>true,applied:async(t,c)=>{applied.push({team:t,change:c});await onApply(t,c);}});
  const pick=(slot,name)=>{listeners.click({target:{closest:sel=>sel==='[data-pick]'?{dataset:{pick:String(slot)}}:null}});if(node('#lineupPicker').open)node('#lineupPlayerList').onclick({target:{closest:()=>({dataset:{player:name},disabled:false})}});};
  return {api,node,pick,values,applied,listeners,element};
 }
@@ -101,6 +101,22 @@ test('failed team switch returns selector and apply action to the last loaded te
  await fillUI(f);f.node('#lineupTeam').value='B';await f.api.selectTeam('B');
  assert.equal(f.node('#lineupTeam').value,'A');assert.equal(f.node('#lineupApply').disabled,false);
  assert.match(f.node('#lineupMessage').textContent,/載入失敗/);await f.node('#lineupApply').onclick();assert.ok(f.api.current('A'));assert.equal(f.api.current('B'),null);
+});
+
+test('a slow applied or reset callback cannot replace the next club lineup message',async()=>{
+ for(const action of ['#lineupApply','#lineupReset']){
+  let finish;
+  const f=uiFixture('ok',async()=>roster,new Map(),()=>new Promise(resolve=>{finish=resolve;}));
+  f.api.setDefaults({A:config()});
+  await f.api.selectTeam('A');
+  const old=f.node(action).onclick();
+  await f.api.selectTeam('B');
+  const message=f.node('#lineupMessage').textContent;
+  finish();
+  await old;
+  assert.equal(f.node('#lineupTeam').value,'B');
+  assert.equal(f.node('#lineupMessage').textContent,message);
+ }
 });
 
 
