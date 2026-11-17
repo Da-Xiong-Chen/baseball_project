@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 <script src="theme.js?v=20261025-v5-id1"></script>
-<link rel="stylesheet" href="style.css?v=lineup-changes-20261116">
+<link rel="stylesheet" href="style.css?v=website-audit-20261117">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -47,10 +47,10 @@
   <button type="button" class="theme-toggle" data-theme-toggle aria-label="切換為深色主題"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><symbol id="theme-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1 1M18 18l1 1M5 19l1-1M18 6l1-1"/></symbol><symbol id="theme-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol></defs><use href="#theme-moon"/></svg><span>深色</span></button>
 </header>
 
-<section class="audience-control" aria-label="選擇使用方式"><nav class="entry-nav" aria-label="主要入口"><div class="seg" id="audienceSeg"><button type="button" data-entry="general" class="on" aria-pressed="true" aria-current="page">一般使用者</button><button type="button" data-entry="team" aria-pressed="false">球隊</button><button type="button" data-entry="review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>單日分析</button></div></nav><p id="audienceStatus" class="mut" role="status"></p></section>
+<section class="audience-control" aria-label="選擇使用方式"><nav class="entry-nav" aria-label="主要入口"><div class="seg" id="audienceSeg"><button type="button" data-entry="general" class="on" aria-pressed="true" aria-current="page" disabled>一般使用者</button><button type="button" data-entry="team" aria-pressed="false" disabled>球隊</button><button type="button" data-entry="review" aria-pressed="false" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>單日分析</button></div></nav><p id="audienceStatus" class="mut" role="status"></p></section>
 <nav class="feature-nav" aria-label="一般使用者功能">
-  <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
-  <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
+  <button type="button" data-page="evaluation" aria-current="page" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
+  <button type="button" data-page="lineup" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
 </nav>
 <!-- 歷史回放與自訂評估分開 -->
 <div id="backtestBar" class="backtest-bar" hidden>

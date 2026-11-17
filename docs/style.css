@@ -873,6 +873,7 @@ button .ui-icon,.link .ui-icon { flex:none; margin-right:0; }
 @media(prefers-reduced-motion:reduce){.lineup-page:not([hidden]){animation:none;}}
 .feature-nav button,.lineup-page button,.lineup-summary button { border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;cursor:pointer;transition:background 200ms var(--ease-ui),border-color 200ms var(--ease-ui),transform 200ms var(--ease-ui); }
 .feature-nav button:hover,.lineup-page button:hover,.lineup-summary button:hover { background:var(--panel-2);border-color:var(--accent); }
+.entry-nav button:disabled,.feature-nav button:disabled { opacity:.55;cursor:wait; }
 .feature-nav button[aria-current="page"],.lineup-page .seg button[aria-pressed="true"],.lineup-page #lineupApply,.lineup-page #lineupRecord { background:var(--accent);color:var(--on-accent);border-color:var(--accent); }
 #lineupChanges { margin-top:16px; }
 #lineupChanges .row2 { grid-template-columns:repeat(2,minmax(0,1fr)); }

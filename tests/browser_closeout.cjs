@@ -19,6 +19,22 @@ async function openLineup(page) {
   await page.locator('#lineupApply:enabled').waitFor();
 }
 
+async function navigationWhileLoading(context) {
+  const page=await context.newPage();
+  let finish;
+  const ready=new Promise(resolve=>{finish=resolve;});
+  try {
+    await page.route('**/api/meta',async route=>{await ready;await route.continue();});
+    await page.goto(base,{waitUntil:'domcontentloaded'});
+    const review=page.getByRole('button',{name:'單日分析',exact:true});
+    assert.equal(await review.isDisabled(),true);
+    assert.equal(await page.locator('.feature-nav [data-page=lineup]').isDisabled(),true);
+    finish();
+    await review.click();
+    await page.locator('#replayCase').waitFor();
+  } finally {finish();await page.close();}
+}
+
 async function evaluation(page) {
   await page.goto(base);
   const evaluate = page.locator('#evalBtn');
@@ -326,6 +342,7 @@ async function main() {
     const page = await context.newPage(),errors=[];
     context.on('page',opened=>opened.on('pageerror',e=>errors.push(e.message)));
     page.on('pageerror',e=>errors.push(e.message));
+    await navigationWhileLoading(context);
     await evaluation(page);
     await lineup(context);
     await substitutionPersistence(browser);
