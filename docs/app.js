@@ -492,7 +492,7 @@ async function init() {
 let audienceMode='general';
 let entryGeneration=0;
 function syncEntryNavigation(){
-  const review=currentPage()==='review',entry=review?'review':audienceMode;
+  const page=currentPage(),review=page==='review',entry=review?'review':audienceMode;
   $$('[data-entry]').forEach(b=>{
     const active=b.dataset.entry===entry;
     b.classList.toggle('on',active);b.setAttribute('aria-pressed',String(active));
@@ -504,6 +504,7 @@ function syncEntryNavigation(){
   functions.setAttribute('aria-label',audienceMode==='team'?'球隊功能':'一般使用者功能');
   const first=functions.querySelector(`[data-page="${audienceMode==='team'?'lineup':'evaluation'}"]`);
   if(first&&functions.firstElementChild!==first)functions.prepend(first);
+  $('#audienceStatus').hidden=page==='lineup';
   if(review)$('#audienceStatus').textContent='';
 }
 async function selectAudienceEntry(entry){

@@ -123,6 +123,7 @@ async function substitutionPersistence(browser) {
       await tab.locator('.feature-nav [data-page=lineup]').click();
       await tab.getByRole('button',{name:'設定換人',exact:true}).press('Enter');
       assert.equal(await tab.locator('#lineupChangeTab').getAttribute('aria-pressed'),'true');
+      assert.equal(await tab.locator('#audienceStatus').isHidden(),true);
       await assertFits(tab);
       await tab.locator('#lineupChangeKind').selectOption('pen');
       const out=await tab.locator('#lineupChangeOut').inputValue();
