@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 <script src="theme.js?v=20261025-v5-id1"></script>
-<link rel="stylesheet" href="style.css?v=availability-20261116">
+<link rel="stylesheet" href="style.css?v=website-audit-20261117">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231e40af'/><path d='M9 9c4 4 4 10 0 14M23 9c-4 4-4 10 0 14' stroke='white' stroke-width='2' fill='none'/></svg>">
 </head>
 <body>
@@ -47,10 +47,10 @@
   <button type="button" class="theme-toggle" data-theme-toggle aria-label="切換為深色主題"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><symbol id="theme-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1 1M18 18l1 1M5 19l1-1M18 6l1-1"/></symbol><symbol id="theme-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol></defs><use href="#theme-moon"/></svg><span>深色</span></button>
 </header>
 
-<section class="audience-control" aria-label="選擇使用方式"><nav class="entry-nav" aria-label="主要入口"><div class="seg" id="audienceSeg"><button type="button" data-entry="general" class="on" aria-pressed="true" aria-current="page">一般使用者</button><button type="button" data-entry="team" aria-pressed="false">球隊</button><button type="button" data-entry="review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>單日分析</button></div></nav><p id="audienceStatus" class="mut" role="status"></p></section>
+<section class="audience-control" aria-label="選擇使用方式"><nav class="entry-nav" aria-label="主要入口"><div class="seg" id="audienceSeg"><button type="button" data-entry="general" class="on" aria-pressed="true" aria-current="page" disabled>一般使用者</button><button type="button" data-entry="team" aria-pressed="false" disabled>球隊</button><button type="button" data-entry="review" aria-pressed="false" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-history"/></svg>單日分析</button></div></nav><p id="audienceStatus" class="mut" role="status"></p></section>
 <nav class="feature-nav" aria-label="一般使用者功能">
-  <button type="button" data-page="evaluation" aria-current="page"><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
-  <button type="button" data-page="lineup"><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
+  <button type="button" data-page="evaluation" aria-current="page" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-compare"/></svg>換打／換投評估</button>
+  <button type="button" data-page="lineup" disabled><svg class="ui-icon" aria-hidden="true"><use href="#icon-ball"/></svg>我方場上名單</button>
 </nav>
 <!-- 歷史回放與自訂評估分開 -->
 <div id="backtestBar" class="backtest-bar" hidden>
@@ -67,6 +67,17 @@
 </div>
 <section id="lineupPage" class="lineup-page" hidden aria-labelledby="lineupTitle">
   <div class="lineup-heading"><div><h2 id="lineupTitle" tabindex="-1">我方場上名單</h2></div><div><label class="f" for="lineupTeam">配置球隊</label><select id="lineupTeam"></select></div></div>
+  <div class="seg" aria-label="場上名單操作"><button type="button" id="lineupSetupTab" class="on" aria-pressed="true">設定先發</button><button type="button" id="lineupChangeTab" aria-pressed="false">設定換人</button></div>
+  <section id="lineupChanges" class="card" hidden aria-label="設定換人">
+    <div class="card-b"><div class="row2">
+      <div><label class="f" for="lineupChangeKind">調度類型</label><select id="lineupChangeKind"><option value="ph">代打</option><option value="pen">換投</option></select></div>
+      <div><label class="f" for="lineupChangeOut">換下球員</label><select id="lineupChangeOut"></select></div>
+      <div><label class="f" for="lineupChangeIn">換上球員</label><select id="lineupChangeIn"></select></div>
+    </div><p class="mut" id="lineupChangeSource"></p><label id="lineupChangeCheck"><input type="checkbox" id="lineupChangeConfirm"> <span id="lineupChangeRule"></span></label>
+    <div class="lineup-actions"><button type="button" id="lineupRecord" class="primary" disabled>記錄換人</button><button type="button" id="lineupUndoChange" hidden>復原上次換人</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
+    <p id="lineupChangeStatus" role="status"></p><ol id="lineupChangeHistory"></ol></div>
+  </section>
+  <div id="lineupSetup">
   <div class="lineup-tools"><span id="lineupStatus"></span></div>
   <div class="lineup-layout">
     <section class="card lineup-field-card" aria-label="守備配置"><div class="card-h"><h3>守備配置</h3><button id="lineupSwapField" type="button" aria-pressed="false">互換守位</button><span id="lineupFieldHint" class="mut" role="status">點守位選球員</span></div><div class="lineup-field">
@@ -76,15 +87,17 @@
     </div><div class="lineup-dh"><button type="button" data-field="DH"></button><p class="mut">DH 不占守備位置</p></div></section>
     <section class="card lineup-order-card" aria-labelledby="lineupOrderTitle"><div class="card-h"><h3 id="lineupOrderTitle">打擊順序</h3><button id="lineupSwapOrder" type="button" aria-pressed="false">互換棒次</button><span id="lineupOrderHint" class="mut" role="status">↑↓ 調整棒次</span></div><div class="card-b"><div class="lineup-pitcher"><span>場上投手</span><button type="button" id="lineupPitcherPick"><strong id="lineupPitcherName">選擇投手</strong><span aria-hidden="true">⌄</span></button></div><div id="lineupRows"></div></div></section>
   </div>
-<details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">套用後排除候選；恢復預設名單會清除此紀錄。</p><div id="lineupUnavailable"></div></details>
+<details class="lineup-unavailable"><summary>記錄已退場／不可用球員</summary><p class="mut">退場與不可用紀錄只保留在目前頁面，關閉或重新整理後重置。</p><div id="lineupUnavailable"></div></details>
   <p id="lineupWarnings" class="mut"></p><div class="lineup-swap-tools"><span id="lineupSwapHint" role="status"></span><button id="lineupSwapCancel" type="button" hidden>取消互換</button><button id="lineupSwapUndo" type="button" hidden>復原互換</button></div><p id="lineupMessage" role="status" aria-live="polite"></p>
   <div class="lineup-actions"><button type="button" id="lineupApply" class="primary"><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"/></svg>套用配置</button><button type="button" id="lineupReset">恢復預設名單</button><button type="button" data-page="evaluation">前往換打／換投評估 →</button></div>
+  <p class="mut">修改先發只更新評估配置。記錄正式調度請切換到「設定換人」。</p>
   <details id="lineupBackup" class="lineup-backup"><summary>備份名單</summary>
     <button id="lineupExport" type="button">下載名單</button>
     <label for="lineupImport">匯入名單草稿</label>
     <input id="lineupImport" type="file" accept=".json,application/json">
   </details>
   <p class="mut lineup-footnote" id="lineupSeasonNote">預設為 2026 最後 30 場最常先發的球員；名單不會跨裝置同步。</p>
+  </div>
   <dialog id="lineupPicker" aria-labelledby="lineupPickerTitle"><div class="lineup-picker-head"><h3 id="lineupPickerTitle">選擇球員</h3><button type="button" id="lineupPickerClose" aria-label="關閉球員選擇">×</button></div><label class="f" for="lineupSearch">搜尋球員</label><input type="search" id="lineupSearch" placeholder="姓名或 2026 背號…"><div id="lineupPlayerList"></div></dialog>
 </section>
 
@@ -275,22 +288,22 @@
   <details id="siteInfo">
     <summary>資料與使用說明</summary>
     <div class="site-info-body">
-      <p>逐球資料：<a href="https://github.com/rebas-tw/rebas.tw-open-data" target="_blank" rel="noopener noreferrer">野球革命 Rebas Sports</a>（<a href="https://github.com/rebas-tw/rebas.tw-open-data/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">ODC-By v1.0</a>）。2022–2024 守位資料：<a href="https://github.com/ldkrsi/cpbl-opendata" target="_blank" rel="noopener noreferrer">ldkrsi/cpbl-opendata</a>（<a href="licenses/ldkrsi-MIT.txt" target="_blank" rel="noopener noreferrer">MIT 授權</a>）。2025 守位與球員連結來源為中華職棒官網。</p>
-      <p>主題、群組、名單與預設保存在此瀏覽器；清除網站資料會移除，未提供跨裝置同步。</p>
+      <p>逐球資料與 2026 守位：<a href="https://github.com/rebas-tw/rebas.tw-open-data" target="_blank" rel="noopener noreferrer">野球革命 Rebas Sports</a>（<a href="https://github.com/rebas-tw/rebas.tw-open-data/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">ODC-By v1.0</a>）。2022–2024 守位資料：<a href="https://github.com/ldkrsi/cpbl-opendata" target="_blank" rel="noopener noreferrer">ldkrsi/cpbl-opendata</a>（<a href="licenses/ldkrsi-MIT.txt" target="_blank" rel="noopener noreferrer">MIT 授權</a>）。2025 守位與球員連結來源為中華職棒官網。</p>
+      <p>主題、群組、先發配置與預設保存在此瀏覽器。關閉分頁或重新整理會重置本場調度；瀏覽器設定不會跨裝置同步。</p>
       <p>結果為對決估計；今日可上場名單與換人資格須自行確認。<a href="https://github.com/Da-Xiong-Chen/baseball_project#readme" target="_blank" rel="noopener noreferrer">方法、研究依據與使用限制</a></p>
     </div>
   </details>
 </footer>
 
 <script src="engine.js?v=pinch-fielding-20261116"></script>
-<script src="players.js?v=20261025-v5"></script>
+<script src="players.js?v=cpbl-substitutions-20261116"></script>
 <script src="pitch-change.js?v=20261112-replay"></script>
 <script src="pitcher-groups.js?v=20261114-2026"></script>
 <script src="motion.js?v=20261023-motion1"></script>
-<script src="lineup.js?v=lineup-sync-20261116"></script>
+<script src="lineup.js?v=lineup-source-20261116"></script>
 <script src="backtest.js?v=20261114-2026"></script>
 <script src="bullpen-plan.js?v=20261026-1"></script>
 <script src="bullpen-plan-ui.js?v=availability-20261116"></script>
-<script src="app.js?v=lineup-sync-20261116"></script>
+<script src="app.js?v=website-audit-20261117"></script>
 </body>
 </html>

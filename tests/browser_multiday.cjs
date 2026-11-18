@@ -227,13 +227,18 @@ async function check(browser,width) {
     await calculate.click();
     assert.equal(await capacity.getByText('容量足夠',{exact:true}).count(),2);
     await fits();
-    // Two substitutions in the existing worksheet must unwind in order.
+    const openChanges=async()=>{
+      await page.locator('.feature-nav [data-page=lineup]').click();
+      await page.locator('#lineupChangeTab').click();
+      await page.locator('#lineupChangeKind').selectOption('pen');
+    };
     const choose=async()=>{
-      const button=page.locator('[data-apply-kind=pen]').first();
-      await button.waitFor();
-      const id=await button.getAttribute('data-apply-sub');
-      await button.click();
-      await page.locator('[data-sub-undo]').waitFor();
+      await openChanges();
+      const id=await page.locator('#lineupChangeIn option').nth(1).getAttribute('value');
+      await page.locator('#lineupChangeIn').selectOption(id);
+      await page.locator('#lineupChangeConfirm').check();
+      await page.locator('#lineupRecord').click();
+      await page.locator('#lineupChangeStatus').getByText(/已退場/).waitFor();
       assert.equal(await field.inputValue(),id);
       return id;
     };
@@ -241,19 +246,19 @@ async function check(browser,width) {
     assert.equal(await calculate.isDisabled(),true,'old bullpen capacity must clear on a confirmed pitching change');
     assert.equal(await capacity.getByText('容量足夠',{exact:true}).count(),0);
     await choose();
-    await page.locator('.substitution-history summary').getByText(/（2）/).waitFor();
-    await page.locator('[data-sub-undo]').click();
+    assert.equal(await page.locator('#lineupChangeHistory li').count(),2);
+    await page.locator('#lineupUndoChange').click();
     await page.waitForFunction(id=>document.querySelector('#myPitcher').value===id,prior);
-    await page.locator('.substitution-history summary').getByText(/（1）/).waitFor();
-    await page.locator('[data-sub-undo]').click();
+    assert.equal(await page.locator('#lineupChangeHistory li').count(),1);
+    await page.locator('#lineupUndoChange').click();
     await page.waitForFunction(id=>document.querySelector('#myPitcher').value===id,incumbent);
-    await page.getByText('已復原上一次換人。').waitFor();
+    await page.locator('#lineupChangeStatus').getByText(/已復原/).waitFor();
     assert.equal(await calculate.isEnabled(),true,'undo restores the matching saved worksheet');
-    await calculate.click();
-    assert.equal(await capacity.getByText('容量足夠',{exact:true}).count(),2);
     await choose();
+    await page.locator('#lineupChanges [data-page=evaluation]').click();
     await page.locator('#penAll').click();
     const out=page.locator(`#penList input[value="${incumbent}"]`);
+    assert.equal(await field.locator(`option[value="${incumbent}"]`).isDisabled(),true,'an exited pitcher cannot be selected as the incumbent');
     assert.equal(await out.isDisabled(),true);
     assert.equal(await out.isChecked(),false,'select all cannot reselect a retired pitcher');
     await capacity.locator('[data-refresh]').click();
@@ -268,6 +273,7 @@ async function check(browser,width) {
     await capacity.locator('[data-rows]').waitFor();
     assert.equal(await calculate.isEnabled(),true);
     await page.locator('[data-entry=team]').click();
+    await page.locator('#lineupSetupTab').click();
     await page.locator('#lineupApply:enabled').waitFor();
     await page.locator('#lineupBackup summary').click();
     const downloadPromise=page.waitForEvent('download');

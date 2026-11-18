@@ -19,6 +19,22 @@ async function openLineup(page) {
   await page.locator('#lineupApply:enabled').waitFor();
 }
 
+async function navigationWhileLoading(context) {
+  const page=await context.newPage();
+  let finish;
+  const ready=new Promise(resolve=>{finish=resolve;});
+  try {
+    await page.route('**/api/meta',async route=>{await ready;await route.continue();});
+    await page.goto(base,{waitUntil:'domcontentloaded'});
+    const review=page.getByRole('button',{name:'單日分析',exact:true});
+    assert.equal(await review.isDisabled(),true);
+    assert.equal(await page.locator('.feature-nav [data-page=lineup]').isDisabled(),true);
+    finish();
+    await review.click();
+    await page.locator('#replayCase').waitFor();
+  } finally {finish();await page.close();}
+}
+
 async function evaluation(page) {
   await page.goto(base);
   const evaluate = page.locator('#evalBtn');
@@ -93,67 +109,87 @@ async function lineup(context) {
 }
 
 async function substitutionPersistence(browser) {
-  const context=await browser.newContext({viewport:{width,height:900}});
+  const context=await browser.newContext({viewport:{width,height:900},hasTouch:width<500});
   try {
-    const first=await context.newPage(), second=await context.newPage();
+    const first=await context.newPage();
     await openLineup(first);
     await first.locator('#lineupApply').press('Enter');
     await first.getByText('配置已套用並保存。').waitFor();
-    await openLineup(second);
     const key='cpbl-lineup-2026-v1:'+await first.locator('#lineupTeam').inputValue();
-    const evaluate=async page=>{
-      await page.locator('.feature-nav [data-page=evaluation]').click();
-      await page.locator('[data-view=defense]').click();
-      await page.locator('#evalBtn:enabled').click();
-      await page.locator('[data-apply-kind=pen]').first().waitFor();
-    };
-    const changeAndUndo=async (page,changeMessage,undoMessage=changeMessage,beforeUndo=()=>{})=>{
-      const pitcher=page.locator('#myPitcher'), previous=await pitcher.inputValue();
-      const change=page.locator('[data-apply-kind=pen]').first();
-      const incoming=await change.getAttribute('data-apply-sub');
-      await change.click();
-      await page.locator('.substitution-note').getByText(changeMessage).waitFor({timeout:4500});
-      assert.equal(await pitcher.inputValue(),incoming);
-      await beforeUndo();
-      await page.locator('[data-sub-undo]').click();
-      await page.locator('.substitution-note').getByText(undoMessage).waitFor({timeout:4500});
-      assert.equal(await pitcher.inputValue(),previous);
-      return incoming;
-    };
-    await evaluate(second);
-    await first.locator('[data-move="0"][data-step="1"]').press('Enter');
-    await first.locator('#lineupApply').press('Enter');
-    await first.getByText('配置已套用並保存。').waitFor();
     const saved=await first.evaluate(key=>localStorage.getItem(key),key);
-    await changeAndUndo(second,/另一個分頁已更新名單/);
-    assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
-    const denied=await context.newPage();
-    await denied.addInitScript(()=>{
-      globalThis.blockLineupWrites=true;
-      const set=Storage.prototype.setItem;
-      Storage.prototype.setItem=function(key,value){
-        if(globalThis.blockLineupWrites&&String(key).startsWith('cpbl-lineup-'))throw new DOMException('Test denied write','QuotaExceededError');
-        return set.call(this,key,value);
+    for(const mode of ['team','general']){
+      let tab=await context.newPage();
+      await tab.addInitScript(()=>{
+        const set=Storage.prototype.setItem;
+        Storage.prototype.setItem=function(key,value){
+          if(String(key).startsWith('cpbl-lineup-'))throw new DOMException('Test denied write','QuotaExceededError');
+          return set.call(this,key,value);
+        };
+      });
+      await openLineup(tab);
+      if(mode==='general'){
+        await tab.locator('[data-entry=general]').click();
+        await tab.locator('[data-view=defense]').click();
+        const select=tab.locator('#myPitcher'),original=await select.inputValue();
+        const alternative=await select.locator('option').evaluateAll((options,id)=>options.find(option=>option.value!==id).value,original);
+        await select.selectOption(alternative);
+        assert.equal(await select.locator(`option[value="${original}"]`).isDisabled(),false);
+        await select.selectOption(original);
+      }
+      await tab.locator('.feature-nav [data-page=lineup]').click();
+      await tab.getByRole('button',{name:'設定換人',exact:true}).press('Enter');
+      assert.equal(await tab.locator('#lineupChangeTab').getAttribute('aria-pressed'),'true');
+      assert.equal(await tab.locator('#audienceStatus').isHidden(),true);
+      await assertFits(tab);
+      await tab.locator('#lineupChangeKind').selectOption('pen');
+      const out=await tab.locator('#lineupChangeOut').inputValue();
+      const incoming=await tab.locator('#lineupChangeIn option').nth(1).getAttribute('value');
+      const record=async()=>{
+        await tab.locator('#lineupChangeIn').selectOption(incoming);
+        assert.equal(await tab.locator('#lineupRecord').isDisabled(),true);
+        await tab.getByRole('checkbox',{name:/最低投球義務/}).press('Space');
+        await tab.getByRole('button',{name:'記錄換人',exact:true}).press('Enter');
+        await tab.locator('#lineupChangeStatus').getByText(/已退場/).waitFor();
       };
-    });
-    await openLineup(denied);
-    await evaluate(denied);
-    await denied.evaluate(()=>{
-      const original=api;
-      let fail=true;
-      api=(path,body)=>{
-        if(fail&&path==='api/evaluate'){fail=false;return Promise.reject(Error('Test rejected reevaluation'));}
-        return original(path,body);
-      };
-    });
-    await changeAndUndo(denied,/無法保存到瀏覽器/,/球隊名單已保存/,()=>
-      denied.getByText('評估未完成，請重試。',{exact:false}).waitFor());
+      await record();
+      await assertFits(tab);
+      assert.equal(await tab.locator('#lineupChangeIn option').evaluateAll((opts,id)=>opts.some(option=>option.value===id),out),false);
+      await tab.locator('#lineupUndoChange').click();
+      await tab.locator('#lineupChangeStatus').getByText(/已復原/).waitFor();
+      assert.equal(await tab.locator('#lineupChangeOut').inputValue(),out);
+      await record();
+      await tab.locator('#lineupChanges [data-page=evaluation]').click();
+      await tab.locator('[data-view=defense]').click();
+      assert.equal(await tab.locator('#myPitcher').inputValue(),incoming);
+      assert.equal(await tab.locator('#pitchCount').inputValue(),'0');
+      await tab.locator('#evalBtn:enabled').click();
+      await tab.locator('#resultBody .evaluation-table').waitFor();
+      assert.equal(await tab.locator('#resultBody [data-apply-sub], #confirmChangeEligibility').count(),0);
+      await tab.close();
+
+      tab=await context.newPage();
+      await openLineup(tab);
+      await tab.locator('#lineupChangeTab').click();
+      await tab.locator('#lineupChangeKind').selectOption('pen');
+      assert.equal(await tab.locator('#lineupChangeOut').inputValue(),out);
+      assert.equal(await tab.locator('#lineupChangeHistory li').count(),0);
+      await tab.close();
+    }
+    await first.locator('#lineupChangeTab').click();
+    await first.locator('#lineupChangeKind').selectOption('pen');
+    const available=await first.locator('#lineupChangeIn option').nth(1).getAttribute('value');
+    await first.locator('#lineupSetupTab').click();
+    await first.locator('.lineup-unavailable summary').click();
+    await first.locator(`[data-lineup-unavailable="${available}"]`).check();
+    await first.locator('#lineupChangeTab').click();
+    await first.locator('#lineupChangeSource').getByText(/先發草稿尚未套用/).waitFor();
+    assert.equal(await first.locator(`#lineupChangeIn option[value="${available}"]`).count(),1);
+    await first.locator('#lineupSetupTab').click();
+    await first.locator('#lineupApply').click();
+    await first.locator('#lineupChangeTab').click();
+    assert.equal(await first.locator(`#lineupChangeIn option[value="${available}"]`).count(),0);
     assert.equal(await first.evaluate(key=>localStorage.getItem(key),key),saved);
-    await denied.evaluate(()=>{globalThis.blockLineupWrites=false;});
-    const incoming=await changeAndUndo(denied,/球隊名單已保存/,/無法保存到瀏覽器/,()=>
-      denied.evaluate(()=>{globalThis.blockLineupWrites=true;}));
-    assert.equal(await first.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed.pitcher,key),incoming);
-    console.log('Passed substitution and undo with cross-tab conflicts and denied lineup writes');
+    console.log('Passed tab-local substitutions, undo, denied writes, and reopening both modes');
   } finally {await context.close();}
 }
 
@@ -161,6 +197,17 @@ async function historical(page) {
   await page.goto(base);
   await page.locator("#evalBtn:enabled").waitFor();
   await page.getByRole("button", {name:"單日分析",exact:true}).press("Enter");
+  await page.waitForFunction(()=>document.querySelector('#historyPlayer').value!=='');
+  await page.locator('.history-background > summary').click();
+  await page.locator('#prefsPanel summary').click();
+  await page.locator('#historyPitchCount').fill('63');
+  await page.locator('#presetSave').click();
+  await page.locator('#presetStatus').getByText('歷史情境已保存。').waitFor();
+  await page.locator('#presetClear').click();
+  assert.equal(await page.locator('#historyPitchCount').inputValue(),'0');
+  await page.locator('#presetLoad').click();
+  await page.locator('#presetStatus').getByText('已載入歷史情境。').waitFor();
+  assert.equal(await page.locator('#historyPitchCount').inputValue(),'63');
   await page.getByRole("button", {name:"逐打席回放",exact:true}).press("Enter");
   await page.getByRole("heading", {name:"先選一個打席"}).waitFor();
   assert.equal(await page.locator("#customEmptyGuide").isVisible(),false);
@@ -240,38 +287,46 @@ async function pinchHitFielding(browser) {
     if(await toggle.isVisible())await toggle.click();
     const preview=page.locator(`[data-batter="${candidate}"] .pinch-hit-preview`);
     await preview.locator('summary').click();
-    await preview.getByText(/會先記錄代打/).waitFor();
-    await preview.locator('[data-apply-kind=ph]').click();
-    await page.locator('#lineupSummary').getByText(/接守待確認：捕手/).waitFor();
-    const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
+    await preview.getByText(/承接原棒次/).waitFor();
+    assert.equal(await preview.locator('button').count(),0);
+    await page.locator('.feature-nav [data-page=lineup]').click();
+    await page.locator('#lineupChangeTab').click();
+    await page.locator('#lineupChangeKind').selectOption('ph');
+    await page.locator('#lineupChangeOut').selectOption(catcher);
+    await page.locator('#lineupChangeIn').selectOption(candidate);
+    await page.locator('#lineupChangeConfirm').check();
+    await page.locator('#lineupRecord').click();
+    await page.locator('#lineupChangeStatus').getByText(/承接第/).waitFor();
+    const saved=await page.evaluate(club=>LineupBoard.current(club),club);
     assert.equal(saved.slots.find(slot=>slot.pos==='C').name,candidate);
     assert.equal(saved.slots.find(slot=>slot.pos==='C').fieldingPending,true);
     assert.deepEqual(saved.unavailable,[catcher]);
-    await openLineup(page);
+    await page.locator('#lineupSetupTab').click();
     await page.locator('#lineupWarnings').getByText(/請確認接守：捕手/).waitFor();
     const catcherIndex=saved.slots.findIndex(slot=>slot.pos==='C');
+    await page.locator('.lineup-unavailable summary').click();
+    assert.equal(await page.locator(`[data-lineup-unavailable="${catcher}"]`).isDisabled(),true);
     await page.locator(`[data-position="${catcherIndex}"]`).selectOption('DH');
     await page.locator('#lineupWarnings').getByText(/請確認接守：捕手/).waitFor();
     assert.doesNotMatch(await page.locator('#lineupWarnings').textContent(),/請確認接守：指定打擊/);
-    const draft=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).draft,key);
-    const cover=draft.slots.find(slot=>slot.pos==='C');
-    assert.equal(cover.fieldingPending,true);
-    assert.equal(draft.slots.find(slot=>slot.pos==='DH').fieldingPending,undefined);
     await page.locator('#lineupBackup summary').click();
     const downloading=page.waitForEvent('download');
     await page.locator('#lineupExport').click();
     const backup=await (await downloading).path();
     await page.locator(`[data-position="${catcherIndex}"]`).selectOption('C');
     await page.locator('#lineupImport').setInputFiles(backup);
-    await page.locator('#lineupMessage').getByText(/草稿已保存/).waitFor();
-    const recovered=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
-    assert.deepEqual(recovered.draft,draft);
-    assert.deepEqual(recovered.confirmed,saved);
+    await page.locator('#lineupMessage').getByText(/已更新本場名單/).waitFor();
+    assert.equal(await page.locator(`[data-position="${catcherIndex}"]`).inputValue(),'DH');
+    assert.deepEqual(await page.evaluate(club=>LineupBoard.current(club),club),saved);
     await page.locator('#lineupApply').getByText('確認接守並套用').waitFor();
     await page.locator('#lineupApply').click();
-    await page.getByText('配置已套用並保存。').waitFor();
-    const confirmed=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
+    await page.getByText(/已更新本場名單/).waitFor();
+    const confirmed=await page.evaluate(club=>LineupBoard.current(club),club);
+    assert.equal(confirmed.slots[catcherIndex].pos,'DH');
+    assert.deepEqual(confirmed.retired,[catcher]);
     assert.equal(confirmed.slots.find(slot=>slot.pos==='C').fieldingPending,undefined);
+    const persisted=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).confirmed,key);
+    assert.equal(persisted.slots.find(slot=>slot.pos==='C').name,catcher);
     console.log('Passed team pinch-hitter, positional confirmation, backup restore and manual apply');
   } finally {await context.close();}
 }
@@ -287,6 +342,7 @@ async function main() {
     const page = await context.newPage(),errors=[];
     context.on('page',opened=>opened.on('pageerror',e=>errors.push(e.message)));
     page.on('pageerror',e=>errors.push(e.message));
+    await navigationWhileLoading(context);
     await evaluation(page);
     await lineup(context);
     await substitutionPersistence(browser);
